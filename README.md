@@ -57,11 +57,11 @@ Colunas do CSV/Excel:
 
 ## Fases de desenvolvimento
 
-| Fase | Escopo |
-|------|--------|
-| 1 — MVP | Auth, CRUD questões, prova com cronômetro, ranking diário |
-| 2 | Importação, dashboard admin, relatórios, rankings completos |
-| 3 | Gamificação, medalhas, streak, desafios semanais |
+| Fase | Escopo | Status |
+|------|--------|--------|
+| 1 — MVP | Auth, CRUD questões, prova com cronômetro, ranking diário | ✅ Implementado |
+| 2 | Importação, dashboard admin, relatórios, rankings completos | Parcial (importação e admin prontos; relatórios PDF/Excel pendente) |
+| 3 | Gamificação, medalhas, streak, desafios semanais | Pendente |
 
 ## Direitos autorais
 
