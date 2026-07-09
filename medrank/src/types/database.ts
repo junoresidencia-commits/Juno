@@ -10,6 +10,10 @@ export type Difficulty = 'facil' | 'medio' | 'dificil';
 
 export type BadgeType = 'gold' | 'silver' | 'bronze' | 'streak' | 'weekly_best';
 
+export type ChallengeType = 'min_exams' | 'min_accuracy' | 'topic_accuracy';
+
+export type SelectionMode = 'auto' | 'manual';
+
 export interface Profile {
   id: string;
   name: string;
@@ -50,6 +54,7 @@ export interface Exam {
   show_answers_after_submit: boolean;
   show_answers_when_all_done: boolean;
   status: ExamStatus;
+  selection_mode?: SelectionMode;
   created_at: string;
 }
 
@@ -115,4 +120,25 @@ export interface ImportQuestionRow {
   subtema?: string;
   dificuldade?: string;
   tags?: string;
+}
+
+export interface WeeklyChallenge {
+  id: string;
+  title: string;
+  description: string | null;
+  week_start: string;
+  week_end: string;
+  challenge_type: ChallengeType;
+  target_value: number;
+  topic: string | null;
+  bonus_points: number;
+  active: boolean;
+  created_at: string;
+}
+
+export interface WeeklyChallengeCompletion {
+  id: string;
+  challenge_id: string;
+  user_id: string;
+  completed_at: string;
 }

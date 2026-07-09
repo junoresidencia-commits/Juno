@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { StudentForm } from '@/components/admin/StudentForm';
+import { StudentActions } from '@/components/admin/StudentActions';
 
 export default async function AlunosPage() {
   await requireRole('admin');
@@ -26,19 +27,26 @@ export default async function AlunosPage() {
       </div>
 
       <div className="mt-8 space-y-3">
-        {(students ?? []).map((s) => (
-          <div key={s.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-            <div>
-              <p className="font-medium">{s.name}</p>
-              <p className="text-sm text-slate-500">{s.email}</p>
+        {(students ?? []).length === 0 ? (
+          <p className="text-slate-500">Nenhum aluno cadastrado.</p>
+        ) : (
+          students!.map((s) => (
+            <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+              <div>
+                <p className="font-medium">{s.name}</p>
+                <p className="text-sm text-slate-500">{s.email}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  s.active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                }`}>
+                  {s.active ? 'Ativo' : 'Bloqueado'}
+                </span>
+                <StudentActions studentId={s.id} name={s.name} active={s.active} />
+              </div>
             </div>
-            <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-              s.active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-            }`}>
-              {s.active ? 'Ativo' : 'Bloqueado'}
-            </span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

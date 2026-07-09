@@ -28,6 +28,7 @@ export default async function AdminDashboard() {
     { href: '/admin/provas', label: 'Provas', desc: `${examCount ?? 0} provas criadas` },
     { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },
     { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
+    { href: '/admin/desafios', label: 'Desafios semanais', desc: 'Metas e gamificação' },
     { href: '/admin/relatorios', label: 'Relatórios', desc: 'Excel e PDF' },
   ];
 

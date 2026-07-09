@@ -43,6 +43,7 @@ export default async function ProvasPage() {
                 <p className="font-medium">{e.title}</p>
                 <p className="text-sm text-slate-500">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
+                  {e.selection_mode === 'manual' ? ' · manual' : ''}
                 </p>
               </div>
               <span className={`rounded-full px-3 py-1 text-xs font-medium ${
