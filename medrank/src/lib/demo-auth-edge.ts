@@ -28,13 +28,17 @@ export function parseDemoSessionLite(token: string | undefined): Profile | null 
       email: string;
       name: string;
       role: UserRole;
+      active?: boolean;
     };
+
+    if (data.role === 'student' && data.active === false) return null;
+
     return {
       id: data.id,
       email: data.email,
       name: data.name,
       role: data.role,
-      active: true,
+      active: data.active !== false,
       created_at: new Date().toISOString(),
     };
   } catch {
