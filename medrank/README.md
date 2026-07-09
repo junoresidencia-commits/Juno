@@ -36,7 +36,10 @@ npm run dev
 ## Banco de dados
 
 1. Criar projeto no [Supabase](https://supabase.com)
-2. Executar a migration em `supabase/migrations/001_initial_schema.sql`
+2. Executar as migrations em ordem:
+   - `supabase/migrations/001_initial_schema.sql`
+   - `supabase/migrations/002_rls_and_submit.sql`
+   - `supabase/migrations/003_period_rankings.sql`
 3. Criar usuário admin no Auth e inserir perfil:
 
 ```sql
@@ -60,8 +63,8 @@ Colunas do CSV/Excel:
 | Fase | Escopo | Status |
 |------|--------|--------|
 | 1 — MVP | Auth, CRUD questões, prova com cronômetro, ranking diário | ✅ Implementado |
-| 2 | Importação, dashboard admin, relatórios, rankings completos | Parcial (importação e admin prontos; relatórios PDF/Excel pendente) |
-| 3 | Gamificação, medalhas, streak, desafios semanais | Pendente |
+| 2 | Importação, dashboard admin, relatórios, rankings completos | ✅ Implementado |
+| 3 | Gamificação, medalhas, streak, desafios semanais | Parcial (medalhas top 3, streak; desafios semanais pendente) |
 
 ## Direitos autorais
 
