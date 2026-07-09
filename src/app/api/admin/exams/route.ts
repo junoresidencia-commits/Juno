@@ -20,29 +20,40 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
+  const mode = body.selection_mode ?? 'auto';
   const totalQuestions = Number(body.total_questions);
   const sourceFilter = body.source_filter || null;
+  const topicFilter = body.topic_filter || null;
+  const manualIds: string[] = body.question_ids ?? [];
 
-  let query = supabase.from('questions').select('id');
+  let selected: { id: string }[] = [];
 
-  if (sourceFilter) {
-    query = query.eq('source', sourceFilter);
+  if (mode === 'manual') {
+    if (manualIds.length !== totalQuestions) {
+      return NextResponse.json({
+        error: `Selecione exatamente ${totalQuestions} questões. Selecionadas: ${manualIds.length}`,
+      }, { status: 400 });
+    }
+    selected = manualIds.map((id) => ({ id }));
+  } else {
+    let query = supabase.from('questions').select('id');
+    if (sourceFilter) query = query.eq('source', sourceFilter);
+    if (topicFilter) query = query.eq('topic', topicFilter);
+
+    const { data: allQuestions, error: qError } = await query;
+
+    if (qError) {
+      return NextResponse.json({ error: qError.message }, { status: 500 });
+    }
+
+    if (!allQuestions || allQuestions.length < totalQuestions) {
+      return NextResponse.json({
+        error: `Questões insuficientes. Disponíveis: ${allQuestions?.length ?? 0}, necessárias: ${totalQuestions}`,
+      }, { status: 400 });
+    }
+
+    selected = [...allQuestions].sort(() => Math.random() - 0.5).slice(0, totalQuestions);
   }
-
-  const { data: allQuestions, error: qError } = await query;
-
-  if (qError) {
-    return NextResponse.json({ error: qError.message }, { status: 500 });
-  }
-
-  if (!allQuestions || allQuestions.length < totalQuestions) {
-    return NextResponse.json({
-      error: `Questões insuficientes no banco. Disponíveis: ${allQuestions?.length ?? 0}, necessárias: ${totalQuestions}`,
-    }, { status: 400 });
-  }
-
-  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, totalQuestions);
 
   const { data: exam, error: examError } = await supabase
     .from('exams')
@@ -53,6 +64,7 @@ export async function POST(request: Request) {
       total_questions: totalQuestions,
       show_answers_after_submit: Boolean(body.show_answers_after_submit),
       show_answers_when_all_done: Boolean(body.show_answers_when_all_done),
+      selection_mode: mode,
       status: body.publish ? 'published' : 'draft',
     })
     .select()

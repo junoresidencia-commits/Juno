@@ -40,6 +40,7 @@ npm run dev
    - `supabase/migrations/001_initial_schema.sql`
    - `supabase/migrations/002_rls_and_submit.sql`
    - `supabase/migrations/003_period_rankings.sql`
+   - `supabase/migrations/004_weekly_challenges.sql`
 3. Criar usuário admin no Auth e inserir perfil:
 
 ```sql
@@ -64,7 +65,7 @@ Colunas do CSV/Excel:
 |------|--------|--------|
 | 1 — MVP | Auth, CRUD questões, prova com cronômetro, ranking diário | ✅ Implementado |
 | 2 | Importação, dashboard admin, relatórios, rankings completos | ✅ Implementado |
-| 3 | Gamificação, medalhas, streak, desafios semanais | Parcial (medalhas top 3, streak; desafios semanais pendente) |
+| 3 | Gamificação, medalhas, streak, desafios semanais | ✅ Implementado |
 
 ## Direitos autorais
 

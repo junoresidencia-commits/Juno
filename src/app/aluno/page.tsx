@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
+import { WeeklyChallengesCard } from '@/components/aluno/WeeklyChallengesCard';
 
 export default async function AlunoDashboard() {
   const supabase = await createClient();
@@ -7,9 +10,13 @@ export default async function AlunoDashboard() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('name')
+    .select('name, active')
     .eq('id', user!.id)
     .single();
+
+  if (profile && !profile.active) {
+    redirect('/login?blocked=1');
+  }
 
   const today = new Date().toISOString().split('T')[0];
   const { data: todayExam } = await supabase
@@ -36,6 +43,14 @@ export default async function AlunoDashboard() {
     .order('position', { ascending: true })
     .limit(10);
 
+  const { data: streak } = await supabase
+    .from('user_streaks')
+    .select('current_streak')
+    .eq('user_id', user!.id)
+    .maybeSingle();
+
+  const challenges = await fetchUserChallengeProgress(supabase, user!.id);
+
   const canStart = todayExam && !attempt;
   const inProgress = todayExam && attempt && !attempt.finished_at;
   const completed = todayExam && attempt?.finished_at;
@@ -46,6 +61,9 @@ export default async function AlunoDashboard() {
         <div>
           <p className="text-sm text-slate-500">Bem-vindo(a)</p>
           <h1 className="text-2xl font-bold">{profile?.name ?? 'Aluno'}</h1>
+          {streak && streak.current_streak > 0 && (
+            <p className="text-sm text-orange-600">🔥 {streak.current_streak} dias seguidos estudando</p>
+          )}
         </div>
         <form action="/api/auth/logout" method="post">
           <button type="submit" className="text-sm text-slate-500 hover:text-slate-700">
@@ -53,6 +71,8 @@ export default async function AlunoDashboard() {
           </button>
         </form>
       </header>
+
+      <WeeklyChallengesCard challenges={challenges} />
 
       <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <h2 className="text-lg font-semibold">Prova do dia</h2>
@@ -109,7 +129,10 @@ export default async function AlunoDashboard() {
                 const name = (profileData as { name?: string } | null)?.name ?? 'Aluno';
                 return (
                   <li key={r.position} className="flex justify-between text-sm">
-                    <span>{r.position}º — {name}</span>
+                    <span>
+                      {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
+                      {' '}{name}
+                    </span>
                     <span className="font-medium">{r.total_score} pts</span>
                   </li>
                 );
@@ -129,6 +152,9 @@ export default async function AlunoDashboard() {
             </Link>
             <Link href="/aluno/ranking" className="block text-emerald-700 hover:underline">
               Ranking geral →
+            </Link>
+            <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">
+              Desafios e gamificação →
             </Link>
           </div>
         </section>
