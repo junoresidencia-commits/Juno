@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,8 +15,23 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const res = await fetch('/api/auth/demo-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (res.ok) {
+      router.push('/');
+      router.refresh();
+      return;
+    }
+
+    const supabase = await import('@/lib/supabase/client').then((m) => m.createClient());
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.includes('@') ? email : `${email}@medrank.com`,
+      password,
+    });
 
     if (authError) {
       setError('E-mail ou senha inválidos.');
@@ -39,15 +53,22 @@ export default function LoginPage() {
           </p>
         </div>
 
+        <div className="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          <p className="font-semibold">Modo demonstração</p>
+          <p className="mt-1">Admin: <strong>admin</strong> / senha: <strong>admin</strong></p>
+          <p>Aluno: <strong>aluno</strong> / senha: <strong>aluno</strong></p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-              E-mail
+              E-mail ou usuário
             </label>
             <input
               id="email"
-              type="email"
+              type="text"
               required
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
@@ -62,6 +83,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
