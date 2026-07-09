@@ -1,8 +1,19 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { demoCookieName, isDemoMode, parseDemoSessionLite } from '@/lib/demo-auth-edge';
+import { isSkipAuth } from '@/lib/skip-auth';
 
 export async function updateSession(request: NextRequest) {
+  if (isSkipAuth()) {
+    if (request.nextUrl.pathname === '/login') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin';
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next({ request });
+  }
+
+  const { demoCookieName, isDemoMode, parseDemoSessionLite } = await import('@/lib/demo-auth-edge');
+
   let supabaseResponse = NextResponse.next({ request });
 
   const demoToken = request.cookies.get(demoCookieName())?.value;
