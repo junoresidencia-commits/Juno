@@ -17,6 +17,7 @@ interface Props {
   startedAt: string;
   questions: ExamQuestion[];
   initialAnswers: Record<string, OptionLetter>;
+  resultPath?: string;
 }
 
 export function ExamRunner({
@@ -25,6 +26,7 @@ export function ExamRunner({
   startedAt,
   questions,
   initialAnswers,
+  resultPath,
 }: Props) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -45,7 +47,7 @@ export function ExamRunner({
       });
       const data = await res.json();
       if (res.ok) {
-        router.push(`/aluno/resultado/${attemptId}`);
+        router.push(resultPath ?? `/aluno/resultado/${attemptId}`);
         router.refresh();
       } else {
         alert(data.error ?? 'Erro ao enviar prova');

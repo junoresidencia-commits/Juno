@@ -2,15 +2,15 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { formatDateBR } from '@/lib/format';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { getDemoExams } from '@/lib/demo/content';
 
 export default async function ProvasPage() {
   await requireRole('admin');
-  const supabase = await createClient();
-
-  const { data: exams } = await supabase
-    .from('exams')
-    .select('*')
-    .order('date_available', { ascending: false });
+  const exams = isSkipAuth()
+    ? getDemoExams().slice().reverse()
+    : (await createClient()
+        .then((supabase) => supabase.from('exams').select('*').order('date_available', { ascending: false }))).data;
 
   const statusLabel: Record<string, string> = {
     draft: 'Rascunho',

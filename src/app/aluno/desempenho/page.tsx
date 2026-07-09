@@ -2,9 +2,30 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatPercent } from '@/lib/format';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { getDemoPerformanceByTopic } from '@/lib/demo/presenters';
 
 export default async function DesempenhoPage() {
   const { userId } = await requireAuth();
+
+  if (isSkipAuth()) {
+    const sorted = getDemoPerformanceByTopic();
+    const weakest = sorted[0];
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8">
+        <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar</Link>
+        <h1 className="mt-4 text-2xl font-bold">Desempenho por tema</h1>
+        {weakest && <div className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">Tema mais fraco: <strong>{weakest[0]}</strong> ({formatPercent((weakest[1].correct / weakest[1].total) * 100)})</div>}
+        <div className="mt-6 space-y-3">
+          {sorted.map(([topic, stats]) => {
+            const pct = (stats.correct / stats.total) * 100;
+            return <div key={topic} className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200"><div className="flex justify-between text-sm"><span className="font-medium">{topic}</span><span>{stats.correct}/{stats.total} · {formatPercent(pct)}</span></div><div className="mt-2 h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-emerald-500" style={{ width: `${pct}%` }} /></div></div>;
+          })}
+        </div>
+      </div>
+    );
+  }
+
   const supabase = await createClient();
 
   const { data: userAttempts } = await supabase

@@ -2,16 +2,19 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { DIFFICULTY_LABELS } from '@/lib/format';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { getDemoQuestions } from '@/lib/demo/content';
 
 export default async function QuestoesPage() {
   await requireRole('admin');
-  const supabase = await createClient();
-
-  const { data: questions } = await supabase
-    .from('questions')
-    .select('id, statement, source, topic, difficulty, year')
-    .order('created_at', { ascending: false })
-    .limit(100);
+  const questions = isSkipAuth()
+    ? getDemoQuestions().slice(0, 120)
+    : (await createClient()
+        .then((supabase) => supabase
+          .from('questions')
+          .select('id, statement, source, topic, difficulty, year')
+          .order('created_at', { ascending: false })
+          .limit(100))).data;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">

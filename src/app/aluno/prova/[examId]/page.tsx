@@ -4,6 +4,9 @@ import { requireAuth } from '@/lib/auth';
 import { getRemainingSeconds } from '@/lib/utils';
 import { ExamRunner } from '@/components/exam/ExamRunner';
 import type { OptionLetter, Question } from '@/types/database';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers } from '@/lib/demo/runtime';
+import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
 
 export default async function ProvaPage({
   params,
@@ -12,6 +15,43 @@ export default async function ProvaPage({
 }) {
   const { examId } = await params;
   const { userId } = await requireAuth();
+
+  if (isSkipAuth()) {
+    const exam = getDemoExams().find((item) => item.id === examId);
+    if (!exam) redirect('/aluno');
+
+    let attempt = getDemoAttemptByExam(examId, userId);
+    if (attempt?.finished_at) {
+      redirect(`/aluno/resultado/${attempt.id}`);
+    }
+    if (!attempt) {
+      attempt = createDemoAttempt(examId, userId);
+    }
+
+    const questions = getDemoExamQuestions(examId);
+    const savedAnswers = getDemoAttemptAnswers(attempt.id);
+    const initialAnswers: Record<string, OptionLetter> = {};
+    for (const a of savedAnswers) {
+      if (a.selected_option) initialAnswers[a.question_id] = a.selected_option;
+    }
+
+    return (
+      <div>
+        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800">
+          Simulação completa: prova diária autoral ENARE/USP.
+        </div>
+        <ExamRunner
+          attemptId={attempt.id}
+          examId={examId}
+          durationMinutes={exam.duration_minutes}
+          startedAt={attempt.started_at}
+          questions={questions}
+          initialAnswers={initialAnswers}
+        />
+      </div>
+    );
+  }
+
   const supabase = await createClient();
 
   const { data: exam } = await supabase
