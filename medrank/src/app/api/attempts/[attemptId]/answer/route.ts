@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { OptionLetter } from '@/types/database';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { saveDemoAnswer } from '@/lib/demo/runtime';
 
 export async function PUT(
   request: Request,
@@ -12,6 +14,13 @@ export async function PUT(
     questionId: string;
     selectedOption: OptionLetter | null;
   };
+
+  if (isSkipAuth()) {
+    const ok = saveDemoAnswer(attemptId, questionId, selectedOption);
+    return ok
+      ? NextResponse.json({ ok: true })
+      : NextResponse.json({ error: 'Tentativa não encontrada' }, { status: 404 });
+  }
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function ImportarPage() {
+  const isTestMode = process.env.NEXT_PUBLIC_SITE_URL?.includes('trycloudflare') ?? false;
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ imported: number; errors: string[] } | null>(null);
 
@@ -36,6 +37,11 @@ export default function ImportarPage() {
       <p className="mt-2 text-sm text-slate-600">
         Envie um arquivo CSV ou Excel com as colunas do template.
       </p>
+      {isTestMode && (
+        <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          No modo teste, o app já vem preenchido com um banco demo autoral para 5 meses de provas.
+        </p>
+      )}
       <a
         href="/templates/importacao-questoes.csv"
         className="mt-2 inline-block text-sm text-emerald-700 hover:underline"

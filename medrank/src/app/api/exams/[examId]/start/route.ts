@@ -1,11 +1,27 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { createDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
+import { getDemoExams } from '@/lib/demo/content';
 
 export async function POST(
   _request: Request,
   { params }: { params: Promise<{ examId: string }> }
 ) {
   const { examId } = await params;
+
+  if (isSkipAuth()) {
+    const exam = getDemoExams().find((item) => item.id === examId);
+    if (!exam) {
+      return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
+    }
+    const existing = getDemoAttemptByExam(examId);
+    if (existing?.finished_at) {
+      return NextResponse.json({ error: 'Prova já finalizada', attemptId: existing.id }, { status: 400 });
+    }
+    return NextResponse.json({ attempt: existing ?? createDemoAttempt(examId) });
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

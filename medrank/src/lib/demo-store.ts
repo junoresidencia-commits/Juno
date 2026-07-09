@@ -24,12 +24,26 @@ export interface DemoStudent {
 interface DemoStore {
   invites: DemoInvite[];
   students: DemoStudent[];
+  attempts?: {
+    id: string;
+    examId: string;
+    userId: string;
+    startedAt: string;
+    finishedAt: string | null;
+    durationSeconds: number | null;
+    score: number | null;
+    totalCorrect: number;
+    totalQuestions: number;
+    percentage: number | null;
+    submittedAutomatically: boolean;
+    answers: Record<string, string>;
+  }[];
 }
 
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
 function defaultStore(): DemoStore {
-  return { invites: [], students: [] };
+  return { invites: [], students: [], attempts: [] };
 }
 
 export function readDemoStore(): DemoStore {
@@ -48,6 +62,29 @@ export function readDemoStore(): DemoStore {
 export function writeDemoStore(store: DemoStore): void {
   mkdirSync(join(process.cwd(), 'data'), { recursive: true });
   writeFileSync(STORE_PATH, JSON.stringify(store, null, 2));
+}
+
+export function getDemoAttempts() {
+  return readDemoStore().attempts ?? [];
+}
+
+export function saveDemoAttempt(attempt: NonNullable<DemoStore['attempts']>[number]) {
+  const store = readDemoStore();
+  const attempts = store.attempts ?? [];
+  const index = attempts.findIndex((item) => item.id === attempt.id);
+  if (index >= 0) {
+    attempts[index] = attempt;
+  } else {
+    attempts.push(attempt);
+  }
+  store.attempts = attempts;
+  writeDemoStore(store);
+}
+
+export function deleteDemoAttempt(attemptId: string) {
+  const store = readDemoStore();
+  store.attempts = (store.attempts ?? []).filter((item) => item.id !== attemptId);
+  writeDemoStore(store);
 }
 
 export function generateInviteToken(): string {
