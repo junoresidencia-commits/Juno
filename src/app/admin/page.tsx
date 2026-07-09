@@ -1,25 +1,33 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { requireRole } from '@/lib/auth';
+import { formatPercent } from '@/lib/format';
+import { fetchStudentPerformance } from '@/lib/reports/data';
 
 export default async function AdminDashboard() {
+  await requireRole('admin');
   const supabase = await createClient();
 
   const [
     { count: studentCount },
     { count: questionCount },
     { count: examCount },
+    students,
   ] = await Promise.all([
     supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('active', true),
     supabase.from('questions').select('*', { count: 'exact', head: true }),
     supabase.from('exams').select('*', { count: 'exact', head: true }),
+    fetchStudentPerformance(supabase),
   ]);
+
+  const topStudent = [...students].sort((a, b) => b.pontuacao - a.pontuacao)[0];
 
   const menu = [
     { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/10 cadastrados` },
     { href: '/admin/questoes', label: 'Banco de questões', desc: `${questionCount ?? 0} questões` },
     { href: '/admin/provas', label: 'Provas', desc: `${examCount ?? 0} provas criadas` },
     { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },
-    { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, geral' },
+    { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
     { href: '/admin/relatorios', label: 'Relatórios', desc: 'Excel e PDF' },
   ];
 
@@ -51,6 +59,14 @@ export default async function AdminDashboard() {
           <p className="text-3xl font-bold">{examCount ?? 0}</p>
         </div>
       </div>
+
+      {topStudent && topStudent.provas > 0 && (
+        <div className="mb-8 rounded-xl bg-amber-50 p-4 ring-1 ring-amber-200">
+          <p className="text-sm text-amber-800">
+            Melhor pontuação geral: <strong>{topStudent.name}</strong> ({topStudent.pontuacao} pts · média {formatPercent(topStudent.mediaPercentual)})
+          </p>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {menu.map((item) => (
