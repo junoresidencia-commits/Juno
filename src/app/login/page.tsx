@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('admin');
   const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
@@ -21,14 +20,23 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password }),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
       window.location.href = '/';
       return;
     }
 
+    if (data.pending) {
+      setError(data.error);
+      setLoading(false);
+      return;
+    }
+
     const supabase = await import('@/lib/supabase/client').then((m) => m.createClient());
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: email.includes('@') ? email : `${email}@medrank.com`,
+    const loginEmail = email.includes('@') ? email : `${email}@medrank.com`;
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
       password,
     });
 
@@ -38,8 +46,24 @@ export default function LoginPage() {
       return;
     }
 
-    router.push('/');
-    router.refresh();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('active, approved_at')
+      .eq('id', authData.user.id)
+      .single();
+
+    if (profile && !profile.active) {
+      await supabase.auth.signOut();
+      setError(
+        profile.approved_at
+          ? 'Seu acesso foi bloqueado. Fale com o professor.'
+          : 'Cadastro recebido! Aguarde o professor liberar seu acesso.'
+      );
+      setLoading(false);
+      return;
+    }
+
+    window.location.href = '/';
   }
 
   return (
@@ -52,10 +76,9 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="mb-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          <p className="font-semibold">Modo demonstração</p>
-          <p className="mt-1">Admin: <strong>admin</strong> / senha: <strong>admin</strong></p>
-          <p>Aluno: <strong>aluno</strong> / senha: <strong>aluno</strong></p>
+        <div className="mb-6 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-700">
+          <p>O cadastro é só por <strong>link de convite</strong> do professor.</p>
+          <p className="mt-1 text-xs text-slate-500">Professor: use seu login habitual (admin).</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,7 +113,11 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+            <p className={`rounded-lg px-3 py-2 text-sm ${
+              error.includes('Aguarde') ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'
+            }`}>
+              {error}
+            </p>
           )}
 
           <button
@@ -101,6 +128,10 @@ export default function LoginPage() {
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-xs text-slate-500">
+          Recebeu um convite? Abra o link enviado pelo professor para criar sua conta.
+        </p>
       </div>
     </div>
   );

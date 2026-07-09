@@ -23,7 +23,8 @@ export default async function AdminDashboard() {
   const topStudent = [...students].sort((a, b) => b.pontuacao - a.pontuacao)[0];
 
   const menu = [
-    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/10 cadastrados` },
+    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/10 — liberar convites` },
+    { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
     { href: '/admin/questoes', label: 'Banco de questões', desc: `${questionCount ?? 0} questões` },
     { href: '/admin/provas', label: 'Provas', desc: `${examCount ?? 0} provas criadas` },
     { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },

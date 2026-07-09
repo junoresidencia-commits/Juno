@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import type { Profile, UserRole } from '@/types/database';
+import { findDemoStudentByEmail } from '@/lib/demo-store';
 
 const COOKIE_NAME = 'medrank_demo_session';
 
@@ -9,29 +10,22 @@ export interface DemoUser {
   name: string;
   role: UserRole;
   password: string;
+  active?: boolean;
 }
 
-export const DEMO_USERS: DemoUser[] = [
-  {
-    id: 'demo-admin-001',
-    email: 'admin@medrank.com',
-    name: 'Professor Admin',
-    role: 'admin',
-    password: 'admin',
-  },
-  {
-    id: 'demo-student-001',
-    email: 'aluno@medrank.com',
-    name: 'Aluno Demo',
-    role: 'student',
-    password: 'aluno',
-  },
-];
+const DEMO_ADMIN: DemoUser = {
+  id: 'demo-admin-001',
+  email: 'admin@medrank.com',
+  name: 'Professor Admin',
+  role: 'admin',
+  password: 'admin',
+  active: true,
+};
 
 export function isDemoMode(): boolean {
   if (process.env.DEMO_MODE === 'true') return true;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  return url.includes('seu-projeto') || url.includes('sua-anon-key') || !url.startsWith('https://');
+  return url.includes('seu-projeto.supabase.co');
 }
 
 function getSecret(): string {
@@ -41,20 +35,38 @@ function getSecret(): string {
 export function normalizeDemoEmail(input: string): string {
   const value = input.trim().toLowerCase();
   if (value === 'admin') return 'admin@medrank.com';
-  if (value === 'aluno') return 'aluno@medrank.com';
   return value;
 }
 
 export function verifyDemoCredentials(email: string, password: string): DemoUser | null {
   const normalized = normalizeDemoEmail(email);
-  const user = DEMO_USERS.find((u) => u.email === normalized);
-  if (!user || user.password !== password) return null;
-  return user;
+
+  if (normalized === DEMO_ADMIN.email && password === DEMO_ADMIN.password) {
+    return DEMO_ADMIN;
+  }
+
+  const student = findDemoStudentByEmail(normalized);
+  if (!student || student.password !== password) return null;
+
+  return {
+    id: student.id,
+    email: student.email,
+    name: student.name,
+    role: 'student',
+    password: student.password,
+    active: student.active,
+  };
 }
 
 export function signDemoSession(user: DemoUser): string {
   const payload = Buffer.from(
-    JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role })
+    JSON.stringify({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      active: user.active !== false,
+    })
   ).toString('base64url');
   const sig = createHmac('sha256', getSecret()).update(payload).digest('base64url');
   return `${payload}.${sig}`;
@@ -81,13 +93,17 @@ export function parseDemoSession(token: string | undefined): Profile | null {
       email: string;
       name: string;
       role: UserRole;
+      active?: boolean;
     };
+
+    if (data.role === 'student' && data.active === false) return null;
+
     return {
       id: data.id,
       email: data.email,
       name: data.name,
       role: data.role,
-      active: true,
+      active: data.active !== false,
       created_at: new Date().toISOString(),
     };
   } catch {
