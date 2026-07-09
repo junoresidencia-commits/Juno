@@ -101,7 +101,7 @@ export function demoCookieName(): string {
 
 export const demoCookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: true,
   sameSite: 'lax' as const,
   path: '/',
   maxAge: 60 * 60 * 24 * 7,

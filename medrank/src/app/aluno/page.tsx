@@ -1,22 +1,18 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getSessionProfile } from '@/lib/auth';
 import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
 import { WeeklyChallengesCard } from '@/components/aluno/WeeklyChallengesCard';
 
 export default async function AlunoDashboard() {
+  const session = await getSessionProfile();
+  if (!session) redirect('/login');
+  if (!session.profile.active) redirect('/login?blocked=1');
+
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('name, active')
-    .eq('id', user!.id)
-    .single();
-
-  if (profile && !profile.active) {
-    redirect('/login?blocked=1');
-  }
+  const userId = session.userId;
+  const profile = session.profile;
 
   const today = new Date().toISOString().split('T')[0];
   const { data: todayExam } = await supabase
@@ -31,7 +27,7 @@ export default async function AlunoDashboard() {
         .from('attempts')
         .select('id, finished_at')
         .eq('exam_id', todayExam.id)
-        .eq('user_id', user!.id)
+        .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
 
@@ -46,10 +42,10 @@ export default async function AlunoDashboard() {
   const { data: streak } = await supabase
     .from('user_streaks')
     .select('current_streak')
-    .eq('user_id', user!.id)
+    .eq('user_id', userId)
     .maybeSingle();
 
-  const challenges = await fetchUserChallengeProgress(supabase, user!.id);
+  const challenges = await fetchUserChallengeProgress(supabase, userId);
 
   const canStart = todayExam && !attempt;
   const inProgress = todayExam && attempt && !attempt.finished_at;
@@ -60,7 +56,7 @@ export default async function AlunoDashboard() {
       <header className="mb-8 flex items-center justify-between">
         <div>
           <p className="text-sm text-slate-500">Bem-vindo(a)</p>
-          <h1 className="text-2xl font-bold">{profile?.name ?? 'Aluno'}</h1>
+          <h1 className="text-2xl font-bold">{profile.name ?? 'Aluno'}</h1>
           {streak && streak.current_streak > 0 && (
             <p className="text-sm text-orange-600">🔥 {streak.current_streak} dias seguidos estudando</p>
           )}

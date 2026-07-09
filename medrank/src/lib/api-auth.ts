@@ -1,7 +1,20 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { demoCookieName, isDemoMode, parseDemoSession } from '@/lib/demo-auth';
 
 export async function requireAdminApi() {
+  if (isDemoMode()) {
+    const cookieStore = await cookies();
+    const demoProfile = parseDemoSession(cookieStore.get(demoCookieName())?.value);
+    if (demoProfile?.role === 'admin') {
+      return { supabase: await createClient(), demo: true as const };
+    }
+    if (demoProfile) {
+      return { error: NextResponse.json({ error: 'Acesso negado' }, { status: 403 }) };
+    }
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -19,5 +32,5 @@ export async function requireAdminApi() {
     return { error: NextResponse.json({ error: 'Acesso negado' }, { status: 403 }) };
   }
 
-  return { supabase };
+  return { supabase, demo: false as const };
 }
