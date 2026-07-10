@@ -39,7 +39,7 @@ export default async function AlunoDashboard() {
                 {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
               </p>
               <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                Preparatório diário ENARE/USP por 5 meses. Provas autorais em estilo de residência.
+                Preparatório diário ENARE/USP por 5 meses. Questões reais de provas passadas.
               </p>
               <div className="mt-4">
                 {canStart && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}

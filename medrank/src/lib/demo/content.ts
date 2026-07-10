@@ -10,6 +10,8 @@ import type {
 } from '@/types/database';
 import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
+import { getImportedQuestions } from '@/lib/demo/imported-questions';
+import { getDemoCustomQuestions } from '@/lib/demo-store';
 
 const LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D', 'E'];
 const SOURCES = ['ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS'] as const;
@@ -76,6 +78,13 @@ function letterAt(index: number): OptionLetter {
 }
 
 export function getDemoQuestions(): Question[] {
+  const imported = getImportedQuestions();
+  const custom = getDemoCustomQuestions();
+
+  if (imported.length > 0 || custom.length > 0) {
+    return [...imported, ...custom];
+  }
+
   const questions: Question[] = [];
   let idCounter = 1;
 
@@ -122,7 +131,7 @@ export function getDemoExams(): Exam[] {
     const date = shiftDays(start, day);
     exams.push({
       id: `demo-exam-${day + 1}`,
-      title: `Prova Diária ${day + 1} — Preparatório ENARE/USP`,
+      title: `Prova Diária ${day + 1} — ENARE/USP`,
       date_available: dateString(date),
       duration_minutes: 30,
       total_questions: 20 + (day % 3) * 5,

@@ -14,7 +14,7 @@ export default async function AdminDashboard() {
     const menu = [
       { href: '/admin/alunos', label: 'Alunos', desc: '0/10 — liberar convites' },
       { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
-      { href: '/admin/questoes', label: 'Banco de questões', desc: `${demo.questionCount} questões autorais` },
+      { href: '/admin/questoes', label: 'Banco de questões', desc: `${demo.questionCount} questões ENARE reais` },
       { href: '/admin/provas', label: 'Provas', desc: `${demo.examCount} provas diárias (5 meses)` },
       { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },
       { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
@@ -25,7 +25,7 @@ export default async function AdminDashboard() {
       <div className="mx-auto w-full max-w-5xl px-4 py-8">
         <header className="mb-8">
           <h1 className="text-2xl font-bold">Painel do Professor</h1>
-          <p className="text-sm text-slate-600">Preparatório ENARE/USP com 5 meses de provas diárias já montadas.</p>
+          <p className="text-sm text-slate-600">Preparatório ENARE/USP com 5 meses de provas e questões reais importadas.</p>
         </header>
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Alunos ativos</p><p className="text-3xl font-bold text-emerald-700">0</p></div>

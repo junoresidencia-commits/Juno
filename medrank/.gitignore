@@ -41,5 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# demo store (cadastros locais)
-/data/
+# demo store local (cadastros/tentativas) e PDFs fonte — manter imported-questions.json
+/data/demo-store.json
+/data/source/
