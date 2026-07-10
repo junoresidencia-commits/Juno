@@ -41,13 +41,13 @@ export function RankingPreviewList({
   return (
     <ol className="space-y-2">
       {rankings.map((r) => (
-        <li key={r.id} className="flex justify-between text-sm">
+        <li key={r.id} className="flex justify-between text-sm text-slate-800">
           <span>
             {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
             {' '}{r.profiles?.name ?? 'Aluno'}
             {userId && r.user_id === userId ? ' (você)' : ''}
           </span>
-          <span className="font-medium">{r.total_score} pts</span>
+          <span className="font-medium text-slate-900">{r.total_score} pts</span>
         </li>
       ))}
     </ol>
