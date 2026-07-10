@@ -14,7 +14,7 @@ export default async function AlunoDashboard() {
 
   if (isSkipAuth()) {
     const { userId } = session;
-    const { todayExam, attempt, streak, challenges } = getDemoDashboardData(userId);
+    const { todayExam, attempt, rankings, streak, challenges } = getDemoDashboardData(userId);
     const canStart = todayExam && !attempt;
     const inProgress = todayExam && attempt && !attempt.finished_at;
     const completed = todayExam && attempt?.finished_at;
@@ -53,16 +53,37 @@ export default async function AlunoDashboard() {
           )}
         </section>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-lg font-semibold">Prática e desempenho</h2>
-          <div className="mt-4 space-y-2 text-sm">
-            <Link href="/aluno/simulados" className="block font-medium text-emerald-700 hover:underline">Simulados aleatórios (20 questões) →</Link>
-            <Link href="/aluno/banco" className="block text-emerald-700 hover:underline">Banco de questões →</Link>
-            <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">Histórico de provas →</Link>
-            <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">Desempenho por tema →</Link>
-            <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">Desafios e gamificação →</Link>
-          </div>
-        </section>
+        <div className="grid gap-6 md:grid-cols-2">
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 className="text-lg font-semibold">Ranking de hoje</h2>
+            <ol className="mt-4 space-y-2">
+              {rankings.map((r) => (
+                <li key={r.id} className="flex justify-between text-sm">
+                  <span>
+                    {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
+                    {' '}{(r as { profiles?: { name?: string } }).profiles?.name ?? 'Aluno'}
+                    {r.user_id === userId ? ' (você)' : ''}
+                  </span>
+                  <span className="font-medium">{r.total_score} pts</span>
+                </li>
+              ))}
+            </ol>
+            <Link href="/aluno/ranking" className="mt-4 block text-sm text-emerald-700 hover:underline">
+              Ver ranking completo →
+            </Link>
+          </section>
+
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 className="text-lg font-semibold">Prática e desempenho</h2>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/aluno/simulados" className="block font-medium text-emerald-700 hover:underline">Simulados aleatórios (20 questões) →</Link>
+              <Link href="/aluno/banco" className="block text-emerald-700 hover:underline">Banco de questões →</Link>
+              <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">Histórico de provas →</Link>
+              <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">Desempenho por tema →</Link>
+              <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">Desafios e gamificação →</Link>
+            </div>
+          </section>
+        </div>
       </div>
     );
   }
@@ -87,6 +108,14 @@ export default async function AlunoDashboard() {
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
+
+  const { data: rankings } = await supabase
+    .from('rankings')
+    .select('position, total_score, user_id, profiles(name)')
+    .eq('period_type', 'daily')
+    .eq('period_start', today)
+    .order('position', { ascending: true })
+    .limit(15);
 
   const { data: streak } = await supabase
     .from('user_streaks')
@@ -162,20 +191,52 @@ export default async function AlunoDashboard() {
         )}
       </section>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold">Prática e desempenho</h2>
-        <div className="mt-4 space-y-2 text-sm">
-          <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">
-            Histórico de provas →
+      <div className="grid gap-6 md:grid-cols-2">
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold">Ranking de hoje</h2>
+          <ol className="mt-4 space-y-2">
+            {(rankings ?? []).length === 0 ? (
+              <li className="text-sm text-slate-500">Sem dados ainda.</li>
+            ) : (
+              rankings!.map((r) => {
+                const profileData = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
+                const name = (profileData as { name?: string } | null)?.name ?? 'Aluno';
+                const isMe = r.user_id === userId;
+                return (
+                  <li key={r.position} className="flex justify-between text-sm">
+                    <span>
+                      {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
+                      {' '}{name}{isMe ? ' (você)' : ''}
+                    </span>
+                    <span className="font-medium">{r.total_score} pts</span>
+                  </li>
+                );
+              })
+            )}
+          </ol>
+          <Link href="/aluno/ranking" className="mt-4 block text-sm text-emerald-700 hover:underline">
+            Ver ranking completo →
           </Link>
-          <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">
-            Desempenho por tema →
-          </Link>
-          <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">
-            Desafios e gamificação →
-          </Link>
-        </div>
-      </section>
+        </section>
+
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold">Prática e desempenho</h2>
+          <div className="mt-4 space-y-2 text-sm">
+            <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">
+              Histórico de provas →
+            </Link>
+            <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">
+              Desempenho por tema →
+            </Link>
+            <Link href="/aluno/ranking" className="block text-emerald-700 hover:underline">
+              Ranking geral →
+            </Link>
+            <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">
+              Desafios e gamificação →
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
