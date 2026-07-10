@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
 import { ensureDemoSeedUsers } from '@/lib/demo/seed-users';
+import { forfeitAbandonedDemoAttempt } from '@/lib/demo/runtime';
 import { mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { AlunoHomeSimple } from '@/components/aluno/AlunoHomeSimple';
 import {
@@ -20,11 +21,20 @@ export default async function AlunoDashboard() {
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
     const { userId } = session;
-    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate } =
+    let { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate } =
       getDemoDashboardData(userId);
+
+    if (todayExam && attempt && !attempt.finished_at) {
+      forfeitAbandonedDemoAttempt(todayExam.id, userId);
+      const refreshed = getDemoDashboardData(userId);
+      attempt = refreshed.attempt;
+      todayRankings = refreshed.todayRankings;
+      showRanking = refreshed.showRanking;
+    }
+
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-    const inProgress = Boolean(todayExam && attempt && !attempt.finished_at && windowPhase !== 'after');
     const completed = Boolean(todayExam && attempt?.finished_at);
+    const forfeitedToday = Boolean(todayExam && attempt?.finished_at && attempt.forfeited);
     const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
 
     return (
@@ -34,15 +44,14 @@ export default async function AlunoDashboard() {
         todayExam={todayExam}
         windowPhase={windowPhase}
         canStart={canStart}
-        inProgress={inProgress}
         completed={completed}
+        forfeitedToday={forfeitedToday}
         missedToday={missedToday}
         attemptId={attempt?.id}
         showRanking={showRanking}
         todayRankings={todayRankings}
         rankingDate={rankingDate}
         showLogout
-        demoMode={usesDemoStore()}
       />
     );
   }
@@ -62,13 +71,31 @@ export default async function AlunoDashboard() {
   const { data: attempt } = todayExam
     ? await supabase
         .from('attempts')
-        .select('id, finished_at')
+        .select('id, finished_at, submitted_automatically')
         .eq('exam_id', todayExam.id)
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
 
-  const hasFinished = Boolean(attempt?.finished_at);
+  if (attempt && !attempt.finished_at) {
+    await supabase.rpc('submit_attempt', {
+      p_attempt_id: attempt.id,
+      p_auto: true,
+    });
+  }
+
+  const forfeitedOnLoad = Boolean(attempt && !attempt.finished_at);
+
+  const { data: finalAttempt } = todayExam
+    ? await supabase
+        .from('attempts')
+        .select('id, finished_at, submitted_automatically')
+        .eq('exam_id', todayExam.id)
+        .eq('user_id', userId)
+        .maybeSingle()
+    : { data: null };
+
+  const hasFinished = Boolean(finalAttempt?.finished_at);
   const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
   const rankingDate = getTodayRankingDate();
 
@@ -83,10 +110,10 @@ export default async function AlunoDashboard() {
     : { data: null };
 
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
-  const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-  const inProgress = Boolean(todayExam && attempt && !attempt.finished_at && windowPhase !== 'after');
-  const completed = Boolean(todayExam && attempt?.finished_at);
-  const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
+  const canStart = Boolean(todayExam && windowPhase === 'open' && !finalAttempt);
+  const completed = Boolean(todayExam && finalAttempt?.finished_at);
+  const forfeitedToday = forfeitedOnLoad;
+  const missedToday = Boolean(todayExam && windowPhase === 'after' && !finalAttempt?.finished_at);
 
   return (
     <AlunoHomeSimple
@@ -95,10 +122,10 @@ export default async function AlunoDashboard() {
       todayExam={todayExam}
       windowPhase={windowPhase}
       canStart={canStart}
-      inProgress={inProgress}
       completed={completed}
+      forfeitedToday={forfeitedToday}
       missedToday={missedToday}
-      attemptId={attempt?.id}
+      attemptId={finalAttempt?.id}
       showRanking={showRanking}
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}

@@ -2,12 +2,12 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
-import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
+import { canStartExam } from '@/lib/exams/release';
 import { formatExamWindowLabel } from '@/lib/exams/window';
 import { ExamRunner } from '@/components/exam/ExamRunner';
 import type { OptionLetter, Question } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
-import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers, submitDemoAttempt } from '@/lib/demo/runtime';
+import { createDemoAttempt, forfeitDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
 
 export default async function ProvaPage({
@@ -27,22 +27,16 @@ export default async function ProvaPage({
       redirect(`/aluno/resultado/${attempt.id}`);
     }
 
-    const windowPhase = getExamWindowStatus(exam);
-
-    if (!attempt) {
-      if (!canStartExam(exam)) redirect('/aluno');
-      attempt = createDemoAttempt(examId, userId);
-    } else if (windowPhase === 'after' && getEffectiveExamRemainingSeconds(attempt.started_at, exam.duration_minutes) <= 0) {
-      const submitted = submitDemoAttempt(attempt.id, true);
-      redirect(`/aluno/resultado/${submitted.id}`);
+    if (attempt && !attempt.finished_at) {
+      forfeitDemoAttempt(attempt.id);
+      redirect('/aluno');
     }
+
+    if (!canStartExam(exam)) redirect('/aluno');
+    attempt = createDemoAttempt(examId, userId);
 
     const questions = getDemoExamQuestions(examId);
-    const savedAnswers = getDemoAttemptAnswers(attempt.id);
     const initialAnswers: Record<string, OptionLetter> = {};
-    for (const a of savedAnswers) {
-      if (a.selected_option) initialAnswers[a.question_id] = a.selected_option;
-    }
 
     return (
       <div>
@@ -83,27 +77,31 @@ export default async function ProvaPage({
     redirect(`/aluno/resultado/${attempt.id}`);
   }
 
-  if (!attempt) {
-    if (!canStartExam(exam)) redirect('/aluno');
+  if (attempt && !attempt.finished_at) {
+    await supabase.rpc('submit_attempt', {
+      p_attempt_id: attempt.id,
+      p_auto: true,
+    });
+    redirect('/aluno');
   }
 
-  if (!attempt) {
-    const { data: newAttempt, error } = await supabase
-      .from('attempts')
-      .insert({
-        exam_id: examId,
-        user_id: userId,
-        total_questions: exam.total_questions,
-      })
-      .select()
-      .single();
+  if (!canStartExam(exam)) redirect('/aluno');
 
-    if (error || !newAttempt) redirect('/aluno');
-    attempt = newAttempt;
-  }
+  const { data: newAttempt, error } = await supabase
+    .from('attempts')
+    .insert({
+      exam_id: examId,
+      user_id: userId,
+      total_questions: exam.total_questions,
+    })
+    .select()
+    .single();
+
+  if (error || !newAttempt) redirect('/aluno');
+  attempt = newAttempt;
 
   const remaining = getEffectiveExamRemainingSeconds(attempt.started_at, exam.duration_minutes);
-  if (remaining <= 0 && !attempt.finished_at) {
+  if (remaining <= 0) {
     await supabase.rpc('submit_attempt', {
       p_attempt_id: attempt.id,
       p_auto: true,
@@ -124,17 +122,7 @@ export default async function ProvaPage({
     })
     .filter((q) => q.id);
 
-  const { data: savedAnswers } = await supabase
-    .from('attempt_answers')
-    .select('question_id, selected_option')
-    .eq('attempt_id', attempt.id);
-
   const initialAnswers: Record<string, OptionLetter> = {};
-  for (const a of savedAnswers ?? []) {
-    if (a.selected_option) {
-      initialAnswers[a.question_id] = a.selected_option as OptionLetter;
-    }
-  }
 
   return (
     <div>

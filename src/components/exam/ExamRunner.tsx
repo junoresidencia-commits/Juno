@@ -57,6 +57,7 @@ export function ExamRunner({
 
   const questionStartedAt = useRef(Date.now());
   const advancingRef = useRef(false);
+  const finishedRef = useRef(false);
   const answersRef = useRef(answers);
   const currentIndexRef = useRef(currentIndex);
   const submittingRef = useRef(submitting);
@@ -77,6 +78,7 @@ export function ExamRunner({
       });
       const data = await res.json();
       if (res.ok) {
+        finishedRef.current = true;
         router.push(resultPath ?? `/aluno/resultado/${attemptId}`);
         router.refresh();
       } else {
@@ -170,13 +172,26 @@ export function ExamRunner({
     const nextUnanswered = questions.findIndex((q, i) => i > currentIndex && !answersRef.current[q.id]);
     if (nextUnanswered !== -1) {
       setCurrentIndex(nextUnanswered);
-      return;
     }
-    const allDone = questions.every((q) => answersRef.current[q.id]);
-    if (allDone) {
-      submitExam(true);
+  }, [currentIndex, questions]);
+
+  // Se sair sem terminar, perde a prova inteira (só ao fechar/sair da página)
+  useEffect(() => {
+    const forfeitUrl = `${apiBase}/${attemptId}/forfeit`;
+
+    function forfeitIfNeeded() {
+      if (finishedRef.current || submittingRef.current) return;
+      const payload = new Blob([JSON.stringify({})], { type: 'application/json' });
+      if (typeof navigator.sendBeacon === 'function') {
+        navigator.sendBeacon(forfeitUrl, payload);
+      } else {
+        void fetch(forfeitUrl, { method: 'POST', keepalive: true });
+      }
     }
-  }, [currentIndex, questions, submitExam]);
+
+    window.addEventListener('pagehide', forfeitIfNeeded);
+    return () => window.removeEventListener('pagehide', forfeitIfNeeded);
+  }, [apiBase, attemptId]);
 
   // Cronômetro único — mais confiável no Safari/iOS que vários setIntervals
   useEffect(() => {
