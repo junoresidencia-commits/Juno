@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { formatDateBR } from '@/lib/format';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoExams } from '@/lib/demo/content';
-import { getTodaysExam, todayDateString } from '@/lib/exams/release';
+import { getTodaysExam, todayDateString, formatExamWindowShort } from '@/lib/exams/release';
 import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 
 export default async function ProvasPage() {
@@ -22,7 +22,7 @@ export default async function ProvasPage() {
             <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
             <h1 className="mt-2 text-2xl font-bold">Provas</h1>
             <p className="mt-1 text-sm text-slate-600">
-              Uma prova por dia, já publicada. Quem não faz no dia perde os pontos.
+              Uma prova por dia, publicada automaticamente · {formatExamWindowShort()} (horário de Brasília)
             </p>
           </div>
           <Link
@@ -38,7 +38,7 @@ export default async function ProvasPage() {
             <h2 className="text-lg font-semibold text-emerald-900">Prova de hoje</h2>
             <p className="mt-1 font-medium">{todayExam.title}</p>
             <p className="mt-2 text-sm text-emerald-800">
-              {formatDateBR(todayExam.date_available)} · {todayExam.total_questions} questões · {todayExam.duration_minutes} min
+              {formatDateBR(todayExam.date_available)} · {todayExam.total_questions} questões · {todayExam.duration_minutes} min · {formatExamWindowShort()}
             </p>
             <p className="mt-2 text-sm text-emerald-700">
               {finishedCount}/{activeStudents} alunos finalizaram hoje
@@ -86,7 +86,7 @@ export default async function ProvasPage() {
     .select('*')
     .order('date_available', { ascending: false });
 
-  const todayExam = getTodaysExam(exams ?? [], today);
+  const todayExam = getTodaysExam(exams ?? []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">

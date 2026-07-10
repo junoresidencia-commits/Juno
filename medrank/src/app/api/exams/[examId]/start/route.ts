@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { createDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
-import { isExamOpen } from '@/lib/exams/release';
+import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
 
 export async function POST(
   _request: Request,
@@ -13,8 +13,8 @@ export async function POST(
 
   if (isSkipAuth()) {
     const exam = getDemoExams().find((item) => item.id === examId);
-    if (!exam || !isExamOpen(exam)) {
-      return NextResponse.json({ error: 'Prova não disponível' }, { status: 404 });
+    if (!exam || !canStartExam(exam)) {
+      return NextResponse.json({ error: 'Prova não disponível neste horário (7h–22h)' }, { status: 404 });
     }
     const existing = getDemoAttemptByExam(examId);
     if (existing?.finished_at) {
@@ -41,9 +41,13 @@ export async function POST(
     return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  if (exam.date_available !== today) {
-    return NextResponse.json({ error: 'Prova não disponível hoje' }, { status: 404 });
+  if (!canStartExam(exam)) {
+    const phase = getExamWindowStatus(exam);
+    const message =
+      phase === 'before'
+        ? 'A prova abre às 7h (horário de Brasília)'
+        : 'O prazo de hoje encerrou às 22h. Você perdeu os pontos do dia.';
+    return NextResponse.json({ error: message }, { status: 403 });
   }
 
   const { data: existing } = await supabase

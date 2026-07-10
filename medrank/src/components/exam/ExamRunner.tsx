@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Question, OptionLetter } from '@/types/database';
-import { getRemainingSeconds } from '@/lib/utils';
+import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import { formatDuration } from '@/lib/format';
 
 interface ExamQuestion extends Question {
@@ -36,7 +36,7 @@ export function ExamRunner({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, OptionLetter>>(initialAnswers);
   const [remaining, setRemaining] = useState(() =>
-    getRemainingSeconds(startedAt, durationMinutes)
+    getEffectiveExamRemainingSeconds(startedAt, durationMinutes)
   );
   const [submitting, setSubmitting] = useState(false);
 
@@ -65,7 +65,7 @@ export function ExamRunner({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const secs = getRemainingSeconds(startedAt, durationMinutes);
+      const secs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
       setRemaining(secs);
       if (secs <= 0) {
         clearInterval(interval);
