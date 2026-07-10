@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isDemoMode } from '@/lib/demo-auth';
-import { approveDemoStudent, readDemoStore, writeDemoStore } from '@/lib/demo-store';
+import { approveDemoStudent, readDemoStore, writeDemoStore, MAX_STUDENTS } from '@/lib/demo-store';
 import { requireAdminApi } from '@/lib/api-auth';
 
 export async function PATCH(
@@ -38,8 +38,8 @@ export async function PATCH(
 
     if (action === 'unblock') {
       const activeCount = store.students.filter((s) => s.active && s.id !== id).length;
-      if (activeCount >= 10) {
-        return NextResponse.json({ error: 'Limite de 10 alunos ativos' }, { status: 400 });
+      if (activeCount >= MAX_STUDENTS) {
+        return NextResponse.json({ error: `Limite de ${MAX_STUDENTS} alunos ativos` }, { status: 400 });
       }
       student.active = true;
       writeDemoStore(store);

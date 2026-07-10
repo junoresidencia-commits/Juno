@@ -6,6 +6,7 @@ import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
 import { WeeklyChallengesCard } from '@/components/aluno/WeeklyChallengesCard';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
+import { formatReleaseWindow } from '@/lib/exams/release';
 
 export default async function AlunoDashboard() {
   const session = await getSessionProfile();
@@ -13,10 +14,11 @@ export default async function AlunoDashboard() {
   if (!session.profile.active) redirect('/login?blocked=1');
 
   if (isSkipAuth()) {
-    const { todayExam, attempt, rankings, streak, challenges } = getDemoDashboardData();
-    const canStart = todayExam && !attempt;
-    const inProgress = todayExam && attempt && !attempt.finished_at;
-    const completed = todayExam && attempt?.finished_at;
+    const { userId } = session;
+    const { activeExam, attempt, streak, challenges } = getDemoDashboardData(userId);
+    const canStart = activeExam && !attempt;
+    const inProgress = activeExam && attempt && !attempt.finished_at;
+    const completed = activeExam && attempt?.finished_at;
 
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-8">
@@ -32,51 +34,39 @@ export default async function AlunoDashboard() {
 
         <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <h2 className="text-lg font-semibold">Prova do dia</h2>
-          {todayExam ? (
+          {activeExam ? (
             <div className="mt-4">
-              <p className="font-medium">{todayExam.title}</p>
+              <p className="font-medium">{activeExam.title}</p>
               <p className="mt-1 text-sm text-slate-600">
-                {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
+                {activeExam.total_questions} questões · {activeExam.duration_minutes} minutos
+              </p>
+              <p className="mt-2 text-sm text-slate-500">
+                Prazo: {formatReleaseWindow(activeExam)}
               </p>
               <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                Preparatório diário ENARE/USP por 5 meses. Questões reais de provas passadas.
+                Mesma prova para todos. Ao terminar, você vê sua nota e o gabarito comentado.
               </p>
               <div className="mt-4">
-                {canStart && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}
-                {inProgress && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Continuar prova</Link>}
+                {canStart && <Link href={`/aluno/prova/${activeExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}
+                {inProgress && <Link href={`/aluno/prova/${activeExam.id}`} className="inline-block rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Continuar prova</Link>}
                 {completed && <Link href={`/aluno/resultado/${attempt!.id}`} className="inline-block rounded-lg bg-slate-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">Ver resultado</Link>}
               </div>
             </div>
           ) : (
-            <p className="mt-4 text-slate-600">Nenhuma prova liberada para hoje.</p>
+            <p className="mt-4 text-slate-600">Aguardando o professor liberar a prova.</p>
           )}
         </section>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 className="text-lg font-semibold">Ranking de hoje</h2>
-            <ol className="mt-4 space-y-2">
-              {rankings.map((r) => (
-                <li key={r.id} className="flex justify-between text-sm">
-                  <span>{r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`} {r.user_id === 'guest-student' ? 'Você' : ['Larissa', 'Mateus', 'Helena', 'Daniel'][Math.max(0, (r.position ?? 1) - 1)]}</span>
-                  <span className="font-medium">{r.total_score} pts</span>
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 className="text-lg font-semibold">Desempenho</h2>
-            <div className="mt-4 space-y-2 text-sm">
-              <Link href="/aluno/simulados" className="block font-medium text-emerald-700 hover:underline">Simulados aleatórios (20 questões) →</Link>
-              <Link href="/aluno/banco" className="block text-emerald-700 hover:underline">Banco de questões →</Link>
-              <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">Histórico de provas →</Link>
-              <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">Desempenho por tema →</Link>
-              <Link href="/aluno/ranking" className="block text-emerald-700 hover:underline">Ranking geral →</Link>
-              <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">Desafios e gamificação →</Link>
-            </div>
-          </section>
-        </div>
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold">Prática e desempenho</h2>
+          <div className="mt-4 space-y-2 text-sm">
+            <Link href="/aluno/simulados" className="block font-medium text-emerald-700 hover:underline">Simulados aleatórios (20 questões) →</Link>
+            <Link href="/aluno/banco" className="block text-emerald-700 hover:underline">Banco de questões →</Link>
+            <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">Histórico de provas →</Link>
+            <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">Desempenho por tema →</Link>
+            <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">Desafios e gamificação →</Link>
+          </div>
+        </section>
       </div>
     );
   }
@@ -86,12 +76,14 @@ export default async function AlunoDashboard() {
   const profile = session.profile;
 
   const today = new Date().toISOString().split('T')[0];
-  const { data: todayExam } = await supabase
+  const { data: publishedExams } = await supabase
     .from('exams')
     .select('*')
-    .eq('date_available', today)
     .eq('status', 'published')
-    .maybeSingle();
+    .lte('date_available', today)
+    .gte('date_closes', today);
+
+  const todayExam = publishedExams?.[0] ?? null;
 
   const { data: attempt } = todayExam
     ? await supabase
@@ -101,14 +93,6 @@ export default async function AlunoDashboard() {
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
-
-  const { data: rankings } = await supabase
-    .from('rankings')
-    .select('position, total_score, profiles(name)')
-    .eq('period_type', 'daily')
-    .eq('period_start', today)
-    .order('position', { ascending: true })
-    .limit(10);
 
   const { data: streak } = await supabase
     .from('user_streaks')
@@ -150,7 +134,7 @@ export default async function AlunoDashboard() {
               {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
             </p>
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              Ao iniciar, você terá {todayExam.duration_minutes} minutos. A prova não poderá ser pausada.
+              Mesma prova para todos. Ao terminar, você vê sua nota e o gabarito comentado.
             </p>
             <div className="mt-4">
               {canStart && (
@@ -180,52 +164,24 @@ export default async function AlunoDashboard() {
             </div>
           </div>
         ) : (
-          <p className="mt-4 text-slate-600">Nenhuma prova liberada para hoje.</p>
+          <p className="mt-4 text-slate-600">Aguardando o professor liberar a prova.</p>
         )}
       </section>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-lg font-semibold">Ranking de hoje</h2>
-          <ol className="mt-4 space-y-2">
-            {(rankings ?? []).length === 0 ? (
-              <li className="text-sm text-slate-500">Sem dados ainda.</li>
-            ) : (
-              rankings!.map((r) => {
-                const profileData = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
-                const name = (profileData as { name?: string } | null)?.name ?? 'Aluno';
-                return (
-                  <li key={r.position} className="flex justify-between text-sm">
-                    <span>
-                      {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
-                      {' '}{name}
-                    </span>
-                    <span className="font-medium">{r.total_score} pts</span>
-                  </li>
-                );
-              })
-            )}
-          </ol>
-        </section>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-lg font-semibold">Desempenho</h2>
-          <div className="mt-4 space-y-2 text-sm">
-            <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">
-              Histórico de provas →
-            </Link>
-            <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">
-              Desempenho por tema →
-            </Link>
-            <Link href="/aluno/ranking" className="block text-emerald-700 hover:underline">
-              Ranking geral →
-            </Link>
-            <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">
-              Desafios e gamificação →
-            </Link>
-          </div>
-        </section>
-      </div>
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <h2 className="text-lg font-semibold">Prática e desempenho</h2>
+        <div className="mt-4 space-y-2 text-sm">
+          <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">
+            Histórico de provas →
+          </Link>
+          <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">
+            Desempenho por tema →
+          </Link>
+          <Link href="/aluno/desafios" className="block text-emerald-700 hover:underline">
+            Desafios e gamificação →
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

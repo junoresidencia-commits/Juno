@@ -11,6 +11,8 @@ import type {
 import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
 import { getQuestionBank } from '@/lib/question-bank/pool';
+import { defaultExamReleaseFields } from '@/lib/exams/release';
+import { getDemoExamOverrides } from '@/lib/demo-store';
 
 const LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D', 'E'];
 const SOURCES = ['ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS'] as const;
@@ -122,22 +124,27 @@ export function getDemoQuestions(): Question[] {
 
 export function getDemoExams(): Exam[] {
   const start = new Date();
+  const overrides = getDemoExamOverrides();
   const exams: Exam[] = [];
 
   for (let day = 0; day < 150; day++) {
     const date = shiftDays(start, day);
-    exams.push({
-      id: `demo-exam-${day + 1}`,
+    const dateStr = dateString(date);
+    const id = `demo-exam-${day + 1}`;
+    const base: Exam = {
+      id,
       title: `Prova Diária ${day + 1} — ENARE/USP`,
-      date_available: dateString(date),
+      date_available: dateStr,
+      ...defaultExamReleaseFields(dateStr),
       duration_minutes: 30,
       total_questions: 20 + (day % 3) * 5,
       show_answers_after_submit: true,
       show_answers_when_all_done: false,
-      status: 'published',
+      status: 'draft',
       selection_mode: day % 5 === 0 ? 'manual' : 'auto',
       created_at: date.toISOString(),
-    });
+    };
+    exams.push({ ...base, ...(overrides[id] ?? {}) });
   }
 
   return exams;

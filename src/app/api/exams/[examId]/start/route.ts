@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { createDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
+import { isExamOpen } from '@/lib/exams/release';
 
 export async function POST(
   _request: Request,
@@ -12,8 +13,8 @@ export async function POST(
 
   if (isSkipAuth()) {
     const exam = getDemoExams().find((item) => item.id === examId);
-    if (!exam) {
-      return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
+    if (!exam || !isExamOpen(exam)) {
+      return NextResponse.json({ error: 'Prova não disponível' }, { status: 404 });
     }
     const existing = getDemoAttemptByExam(examId);
     if (existing?.finished_at) {

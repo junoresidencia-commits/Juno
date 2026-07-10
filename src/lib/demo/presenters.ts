@@ -1,14 +1,36 @@
-import type { Ranking, WeeklyChallenge } from '@/types/database';
-import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenges } from '@/lib/demo/content';
+import type { Ranking } from '@/types/database';
+import { getDemoExams, getDemoQuestions, getDemoWeeklyChallenges } from '@/lib/demo/content';
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptById, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
+import { getActivePublishedExam, formatReleaseWindow, todayDateString } from '@/lib/exams/release';
+import { buildExamRankings, buildPeriodRankings, isRankingVisibleToTeachers, countFinishedAttempts, countActiveStudents } from '@/lib/exams/ranking';
+import { listDemoStudents } from '@/lib/demo-store';
 
-export function getDemoDashboardData() {
-  const today = new Date().toISOString().split('T')[0];
-  const exams = getDemoExams();
-  const todayExam = exams.find((exam) => exam.date_available === today) ?? exams[0];
-  const attempt = todayExam ? getDemoAttemptByExam(todayExam.id) : null;
-  const rankings = getDemoRankings('daily', todayExam?.date_available ?? today);
+const DEMO_NAMES: Record<string, string> = {
+  'guest-student': 'Você',
+  r1: 'Larissa',
+  r2: 'Mateus',
+  r4: 'Helena',
+  r5: 'Daniel',
+};
+
+function studentName(userId: string): string {
+  const student = listDemoStudents().find((s) => s.id === userId);
+  if (student) return student.name;
+  return DEMO_NAMES[userId] ?? 'Aluno';
+}
+
+function withProfileNames(rankings: Ranking[]): (Ranking & { profiles: { name: string } })[] {
+  return rankings.map((ranking) => ({
+    ...ranking,
+    profiles: { name: studentName(ranking.user_id) },
+  }));
+}
+
+export function getDemoDashboardData(userId = 'guest-student') {
+  const today = todayDateString();
+  const activeExam = getActivePublishedExam(getDemoExams(), today);
+  const attempt = activeExam ? getDemoAttemptByExam(activeExam.id, userId) : null;
   const streak = { current_streak: 7 };
   const challenges = getDemoWeeklyChallenges().map((challenge) => ({
     challenge,
@@ -20,11 +42,33 @@ export function getDemoDashboardData() {
     description: challenge.description ?? '',
   }));
 
-  return { todayExam, attempt, rankings, streak, challenges };
+  return { activeExam, attempt, streak, challenges };
+}
+
+export function getDemoAdminExamStatus() {
+  const today = todayDateString();
+  const exams = getDemoExams();
+  const activeExam = getActivePublishedExam(exams, today);
+  const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
+  const finishedCount = activeExam ? countFinishedAttempts(attempts, activeExam.id) : 0;
+  const activeStudents = countActiveStudents();
+  const rankingReady = activeExam ? isRankingVisibleToTeachers(activeExam, attempts, today) : false;
+  const rankings = activeExam && rankingReady
+    ? withProfileNames(buildExamRankings(attempts, activeExam))
+    : [];
+
+  return {
+    activeExam,
+    finishedCount,
+    activeStudents,
+    rankingReady,
+    rankings,
+    windowLabel: activeExam ? formatReleaseWindow(activeExam) : null,
+  };
 }
 
 export function getDemoPerformanceByTopic() {
-  const attempts = getAllDemoAttempts().filter((a) => a.finished_at);
+  const attempts = getAllDemoAttempts().filter((a) => a.finished_at && !a.id.startsWith('seed-'));
   const byTopic: Record<string, { correct: number; total: number }> = {};
 
   for (const attempt of attempts) {
@@ -45,7 +89,7 @@ export function getDemoPerformanceByTopic() {
 export function getDemoHistory() {
   const exams = new Map(getDemoExams().map((e) => [e.id, e]));
   return getAllDemoAttempts()
-    .filter((attempt) => attempt.finished_at)
+    .filter((attempt) => attempt.finished_at && !attempt.id.startsWith('seed-'))
     .map((attempt) => ({
       ...attempt,
       exams: exams.get(attempt.exam_id),
@@ -54,25 +98,20 @@ export function getDemoHistory() {
 }
 
 export function getDemoRanking(period: 'daily' | 'weekly' | 'monthly' | 'general') {
-  const today = new Date();
-  const date = today.toISOString().split('T')[0];
-  const rankings = getDemoRankings(period, date).map((ranking) => ({
-    ...ranking,
-    profiles: { name: ranking.user_id === 'guest-student' ? 'Você' : ({
-      r1: 'Larissa', r2: 'Mateus', r4: 'Helena', r5: 'Daniel',
-    } as Record<string, string>)[ranking.user_id] ?? 'Aluno' },
-  }));
+  const today = todayDateString();
+  const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
+  const rankings = withProfileNames(buildPeriodRankings(attempts, period, today));
   const bounds = {
-    daily: { start: date, end: date },
-    weekly: { start: getWeekStart(today), end: getWeekEnd(today) },
-    monthly: { start: getMonthStart(today), end: getMonthEnd(today) },
-    general: { start: '2026-07-09', end: date },
+    daily: { start: today, end: today, label: 'Hoje' },
+    weekly: { start: getWeekStart(new Date()), end: getWeekEnd(new Date()), label: 'Semana atual' },
+    monthly: { start: getMonthStart(new Date()), end: getMonthEnd(new Date()), label: 'Mês atual' },
+    general: { start: '2026-07-09', end: today, label: 'Geral' },
   }[period];
   return { rankings, bounds };
 }
 
 export function getDemoReportData() {
-  const rankings = getDemoRankings('weekly');
+  const { rankings } = getDemoRanking('weekly');
   return {
     questionCount: getDemoQuestions().length,
     examCount: getDemoExams().length,
@@ -80,4 +119,3 @@ export function getDemoReportData() {
     challenges: getDemoWeeklyChallenges(),
   };
 }
-
