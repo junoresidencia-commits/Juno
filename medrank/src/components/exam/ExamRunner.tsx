@@ -1,9 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
+import {
+  getQuestionTimeLimitSeconds,
+  MIN_READING_SECONDS,
+} from '@/lib/exams/scoring';
 import { formatDuration } from '@/lib/format';
 
 interface ExamQuestion extends Question {
@@ -20,6 +24,8 @@ interface Props {
   resultPath?: string;
   apiBase?: string;
   finishLabel?: string;
+  /** Prova sequencial: uma questão por vez, tempo por questão, sem pular */
+  linearMode?: boolean;
 }
 
 export function ExamRunner({
@@ -31,14 +37,29 @@ export function ExamRunner({
   resultPath,
   apiBase = '/api/attempts',
   finishLabel = 'Finalizar prova',
+  linearMode = true,
 }: Props) {
   const router = useRouter();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const questionLimit = getQuestionTimeLimitSeconds(durationMinutes, questions.length);
+
+  const firstOpenIndex = Math.max(
+    0,
+    questions.findIndex((q) => !initialAnswers[q.id])
+  );
+  const allAnswered = questions.every((q) => initialAnswers[q.id]);
+
+  const [currentIndex, setCurrentIndex] = useState(allAnswered ? questions.length - 1 : firstOpenIndex);
   const [answers, setAnswers] = useState<Record<string, OptionLetter>>(initialAnswers);
   const [remaining, setRemaining] = useState(() =>
     getEffectiveExamRemainingSeconds(startedAt, durationMinutes)
   );
+  const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
+  const [readingRemaining, setReadingRemaining] = useState(MIN_READING_SECONDS);
+  const [locked, setLocked] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const questionStartedAt = useRef(Date.now());
+  const advancingRef = useRef(false);
 
   const submitExam = useCallback(async (auto = false) => {
     if (submitting) return;
@@ -63,6 +84,70 @@ export function ExamRunner({
     }
   }, [attemptId, apiBase, router, resultPath, submitting]);
 
+  const recordAnswer = useCallback(
+    async (questionId: string, option: OptionLetter | null, timeSpentSeconds: number) => {
+      await fetch(`${apiBase}/${attemptId}/answer`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId, selectedOption: option, timeSpentSeconds }),
+      });
+    },
+    [apiBase, attemptId]
+  );
+
+  const goToNext = useCallback(
+    (fromIndex: number) => {
+      if (fromIndex >= questions.length - 1) {
+        submitExam(true);
+        return;
+      }
+      setCurrentIndex(fromIndex + 1);
+    },
+    [questions.length, submitExam]
+  );
+
+  const skipQuestion = useCallback(
+    async (index: number) => {
+      if (advancingRef.current) return;
+      advancingRef.current = true;
+      const question = questions[index];
+      const timeSpent = questionLimit;
+      await recordAnswer(question.id, null, timeSpent);
+      setLocked(true);
+      setTimeout(() => {
+        advancingRef.current = false;
+        goToNext(index);
+      }, 400);
+    },
+    [goToNext, questionLimit, questions, recordAnswer]
+  );
+
+  const selectAnswer = useCallback(
+    async (questionId: string, option: OptionLetter) => {
+      if (locked || advancingRef.current) return;
+      if (answers[questionId]) return;
+
+      const timeSpent = Math.max(1, Math.floor((Date.now() - questionStartedAt.current) / 1000));
+      const newAnswers = { ...answers, [questionId]: option };
+      setAnswers(newAnswers);
+      setLocked(true);
+      advancingRef.current = true;
+
+      await recordAnswer(questionId, option, timeSpent);
+
+      setTimeout(() => {
+        advancingRef.current = false;
+        if (linearMode) {
+          goToNext(currentIndex);
+        } else {
+          setLocked(false);
+        }
+      }, 500);
+    },
+    [answers, currentIndex, goToNext, linearMode, locked, recordAnswer]
+  );
+
+  // Cronômetro total da prova
   useEffect(() => {
     const interval = setInterval(() => {
       const secs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
@@ -75,35 +160,78 @@ export function ExamRunner({
     return () => clearInterval(interval);
   }, [startedAt, durationMinutes, submitExam]);
 
-  async function saveAnswer(questionId: string, option: OptionLetter) {
-    const newAnswers = { ...answers, [questionId]: option };
-    setAnswers(newAnswers);
-    await fetch(`${apiBase}/${attemptId}/answer`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ questionId, selectedOption: option }),
-    });
-  }
+  // Reinicia cronômetro da questão ao mudar de índice
+  useEffect(() => {
+    questionStartedAt.current = Date.now();
+    setQuestionRemaining(questionLimit);
+    setReadingRemaining(MIN_READING_SECONDS);
+    setLocked(Boolean(answers[questions[currentIndex]?.id]));
+  }, [currentIndex, questionLimit, questions, answers]);
+
+  // Cronômetro por questão (modo linear)
+  useEffect(() => {
+    if (!linearMode || locked) return;
+
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
+      const left = Math.max(0, questionLimit - elapsed);
+      setQuestionRemaining(left);
+      setReadingRemaining(Math.max(0, MIN_READING_SECONDS - elapsed));
+
+      if (left <= 0 && !answers[questions[currentIndex]?.id]) {
+        clearInterval(interval);
+        skipQuestion(currentIndex);
+      }
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [answers, currentIndex, linearMode, locked, questionLimit, questions, skipQuestion]);
 
   const current = questions[currentIndex];
   const answeredCount = Object.keys(answers).length;
   const isUrgent = remaining <= 300;
+  const questionUrgent = questionRemaining <= 20;
+  const canSelect = !locked && readingRemaining <= 0;
+  const currentAnswered = Boolean(answers[current.id]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <div className="mb-6 flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        <div>
-          <p className="text-sm text-slate-600">Questão {currentIndex + 1} de {questions.length}</p>
-          <p className="text-xs text-slate-400">{answeredCount} respondidas</p>
+      <div className="mb-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo total</p>
+          <p
+            className={`mt-1 font-mono text-2xl font-bold ${
+              isUrgent ? 'text-red-700' : 'text-emerald-800'
+            }`}
+          >
+            {formatDuration(remaining)}
+          </p>
+          <p className="mt-1 text-xs text-slate-600">
+            Questão {currentIndex + 1} de {questions.length} · {answeredCount} respondidas
+          </p>
         </div>
-        <div
-          className={`rounded-lg px-4 py-2 font-mono text-lg font-bold ${
-            isUrgent ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'
-          }`}
-        >
-          {formatDuration(remaining)}
-        </div>
+        {linearMode && (
+          <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo nesta questão</p>
+            <p
+              className={`mt-1 font-mono text-2xl font-bold ${
+                questionUrgent ? 'text-red-700' : 'text-slate-900'
+              }`}
+            >
+              {formatDuration(questionRemaining)}
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              Máx. {Math.floor(questionLimit / 60)} min por questão · bônus para quem acerta mais rápido
+            </p>
+          </div>
+        )}
       </div>
+
+      {linearMode && readingRemaining > 0 && !currentAnswered && (
+        <div className="mb-4 rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-900 ring-1 ring-blue-100">
+          Leia a questão com atenção. As alternativas liberam em <strong>{readingRemaining}s</strong>.
+        </div>
+      )}
 
       <div className="mb-4 rounded-xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
         {current.topic && (
@@ -122,20 +250,26 @@ export function ExamRunner({
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           const selected = answers[current.id] === letter;
+          const disabled = !canSelect && !selected;
           return (
             <button
               key={letter}
               type="button"
-              onClick={() => saveAnswer(current.id, letter)}
+              disabled={disabled || currentAnswered}
+              onClick={() => selectAnswer(current.id, letter)}
               className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition ${
                 selected
                   ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                  : 'border-slate-200 bg-white hover:border-emerald-300'
+                  : disabled
+                    ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
+                    : 'border-slate-200 bg-white hover:border-emerald-300'
               }`}
             >
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                selected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'
-              }`}>
+              <span
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                  selected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'
+                }`}
+              >
                 {letter}
               </span>
               <span className="text-sm leading-relaxed text-slate-900">{text}</span>
@@ -144,53 +278,62 @@ export function ExamRunner({
         })}
       </div>
 
-      <div className="mb-6 flex flex-wrap gap-2">
-        {questions.map((q, i) => (
-          <button
-            key={q.id}
-            type="button"
-            onClick={() => setCurrentIndex(i)}
-            className={`h-9 w-9 rounded-lg text-sm font-medium ${
-              i === currentIndex
-                ? 'bg-emerald-600 text-white'
-                : answers[q.id]
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-slate-100 text-slate-600'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      {!linearMode && (
+        <>
+          <div className="mb-6 flex flex-wrap gap-2">
+            {questions.map((q, i) => (
+              <button
+                key={q.id}
+                type="button"
+                onClick={() => setCurrentIndex(i)}
+                className={`h-9 w-9 rounded-lg text-sm font-medium ${
+                  i === currentIndex
+                    ? 'bg-emerald-600 text-white'
+                    : answers[q.id]
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-slate-100 text-slate-600'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              disabled={currentIndex === 0}
+              onClick={() => setCurrentIndex((i) => i - 1)}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+            >
+              Anterior
+            </button>
+            <button
+              type="button"
+              disabled={currentIndex === questions.length - 1}
+              onClick={() => setCurrentIndex((i) => i + 1)}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+            >
+              Próxima
+            </button>
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={() => {
+                if (confirm('Deseja finalizar a prova?')) submitExam(false);
+              }}
+              className="ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+            >
+              {submitting ? 'Enviando...' : finishLabel}
+            </button>
+          </div>
+        </>
+      )}
 
-      <div className="flex gap-3">
-        <button
-          type="button"
-          disabled={currentIndex === 0}
-          onClick={() => setCurrentIndex((i) => i - 1)}
-          className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
-        >
-          Anterior
-        </button>
-        <button
-          type="button"
-          disabled={currentIndex === questions.length - 1}
-          onClick={() => setCurrentIndex((i) => i + 1)}
-          className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
-        >
-          Próxima
-        </button>
-        <button
-          type="button"
-          disabled={submitting}
-          onClick={() => {
-            if (confirm('Deseja finalizar a prova?')) submitExam(false);
-          }}
-          className="ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
-        >
-          {submitting ? 'Enviando...' : finishLabel}
-        </button>
-      </div>
+      {linearMode && (
+        <p className="text-center text-xs text-slate-600">
+          Responda para avançar. Sem resposta no tempo = 0 ponto. Acerto rápido (após leitura) vale mais.
+        </p>
+      )}
     </div>
   );
 }

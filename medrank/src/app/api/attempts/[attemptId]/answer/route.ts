@@ -10,13 +10,14 @@ export async function PUT(
 ) {
   const { attemptId } = await params;
   const body = await request.json();
-  const { questionId, selectedOption } = body as {
+  const { questionId, selectedOption, timeSpentSeconds } = body as {
     questionId: string;
     selectedOption: OptionLetter | null;
+    timeSpentSeconds?: number;
   };
 
   if (isSkipAuth()) {
-    const ok = saveDemoAnswer(attemptId, questionId, selectedOption);
+    const ok = saveDemoAnswer(attemptId, questionId, selectedOption, timeSpentSeconds);
     return ok
       ? NextResponse.json({ ok: true })
       : NextResponse.json({ error: 'Tentativa não encontrada' }, { status: 404 });
@@ -53,6 +54,7 @@ export async function PUT(
           question_id: questionId,
           selected_option: selectedOption,
           answered_at: new Date().toISOString(),
+          time_spent_seconds: timeSpentSeconds ?? null,
         },
         { onConflict: 'attempt_id,question_id' }
       );

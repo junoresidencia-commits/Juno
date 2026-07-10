@@ -95,6 +95,7 @@ export interface AttemptAnswer {
   selected_option: OptionLetter | null;
   is_correct: boolean | null;
   answered_at: string | null;
+  time_spent_seconds?: number | null;
 }
 
 export interface Ranking {

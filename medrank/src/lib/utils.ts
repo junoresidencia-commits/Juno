@@ -1,5 +1,18 @@
 import type { ImportQuestionRow } from '@/types/database';
 import { getSecondsUntilWindowClose } from '@/lib/exams/window';
+import {
+  calculateExamScoreFromAnswers,
+  getQuestionTimeLimitSeconds,
+} from '@/lib/exams/scoring';
+
+export {
+  calculateExamScoreFromAnswers,
+  formatRankingScoreExplanation,
+  getQuestionTimeLimitSeconds,
+  MIN_ANSWER_SECONDS,
+  MIN_READING_SECONDS,
+  scoreQuestionAnswer,
+} from '@/lib/exams/scoring';
 
 const DIFFICULTY_MAP: Record<string, 'facil' | 'medio' | 'dificil'> = {
   facil: 'facil',
@@ -48,16 +61,17 @@ export function calculateRankingScore(
   totalQuestions: number,
   durationSeconds: number
 ): number {
-  // Mais acertos = mais pontos; em empate, quem foi mais rápido ganha
-  const accuracyPoints = totalCorrect * 1000;
-  const maxDuration = Math.max(totalQuestions * 90, 60);
-  const clampedDuration = Math.min(Math.max(durationSeconds, 1), maxDuration);
-  const speedPoints = Math.round((1 - clampedDuration / maxDuration) * totalQuestions * 10);
-  return accuracyPoints + speedPoints;
-}
-
-export function formatRankingScoreExplanation(): string {
-  return 'Pontuação: mais acertos valem mais; em empate, quem termina mais rápido ganha.';
+  const questionLimit = getQuestionTimeLimitSeconds(30, totalQuestions);
+  const avgTime = Math.max(1, Math.floor(durationSeconds / Math.max(totalCorrect, 1)));
+  const results = Array.from({ length: totalCorrect }, () => ({
+    isCorrect: true,
+    timeSpentSeconds: Math.min(avgTime, questionLimit),
+  }));
+  const wrong = totalQuestions - totalCorrect;
+  for (let i = 0; i < wrong; i++) {
+    results.push({ isCorrect: false, timeSpentSeconds: questionLimit });
+  }
+  return calculateExamScoreFromAnswers(results, questionLimit);
 }
 
 export function compareRankings(

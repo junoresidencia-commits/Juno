@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import type { Attempt, AttemptAnswer, OptionLetter, Question } from '@/types/database';
 import { getDemoAttempts, saveDemoAttempt } from '@/lib/demo-store';
 import { getDemoExamQuestions, getDemoExams, getDemoRankings, getSeededAttemptAnswers, getSeededAttempts } from '@/lib/demo/content';
-import { calculateRankingScore } from '@/lib/utils';
+import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 
 type StoredAttempt = ReturnType<typeof getDemoAttempts>[number];
 
@@ -64,15 +64,28 @@ export function createDemoAttempt(examId: string, userId = 'guest-student'): Att
   return mapStoredAttempt(attempt);
 }
 
-export function saveDemoAnswer(attemptId: string, questionId: string, option: OptionLetter | null) {
+export function saveDemoAnswer(
+  attemptId: string,
+  questionId: string,
+  option: OptionLetter | null,
+  timeSpentSeconds?: number
+) {
   const attempt = (getDemoAttempts() ?? []).find((item) => item.id === attemptId);
   if (!attempt) return false;
   if (attempt.finishedAt) return false;
 
+  if (!attempt.answerTimes) attempt.answerTimes = {};
+
   if (option) {
     attempt.answers[questionId] = option;
+    if (timeSpentSeconds != null) {
+      attempt.answerTimes[questionId] = timeSpentSeconds;
+    }
   } else {
     delete attempt.answers[questionId];
+    if (timeSpentSeconds != null) {
+      attempt.answerTimes[questionId] = timeSpentSeconds;
+    }
   }
   saveDemoAttempt(attempt);
   return true;
@@ -113,9 +126,19 @@ export function submitDemoAttempt(attemptId: string, auto = false) {
   const totalQuestions = questions.length;
   const startedAt = new Date(attempt.startedAt).getTime();
   const now = Date.now();
-  const durationSeconds = Math.max(60, Math.floor((now - startedAt) / 1000));
+  const durationSeconds = Math.max(1, Math.floor((now - startedAt) / 1000));
   const percentage = Math.round((totalCorrect / totalQuestions) * 1000) / 10;
-  const score = calculateRankingScore(totalCorrect, totalQuestions, durationSeconds);
+  const questionLimit = getQuestionTimeLimitSeconds(
+    getDemoExams().find((e) => e.id === attempt.examId)?.duration_minutes ?? 30,
+    totalQuestions
+  );
+  const scoreResults = questions.map((question) => {
+    const selected = attempt.answers[question.id] as OptionLetter | undefined;
+    const isCorrect = selected === question.correct_option;
+    const timeSpent = attempt.answerTimes?.[question.id] ?? questionLimit;
+    return { isCorrect, timeSpentSeconds: timeSpent };
+  });
+  const score = calculateExamScoreFromAnswers(scoreResults, questionLimit);
 
   attempt.finishedAt = new Date().toISOString();
   attempt.durationSeconds = durationSeconds;

@@ -42,6 +42,7 @@ interface DemoStore {
     percentage: number | null;
     submittedAutomatically: boolean;
     answers: Record<string, string>;
+    answerTimes?: Record<string, number>;
   }[];
   customQuestions?: Question[];
   simulados?: StoredSimulado[];
@@ -66,6 +67,7 @@ export interface StoredSimulado {
   percentage: number | null;
   submittedAutomatically: boolean;
   answers: Record<string, string>;
+  answerTimes?: Record<string, number>;
 }
 
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');

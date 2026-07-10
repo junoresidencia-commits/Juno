@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatDuration, formatPercent } from '@/lib/format';
+import { formatRankingScoreExplanation } from '@/lib/exams/scoring';
 import type { Question, OptionLetter } from '@/types/database';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
@@ -35,6 +36,7 @@ export default async function ResultadoPage({
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
+        <p className="mt-2 text-xs text-slate-600">{formatRankingScoreExplanation()}</p>
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Acertos</p><p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p></div>
           <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Erros</p><p className="text-3xl font-bold text-red-600">{totalWrong}</p></div>
