@@ -60,6 +60,7 @@ export function ExamRunner({
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
   const selectingRef = useRef(false);
+  const pendingRef = useRef<OptionLetter | null>(null);
   const answersRef = useRef(initialAnswers);
   const currentIndexRef = useRef(firstOpenIndex);
   const submittingRef = useRef(false);
@@ -111,11 +112,13 @@ export function ExamRunner({
     if (submittingRef.current) return;
     const question = questions[currentIndexRef.current];
     if (!question || answersRef.current[question.id]) return;
+    pendingRef.current = option;
     setPendingChoice(option);
   };
 
   const handleNext = () => {
-    if (!pendingChoice || selectingRef.current || submittingRef.current) return;
+    const choice = pendingRef.current;
+    if (!choice || selectingRef.current || submittingRef.current) return;
 
     const index = currentIndexRef.current;
     const question = questions[index];
@@ -123,10 +126,11 @@ export function ExamRunner({
 
     selectingRef.current = true;
     const timeSpent = secondsOnQuestion(questionStartedAt.current);
-    const nextAnswers = { ...answersRef.current, [question.id]: pendingChoice };
+    const nextAnswers = { ...answersRef.current, [question.id]: choice };
     answersRef.current = nextAnswers;
     setAnswers(nextAnswers);
-    recordAnswer(question.id, pendingChoice, timeSpent);
+    recordAnswer(question.id, choice, timeSpent);
+    pendingRef.current = null;
     setPendingChoice(null);
 
     if (index >= questions.length - 1) {
@@ -159,6 +163,7 @@ export function ExamRunner({
   useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
+    pendingRef.current = null;
     setPendingChoice(null);
     selectingRef.current = false;
   }, [currentIndex, questionLimit]);
@@ -207,14 +212,7 @@ export function ExamRunner({
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
   return (
-    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-32">
-      {linearMode && canPick && (
-        <div className="mb-4 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm text-amber-950 ring-1 ring-amber-200">
-          <strong>1. Toque na alternativa</strong> · <strong>2. Confirme em Próxima questão</strong>
-          <br />
-          O tempo é marcado ao confirmar.
-        </div>
-      )}
+    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-36">
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
@@ -273,15 +271,15 @@ export function ExamRunner({
               type="button"
               aria-pressed={selected}
               onContextMenu={(e) => e.preventDefault()}
-              onPointerUp={() => {
+              onClick={() => {
                 if (!canPick) return;
                 handlePick(letter);
               }}
-              className={`flex min-h-[4rem] w-full items-start gap-3 rounded-xl border p-4 text-left transition ${
+              className={`flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left ${
                 selected
-                  ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
+                  ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
                   : canPick
-                    ? 'border-slate-300 bg-white active:border-emerald-500 active:bg-emerald-100'
+                    ? 'border-slate-300 bg-white'
                     : 'border-slate-200 bg-slate-100 opacity-50'
               }`}
             >
@@ -298,12 +296,27 @@ export function ExamRunner({
         })}
       </div>
 
-      {linearMode && pendingChoice && canPick && (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-200 bg-white/95 px-4 py-4 backdrop-blur-sm">
+      {linearMode && canPick && (
+        <div
+          className="fixed inset-x-0 bottom-0 z-[200] border-t border-slate-200 bg-white px-4 pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.12)]"
+          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+        >
+          {pendingChoice ? (
+            <p className="mb-2 text-center text-sm font-medium text-emerald-800">
+              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span>
+            </p>
+          ) : (
+            <p className="mb-2 text-center text-sm text-slate-500">Toque uma alternativa acima</p>
+          )}
           <button
             type="button"
-            onPointerUp={handleNext}
-            className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-bold text-white shadow-lg active:bg-emerald-700"
+            disabled={!pendingChoice}
+            onClick={handleNext}
+            className={`flex w-full items-center justify-center rounded-2xl px-6 py-4 text-lg font-bold text-white shadow-lg ${
+              pendingChoice
+                ? 'bg-emerald-600 active:bg-emerald-700'
+                : 'cursor-not-allowed bg-slate-300'
+            }`}
           >
             {isLastQuestion ? 'Finalizar prova' : 'Próxima questão →'}
           </button>
