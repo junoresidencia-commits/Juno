@@ -136,7 +136,7 @@ export function getDemoExams(): Exam[] {
       ...defaultExamReleaseFields(dateStr),
       duration_minutes: 30,
       total_questions: 20 + (day % 3) * 5,
-      show_answers_after_submit: true,
+      show_answers_after_submit: false,
       show_answers_when_all_done: false,
       status: 'published',
       selection_mode: day % 5 === 0 ? 'manual' : 'auto',

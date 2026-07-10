@@ -4,11 +4,49 @@ import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatDuration, formatPercent } from '@/lib/format';
 import { formatRankingScoreExplanation } from '@/lib/exams/scoring';
+import {
+  canStudentSeeExamGabarito,
+  studentGabaritoBeforeWindowMessage,
+} from '@/lib/exams/ranking-visibility';
 import type { Question, OptionLetter } from '@/types/database';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { getDemoRanking } from '@/lib/demo/presenters';
+import { GabaritoReview, type GabaritoRow } from '@/components/exam/GabaritoReview';
+
+function ResultStats({
+  totalCorrect,
+  totalWrong,
+  percentage,
+  durationSeconds,
+}: {
+  totalCorrect: number;
+  totalWrong: number;
+  percentage: number | null;
+  durationSeconds: number;
+}) {
+  return (
+    <div className="mt-6 grid grid-cols-2 gap-3">
+      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <p className="text-sm text-slate-600">Acertos</p>
+        <p className="text-3xl font-bold text-emerald-700">{totalCorrect}</p>
+      </div>
+      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <p className="text-sm text-slate-600">Erros / em branco</p>
+        <p className="text-3xl font-bold text-red-600">{totalWrong}</p>
+      </div>
+      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <p className="text-sm text-slate-600">Percentual</p>
+        <p className="text-3xl font-bold text-slate-900">{formatPercent(percentage)}</p>
+      </div>
+      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <p className="text-sm text-slate-600">Tempo</p>
+        <p className="text-3xl font-bold text-slate-900">{formatDuration(durationSeconds)}</p>
+      </div>
+    </div>
+  );
+}
 
 export default async function ResultadoPage({
   params,
@@ -25,53 +63,52 @@ export default async function ResultadoPage({
     const { rankings } = getDemoRanking('daily', exam?.date_available);
     const ranking = rankings.find((r) => r.user_id === userId);
     const questions = new Map(getDemoQuestionsForAttempt(attemptId).map((q) => [q.id, q]));
-    const answers = getDemoAttemptAnswers(attemptId).map((answer) => ({
-      ...answer,
-      questions: questions.get(answer.question_id),
-    }));
+    const gabaritoRows: GabaritoRow[] = [];
+    for (const answer of getDemoAttemptAnswers(attemptId)) {
+      const q = questions.get(answer.question_id);
+      if (!q) continue;
+      gabaritoRows.push({
+        id: answer.id,
+        selected_option: answer.selected_option,
+        is_correct:
+          !!answer.selected_option && answer.selected_option === q.correct_option,
+        questions: q,
+      });
+    }
+
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
+    const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
 
     return (
-      <div className="mx-auto max-w-lg px-4 py-6">
+      <div className="mx-auto max-w-lg px-4 py-6 text-slate-900">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
         <p className="mt-2 text-xs text-slate-600">{formatRankingScoreExplanation()}</p>
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Acertos</p><p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p></div>
-          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Erros</p><p className="text-3xl font-bold text-red-600">{totalWrong}</p></div>
-          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Percentual</p><p className="text-3xl font-bold text-slate-900">{formatPercent(attempt.percentage)}</p></div>
-          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Tempo</p><p className="text-3xl font-bold text-slate-900">{formatDuration(attempt.duration_seconds ?? 0)}</p></div>
-        </div>
+        <ResultStats
+          totalCorrect={attempt.total_correct ?? 0}
+          totalWrong={totalWrong}
+          percentage={attempt.percentage}
+          durationSeconds={attempt.duration_seconds ?? 0}
+        />
         {ranking?.position && (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
-            <p className="text-lg font-semibold text-emerald-800">{ranking.position}º no ranking de hoje</p>
-            <p className="text-sm text-emerald-600">{attempt.score} pts · atualiza conforme outros terminam</p>
+          <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
+            <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
+            <p className="text-sm text-emerald-800">{attempt.score} pts · atualiza conforme outros terminam</p>
           </div>
         )}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold">Gabarito comentado</h2>
-          <div className="mt-4 space-y-6">
-            {answers.map((a, i) => {
-              const q = a.questions as Question;
-              return (
-                <div key={a.id} className={`rounded-xl p-5 ring-1 ${a.is_correct ? 'bg-emerald-50 ring-emerald-200' : 'bg-red-50 ring-red-200'}`}>
-                  <p className="text-xs font-medium text-slate-600">Questão {i + 1}</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm">{q.statement}</p>
-                  <div className="mt-3 space-y-1 text-sm">
-                    {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
-                      const text = q[`option_${letter.toLowerCase()}` as keyof Question] as string;
-                      const isCorrect = q.correct_option === letter;
-                      const isSelected = a.selected_option === letter;
-                      return <p key={letter} className={`rounded px-2 py-1 ${isCorrect ? 'bg-emerald-200 font-semibold' : isSelected ? 'bg-red-200' : ''}`}>{letter}) {text}{isCorrect && ' ✓'}{isSelected && !isCorrect && ' ✗'}</p>;
-                    })}
-                  </div>
-                  {q.explanation && <p className="mt-3 rounded-lg bg-white/70 p-3 text-sm text-slate-700"><strong>Comentário:</strong> {q.explanation}</p>}
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        {attempt.submitted_automatically && (
+          <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
+            Prova enviada automaticamente ao fim do tempo.
+          </p>
+        )}
+        {showGabarito ? (
+          <GabaritoReview rows={gabaritoRows} />
+        ) : (
+          <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
+            {studentGabaritoBeforeWindowMessage()}
+          </p>
+        )}
       </div>
     );
   }
@@ -90,27 +127,10 @@ export default async function ResultadoPage({
   const exam = attempt.exams as {
     title: string;
     date_available: string;
-    show_answers_after_submit: boolean;
-    show_answers_when_all_done: boolean;
-    ranking_visible_to_students: boolean;
     total_questions: number;
   };
 
-  const { count: totalStudents } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('role', 'student')
-    .eq('active', true);
-
-  const { count: finishedCount } = await supabase
-    .from('attempts')
-    .select('*', { count: 'exact', head: true })
-    .eq('exam_id', attempt.exam_id)
-    .not('finished_at', 'is', null);
-
-  const allFinished = (finishedCount ?? 0) >= (totalStudents ?? 0);
-  const showAnswers =
-    exam.show_answers_after_submit || (exam.show_answers_when_all_done && allFinished);
+  const showGabarito = canStudentSeeExamGabarito(exam, true);
 
   const { data: ranking } = await supabase
     .from('rankings')
@@ -120,108 +140,63 @@ export default async function ResultadoPage({
     .eq('period_start', exam.date_available)
     .maybeSingle();
 
-  const { data: answers } = await supabase
+  const { data: examQuestions } = await supabase
+    .from('exam_questions')
+    .select('order_number, questions(*)')
+    .eq('exam_id', attempt.exam_id)
+    .order('order_number');
+
+  const { data: savedAnswers } = await supabase
     .from('attempt_answers')
-    .select('*, questions(*)')
+    .select('*')
     .eq('attempt_id', attemptId);
+
+  const answerByQuestion = new Map(
+    (savedAnswers ?? []).map((a) => [a.question_id, a])
+  );
+
+  const gabaritoRows: GabaritoRow[] = [];
+  for (const eq of examQuestions ?? []) {
+    const q = eq.questions as unknown as Question;
+    if (!q?.id) continue;
+    const saved = answerByQuestion.get(q.id);
+    gabaritoRows.push({
+      id: saved?.id ?? `${attemptId}-${q.id}`,
+      selected_option: (saved?.selected_option as OptionLetter | null) ?? null,
+      is_correct: !!saved?.selected_option && !!saved?.is_correct,
+      questions: q,
+    });
+  }
 
   const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-6">
+    <div className="mx-auto max-w-lg px-4 py-6 text-slate-900">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
       <p className="text-slate-600">{exam.title}</p>
-
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Acertos</p>
-          <p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p>
-        </div>
-        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Erros</p>
-          <p className="text-3xl font-bold text-red-600">{totalWrong}</p>
-        </div>
-        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Percentual</p>
-          <p className="text-3xl font-bold text-slate-900">{formatPercent(attempt.percentage)}</p>
-        </div>
-        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Tempo</p>
-          <p className="text-3xl font-bold text-slate-900">{formatDuration(attempt.duration_seconds ?? 0)}</p>
-        </div>
-      </div>
-
+      <ResultStats
+        totalCorrect={attempt.total_correct ?? 0}
+        totalWrong={totalWrong}
+        percentage={attempt.percentage}
+        durationSeconds={attempt.duration_seconds ?? 0}
+      />
       {ranking?.position && (
-        <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
-          <p className="text-lg font-semibold text-emerald-800">{ranking.position}º no ranking de hoje</p>
-          <p className="text-sm text-emerald-600">{attempt.score} pts · atualiza conforme outros terminam</p>
+        <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
+          <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
+          <p className="text-sm text-emerald-800">{attempt.score} pts · atualiza conforme outros terminam</p>
         </div>
       )}
-
       {attempt.submitted_automatically && (
-        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
           Prova enviada automaticamente ao fim do tempo.
         </p>
       )}
-
-      {showAnswers ? (
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold">Gabarito comentado</h2>
-          <div className="mt-4 space-y-6">
-            {(answers ?? []).map((a, i) => {
-              const q = a.questions as unknown as Question;
-              return (
-                <div
-                  key={a.id}
-                  className={`rounded-xl p-5 ring-1 ${
-                    a.is_correct
-                      ? 'bg-emerald-50 ring-emerald-200'
-                      : 'bg-red-50 ring-red-200'
-                  }`}
-                >
-                  <p className="text-xs font-medium text-slate-600">Questão {i + 1}</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm">{q.statement}</p>
-                  <div className="mt-3 space-y-1 text-sm">
-                    {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
-                      const text = q[`option_${letter.toLowerCase()}` as keyof Question] as string;
-                      const isCorrect = q.correct_option === letter;
-                      const isSelected = a.selected_option === letter;
-                      return (
-                        <p
-                          key={letter}
-                          className={`rounded px-2 py-1 ${
-                            isCorrect
-                              ? 'bg-emerald-200 font-semibold'
-                              : isSelected
-                                ? 'bg-red-200'
-                                : ''
-                          }`}
-                        >
-                          {letter}) {text}
-                          {isCorrect && ' ✓'}
-                          {isSelected && !isCorrect && ' ✗'}
-                        </p>
-                      );
-                    })}
-                  </div>
-                  {q.explanation && (
-                    <p className="mt-3 rounded-lg bg-white/70 p-3 text-sm text-slate-700">
-                      <strong>Comentário:</strong> {q.explanation}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </section>
+      {showGabarito ? (
+        <GabaritoReview rows={gabaritoRows} />
       ) : (
-        <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-600">
-          O gabarito comentado será liberado pelo professor
-          {exam.show_answers_when_all_done && !allFinished
-            ? ' quando todos os alunos terminarem.'
-            : '.'}
+        <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
+          {studentGabaritoBeforeWindowMessage()}
         </p>
       )}
     </div>
