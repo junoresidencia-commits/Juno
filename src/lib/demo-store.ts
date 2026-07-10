@@ -3,12 +3,11 @@ import { join } from 'path';
 import { randomBytes } from 'crypto';
 import type { Exam, Question } from '@/types/database';
 import type { SimuladoMode } from '@/types/simulado';
-import { MAX_STUDENTS, applyReleaseWindow } from '@/lib/exams/release';
-
-export { MAX_STUDENTS };
+import { applyReleaseWindow } from '@/lib/exams/release';
 
 export interface DemoInvite {
   token: string;
+  email: string;
   createdAt: string;
   expiresAt: string;
   usedAt: string | null;
@@ -120,14 +119,24 @@ export function generateInviteToken(): string {
   return randomBytes(16).toString('hex');
 }
 
-export function createDemoInvite(note?: string): DemoInvite {
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+export function createDemoInvite(email: string, note?: string): DemoInvite {
   const store = readDemoStore();
+  const emailNorm = normalizeEmail(email);
+  if (!emailNorm.includes('@')) {
+    throw new Error('E-mail inválido');
+  }
+
   const token = generateInviteToken();
   const now = new Date();
   const expires = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   const invite: DemoInvite = {
     token,
+    email: emailNorm,
     createdAt: now.toISOString(),
     expiresAt: expires.toISOString(),
     usedAt: null,
@@ -140,7 +149,7 @@ export function createDemoInvite(note?: string): DemoInvite {
   return invite;
 }
 
-export function validateDemoInvite(token: string): { valid: boolean; error?: string } {
+export function validateDemoInvite(token: string): { valid: boolean; error?: string; email?: string } {
   const store = readDemoStore();
   const invite = store.invites.find((i) => i.token === token);
 
@@ -150,12 +159,7 @@ export function validateDemoInvite(token: string): { valid: boolean; error?: str
     return { valid: false, error: 'Este link expirou. Peça um novo ao professor.' };
   }
 
-  const activeCount = store.students.filter((s) => s.active).length;
-  if (activeCount >= MAX_STUDENTS) {
-    return { valid: false, error: `Turma cheia (${MAX_STUDENTS} alunos). Peça ao professor.` };
-  }
-
-  return { valid: true };
+  return { valid: true, email: invite.email ?? undefined };
 }
 
 export function registerDemoStudent(
@@ -168,7 +172,13 @@ export function registerDemoStudent(
   if (!validation.valid) return { ok: false, error: validation.error };
 
   const store = readDemoStore();
-  const emailNorm = email.trim().toLowerCase();
+  const invite = store.invites.find((i) => i.token === token);
+  if (!invite) return { ok: false, error: 'Link inválido.' };
+
+  const emailNorm = normalizeEmail(email);
+  if (invite.email && emailNorm !== invite.email) {
+    return { ok: false, error: 'Use o mesmo e-mail para o qual o convite foi enviado.' };
+  }
 
   if (store.students.some((s) => s.email === emailNorm)) {
     return { ok: false, error: 'Este e-mail já está cadastrado.' };
@@ -203,9 +213,6 @@ export function approveDemoStudent(id: string): boolean {
   const store = readDemoStore();
   const student = store.students.find((s) => s.id === id);
   if (!student) return false;
-
-  const activeCount = store.students.filter((s) => s.active && s.id !== id).length;
-  if (activeCount >= MAX_STUDENTS) return false;
 
   student.active = true;
   student.approvedAt = new Date().toISOString();

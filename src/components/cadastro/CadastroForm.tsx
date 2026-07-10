@@ -8,12 +8,13 @@ interface Props {
   token: string;
   valid: boolean;
   error?: string;
+  inviteEmail?: string;
 }
 
-export function CadastroForm({ token, valid, error: initialError }: Props) {
+export function CadastroForm({ token, valid, error: initialError, inviteEmail }: Props) {
   const router = useRouter();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(inviteEmail ?? '');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(initialError ?? '');
@@ -87,7 +88,17 @@ export function CadastroForm({ token, valid, error: initialError }: Props) {
       </div>
       <div>
         <label className="block text-sm font-medium">E-mail *</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClass} />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          readOnly={Boolean(inviteEmail)}
+          required
+          className={`${inputClass}${inviteEmail ? ' bg-slate-50' : ''}`}
+        />
+        {inviteEmail && (
+          <p className="mt-1 text-xs text-slate-500">Este convite é exclusivo para este e-mail.</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium">Senha *</label>

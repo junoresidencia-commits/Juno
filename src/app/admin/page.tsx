@@ -7,7 +7,6 @@ import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoReportData, getDemoRanking } from '@/lib/demo/presenters';
 import { RankingPreviewList, mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { getPeriodBounds } from '@/lib/periods';
-import { MAX_STUDENTS } from '@/lib/exams/release';
 
 export default async function AdminDashboard() {
   await requireRole('admin');
@@ -16,8 +15,8 @@ export default async function AdminDashboard() {
     const demo = getDemoReportData();
     const { rankings: weeklyRankings } = getDemoRanking('weekly');
     const menu = [
-      { href: '/admin/alunos', label: 'Alunos', desc: `0/${MAX_STUDENTS} — liberar convites` },
-      { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
+      { href: '/admin/alunos', label: 'Alunos', desc: 'Convidar e liberar acesso' },
+      { href: '/admin/convites', label: 'Convites', desc: 'Gerar link por e-mail' },
       { href: '/admin/questoes', label: 'Banco de questões', desc: `${demo.questionCount} questões ENARE reais` },
       { href: '/admin/provas', label: 'Provas', desc: `${demo.examCount} provas diárias (5 meses)` },
       { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },
@@ -81,8 +80,8 @@ export default async function AdminDashboard() {
     .limit(15);
 
   const menu = [
-    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/${MAX_STUDENTS} — liberar convites` },
-    { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
+    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0} cadastrados — liberar acesso` },
+    { href: '/admin/convites', label: 'Convites', desc: 'Gerar link por e-mail' },
     { href: '/admin/questoes', label: 'Banco de questões', desc: `${questionCount ?? 0} questões` },
     { href: '/admin/provas', label: 'Provas', desc: `${examCount ?? 0} provas criadas` },
     { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },

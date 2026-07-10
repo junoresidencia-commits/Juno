@@ -19,7 +19,7 @@ async function validateSupabaseInvite(token: string) {
   if (new Date(invite.expires_at) < new Date()) {
     return { valid: false as const, error: 'Este link expirou.' };
   }
-  return { valid: true as const };
+  return { valid: true as const, email: invite.email as string | null };
 }
 
 export async function GET(
@@ -30,7 +30,7 @@ export async function GET(
 
   if (isDemoMode()) {
     const result = validateDemoInvite(token);
-    return NextResponse.json({ valid: result.valid, error: result.error });
+    return NextResponse.json({ valid: result.valid, error: result.error, email: result.email });
   }
 
   if (!isSupabaseConfigured()) {
@@ -73,13 +73,21 @@ export async function POST(
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
+  const emailNorm = email.trim().toLowerCase();
+  if (validation.email && emailNorm !== validation.email.trim().toLowerCase()) {
+    return NextResponse.json(
+      { error: 'Use o mesmo e-mail para o qual o convite foi enviado.' },
+      { status: 400 }
+    );
+  }
+
   const admin = createAdminClient();
   if (!admin) {
     return NextResponse.json({ error: 'Sistema indisponível' }, { status: 503 });
   }
 
   const { data: authUser, error: authError } = await admin.auth.admin.createUser({
-    email: email.trim().toLowerCase(),
+    email: emailNorm,
     password,
     email_confirm: true,
     user_metadata: { name: name.trim() },
@@ -92,7 +100,7 @@ export async function POST(
   const { error: profileError } = await admin.from('profiles').insert({
     id: authUser.user.id,
     name: name.trim(),
-    email: email.trim().toLowerCase(),
+    email: emailNorm,
     role: 'student',
     active: false,
     approved_at: null,

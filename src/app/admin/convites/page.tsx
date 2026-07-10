@@ -12,6 +12,7 @@ export default async function ConvitesPage() {
 
   let invites: {
     token: string;
+    email?: string | null;
     expires_at: string;
     used_at: string | null;
     link: string;
@@ -20,6 +21,7 @@ export default async function ConvitesPage() {
   if (isDemoMode()) {
     invites = listDemoInvites().map((i) => ({
       token: i.token,
+      email: i.email,
       expires_at: i.expiresAt,
       used_at: i.usedAt,
       link: buildInviteLink(i.token),
@@ -34,7 +36,7 @@ export default async function ConvitesPage() {
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
       <h1 className="mt-4 text-2xl font-bold">Convites</h1>
-      <p className="text-sm text-slate-600">Só quem receber seu link pode se cadastrar.</p>
+      <p className="text-sm text-slate-600">Cada convite é para um e-mail específico. Você libera o acesso depois do cadastro.</p>
 
       <div className="mt-6">
         <InviteGenerator />
@@ -47,8 +49,9 @@ export default async function ConvitesPage() {
             <p className="text-sm text-slate-500">Nenhum convite ainda.</p>
           ) : (
             invites.map((i) => (
-              <div key={i.token} className="rounded-xl bg-white p-4 text-sm shadow-sm ring-1 ring-slate-200">
-                <p className="break-all text-slate-700">{i.link}</p>
+              <div key={i.token} className="rounded-xl bg-white p-4 text-sm text-slate-900 shadow-sm ring-1 ring-slate-200">
+                {i.email && <p className="font-medium text-slate-900">{i.email}</p>}
+                <p className="mt-1 break-all text-slate-700">{i.link}</p>
                 <p className="mt-2 text-xs text-slate-500">
                   Expira: {formatDateBR(i.expires_at.split('T')[0])}
                   {' · '}
