@@ -4,15 +4,19 @@ import { requireRole } from '@/lib/auth';
 import { formatPercent } from '@/lib/format';
 import { fetchStudentPerformance } from '@/lib/reports/data';
 import { isSkipAuth } from '@/lib/skip-auth';
-import { getDemoReportData } from '@/lib/demo/presenters';
+import { getDemoReportData, getDemoRanking } from '@/lib/demo/presenters';
+import { RankingPreviewList, mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
+import { getPeriodBounds } from '@/lib/periods';
+import { MAX_STUDENTS } from '@/lib/exams/release';
 
 export default async function AdminDashboard() {
   await requireRole('admin');
 
   if (isSkipAuth()) {
     const demo = getDemoReportData();
+    const { rankings: weeklyRankings } = getDemoRanking('weekly');
     const menu = [
-      { href: '/admin/alunos', label: 'Alunos', desc: '0/10 — liberar convites' },
+      { href: '/admin/alunos', label: 'Alunos', desc: `0/${MAX_STUDENTS} — liberar convites` },
       { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
       { href: '/admin/questoes', label: 'Banco de questões', desc: `${demo.questionCount} questões ENARE reais` },
       { href: '/admin/provas', label: 'Provas', desc: `${demo.examCount} provas diárias (5 meses)` },
@@ -33,6 +37,17 @@ export default async function AdminDashboard() {
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Provas</p><p className="text-3xl font-bold">{demo.examCount}</p></div>
         </div>
         <div className="mb-8 rounded-xl bg-amber-50 p-4 ring-1 ring-amber-200"><p className="text-sm text-amber-800">Conteúdo demo autoral criado para visualização imediata: provas diárias por 150 dias, ranking e desafios.</p></div>
+        <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Ranking da semana</h2>
+            <Link href="/admin/ranking?period=weekly" className="text-sm text-emerald-700 hover:underline">
+              Ver completo →
+            </Link>
+          </div>
+          <div className="mt-4">
+            <RankingPreviewList rankings={weeklyRankings} />
+          </div>
+        </section>
         <div className="grid gap-4 sm:grid-cols-2">
           {menu.map((item) => <Link key={item.href} href={item.href} className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300"><h2 className="font-semibold">{item.label}</h2><p className="mt-1 text-sm text-slate-600">{item.desc}</p></Link>)}
         </div>
@@ -56,8 +71,17 @@ export default async function AdminDashboard() {
 
   const topStudent = [...students].sort((a, b) => b.pontuacao - a.pontuacao)[0];
 
+  const weekBounds = getPeriodBounds('weekly');
+  const { data: weeklyRankings } = await supabase
+    .from('rankings')
+    .select('id, position, total_score, user_id, profiles(name)')
+    .eq('period_type', 'weekly')
+    .eq('period_start', weekBounds.start)
+    .order('position', { ascending: true })
+    .limit(15);
+
   const menu = [
-    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/10 — liberar convites` },
+    { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0}/${MAX_STUDENTS} — liberar convites` },
     { href: '/admin/convites', label: 'Convites', desc: 'Gerar link de cadastro' },
     { href: '/admin/questoes', label: 'Banco de questões', desc: `${questionCount ?? 0} questões` },
     { href: '/admin/provas', label: 'Provas', desc: `${examCount ?? 0} provas criadas` },
@@ -103,6 +127,18 @@ export default async function AdminDashboard() {
           </p>
         </div>
       )}
+
+      <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Ranking da semana</h2>
+          <Link href="/admin/ranking?period=weekly" className="text-sm text-emerald-700 hover:underline">
+            Ver completo →
+          </Link>
+        </div>
+        <div className="mt-4">
+          <RankingPreviewList rankings={mapRankingPreviewRows(weeklyRankings)} />
+        </div>
+      </section>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {menu.map((item) => (

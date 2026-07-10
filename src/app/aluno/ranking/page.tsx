@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatPercent } from '@/lib/format';
-import { getPeriodBounds } from '@/lib/periods';
+import { getPeriodBounds, STUDENT_RANKING_PERIODS } from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { isSkipAuth } from '@/lib/skip-auth';
@@ -15,7 +15,10 @@ export default async function RankingAlunoPage({
 }) {
   const { userId } = await requireAuth();
   const { period: periodParam } = await searchParams;
-  const period = (periodParam ?? 'daily') as PeriodType;
+  const allowedPeriods = STUDENT_RANKING_PERIODS.map((p) => p.value);
+  const period = allowedPeriods.includes(periodParam as PeriodType)
+    ? (periodParam as PeriodType)
+    : 'daily';
 
   if (isSkipAuth()) {
     const { rankings } = getDemoRanking(period);
@@ -24,8 +27,8 @@ export default async function RankingAlunoPage({
       <div className="mx-auto max-w-3xl px-4 py-8">
         <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold">Ranking</h1>
-        <p className="text-sm text-slate-600">Competição diária — uma prova por dia, mesmas questões para todos.</p>
-        <RankingPeriodNav basePath="/aluno/ranking" current={period} />
+        <p className="text-sm text-slate-600">Ranking diário e semanal da competição.</p>
+        <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
         {myRanking && (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4">
             <p className="font-semibold text-emerald-800">Sua posição: {myRanking.position}º · {myRanking.total_score} pts</p>
@@ -87,9 +90,9 @@ export default async function RankingAlunoPage({
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold">Ranking</h1>
-      <p className="text-sm text-slate-600">Competição diária — uma prova por dia.</p>
+      <p className="text-sm text-slate-600">Ranking diário e semanal da competição.</p>
 
-      <RankingPeriodNav basePath="/aluno/ranking" current={period} />
+      <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
 
       {myRanking && (
         <div className="mt-4 rounded-xl bg-emerald-50 p-4">

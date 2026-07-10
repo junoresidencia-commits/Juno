@@ -5,12 +5,13 @@ import { PERIOD_OPTIONS } from '@/lib/periods';
 interface Props {
   basePath: string;
   current: PeriodType;
+  periods?: { value: PeriodType; label: string }[];
 }
 
-export function RankingPeriodNav({ basePath, current }: Props) {
+export function RankingPeriodNav({ basePath, current, periods = PERIOD_OPTIONS }: Props) {
   return (
     <nav className="mt-4 flex flex-wrap gap-2">
-      {PERIOD_OPTIONS.map((p) => (
+      {periods.map((p) => (
         <Link
           key={p.value}
           href={`${basePath}?period=${p.value}`}
