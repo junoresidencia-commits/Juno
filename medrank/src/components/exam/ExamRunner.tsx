@@ -64,6 +64,7 @@ export function ExamRunner({
   const answersRef = useRef(initialAnswers);
   const currentIndexRef = useRef(firstOpenIndex);
   const submittingRef = useRef(false);
+  const lastPickAtRef = useRef(0);
 
   answersRef.current = answers;
   currentIndexRef.current = currentIndex;
@@ -108,15 +109,23 @@ export function ExamRunner({
     [apiBase, attemptId]
   );
 
-  const handlePick = (option: OptionLetter) => {
-    if (submittingRef.current) return;
-    const question = questions[currentIndexRef.current];
-    if (!question || answersRef.current[question.id]) return;
-    pendingRef.current = option;
-    setPendingChoice(option);
-  };
+  const pickOption = useCallback(
+    (option: OptionLetter) => {
+      const now = Date.now();
+      if (now - lastPickAtRef.current < 250) return;
+      lastPickAtRef.current = now;
 
-  const handleNext = () => {
+      if (submittingRef.current) return;
+      const question = questions[currentIndexRef.current];
+      if (!question || answersRef.current[question.id]) return;
+
+      pendingRef.current = option;
+      setPendingChoice(option);
+    },
+    [questions]
+  );
+
+  const handleNext = useCallback(() => {
     const choice = pendingRef.current;
     if (!choice || selectingRef.current || submittingRef.current) return;
 
@@ -139,7 +148,7 @@ export function ExamRunner({
       setCurrentIndex(index + 1);
     }
     selectingRef.current = false;
-  };
+  }, [questions, recordAnswer, submitExam]);
 
   const skipQuestion = useCallback(
     (index: number) => {
@@ -166,6 +175,7 @@ export function ExamRunner({
     pendingRef.current = null;
     setPendingChoice(null);
     selectingRef.current = false;
+    lastPickAtRef.current = 0;
   }, [currentIndex, questionLimit]);
 
   useEffect(() => {
@@ -211,8 +221,13 @@ export function ExamRunner({
       ? `${questionLimit / 60} min`
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
+  const tapStyle = {
+    WebkitTapHighlightColor: 'transparent',
+    touchAction: 'manipulation' as const,
+  };
+
   return (
-    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-36">
+    <div className="mx-auto max-w-3xl px-4 py-6 pb-8">
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
@@ -252,14 +267,14 @@ export function ExamRunner({
             {current.subtopic ? ` · ${current.subtopic}` : ''}
           </p>
         )}
-        <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
+        <p className="exam-no-select whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={current.image_url} alt="Imagem da questão" className="mt-4 max-h-64 rounded-lg" />
         )}
       </div>
 
-      <div className="mb-6 space-y-3">
+      <div key={current.id} className="mb-4 space-y-3" role="group" aria-label="Alternativas">
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
@@ -270,37 +285,36 @@ export function ExamRunner({
               key={letter}
               type="button"
               aria-pressed={selected}
-              onContextMenu={(e) => e.preventDefault()}
-              onClick={() => {
-                if (!canPick) return;
-                handlePick(letter);
+              aria-disabled={!canPick}
+              onPointerUp={(e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                pickOption(letter);
               }}
-              className={`flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left ${
+              onClick={() => pickOption(letter)}
+              className={`flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] ${
                 selected
                   ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
                   : canPick
-                    ? 'border-slate-300 bg-white'
+                    ? 'border-slate-300 bg-white active:bg-slate-50'
                     : 'border-slate-200 bg-slate-100 opacity-50'
               }`}
+              style={tapStyle}
             >
               <span
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-bold ${
-                  selected ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
+                  selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
                 }`}
               >
                 {letter}
               </span>
-              <span className="pt-1 text-base leading-relaxed text-slate-900">{text}</span>
+              <span className="pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
             </button>
           );
         })}
       </div>
 
       {linearMode && canPick && (
-        <div
-          className="fixed inset-x-0 bottom-0 z-[200] border-t border-slate-200 bg-white px-4 pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.12)]"
-          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-        >
+        <div className="mb-8">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
               Você marcou: <span className="text-lg font-bold">{pendingChoice}</span>
@@ -310,13 +324,20 @@ export function ExamRunner({
           )}
           <button
             type="button"
-            disabled={!pendingChoice}
-            onClick={handleNext}
-            className={`flex w-full items-center justify-center rounded-2xl px-6 py-4 text-lg font-bold text-white shadow-lg ${
-              pendingChoice
-                ? 'bg-emerald-600 active:bg-emerald-700'
-                : 'cursor-not-allowed bg-slate-300'
+            aria-disabled={!pendingChoice}
+            onPointerUp={(e) => {
+              if (e.pointerType === 'mouse' && e.button !== 0) return;
+              if (!pendingRef.current) return;
+              handleNext();
+            }}
+            onClick={() => {
+              if (!pendingRef.current) return;
+              handleNext();
+            }}
+            className={`flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] ${
+              pendingChoice ? 'bg-emerald-600 active:bg-emerald-700' : 'bg-slate-300'
             }`}
+            style={tapStyle}
           >
             {isLastQuestion ? 'Finalizar prova' : 'Próxima questão →'}
           </button>
