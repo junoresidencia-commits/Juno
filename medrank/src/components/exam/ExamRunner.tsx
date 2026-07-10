@@ -18,6 +18,8 @@ interface Props {
   questions: ExamQuestion[];
   initialAnswers: Record<string, OptionLetter>;
   resultPath?: string;
+  apiBase?: string;
+  finishLabel?: string;
 }
 
 export function ExamRunner({
@@ -27,6 +29,8 @@ export function ExamRunner({
   questions,
   initialAnswers,
   resultPath,
+  apiBase = '/api/attempts',
+  finishLabel = 'Finalizar prova',
 }: Props) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,7 +44,7 @@ export function ExamRunner({
     if (submitting) return;
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/attempts/${attemptId}/submit`, {
+      const res = await fetch(`${apiBase}/${attemptId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ auto }),
@@ -57,7 +61,7 @@ export function ExamRunner({
       alert('Erro de conexão ao enviar prova');
       setSubmitting(false);
     }
-  }, [attemptId, router, submitting]);
+  }, [attemptId, apiBase, router, resultPath, submitting]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -74,7 +78,7 @@ export function ExamRunner({
   async function saveAnswer(questionId: string, option: OptionLetter) {
     const newAnswers = { ...answers, [questionId]: option };
     setAnswers(newAnswers);
-    await fetch(`/api/attempts/${attemptId}/answer`, {
+    await fetch(`${apiBase}/${attemptId}/answer`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ questionId, selectedOption: option }),
@@ -184,7 +188,7 @@ export function ExamRunner({
           }}
           className="ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
         >
-          {submitting ? 'Enviando...' : 'Finalizar prova'}
+          {submitting ? 'Enviando...' : finishLabel}
         </button>
       </div>
     </div>

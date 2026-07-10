@@ -10,8 +10,7 @@ import type {
 } from '@/types/database';
 import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
-import { getImportedQuestions } from '@/lib/demo/imported-questions';
-import { getDemoCustomQuestions } from '@/lib/demo-store';
+import { getQuestionBank } from '@/lib/question-bank/pool';
 
 const LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D', 'E'];
 const SOURCES = ['ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS'] as const;
@@ -78,11 +77,9 @@ function letterAt(index: number): OptionLetter {
 }
 
 export function getDemoQuestions(): Question[] {
-  const imported = getImportedQuestions();
-  const custom = getDemoCustomQuestions();
-
-  if (imported.length > 0 || custom.length > 0) {
-    return [...imported, ...custom];
+  const bank = getQuestionBank();
+  if (bank.length > 0) {
+    return bank;
   }
 
   const questions: Question[] = [];
