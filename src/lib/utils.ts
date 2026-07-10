@@ -1,4 +1,5 @@
 import type { ImportQuestionRow } from '@/types/database';
+import { getSecondsUntilWindowClose } from '@/lib/exams/window';
 
 const DIFFICULTY_MAP: Record<string, 'facil' | 'medio' | 'dificil'> = {
   facil: 'facil',
@@ -47,9 +48,16 @@ export function calculateRankingScore(
   totalQuestions: number,
   durationSeconds: number
 ): number {
-  const accuracy = totalQuestions > 0 ? totalCorrect / totalQuestions : 0;
-  const timeBonus = Math.max(0, 1 - durationSeconds / 1800);
-  return Math.round((accuracy * 1000 + timeBonus * 100) * 100) / 100;
+  // Mais acertos = mais pontos; em empate, quem foi mais rápido ganha
+  const accuracyPoints = totalCorrect * 1000;
+  const maxDuration = Math.max(totalQuestions * 90, 60);
+  const clampedDuration = Math.min(Math.max(durationSeconds, 1), maxDuration);
+  const speedPoints = Math.round((1 - clampedDuration / maxDuration) * totalQuestions * 10);
+  return accuracyPoints + speedPoints;
+}
+
+export function formatRankingScoreExplanation(): string {
+  return 'Pontuação: mais acertos valem mais; em empate, quem termina mais rápido ganha.';
 }
 
 export function compareRankings(
@@ -68,4 +76,15 @@ export function getExamExpiresAt(startedAt: string, durationMinutes: number): Da
 export function getRemainingSeconds(startedAt: string, durationMinutes: number): number {
   const expires = getExamExpiresAt(startedAt, durationMinutes);
   return Math.max(0, Math.floor((expires.getTime() - Date.now()) / 1000));
+}
+
+export function getEffectiveExamRemainingSeconds(
+  startedAt: string,
+  durationMinutes: number,
+  now = new Date()
+): number {
+  return Math.min(
+    getRemainingSeconds(startedAt, durationMinutes),
+    getSecondsUntilWindowClose(now)
+  );
 }

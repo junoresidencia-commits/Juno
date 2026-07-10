@@ -8,6 +8,9 @@ import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
 import { RankingPreviewList, mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { getPeriodBounds } from '@/lib/periods';
+import { formatRankingScoreExplanation } from '@/lib/utils';
+import { formatExamWindowLabel, todayDateStringBrazil } from '@/lib/exams/window';
+import { getExamWindowStatus } from '@/lib/exams/release';
 
 export default async function AlunoDashboard() {
   const session = await getSessionProfile();
@@ -16,10 +19,11 @@ export default async function AlunoDashboard() {
 
   if (isSkipAuth()) {
     const { userId } = session;
-    const { todayExam, attempt, rankings, weeklyRankings, streak, challenges } = getDemoDashboardData(userId);
-    const canStart = todayExam && !attempt;
-    const inProgress = todayExam && attempt && !attempt.finished_at;
+    const { todayExam, attempt, rankings, weeklyRankings, streak, challenges, windowPhase } = getDemoDashboardData(userId);
+    const canStart = todayExam && windowPhase === 'open' && !attempt;
+    const inProgress = todayExam && attempt && !attempt.finished_at && windowPhase !== 'after';
     const completed = todayExam && attempt?.finished_at;
+    const missedToday = todayExam && windowPhase === 'after' && !attempt?.finished_at;
 
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-8">
@@ -41,13 +45,20 @@ export default async function AlunoDashboard() {
               <p className="mt-1 text-sm text-slate-600">
                 {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
               </p>
+              <p className="mt-2 text-sm text-slate-500">{formatExamWindowLabel()}</p>
               <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                Prova válida só hoje. Mesma prova para todos. Se não fizer hoje, você perde os pontos do dia.
+                Uma prova por dia, mesmas questões para todos. {formatRankingScoreExplanation()} Se não fizer no horário, perde os pontos do dia.
               </p>
               <div className="mt-4">
+                {windowPhase === 'before' && (
+                  <p className="text-sm font-medium text-blue-700">A prova abre hoje às 7h.</p>
+                )}
                 {canStart && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}
                 {inProgress && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Continuar prova</Link>}
                 {completed && <Link href={`/aluno/resultado/${attempt!.id}`} className="inline-block rounded-lg bg-slate-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">Ver resultado</Link>}
+                {missedToday && (
+                  <p className="text-sm font-medium text-red-700">Prazo encerrado às 22h. Você perdeu os pontos de hoje.</p>
+                )}
               </div>
             </div>
           ) : (
@@ -95,7 +106,7 @@ export default async function AlunoDashboard() {
   const userId = session.userId;
   const profile = session.profile;
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = todayDateStringBrazil();
   const { data: todayExam } = await supabase
     .from('exams')
     .select('*')
@@ -137,9 +148,11 @@ export default async function AlunoDashboard() {
 
   const challenges = await fetchUserChallengeProgress(supabase, userId);
 
-  const canStart = todayExam && !attempt;
-  const inProgress = todayExam && attempt && !attempt.finished_at;
+  const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
+  const canStart = todayExam && windowPhase === 'open' && !attempt;
+  const inProgress = todayExam && attempt && !attempt.finished_at && windowPhase !== 'after';
   const completed = todayExam && attempt?.finished_at;
+  const missedToday = todayExam && windowPhase === 'after' && !attempt?.finished_at;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8">
@@ -168,10 +181,14 @@ export default async function AlunoDashboard() {
             <p className="mt-1 text-sm text-slate-600">
               {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
             </p>
+            <p className="mt-2 text-sm text-slate-500">{formatExamWindowLabel()}</p>
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              Prova válida só hoje. Se não fizer hoje, você perde os pontos do dia.
+              Uma prova por dia. {formatRankingScoreExplanation()} Se não fizer no horário, perde os pontos do dia.
             </p>
             <div className="mt-4">
+              {windowPhase === 'before' && (
+                <p className="text-sm font-medium text-blue-700">A prova abre hoje às 7h.</p>
+              )}
               {canStart && (
                 <Link
                   href={`/aluno/prova/${todayExam.id}`}
@@ -195,6 +212,9 @@ export default async function AlunoDashboard() {
                 >
                   Ver resultado
                 </Link>
+              )}
+              {missedToday && (
+                <p className="text-sm font-medium text-red-700">Prazo encerrado às 22h. Você perdeu os pontos de hoje.</p>
               )}
             </div>
           </div>

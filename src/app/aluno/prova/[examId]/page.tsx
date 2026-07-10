@@ -1,13 +1,14 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
-import { getRemainingSeconds } from '@/lib/utils';
+import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
+import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
+import { formatExamWindowLabel } from '@/lib/exams/window';
 import { ExamRunner } from '@/components/exam/ExamRunner';
 import type { OptionLetter, Question } from '@/types/database';
 import { isSkipAuth } from '@/lib/skip-auth';
-import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers } from '@/lib/demo/runtime';
+import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers, submitDemoAttempt } from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
-import { isExamOpen } from '@/lib/exams/release';
 
 export default async function ProvaPage({
   params,
@@ -19,14 +20,21 @@ export default async function ProvaPage({
 
   if (isSkipAuth()) {
     const exam = getDemoExams().find((item) => item.id === examId);
-    if (!exam || !isExamOpen(exam)) redirect('/aluno');
+    if (!exam) redirect('/aluno');
 
     let attempt = getDemoAttemptByExam(examId, userId);
     if (attempt?.finished_at) {
       redirect(`/aluno/resultado/${attempt.id}`);
     }
+
+    const windowPhase = getExamWindowStatus(exam);
+
     if (!attempt) {
+      if (!canStartExam(exam)) redirect('/aluno');
       attempt = createDemoAttempt(examId, userId);
+    } else if (windowPhase === 'after' && getEffectiveExamRemainingSeconds(attempt.started_at, exam.duration_minutes) <= 0) {
+      const submitted = submitDemoAttempt(attempt.id, true);
+      redirect(`/aluno/resultado/${submitted.id}`);
     }
 
     const questions = getDemoExamQuestions(examId);
@@ -39,7 +47,7 @@ export default async function ProvaPage({
     return (
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800">
-          Simulação completa: prova diária autoral ENARE/USP.
+          {formatExamWindowLabel()}. A prova encerra automaticamente às 22h.
         </div>
         <ExamRunner
           attemptId={attempt.id}
@@ -64,9 +72,6 @@ export default async function ProvaPage({
 
   if (!exam) redirect('/aluno');
 
-  const today = new Date().toISOString().split('T')[0];
-  if (exam.date_available !== today) redirect('/aluno');
-
   let { data: attempt } = await supabase
     .from('attempts')
     .select('*')
@@ -76,6 +81,10 @@ export default async function ProvaPage({
 
   if (attempt?.finished_at) {
     redirect(`/aluno/resultado/${attempt.id}`);
+  }
+
+  if (!attempt) {
+    if (!canStartExam(exam)) redirect('/aluno');
   }
 
   if (!attempt) {
@@ -93,7 +102,7 @@ export default async function ProvaPage({
     attempt = newAttempt;
   }
 
-  const remaining = getRemainingSeconds(attempt.started_at, exam.duration_minutes);
+  const remaining = getEffectiveExamRemainingSeconds(attempt.started_at, exam.duration_minutes);
   if (remaining <= 0 && !attempt.finished_at) {
     await supabase.rpc('submit_attempt', {
       p_attempt_id: attempt.id,
@@ -130,7 +139,7 @@ export default async function ProvaPage({
   return (
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800">
-        A prova não pode ser pausada. Tempo restante exibido no cronômetro.
+        {formatExamWindowLabel()}. A prova encerra automaticamente às 22h.
       </div>
       <ExamRunner
         attemptId={attempt.id}

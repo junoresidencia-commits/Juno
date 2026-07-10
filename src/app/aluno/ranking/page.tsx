@@ -7,6 +7,7 @@ import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoRanking } from '@/lib/demo/presenters';
+import { formatRankingScoreExplanation } from '@/lib/utils';
 
 export default async function RankingAlunoPage({
   searchParams,
@@ -27,7 +28,7 @@ export default async function RankingAlunoPage({
       <div className="mx-auto max-w-3xl px-4 py-8">
         <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold">Ranking</h1>
-        <p className="text-sm text-slate-600">Ranking diário e semanal da competição.</p>
+        <p className="text-sm text-slate-600">Ranking diário e semanal. {formatRankingScoreExplanation()}</p>
         <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
         {myRanking && (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4">
@@ -90,7 +91,7 @@ export default async function RankingAlunoPage({
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold">Ranking</h1>
-      <p className="text-sm text-slate-600">Ranking diário e semanal da competição.</p>
+      <p className="text-sm text-slate-600">Ranking diário e semanal. {formatRankingScoreExplanation()}</p>
 
       <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
 

@@ -20,10 +20,10 @@ export function allStudentsFinished(attempts: Attempt[], exam: Exam): boolean {
   return countFinishedAttempts(attempts, exam.id) >= activeStudents;
 }
 
-export function isRankingVisibleToTeachers(exam: Exam, attempts: Attempt[], onDate?: string): boolean {
+export function isRankingVisibleToTeachers(exam: Exam, attempts: Attempt[], now = new Date()): boolean {
   if (exam.ranking_release === 'immediate') return true;
   if (exam.ranking_release === 'after_window') {
-    return isExamWindowClosed(exam, onDate);
+    return isExamWindowClosed(exam, now);
   }
   return allStudentsFinished(attempts, exam);
 }
@@ -35,8 +35,11 @@ export function buildExamRankings(
   const finished = attempts
     .filter((a) => a.exam_id === exam.id && a.finished_at && a.score != null)
     .sort((a, b) => {
-      if ((b.score ?? 0) !== (a.score ?? 0)) return (b.score ?? 0) - (a.score ?? 0);
-      return (a.duration_seconds ?? 0) - (b.duration_seconds ?? 0);
+      if (b.total_correct !== a.total_correct) return b.total_correct - a.total_correct;
+      if ((a.duration_seconds ?? 0) !== (b.duration_seconds ?? 0)) {
+        return (a.duration_seconds ?? 0) - (b.duration_seconds ?? 0);
+      }
+      return (b.score ?? 0) - (a.score ?? 0);
     });
 
   return finished.map((attempt, index) => ({

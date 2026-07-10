@@ -2,7 +2,8 @@ import type { Ranking } from '@/types/database';
 import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenges } from '@/lib/demo/content';
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
-import { getTodaysExam, todayDateString } from '@/lib/exams/release';
+import { getTodaysExam, todayDateString, getExamWindowStatus } from '@/lib/exams/release';
+import { formatExamWindowLabel } from '@/lib/exams/window';
 import { buildExamRankings, isRankingVisibleToTeachers, countFinishedAttempts, countActiveStudents } from '@/lib/exams/ranking';
 import { listDemoStudents } from '@/lib/demo-store';
 
@@ -29,7 +30,8 @@ function withProfileNames(rankings: Ranking[]): (Ranking & { profiles: { name: s
 
 export function getDemoDashboardData(userId = 'guest-student') {
   const today = todayDateString();
-  const todayExam = getTodaysExam(getDemoExams(), today);
+  const todayExam = getTodaysExam(getDemoExams(), new Date());
+  const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
   const attempt = todayExam ? getDemoAttemptByExam(todayExam.id, userId) : null;
   const { rankings } = getDemoRanking('daily');
   const { rankings: weeklyRankings } = getDemoRanking('weekly');
@@ -44,17 +46,17 @@ export function getDemoDashboardData(userId = 'guest-student') {
     description: challenge.description ?? '',
   }));
 
-  return { todayExam, attempt, rankings, weeklyRankings, streak, challenges };
+  return { todayExam, attempt, rankings, weeklyRankings, streak, challenges, windowPhase };
 }
 
 export function getDemoAdminExamStatus() {
   const today = todayDateString();
   const exams = getDemoExams();
-  const todayExam = getTodaysExam(exams, today);
+  const todayExam = getTodaysExam(exams, new Date());
   const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
   const finishedCount = todayExam ? countFinishedAttempts(attempts, todayExam.id) : 0;
   const activeStudents = countActiveStudents();
-  const rankingReady = todayExam ? isRankingVisibleToTeachers(todayExam, attempts, today) : false;
+  const rankingReady = todayExam ? isRankingVisibleToTeachers(todayExam, attempts, new Date()) : false;
   const rankings = todayExam && rankingReady
     ? withProfileNames(buildExamRankings(attempts, todayExam))
     : withProfileNames(getDemoRankings('daily', today));
@@ -101,7 +103,7 @@ export function getDemoHistory() {
 export function getDemoRanking(period: 'daily' | 'weekly' | 'monthly' | 'general') {
   const today = todayDateString();
   const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
-  const todayExam = getTodaysExam(getDemoExams(), today);
+  const todayExam = getTodaysExam(getDemoExams(), new Date());
 
   let rankings: Ranking[];
   if (period === 'daily' && todayExam) {

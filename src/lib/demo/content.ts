@@ -12,6 +12,7 @@ import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
 import { getQuestionBank } from '@/lib/question-bank/pool';
 import { defaultExamReleaseFields } from '@/lib/exams/release';
+import { todayDateStringBrazil } from '@/lib/exams/window';
 
 const LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D', 'E'];
 const SOURCES = ['ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS'] as const;
@@ -122,7 +123,7 @@ export function getDemoQuestions(): Question[] {
 }
 
 export function getDemoExams(): Exam[] {
-  const start = new Date();
+  const start = new Date(`${todayDateStringBrazil()}T12:00:00`);
   const exams: Exam[] = [];
 
   for (let day = 0; day < 150; day++) {
