@@ -49,10 +49,18 @@ export interface Exam {
   id: string;
   title: string;
   date_available: string;
+  /** Último dia (inclusivo) para iniciar a prova */
+  date_closes: string;
+  /** Quantidade de dias liberados (1 ou 2) */
+  release_days: 1 | 2;
   duration_minutes: number;
   total_questions: number;
   show_answers_after_submit: boolean;
   show_answers_when_all_done: boolean;
+  /** Se false, ranking da prova fica só no painel do professor */
+  ranking_visible_to_students: boolean;
+  /** Quando o ranking da prova é consolidado para o professor */
+  ranking_release: 'after_all_done' | 'after_window' | 'immediate';
   status: ExamStatus;
   selection_mode?: SelectionMode;
   created_at: string;

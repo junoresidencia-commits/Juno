@@ -1,8 +1,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
-import type { Question } from '@/types/database';
+import type { Exam, Question } from '@/types/database';
 import type { SimuladoMode } from '@/types/simulado';
+import { MAX_STUDENTS, applyReleaseWindow } from '@/lib/exams/release';
+
+export { MAX_STUDENTS };
 
 export interface DemoInvite {
   token: string;
@@ -26,6 +29,7 @@ export interface DemoStudent {
 interface DemoStore {
   invites: DemoInvite[];
   students: DemoStudent[];
+  examOverrides?: Record<string, Partial<Exam>>;
   attempts?: {
     id: string;
     examId: string;
@@ -68,7 +72,7 @@ export interface StoredSimulado {
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
 function defaultStore(): DemoStore {
-  return { invites: [], students: [], attempts: [], customQuestions: [], simulados: [], wrongQuestions: {} };
+  return { invites: [], students: [], examOverrides: {}, attempts: [], customQuestions: [], simulados: [], wrongQuestions: {} };
 }
 
 export function readDemoStore(): DemoStore {
@@ -147,7 +151,9 @@ export function validateDemoInvite(token: string): { valid: boolean; error?: str
   }
 
   const activeCount = store.students.filter((s) => s.active).length;
-  if (activeCount >= 10) return { valid: false, error: 'Turma cheia (10 alunos). Peça ao professor.' };
+  if (activeCount >= MAX_STUDENTS) {
+    return { valid: false, error: `Turma cheia (${MAX_STUDENTS} alunos). Peça ao professor.` };
+  }
 
   return { valid: true };
 }
@@ -199,7 +205,7 @@ export function approveDemoStudent(id: string): boolean {
   if (!student) return false;
 
   const activeCount = store.students.filter((s) => s.active && s.id !== id).length;
-  if (activeCount >= 10) return false;
+  if (activeCount >= MAX_STUDENTS) return false;
 
   student.active = true;
   student.approvedAt = new Date().toISOString();
@@ -310,4 +316,55 @@ export function removeCorrectFromWrong(userId: string, questionIds: string[]): v
   const current = (store.wrongQuestions?.[userId] ?? []).filter((id) => !questionIds.includes(id));
   store.wrongQuestions = { ...(store.wrongQuestions ?? {}), [userId]: current };
   writeDemoStore(store);
+}
+
+export function getDemoExamOverrides(): Record<string, Partial<Exam>> {
+  return readDemoStore().examOverrides ?? {};
+}
+
+export function releaseDemoExam(examId: string, releaseDays: 1 | 2, startDate?: string): Exam | null {
+  const store = readDemoStore();
+  const overrides = store.examOverrides ?? {};
+
+  for (const [id, patch] of Object.entries(overrides)) {
+    if (patch.status === 'published' && id !== examId) {
+      overrides[id] = { ...patch, status: 'closed' };
+    }
+  }
+
+  const released = applyReleaseWindow(
+    {
+      id: examId,
+      title: '',
+      date_available: startDate ?? new Date().toISOString().split('T')[0],
+      date_closes: startDate ?? new Date().toISOString().split('T')[0],
+      release_days: releaseDays,
+      duration_minutes: 30,
+      total_questions: 20,
+      show_answers_after_submit: true,
+      show_answers_when_all_done: false,
+      ranking_visible_to_students: false,
+      ranking_release: 'after_all_done',
+      status: 'draft',
+      created_at: new Date().toISOString(),
+    },
+    releaseDays,
+    startDate
+  );
+
+  overrides[examId] = {
+    status: released.status,
+    date_available: released.date_available,
+    date_closes: released.date_closes,
+    release_days: released.release_days,
+    show_answers_after_submit: released.show_answers_after_submit,
+    show_answers_when_all_done: released.show_answers_when_all_done,
+    ranking_visible_to_students: released.ranking_visible_to_students,
+    ranking_release: released.ranking_release,
+    releasedAt: new Date().toISOString(),
+  } as Partial<Exam> & { releasedAt?: string };
+
+  store.examOverrides = overrides;
+  writeDemoStore(store);
+  return released;
 }

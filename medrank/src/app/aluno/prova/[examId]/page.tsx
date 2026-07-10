@@ -7,6 +7,7 @@ import type { OptionLetter, Question } from '@/types/database';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers } from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
+import { isExamOpen } from '@/lib/exams/release';
 
 export default async function ProvaPage({
   params,
@@ -18,7 +19,7 @@ export default async function ProvaPage({
 
   if (isSkipAuth()) {
     const exam = getDemoExams().find((item) => item.id === examId);
-    if (!exam) redirect('/aluno');
+    if (!exam || !isExamOpen(exam)) redirect('/aluno');
 
     let attempt = getDemoAttemptByExam(examId, userId);
     if (attempt?.finished_at) {
