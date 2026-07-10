@@ -32,14 +32,14 @@ export default async function AdminDashboard() {
           <p className="text-sm text-slate-600">Preparatório ENARE/USP com 5 meses de provas e questões reais importadas.</p>
         </header>
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Alunos ativos</p><p className="text-3xl font-bold text-emerald-700">0</p></div>
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Questões</p><p className="text-3xl font-bold">{demo.questionCount}</p></div>
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Provas</p><p className="text-3xl font-bold">{demo.examCount}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Alunos ativos</p><p className="text-3xl font-bold text-emerald-700">0</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Questões</p><p className="text-3xl font-bold text-slate-900">{demo.questionCount}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Provas</p><p className="text-3xl font-bold text-slate-900">{demo.examCount}</p></div>
         </div>
         <div className="mb-8 rounded-xl bg-amber-50 p-4 ring-1 ring-amber-200"><p className="text-sm text-amber-800">Conteúdo demo autoral criado para visualização imediata: provas diárias por 150 dias, ranking e desafios.</p></div>
-        <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <section className="mb-8 rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Ranking da semana</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Ranking da semana</h2>
             <Link href="/admin/ranking?period=weekly" className="text-sm text-emerald-700 hover:underline">
               Ver completo →
             </Link>
@@ -49,7 +49,7 @@ export default async function AdminDashboard() {
           </div>
         </section>
         <div className="grid gap-4 sm:grid-cols-2">
-          {menu.map((item) => <Link key={item.href} href={item.href} className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300"><h2 className="font-semibold">{item.label}</h2><p className="mt-1 text-sm text-slate-600">{item.desc}</p></Link>)}
+          {menu.map((item) => <Link key={item.href} href={item.href} className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300"><h2 className="font-semibold text-slate-900">{item.label}</h2><p className="mt-1 text-sm text-slate-600">{item.desc}</p></Link>)}
         </div>
       </div>
     );
@@ -106,17 +106,17 @@ export default async function AdminDashboard() {
       </header>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Alunos ativos</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Alunos ativos</p>
           <p className="text-3xl font-bold text-emerald-700">{studentCount ?? 0}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Questões</p>
-          <p className="text-3xl font-bold">{questionCount ?? 0}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Questões</p>
+          <p className="text-3xl font-bold text-slate-900">{questionCount ?? 0}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Provas</p>
-          <p className="text-3xl font-bold">{examCount ?? 0}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Provas</p>
+          <p className="text-3xl font-bold text-slate-900">{examCount ?? 0}</p>
         </div>
       </div>
 
@@ -128,9 +128,9 @@ export default async function AdminDashboard() {
         </div>
       )}
 
-      <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <section className="mb-8 rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Ranking da semana</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Ranking da semana</h2>
           <Link href="/admin/ranking?period=weekly" className="text-sm text-emerald-700 hover:underline">
             Ver completo →
           </Link>
@@ -145,9 +145,9 @@ export default async function AdminDashboard() {
           <Link
             key={item.href}
             href={item.href}
-            className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300"
+            className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300"
           >
-            <h2 className="font-semibold">{item.label}</h2>
+            <h2 className="font-semibold text-slate-900">{item.label}</h2>
             <p className="mt-1 text-sm text-slate-600">{item.desc}</p>
           </Link>
         ))}
