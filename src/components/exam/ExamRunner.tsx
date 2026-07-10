@@ -55,15 +55,22 @@ export function ExamRunner({
   );
   const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
   const [readingRemaining, setReadingRemaining] = useState(MIN_READING_SECONDS);
-  const [locked, setLocked] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const questionStartedAt = useRef(Date.now());
   const advancingRef = useRef(false);
+  const answersRef = useRef(answers);
+  const currentIndexRef = useRef(currentIndex);
+  const submittingRef = useRef(submitting);
+
+  answersRef.current = answers;
+  currentIndexRef.current = currentIndex;
+  submittingRef.current = submitting;
 
   const submitExam = useCallback(async (auto = false) => {
-    if (submitting) return;
+    if (submittingRef.current) return;
     setSubmitting(true);
+    submittingRef.current = true;
     try {
       const res = await fetch(`${apiBase}/${attemptId}/submit`, {
         method: 'POST',
@@ -77,12 +84,14 @@ export function ExamRunner({
       } else {
         alert(data.error ?? 'Erro ao enviar prova');
         setSubmitting(false);
+        submittingRef.current = false;
       }
     } catch {
       alert('Erro de conexão ao enviar prova');
       setSubmitting(false);
+      submittingRef.current = false;
     }
-  }, [attemptId, apiBase, router, resultPath, submitting]);
+  }, [attemptId, apiBase, router, resultPath]);
 
   const recordAnswer = useCallback(
     async (questionId: string, option: OptionLetter | null, timeSpentSeconds: number) => {
@@ -111,26 +120,31 @@ export function ExamRunner({
       if (advancingRef.current) return;
       advancingRef.current = true;
       const question = questions[index];
-      const timeSpent = questionLimit;
-      await recordAnswer(question.id, null, timeSpent);
-      setLocked(true);
+      if (!question) {
+        advancingRef.current = false;
+        return;
+      }
+      await recordAnswer(question.id, null, questionLimit);
       setTimeout(() => {
         advancingRef.current = false;
         goToNext(index);
-      }, 400);
+      }, 300);
     },
     [goToNext, questionLimit, questions, recordAnswer]
   );
 
   const selectAnswer = useCallback(
     async (questionId: string, option: OptionLetter) => {
-      if (locked || advancingRef.current) return;
-      if (answers[questionId]) return;
+      if (advancingRef.current || submittingRef.current) return;
+      if (answersRef.current[questionId]) return;
 
-      const timeSpent = Math.max(1, Math.floor((Date.now() - questionStartedAt.current) / 1000));
-      const newAnswers = { ...answers, [questionId]: option };
+      const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
+      if (linearMode && elapsed < MIN_READING_SECONDS) return;
+
+      const timeSpent = Math.max(1, elapsed);
+      const newAnswers = { ...answersRef.current, [questionId]: option };
       setAnswers(newAnswers);
-      setLocked(true);
+      answersRef.current = newAnswers;
       advancingRef.current = true;
 
       await recordAnswer(questionId, option, timeSpent);
@@ -138,61 +152,78 @@ export function ExamRunner({
       setTimeout(() => {
         advancingRef.current = false;
         if (linearMode) {
-          goToNext(currentIndex);
-        } else {
-          setLocked(false);
+          goToNext(currentIndexRef.current);
         }
-      }, 500);
+      }, 300);
     },
-    [answers, currentIndex, goToNext, linearMode, locked, recordAnswer]
+    [goToNext, linearMode, recordAnswer]
   );
-
-  // Cronômetro total da prova
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const secs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
-      setRemaining(secs);
-      if (secs <= 0) {
-        clearInterval(interval);
-        submitExam(true);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [startedAt, durationMinutes, submitExam]);
 
   // Reinicia cronômetro da questão ao mudar de índice
   useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
     setReadingRemaining(MIN_READING_SECONDS);
-    setLocked(Boolean(answers[questions[currentIndex]?.id]));
-  }, [currentIndex, questionLimit, questions, answers]);
+  }, [currentIndex, questionLimit]);
 
-  // Cronômetro por questão (modo linear)
+  // Pula questões já respondidas ao retomar a prova
   useEffect(() => {
-    if (!linearMode || locked) return;
+    const questionId = questions[currentIndex]?.id;
+    if (!questionId || !answersRef.current[questionId]) return;
+    if (advancingRef.current) return;
 
-    const interval = setInterval(() => {
+    const nextUnanswered = questions.findIndex((q, i) => i > currentIndex && !answersRef.current[q.id]);
+    if (nextUnanswered !== -1) {
+      setCurrentIndex(nextUnanswered);
+      return;
+    }
+    const allDone = questions.every((q) => answersRef.current[q.id]);
+    if (allDone) {
+      submitExam(true);
+    }
+  }, [currentIndex, questions, submitExam]);
+
+  // Cronômetro único — mais confiável no Safari/iOS que vários setIntervals
+  useEffect(() => {
+    const tick = () => {
+      const examSecs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
+      setRemaining(examSecs);
+      if (examSecs <= 0) {
+        submitExam(true);
+        return;
+      }
+
+      if (!linearMode) return;
+
+      const index = currentIndexRef.current;
+      const question = questions[index];
+      if (!question || answersRef.current[question.id] || advancingRef.current) return;
+
       const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
       const left = Math.max(0, questionLimit - elapsed);
+      const readingLeft = Math.max(0, MIN_READING_SECONDS - elapsed);
+
       setQuestionRemaining(left);
-      setReadingRemaining(Math.max(0, MIN_READING_SECONDS - elapsed));
+      setReadingRemaining(readingLeft);
 
-      if (left <= 0 && !answers[questions[currentIndex]?.id]) {
-        clearInterval(interval);
-        skipQuestion(currentIndex);
+      if (left <= 0) {
+        skipQuestion(index);
       }
-    }, 250);
+    };
 
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [answers, currentIndex, linearMode, locked, questionLimit, questions, skipQuestion]);
+  }, [durationMinutes, linearMode, questionLimit, questions, skipQuestion, startedAt, submitExam]);
 
   const current = questions[currentIndex];
+  if (!current) return null;
+
   const answeredCount = Object.keys(answers).length;
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
-  const canSelect = !locked && readingRemaining <= 0;
   const currentAnswered = Boolean(answers[current.id]);
+  const canSelect = readingRemaining <= 0 && !currentAnswered && !submitting;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
@@ -249,18 +280,22 @@ export function ExamRunner({
       <div className="mb-6 space-y-2">
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
+          if (!text) return null;
           const selected = answers[current.id] === letter;
-          const disabled = !canSelect && !selected;
+          const inactive = !canSelect || currentAnswered;
           return (
             <button
               key={letter}
               type="button"
-              disabled={disabled || currentAnswered}
-              onClick={() => selectAnswer(current.id, letter)}
-              className={`flex w-full items-start gap-3 rounded-xl border p-4 text-left transition ${
+              aria-disabled={inactive}
+              onClick={() => {
+                if (inactive) return;
+                selectAnswer(current.id, letter);
+              }}
+              className={`flex w-full touch-manipulation items-start gap-3 rounded-xl border p-4 text-left transition active:scale-[0.99] ${
                 selected
                   ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                  : disabled
+                  : inactive
                     ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
                     : 'border-slate-200 bg-white hover:border-emerald-300'
               }`}
