@@ -40,9 +40,7 @@ export function getDemoAttemptById(attemptId: string) {
 export function createDemoAttempt(examId: string, userId = 'guest-student'): Attempt {
   const existing = getDemoAttemptByExam(examId, userId);
   if (existing?.finished_at) return existing;
-  if (existing && !existing.finished_at) {
-    throw new Error('Prova já iniciada');
-  }
+  if (existing && !existing.finished_at) return existing;
 
   const exam = getDemoExams().find((item) => item.id === examId);
   if (!exam) {
