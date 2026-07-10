@@ -86,6 +86,7 @@ export interface Attempt {
   percentage: number | null;
   submitted_automatically: boolean;
   created_at: string;
+  forfeited?: boolean;
 }
 
 export interface AttemptAnswer {

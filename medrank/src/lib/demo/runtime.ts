@@ -24,6 +24,7 @@ function mapStoredAttempt(item: StoredAttempt): Attempt {
     percentage: item.percentage,
     submitted_automatically: item.submittedAutomatically,
     created_at: item.startedAt,
+    forfeited: item.forfeited ?? false,
   };
 }
 
@@ -38,7 +39,10 @@ export function getDemoAttemptById(attemptId: string) {
 
 export function createDemoAttempt(examId: string, userId = 'guest-student'): Attempt {
   const existing = getDemoAttemptByExam(examId, userId);
-  if (existing) return existing;
+  if (existing?.finished_at) return existing;
+  if (existing && !existing.finished_at) {
+    throw new Error('Prova já iniciada');
+  }
 
   const exam = getDemoExams().find((item) => item.id === examId);
   if (!exam) {
@@ -110,6 +114,21 @@ export function getDemoAttemptAnswers(attemptId: string): AttemptAnswer[] {
       answered_at: attempt.finishedAt ?? null,
     };
   });
+}
+
+export function forfeitDemoAttempt(attemptId: string) {
+  const attempt = (getDemoAttempts() ?? []).find((item) => item.id === attemptId);
+  if (!attempt) throw new Error('Tentativa não encontrada');
+  if (attempt.finishedAt) return mapStoredAttempt(attempt);
+  attempt.forfeited = true;
+  saveDemoAttempt(attempt);
+  return submitDemoAttempt(attemptId, true);
+}
+
+export function forfeitAbandonedDemoAttempt(examId: string, userId: string): Attempt | null {
+  const attempt = getDemoAttemptByExam(examId, userId);
+  if (!attempt || attempt.finished_at) return attempt;
+  return forfeitDemoAttempt(attempt.id);
 }
 
 export function submitDemoAttempt(attemptId: string, auto = false) {

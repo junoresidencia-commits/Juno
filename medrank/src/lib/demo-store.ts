@@ -41,6 +41,7 @@ interface DemoStore {
     totalQuestions: number;
     percentage: number | null;
     submittedAutomatically: boolean;
+    forfeited?: boolean;
     answers: Record<string, string>;
     answerTimes?: Record<string, number>;
   }[];

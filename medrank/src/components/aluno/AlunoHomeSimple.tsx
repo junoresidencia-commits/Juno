@@ -7,7 +7,6 @@ import {
   studentDailyRankingLabel,
   studentRankingBeforeFinishMessage,
 } from '@/lib/exams/ranking-visibility';
-import { DemoResetTodayButton } from '@/components/aluno/DemoResetTodayButton';
 
 type WindowPhase = 'before' | 'open' | 'after' | 'wrong_day' | null;
 
@@ -17,15 +16,14 @@ interface Props {
   todayExam: Exam | null;
   windowPhase: WindowPhase;
   canStart: boolean;
-  inProgress: boolean;
   completed: boolean;
+  forfeitedToday: boolean;
   missedToday: boolean;
   attemptId?: string;
   showRanking: boolean;
   todayRankings: RankingPreviewRow[];
   rankingDate: string;
   showLogout?: boolean;
-  demoMode?: boolean;
 }
 
 export function AlunoHomeSimple({
@@ -34,15 +32,14 @@ export function AlunoHomeSimple({
   todayExam,
   windowPhase,
   canStart,
-  inProgress,
   completed,
+  forfeitedToday,
   missedToday,
   attemptId,
   showRanking,
   todayRankings,
   rankingDate,
   showLogout,
-  demoMode,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
@@ -71,27 +68,30 @@ export function AlunoHomeSimple({
                 href={examHref}
                 className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]"
               >
-                Fazer prova de hoje
+                Começar a prova!
               </Link>
             )}
-            {inProgress && (
+            {forfeitedToday && (
+              <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
+                <p className="text-lg font-semibold text-red-900">Você saiu da prova</p>
+                <p className="mt-2 text-sm text-red-700">Perdeu o dia — não dá para refazer hoje.</p>
+                {attemptId && (
+                  <Link
+                    href={resultHref}
+                    className="mt-4 inline-block text-sm font-medium text-red-800 underline-offset-2 hover:underline"
+                  >
+                    Ver o que ficou registrado →
+                  </Link>
+                )}
+              </div>
+            )}
+            {completed && !forfeitedToday && (
               <Link
-                href={examHref}
-                className="flex w-full items-center justify-center rounded-2xl bg-blue-600 px-6 py-6 text-xl font-bold text-white shadow-lg active:scale-[0.98]"
+                href={resultHref}
+                className="flex w-full items-center justify-center rounded-2xl bg-slate-700 px-6 py-5 text-lg font-semibold text-white active:scale-[0.98]"
               >
-                Continuar prova
+                Ver seu resultado
               </Link>
-            )}
-            {completed && (
-              <>
-                <Link
-                  href={resultHref}
-                  className="flex w-full items-center justify-center rounded-2xl bg-slate-700 px-6 py-5 text-lg font-semibold text-white active:scale-[0.98]"
-                >
-                  Ver seu resultado
-                </Link>
-                {demoMode && todayExam && <DemoResetTodayButton examId={todayExam.id} />}
-              </>
             )}
             {windowPhase === 'before' && (
               <div className="rounded-2xl bg-blue-50 px-6 py-8 text-center ring-1 ring-blue-100">
@@ -109,6 +109,11 @@ export function AlunoHomeSimple({
             <p className="mt-4 text-center text-sm text-slate-600">
               {todayExam.total_questions} questões · {todayExam.duration_minutes} min · {formatExamWindowShort()}
             </p>
+            {canStart && (
+              <p className="mt-2 text-center text-xs text-slate-500">
+                Uma chance por dia. Se sair, perde a prova inteira.
+              </p>
+            )}
           </>
         ) : (
           <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
