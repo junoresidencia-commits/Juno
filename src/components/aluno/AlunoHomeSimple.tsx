@@ -7,6 +7,7 @@ import {
   studentDailyRankingLabel,
   studentRankingBeforeFinishMessage,
 } from '@/lib/exams/ranking-visibility';
+import { DemoResetTodayButton } from '@/components/aluno/DemoResetTodayButton';
 
 type WindowPhase = 'before' | 'open' | 'after' | 'wrong_day' | null;
 
@@ -24,6 +25,7 @@ interface Props {
   todayRankings: RankingPreviewRow[];
   rankingDate: string;
   showLogout?: boolean;
+  demoMode?: boolean;
 }
 
 export function AlunoHomeSimple({
@@ -40,6 +42,7 @@ export function AlunoHomeSimple({
   todayRankings,
   rankingDate,
   showLogout,
+  demoMode,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
@@ -80,12 +83,15 @@ export function AlunoHomeSimple({
               </Link>
             )}
             {completed && (
-              <Link
-                href={resultHref}
-                className="flex w-full items-center justify-center rounded-2xl bg-slate-700 px-6 py-5 text-lg font-semibold text-white active:scale-[0.98]"
-              >
-                Ver seu resultado
-              </Link>
+              <>
+                <Link
+                  href={resultHref}
+                  className="flex w-full items-center justify-center rounded-2xl bg-slate-700 px-6 py-5 text-lg font-semibold text-white active:scale-[0.98]"
+                >
+                  Ver seu resultado
+                </Link>
+                {demoMode && todayExam && <DemoResetTodayButton examId={todayExam.id} />}
+              </>
             )}
             {windowPhase === 'before' && (
               <div className="rounded-2xl bg-blue-50 px-6 py-8 text-center ring-1 ring-blue-100">
