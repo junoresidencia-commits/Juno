@@ -57,4 +57,14 @@
     -webkit-touch-callout: none;
     touch-action: manipulation;
   }
+
+  /* Botões da prova: alvo de toque grande, sem delay, qualquer celular */
+  .exam-tap {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    min-height: 3rem;
+  }
 }
