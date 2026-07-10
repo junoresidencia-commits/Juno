@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import type { Attempt, AttemptAnswer, OptionLetter, Question } from '@/types/database';
-import { getDemoAttempts, saveDemoAttempt } from '@/lib/demo-store';
+import { getDemoAttempts, saveDemoAttempt, readDemoStore, writeDemoStore } from '@/lib/demo-store';
 import { getDemoExamQuestions, getDemoExams, getDemoRankings, getSeededAttemptAnswers, getSeededAttempts } from '@/lib/demo/content';
 import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 
@@ -149,6 +149,17 @@ export function submitDemoAttempt(attemptId: string, auto = false) {
   attempt.submittedAutomatically = auto;
   saveDemoAttempt(attempt);
   return mapStoredAttempt(attempt);
+}
+
+export function resetDemoAttempt(examId: string, userId: string): boolean {
+  const store = readDemoStore();
+  const before = (store.attempts ?? []).length;
+  store.attempts = (store.attempts ?? []).filter(
+    (item) => !(item.examId === examId && item.userId === userId)
+  );
+  if (store.attempts.length === before) return false;
+  writeDemoStore(store);
+  return true;
 }
 
 export function getDemoRankingForDate(date: string) {
