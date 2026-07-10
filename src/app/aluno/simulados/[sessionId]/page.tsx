@@ -29,10 +29,10 @@ export default async function SimuladoSessionPage({
 
   return (
     <div>
-      <div className="border-b border-slate-200 bg-white px-4 py-3">
+      <div className="border-b border-slate-200 bg-white px-4 py-3 text-slate-900">
         <Link href="/aluno/simulados" className="text-sm text-emerald-700 hover:underline">← Simulados</Link>
         <h1 className="mt-1 text-lg font-semibold">{session.title}</h1>
-        <p className="text-xs text-slate-500">{session.total_questions} questões · {session.duration_minutes} min</p>
+        <p className="text-xs text-slate-600">{session.total_questions} questões · {session.duration_minutes} min</p>
       </div>
       <ExamRunner
         attemptId={sessionId}

@@ -35,7 +35,7 @@ export default async function ConvitesPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <h1 className="mt-4 text-2xl font-bold">Convites</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Convites</h1>
       <p className="text-sm text-slate-600">Cada convite é para um e-mail específico. Você libera o acesso depois do cadastro.</p>
 
       <div className="mt-6">
@@ -43,16 +43,16 @@ export default async function ConvitesPage() {
       </div>
 
       <section className="mt-8">
-        <h2 className="font-semibold">Links gerados</h2>
+        <h2 className="font-semibold text-slate-900">Links gerados</h2>
         <div className="mt-4 space-y-3">
           {invites.length === 0 ? (
-            <p className="text-sm text-slate-500">Nenhum convite ainda.</p>
+            <p className="text-sm text-slate-600">Nenhum convite ainda.</p>
           ) : (
             invites.map((i) => (
               <div key={i.token} className="rounded-xl bg-white p-4 text-sm text-slate-900 shadow-sm ring-1 ring-slate-200">
                 {i.email && <p className="font-medium text-slate-900">{i.email}</p>}
                 <p className="mt-1 break-all text-slate-700">{i.link}</p>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-600">
                   Expira: {formatDateBR(i.expires_at.split('T')[0])}
                   {' · '}
                   {i.used_at ? '✓ Usado' : 'Disponível'}

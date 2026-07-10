@@ -33,7 +33,7 @@ export default function ImportarPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <h1 className="mt-4 text-2xl font-bold">Importar questões</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar questões</h1>
       <p className="mt-2 text-sm text-slate-600">
         Envie um arquivo CSV ou Excel com as colunas do template.
       </p>
@@ -49,7 +49,7 @@ export default function ImportarPage() {
         Baixar template CSV
       </a>
 
-      <form onSubmit={handleSubmit} className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <form onSubmit={handleSubmit} className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <input
           name="file"
           type="file"
@@ -67,7 +67,7 @@ export default function ImportarPage() {
       </form>
 
       {result && (
-        <div className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+        <div className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <p className="font-medium text-emerald-700">{result.imported} questões importadas</p>
           {result.errors.length > 0 && (
             <ul className="mt-2 list-inside list-disc text-sm text-red-600">

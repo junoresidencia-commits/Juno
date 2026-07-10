@@ -31,7 +31,7 @@ export function ReportDownloads() {
   }
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
       <h2 className="font-semibold">Exportar relatório completo</h2>
       <p className="mt-1 text-sm text-slate-600">
         Inclui desempenho por aluno, ranking, estatísticas por tema e questões com mais erro.

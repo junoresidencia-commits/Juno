@@ -73,10 +73,10 @@ export function SimuladoLauncher({ wrongCount }: Props) {
             type="button"
             disabled={loading !== null || (item.mode === 'revisao_erros' && wrongCount === 0)}
             onClick={() => start(item.mode)}
-            className="rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-2xl bg-white p-5 text-left text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:ring-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <p className="text-2xl">{item.icon}</p>
-            <p className="mt-2 font-semibold">{item.title}</p>
+            <p className="mt-2 font-semibold text-slate-900">{item.title}</p>
             <p className="mt-1 text-sm text-slate-600">{item.description}</p>
             {item.mode === 'revisao_erros' && (
               <p className="mt-2 text-xs text-amber-700">{wrongCount} questões na fila de revisão</p>
@@ -88,8 +88,8 @@ export function SimuladoLauncher({ wrongCount }: Props) {
         ))}
       </div>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold">Simulado por área</h2>
+      <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <h2 className="text-lg font-semibold text-slate-900">Simulado por área</h2>
         <p className="mt-1 text-sm text-slate-600">Foque em uma grande área da residência médica.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <select
@@ -112,8 +112,8 @@ export function SimuladoLauncher({ wrongCount }: Props) {
         </div>
       </section>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold">Simulado por tema</h2>
+      <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
+        <h2 className="text-lg font-semibold text-slate-900">Simulado por tema</h2>
         <p className="mt-1 text-sm text-slate-600">Busque por tema, subtema ou palavra-chave.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <input

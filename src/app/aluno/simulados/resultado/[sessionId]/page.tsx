@@ -29,25 +29,25 @@ export default async function SimuladoResultadoPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/aluno/simulados" className="text-sm text-emerald-700 hover:underline">← Simulados</Link>
-      <h1 className="mt-4 text-2xl font-bold">Resultado do simulado</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Resultado do simulado</h1>
       <p className="text-slate-600">{session.title}</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Acertos</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Acertos</p>
           <p className="text-3xl font-bold text-emerald-700">{session.total_correct}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Erros</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Erros</p>
           <p className="text-3xl font-bold text-red-600">{totalWrong}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Percentual</p>
-          <p className="text-3xl font-bold">{formatPercent(session.percentage)}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Percentual</p>
+          <p className="text-3xl font-bold text-slate-900">{formatPercent(session.percentage)}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Tempo</p>
-          <p className="text-3xl font-bold">{formatDuration(session.duration_seconds ?? 0)}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Tempo</p>
+          <p className="text-3xl font-bold text-slate-900">{formatDuration(session.duration_seconds ?? 0)}</p>
         </div>
       </div>
 
@@ -96,7 +96,7 @@ function QuestionReview({
 }) {
   return (
     <div className={`rounded-xl p-5 ring-1 ${isCorrect ? 'bg-emerald-50 ring-emerald-200' : 'bg-red-50 ring-red-200'}`}>
-      <p className="text-xs font-medium text-slate-500">
+      <p className="text-xs font-medium text-slate-600">
         Questão {index} · {question.topic}{question.subtopic ? ` · ${question.subtopic}` : ''}
       </p>
       <p className="mt-2 whitespace-pre-wrap text-sm">{question.statement}</p>
@@ -122,7 +122,7 @@ function QuestionReview({
           <strong>Comentário:</strong> {question.explanation}
         </p>
       )}
-      <p className="mt-2 text-xs text-slate-500">
+      <p className="mt-2 text-xs text-slate-600">
         {question.source} {question.year} · {question.difficulty}
       </p>
     </div>

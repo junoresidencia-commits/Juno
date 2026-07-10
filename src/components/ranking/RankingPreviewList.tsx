@@ -35,7 +35,7 @@ export function RankingPreviewList({
   emptyLabel?: string;
 }) {
   if (rankings.length === 0) {
-    return <p className="text-sm text-slate-500">{emptyLabel}</p>;
+    return <p className="text-sm text-slate-600">{emptyLabel}</p>;
   }
 
   return (

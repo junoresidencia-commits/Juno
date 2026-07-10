@@ -69,9 +69,9 @@ export function ChallengeManager({ challenges, weekStart, weekEnd }: Props) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <form onSubmit={handleSubmit} className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <h2 className="font-semibold">Novo desafio semanal</h2>
-        <p className="text-xs text-slate-500">Semana: {weekStart} a {weekEnd}</p>
+        <p className="text-xs text-slate-600">Semana: {weekStart} a {weekEnd}</p>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -117,15 +117,15 @@ export function ChallengeManager({ challenges, weekStart, weekEnd }: Props) {
 
       <div className="mt-8 space-y-4">
         {challenges.length === 0 ? (
-          <p className="text-slate-500">Nenhum desafio esta semana.</p>
+          <p className="text-slate-600">Nenhum desafio esta semana.</p>
         ) : (
           challenges.map((ch) => {
             const completions = ch.weekly_challenge_completions ?? [];
             return (
-              <div key={ch.id} className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+              <div key={ch.id} className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
                 <h3 className="font-semibold">{ch.title}</h3>
                 {ch.description && <p className="text-sm text-slate-600">{ch.description}</p>}
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-slate-600">
                   {CHALLENGE_TYPE_LABELS[ch.challenge_type]} · meta: {ch.target_value}
                   {ch.topic ? ` · ${ch.topic}` : ''} · +{ch.bonus_points} pts
                 </p>

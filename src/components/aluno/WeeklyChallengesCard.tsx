@@ -9,7 +9,7 @@ export function WeeklyChallengesCard({ challenges }: Props) {
   if (challenges.length === 0) return null;
 
   return (
-    <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="mb-8 rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
       <h2 className="text-lg font-semibold">Desafios da semana</h2>
       <div className="mt-4 space-y-4">
         {challenges.map(({ challenge, currentValue, completed, description }) => {
@@ -23,12 +23,12 @@ export function WeeklyChallengesCard({ challenges }: Props) {
                     ✓ Concluído +{challenge.bonus_points} pts
                   </span>
                 ) : (
-                  <span className="text-slate-500">
+                  <span className="text-slate-600">
                     {currentValue}/{challenge.target_value}
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500">{description}</p>
+              <p className="text-xs text-slate-600">{description}</p>
               <div className="mt-2 h-2 rounded-full bg-slate-100">
                 <div
                   className={`h-2 rounded-full ${completed ? 'bg-emerald-500' : 'bg-amber-400'}`}

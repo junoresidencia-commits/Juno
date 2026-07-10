@@ -48,7 +48,7 @@ export function AlunoHomeSimple({
     <div className="mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-lg flex-col px-4 py-6">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-500">Olá,</p>
+          <p className="text-sm text-slate-600">Olá,</p>
           <h1 className="text-2xl font-bold tracking-tight">{name}</h1>
         </div>
         {showLogout && (
@@ -100,20 +100,20 @@ export function AlunoHomeSimple({
               </div>
             )}
 
-            <p className="mt-4 text-center text-sm text-slate-500">
+            <p className="mt-4 text-center text-sm text-slate-600">
               {todayExam.total_questions} questões · {todayExam.duration_minutes} min · {formatExamWindowShort()}
             </p>
           </>
         ) : (
-          <div className="rounded-2xl bg-white px-6 py-10 text-center ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
             <p className="text-slate-600">Nenhuma prova para hoje.</p>
           </div>
         )}
       </section>
 
-      <section className="mt-8 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+      <section className="mt-8 rounded-2xl bg-white p-5 text-slate-900 ring-1 ring-slate-200">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-semibold">{studentDailyRankingLabel(rankingDate)}</h2>
+          <h2 className="font-semibold text-slate-900">{studentDailyRankingLabel(rankingDate)}</h2>
           {showRanking && (
             <Link href="/aluno/ranking" className="shrink-0 text-sm text-emerald-700">
               Ver →
@@ -125,16 +125,16 @@ export function AlunoHomeSimple({
             todayRankings.length > 0 ? (
               <RankingPreviewList rankings={todayRankings} userId={userId} />
             ) : (
-              <p className="text-sm text-slate-500">Aguardando primeiros resultados…</p>
+              <p className="text-sm text-slate-600">Aguardando primeiros resultados…</p>
             )
           ) : (
-            <p className="text-sm text-slate-500">{studentRankingBeforeFinishMessage()}</p>
+            <p className="text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
           )}
         </div>
       </section>
 
       <footer className="mt-6 pb-4 text-center">
-        <Link href="/aluno/ranking?period=weekly" className="text-sm text-slate-500 underline-offset-2 hover:text-emerald-700 hover:underline">
+        <Link href="/aluno/ranking?period=weekly" className="text-sm text-slate-600 underline-offset-2 hover:text-emerald-700 hover:underline">
           Ranking da semana
         </Link>
       </footer>

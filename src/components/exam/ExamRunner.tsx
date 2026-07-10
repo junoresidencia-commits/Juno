@@ -91,9 +91,9 @@ export function ExamRunner({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <div className="mb-6 flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <div className="mb-6 flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <div>
-          <p className="text-sm text-slate-500">Questão {currentIndex + 1} de {questions.length}</p>
+          <p className="text-sm text-slate-600">Questão {currentIndex + 1} de {questions.length}</p>
           <p className="text-xs text-slate-400">{answeredCount} respondidas</p>
         </div>
         <div
@@ -105,13 +105,13 @@ export function ExamRunner({
         </div>
       </div>
 
-      <div className="mb-4 rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <div className="mb-4 rounded-xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
         {current.topic && (
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-emerald-600">
             {current.topic}{current.subtopic ? ` · ${current.subtopic}` : ''}
           </p>
         )}
-        <p className="whitespace-pre-wrap text-base leading-relaxed">{current.statement}</p>
+        <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={current.image_url} alt="Imagem da questão" className="mt-4 max-h-64 rounded-lg" />
@@ -138,7 +138,7 @@ export function ExamRunner({
               }`}>
                 {letter}
               </span>
-              <span className="text-sm leading-relaxed">{text}</span>
+              <span className="text-sm leading-relaxed text-slate-900">{text}</span>
             </button>
           );
         })}

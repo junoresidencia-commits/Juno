@@ -43,7 +43,7 @@ export default function NovaQuestaoPage() {
       <Link href="/admin/questoes" className="text-sm text-emerald-700 hover:underline">
         ← Voltar
       </Link>
-      <h1 className="mt-4 text-2xl font-bold">Nova questão</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Nova questão</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
