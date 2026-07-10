@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
 import type { Question } from '@/types/database';
+import type { SimuladoMode } from '@/types/simulado';
 
 export interface DemoInvite {
   token: string;
@@ -40,12 +41,34 @@ interface DemoStore {
     answers: Record<string, string>;
   }[];
   customQuestions?: Question[];
+  simulados?: StoredSimulado[];
+  wrongQuestions?: Record<string, string[]>;
+}
+
+export interface StoredSimulado {
+  id: string;
+  userId: string;
+  mode: SimuladoMode;
+  title: string;
+  areaFilter: string | null;
+  themeFilter: string | null;
+  questionIds: string[];
+  durationMinutes: number;
+  startedAt: string;
+  finishedAt: string | null;
+  durationSeconds: number | null;
+  score: number | null;
+  totalCorrect: number;
+  totalQuestions: number;
+  percentage: number | null;
+  submittedAutomatically: boolean;
+  answers: Record<string, string>;
 }
 
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
 function defaultStore(): DemoStore {
-  return { invites: [], students: [], attempts: [], customQuestions: [] };
+  return { invites: [], students: [], attempts: [], customQuestions: [], simulados: [], wrongQuestions: {} };
 }
 
 export function readDemoStore(): DemoStore {
@@ -246,4 +269,45 @@ export function appendDemoImportedQuestions(rows: ImportableQuestion[]): number 
   store.customQuestions = current;
   writeDemoStore(store);
   return rows.length;
+}
+
+export function getDemoSimulados(userId?: string): StoredSimulado[] {
+  const simulados = readDemoStore().simulados ?? [];
+  return userId ? simulados.filter((s) => s.userId === userId) : simulados;
+}
+
+export function getDemoSimuladoById(id: string): StoredSimulado | null {
+  return getDemoSimulados().find((s) => s.id === id) ?? null;
+}
+
+export function saveDemoSimulado(simulado: StoredSimulado): void {
+  const store = readDemoStore();
+  const simulados = store.simulados ?? [];
+  const index = simulados.findIndex((s) => s.id === simulado.id);
+  if (index >= 0) {
+    simulados[index] = simulado;
+  } else {
+    simulados.push(simulado);
+  }
+  store.simulados = simulados;
+  writeDemoStore(store);
+}
+
+export function getWrongQuestionIds(userId: string): string[] {
+  return readDemoStore().wrongQuestions?.[userId] ?? [];
+}
+
+export function addWrongQuestionIds(userId: string, questionIds: string[]): void {
+  const store = readDemoStore();
+  const current = new Set(store.wrongQuestions?.[userId] ?? []);
+  questionIds.forEach((id) => current.add(id));
+  store.wrongQuestions = { ...(store.wrongQuestions ?? {}), [userId]: [...current] };
+  writeDemoStore(store);
+}
+
+export function removeCorrectFromWrong(userId: string, questionIds: string[]): void {
+  const store = readDemoStore();
+  const current = (store.wrongQuestions?.[userId] ?? []).filter((id) => !questionIds.includes(id));
+  store.wrongQuestions = { ...(store.wrongQuestions ?? {}), [userId]: current };
+  writeDemoStore(store);
 }

@@ -68,6 +68,8 @@ export default async function AlunoDashboard() {
           <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">Desempenho</h2>
             <div className="mt-4 space-y-2 text-sm">
+              <Link href="/aluno/simulados" className="block font-medium text-emerald-700 hover:underline">Simulados aleatórios (20 questões) →</Link>
+              <Link href="/aluno/banco" className="block text-emerald-700 hover:underline">Banco de questões →</Link>
               <Link href="/aluno/historico" className="block text-emerald-700 hover:underline">Histórico de provas →</Link>
               <Link href="/aluno/desempenho" className="block text-emerald-700 hover:underline">Desempenho por tema →</Link>
               <Link href="/aluno/ranking" className="block text-emerald-700 hover:underline">Ranking geral →</Link>

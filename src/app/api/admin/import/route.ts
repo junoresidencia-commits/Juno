@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { parseImportRow } from '@/lib/utils';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { appendDemoImportedQuestions } from '@/lib/demo-store';
+import { invalidateQuestionBankCache } from '@/lib/question-bank/pool';
 import type { ImportQuestionRow } from '@/types/database';
 
 export async function POST(request: Request) {
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
 
   if (isSkipAuth()) {
     const imported = appendDemoImportedQuestions(toInsert);
+    invalidateQuestionBankCache();
     return NextResponse.json({ imported, errors });
   }
 
