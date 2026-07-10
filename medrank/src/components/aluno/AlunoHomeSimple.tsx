@@ -3,12 +3,16 @@ import type { Exam } from '@/types/database';
 import type { RankingPreviewRow } from '@/components/ranking/RankingPreviewList';
 import { RankingPreviewList } from '@/components/ranking/RankingPreviewList';
 import { formatExamWindowShort } from '@/lib/exams/window';
-import { studentDailyRankingLabel, studentRankingAvailableTomorrowMessage } from '@/lib/exams/ranking-visibility';
+import {
+  studentDailyRankingLabel,
+  studentRankingBeforeFinishMessage,
+} from '@/lib/exams/ranking-visibility';
 
 type WindowPhase = 'before' | 'open' | 'after' | 'wrong_day' | null;
 
 interface Props {
   name: string;
+  userId?: string;
   todayExam: Exam | null;
   windowPhase: WindowPhase;
   canStart: boolean;
@@ -16,13 +20,15 @@ interface Props {
   completed: boolean;
   missedToday: boolean;
   attemptId?: string;
-  yesterdayRankings: RankingPreviewRow[];
-  yesterdayDate: string;
+  showRanking: boolean;
+  todayRankings: RankingPreviewRow[];
+  rankingDate: string;
   showLogout?: boolean;
 }
 
 export function AlunoHomeSimple({
   name,
+  userId,
   todayExam,
   windowPhase,
   canStart,
@@ -30,8 +36,9 @@ export function AlunoHomeSimple({
   completed,
   missedToday,
   attemptId,
-  yesterdayRankings,
-  yesterdayDate,
+  showRanking,
+  todayRankings,
+  rankingDate,
   showLogout,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
@@ -88,8 +95,8 @@ export function AlunoHomeSimple({
             )}
             {missedToday && (
               <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Prazo encerrado</p>
-                <p className="mt-2 text-sm text-red-700">A prova de hoje era até 22h. Sem pontos neste dia.</p>
+                <p className="text-lg font-semibold text-red-900">Você não fez a prova hoje</p>
+                <p className="mt-2 text-sm text-red-700">Sem pontos neste dia — veja o ranking abaixo.</p>
               </div>
             )}
 
@@ -106,16 +113,22 @@ export function AlunoHomeSimple({
 
       <section className="mt-8 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-semibold">{studentDailyRankingLabel(yesterdayDate)}</h2>
-          <Link href="/aluno/ranking" className="shrink-0 text-sm text-emerald-700">
-            Ver →
-          </Link>
+          <h2 className="font-semibold">{studentDailyRankingLabel(rankingDate)}</h2>
+          {showRanking && (
+            <Link href="/aluno/ranking" className="shrink-0 text-sm text-emerald-700">
+              Ver →
+            </Link>
+          )}
         </div>
         <div className="mt-3">
-          {yesterdayRankings.length > 0 ? (
-            <RankingPreviewList rankings={yesterdayRankings} />
+          {showRanking ? (
+            todayRankings.length > 0 ? (
+              <RankingPreviewList rankings={todayRankings} userId={userId} />
+            ) : (
+              <p className="text-sm text-slate-500">Aguardando primeiros resultados…</p>
+            )
           ) : (
-            <p className="text-sm text-slate-500">{studentRankingAvailableTomorrowMessage()}</p>
+            <p className="text-sm text-slate-500">{studentRankingBeforeFinishMessage()}</p>
           )}
         </div>
       </section>

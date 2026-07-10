@@ -3,7 +3,10 @@ import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenge
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
 import { getTodaysExam, todayDateString, getExamWindowStatus } from '@/lib/exams/release';
-import { getStudentDailyRankingDate } from '@/lib/exams/ranking-visibility';
+import {
+  canStudentSeeTodayRanking,
+  getTodayRankingDate,
+} from '@/lib/exams/ranking-visibility';
 import { buildExamRankings, isRankingVisibleToTeachers, countFinishedAttempts, countActiveStudents } from '@/lib/exams/ranking';
 import { listDemoStudents } from '@/lib/demo-store';
 
@@ -29,13 +32,17 @@ function withProfileNames(rankings: Ranking[]): (Ranking & { profiles: { name: s
 }
 
 export function getDemoDashboardData(userId = 'guest-student') {
-  const yesterdayDate = getStudentDailyRankingDate();
   const todayExam = getTodaysExam(getDemoExams(), new Date());
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
   const attempt = todayExam ? getDemoAttemptByExam(todayExam.id, userId) : null;
-  const { rankings: yesterdayRankings } = getDemoRanking('daily', yesterdayDate);
+  const hasFinished = Boolean(attempt?.finished_at);
+  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
+  const rankingDate = getTodayRankingDate();
+  const { rankings: todayRankings } = showRanking
+    ? getDemoRanking('daily', rankingDate)
+    : { rankings: [] };
 
-  return { todayExam, attempt, yesterdayRankings, windowPhase };
+  return { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate };
 }
 
 export function getDemoAdminExamStatus() {
