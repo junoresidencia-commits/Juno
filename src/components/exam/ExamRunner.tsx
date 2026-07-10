@@ -55,11 +55,11 @@ export function ExamRunner({
   );
   const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
   const [submitting, setSubmitting] = useState(false);
+  const [pendingChoice, setPendingChoice] = useState<OptionLetter | null>(null);
 
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
   const selectingRef = useRef(false);
-  const lastSelectAt = useRef(0);
   const answersRef = useRef(initialAnswers);
   const currentIndexRef = useRef(firstOpenIndex);
   const submittingRef = useRef(false);
@@ -107,22 +107,27 @@ export function ExamRunner({
     [apiBase, attemptId]
   );
 
-  const handleSelect = (option: OptionLetter) => {
-    const now = Date.now();
-    if (now - lastSelectAt.current < 400) return;
-    if (selectingRef.current || submittingRef.current) return;
+  const handlePick = (option: OptionLetter) => {
+    if (submittingRef.current) return;
+    const question = questions[currentIndexRef.current];
+    if (!question || answersRef.current[question.id]) return;
+    setPendingChoice(option);
+  };
+
+  const handleNext = () => {
+    if (!pendingChoice || selectingRef.current || submittingRef.current) return;
 
     const index = currentIndexRef.current;
     const question = questions[index];
     if (!question || answersRef.current[question.id]) return;
 
-    lastSelectAt.current = now;
     selectingRef.current = true;
     const timeSpent = secondsOnQuestion(questionStartedAt.current);
-    const nextAnswers = { ...answersRef.current, [question.id]: option };
+    const nextAnswers = { ...answersRef.current, [question.id]: pendingChoice };
     answersRef.current = nextAnswers;
     setAnswers(nextAnswers);
-    recordAnswer(question.id, option, timeSpent);
+    recordAnswer(question.id, pendingChoice, timeSpent);
+    setPendingChoice(null);
 
     if (index >= questions.length - 1) {
       void submitExam(true);
@@ -154,6 +159,7 @@ export function ExamRunner({
   useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
+    setPendingChoice(null);
     selectingRef.current = false;
   }, [currentIndex, questionLimit]);
 
@@ -192,20 +198,21 @@ export function ExamRunner({
   const answeredCount = Object.keys(answers).length;
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
-  const selectedLetter = answers[current.id];
-  const canAnswer = !selectedLetter && !submitting;
+  const questionConfirmed = Boolean(answers[current.id]);
+  const canPick = !questionConfirmed && !submitting;
+  const isLastQuestion = currentIndex >= questions.length - 1;
   const questionLimitLabel =
     questionLimit % 60 === 0
       ? `${questionLimit / 60} min`
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
   return (
-    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-24">
-      {linearMode && canAnswer && (
+    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-32">
+      {linearMode && canPick && (
         <div className="mb-4 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm text-amber-950 ring-1 ring-amber-200">
-          <strong>Ao tocar em uma alternativa, a questão passa na hora.</strong>
+          <strong>1. Toque na alternativa</strong> · <strong>2. Confirme em Próxima questão</strong>
           <br />
-          Toque só com certeza — o tempo é marcado no clique.
+          O tempo é marcado ao confirmar.
         </div>
       )}
 
@@ -258,7 +265,7 @@ export function ExamRunner({
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
-          const selected = selectedLetter === letter;
+          const selected = pendingChoice === letter;
 
           return (
             <button
@@ -267,13 +274,13 @@ export function ExamRunner({
               aria-pressed={selected}
               onContextMenu={(e) => e.preventDefault()}
               onPointerUp={() => {
-                if (!canAnswer) return;
-                handleSelect(letter);
+                if (!canPick) return;
+                handlePick(letter);
               }}
               className={`flex min-h-[4rem] w-full items-start gap-3 rounded-xl border p-4 text-left transition ${
                 selected
                   ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                  : canAnswer
+                  : canPick
                     ? 'border-slate-300 bg-white active:border-emerald-500 active:bg-emerald-100'
                     : 'border-slate-200 bg-slate-100 opacity-50'
               }`}
@@ -290,6 +297,18 @@ export function ExamRunner({
           );
         })}
       </div>
+
+      {linearMode && pendingChoice && canPick && (
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-200 bg-white/95 px-4 py-4 backdrop-blur-sm">
+          <button
+            type="button"
+            onPointerUp={handleNext}
+            className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-4 text-lg font-bold text-white shadow-lg active:bg-emerald-700"
+          >
+            {isLastQuestion ? 'Finalizar prova' : 'Próxima questão →'}
+          </button>
+        </div>
+      )}
 
       {!linearMode && (
         <>
