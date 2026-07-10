@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMobileAction } from '@/hooks/use-mobile-action';
 
 interface Props {
   studentId: string;
@@ -15,18 +16,23 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
   const [loading, setLoading] = useState<string | null>(null);
 
   async function apiCall(method: string, body?: object) {
-    const res = await fetch(`/api/admin/students/${studentId}`, {
-      method,
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data.error ?? 'Erro');
+    try {
+      const res = await fetch(`/api/admin/students/${studentId}`, {
+        method,
+        headers: body ? { 'Content-Type': 'application/json' } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error ?? 'Erro');
+        return false;
+      }
+      router.refresh();
+      return true;
+    } catch {
+      alert('Erro de conexão. Tente de novo.');
       return false;
     }
-    router.refresh();
-    return true;
   }
 
   async function approve() {
@@ -50,14 +56,18 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
     setLoading(null);
   }
 
+  const approveHandlers = useMobileAction(approve);
+  const blockHandlers = useMobileAction(toggleBlock);
+  const deleteHandlers = useMobileAction(deleteStudent);
+
   return (
     <div className="flex flex-wrap gap-2">
       {pending && (
         <button
           type="button"
-          onClick={approve}
           disabled={loading !== null}
-          className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+          {...approveHandlers}
+          className="exam-tap rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
         >
           {loading === 'approve' ? '...' : 'Liberar acesso'}
         </button>
@@ -65,18 +75,18 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
       {!pending && (
         <button
           type="button"
-          onClick={toggleBlock}
           disabled={loading !== null}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 disabled:opacity-50"
+          {...blockHandlers}
+          className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
         >
           {loading === 'block' ? '...' : active ? 'Bloquear' : 'Desbloquear'}
         </button>
       )}
       <button
         type="button"
-        onClick={deleteStudent}
         disabled={loading !== null}
-        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+        {...deleteHandlers}
+        className="exam-tap rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
       >
         {loading === 'delete' ? '...' : 'Excluir'}
       </button>

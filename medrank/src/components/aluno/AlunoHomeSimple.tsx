@@ -67,7 +67,7 @@ export function AlunoHomeSimple({
               <Link
                 href={examHref}
                 prefetch={false}
-                className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]"
+                className="exam-tap flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]"
               >
                 Começar a prova!
               </Link>

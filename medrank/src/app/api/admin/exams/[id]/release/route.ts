@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
 import { releaseDemoExam } from '@/lib/demo-store';
 import { getDemoExams } from '@/lib/demo/content';
 import { applyReleaseWindow } from '@/lib/exams/release';
+import { requireAdminApi } from '@/lib/api-auth';
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdminApi();
+  if ('error' in auth && auth.error) return auth.error;
+
   const { id } = await params;
   const body = await request.json();
   const releaseDays = body.release_days === 2 ? 2 : 1;
@@ -23,7 +26,7 @@ export async function POST(
     return NextResponse.json({ exam: updated });
   }
 
-  const supabase = await createClient();
+  const supabase = auth.supabase;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });

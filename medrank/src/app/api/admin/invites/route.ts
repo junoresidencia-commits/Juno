@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
 import { isDemoMode } from '@/lib/demo-auth';
 import { createDemoInvite, listDemoInvites } from '@/lib/demo-store';
-import { buildInviteLink, isSupabaseConfigured } from '@/lib/app-url';
+import { buildInviteLinkFromOrigin, getRequestOrigin, isSupabaseConfigured } from '@/lib/app-url';
 import { requireAdminApi } from '@/lib/api-auth';
 import { randomBytes } from 'crypto';
 
-export async function GET() {
+export async function GET(request: Request) {
   const auth = await requireAdminApi();
   if ('error' in auth && auth.error) return auth.error;
+
+  const origin = getRequestOrigin(request);
 
   if (isDemoMode() || auth.demo) {
     const invites = listDemoInvites().map((i) => ({
@@ -17,7 +19,7 @@ export async function GET() {
       expires_at: i.expiresAt,
       used_at: i.usedAt,
       note: i.note,
-      link: buildInviteLink(i.token),
+      link: buildInviteLinkFromOrigin(origin, i.token),
     }));
     return NextResponse.json({ invites });
   }
@@ -32,7 +34,7 @@ export async function GET() {
 
   const invites = (data ?? []).map((i) => ({
     ...i,
-    link: buildInviteLink(i.token),
+    link: buildInviteLinkFromOrigin(origin, i.token),
   }));
 
   return NextResponse.json({ invites });
@@ -52,12 +54,13 @@ export async function POST(request: Request) {
 
   if (isDemoMode() || auth.demo) {
     try {
+      const origin = getRequestOrigin(request);
       const invite = createDemoInvite(email, note ?? undefined);
       return NextResponse.json({
         invite: {
           token: invite.token,
           email: invite.email,
-          link: buildInviteLink(invite.token),
+          link: buildInviteLinkFromOrigin(origin, invite.token),
           expires_at: invite.expiresAt,
         },
       });
@@ -92,6 +95,6 @@ export async function POST(request: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({
-    invite: { ...data, link: buildInviteLink(token) },
+    invite: { ...data, link: buildInviteLinkFromOrigin(getRequestOrigin(request), token) },
   });
 }

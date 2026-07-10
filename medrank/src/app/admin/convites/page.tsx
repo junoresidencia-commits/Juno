@@ -3,12 +3,13 @@ import { requireRole } from '@/lib/auth';
 import { InviteGenerator } from '@/components/admin/InviteGenerator';
 import { isDemoMode } from '@/lib/demo-auth';
 import { listDemoInvites } from '@/lib/demo-store';
-import { buildInviteLink } from '@/lib/app-url';
+import { buildInviteLinkFromOrigin, getServerOrigin } from '@/lib/app-url';
 import { createClient } from '@/lib/supabase/server';
 import { formatDateBR } from '@/lib/format';
 
 export default async function ConvitesPage() {
   await requireRole('admin');
+  const origin = await getServerOrigin();
 
   let invites: {
     token: string;
@@ -24,12 +25,12 @@ export default async function ConvitesPage() {
       email: i.email,
       expires_at: i.expiresAt,
       used_at: i.usedAt,
-      link: buildInviteLink(i.token),
+      link: buildInviteLinkFromOrigin(origin, i.token),
     }));
   } else {
     const supabase = await createClient();
     const { data } = await supabase.from('invite_tokens').select('*').order('created_at', { ascending: false }).limit(20);
-    invites = (data ?? []).map((i) => ({ ...i, link: buildInviteLink(i.token) }));
+    invites = (data ?? []).map((i) => ({ ...i, link: buildInviteLinkFromOrigin(origin, i.token) }));
   }
 
   return (
