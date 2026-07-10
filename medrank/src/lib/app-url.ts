@@ -6,6 +6,23 @@ export function getAppBaseUrl(): string {
   return 'http://localhost:3000';
 }
 
+/** Origin público da requisição (túnel/proxy), não o host interno do servidor */
+export function getRequestOrigin(request: Request): string {
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') ?? 'https';
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`.replace(/\/$/, '');
+  }
+
+  const host = request.headers.get('host');
+  if (host && !host.startsWith('0.0.0.0') && host !== 'localhost:3000') {
+    const proto = host.includes('localhost') ? 'http' : 'https';
+    return `${proto}://${host}`.replace(/\/$/, '');
+  }
+
+  return getAppBaseUrl();
+}
+
 export function buildInviteLink(token: string): string {
   return `${getAppBaseUrl()}/cadastro/${token}`;
 }
