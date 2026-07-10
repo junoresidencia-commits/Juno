@@ -70,3 +70,9 @@ export const PERIOD_OPTIONS: { value: PeriodType; label: string }[] = [
   { value: 'monthly', label: 'Mensal' },
   { value: 'general', label: 'Geral' },
 ];
+
+/** Períodos visíveis para alunos (competição diária + semanal) */
+export const STUDENT_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
+  { value: 'daily', label: 'Diário' },
+  { value: 'weekly', label: 'Semanal' },
+];

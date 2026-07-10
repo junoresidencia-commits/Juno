@@ -32,6 +32,7 @@ export function getDemoDashboardData(userId = 'guest-student') {
   const todayExam = getTodaysExam(getDemoExams(), today);
   const attempt = todayExam ? getDemoAttemptByExam(todayExam.id, userId) : null;
   const { rankings } = getDemoRanking('daily');
+  const { rankings: weeklyRankings } = getDemoRanking('weekly');
   const streak = { current_streak: 7 };
   const challenges = getDemoWeeklyChallenges().map((challenge) => ({
     challenge,
@@ -43,7 +44,7 @@ export function getDemoDashboardData(userId = 'guest-student') {
     description: challenge.description ?? '',
   }));
 
-  return { todayExam, attempt, rankings, streak, challenges };
+  return { todayExam, attempt, rankings, weeklyRankings, streak, challenges };
 }
 
 export function getDemoAdminExamStatus() {
