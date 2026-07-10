@@ -41,6 +41,11 @@ export async function POST(
     return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
   }
 
+  const today = new Date().toISOString().split('T')[0];
+  if (exam.date_available !== today) {
+    return NextResponse.json({ error: 'Prova não disponível hoje' }, { status: 404 });
+  }
+
   const { data: existing } = await supabase
     .from('attempts')
     .select('*')

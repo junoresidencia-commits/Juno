@@ -6,7 +6,6 @@ import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
 import { WeeklyChallengesCard } from '@/components/aluno/WeeklyChallengesCard';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
-import { formatReleaseWindow } from '@/lib/exams/release';
 
 export default async function AlunoDashboard() {
   const session = await getSessionProfile();
@@ -15,10 +14,10 @@ export default async function AlunoDashboard() {
 
   if (isSkipAuth()) {
     const { userId } = session;
-    const { activeExam, attempt, streak, challenges } = getDemoDashboardData(userId);
-    const canStart = activeExam && !attempt;
-    const inProgress = activeExam && attempt && !attempt.finished_at;
-    const completed = activeExam && attempt?.finished_at;
+    const { todayExam, attempt, streak, challenges } = getDemoDashboardData(userId);
+    const canStart = todayExam && !attempt;
+    const inProgress = todayExam && attempt && !attempt.finished_at;
+    const completed = todayExam && attempt?.finished_at;
 
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-8">
@@ -34,26 +33,23 @@ export default async function AlunoDashboard() {
 
         <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <h2 className="text-lg font-semibold">Prova do dia</h2>
-          {activeExam ? (
+          {todayExam ? (
             <div className="mt-4">
-              <p className="font-medium">{activeExam.title}</p>
+              <p className="font-medium">{todayExam.title}</p>
               <p className="mt-1 text-sm text-slate-600">
-                {activeExam.total_questions} questões · {activeExam.duration_minutes} minutos
-              </p>
-              <p className="mt-2 text-sm text-slate-500">
-                Prazo: {formatReleaseWindow(activeExam)}
+                {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
               </p>
               <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                Mesma prova para todos. Ao terminar, você vê sua nota e o gabarito comentado.
+                Prova válida só hoje. Mesma prova para todos. Se não fizer hoje, você perde os pontos do dia.
               </p>
               <div className="mt-4">
-                {canStart && <Link href={`/aluno/prova/${activeExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}
-                {inProgress && <Link href={`/aluno/prova/${activeExam.id}`} className="inline-block rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Continuar prova</Link>}
+                {canStart && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">Iniciar prova</Link>}
+                {inProgress && <Link href={`/aluno/prova/${todayExam.id}`} className="inline-block rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Continuar prova</Link>}
                 {completed && <Link href={`/aluno/resultado/${attempt!.id}`} className="inline-block rounded-lg bg-slate-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">Ver resultado</Link>}
               </div>
             </div>
           ) : (
-            <p className="mt-4 text-slate-600">Aguardando o professor liberar a prova.</p>
+            <p className="mt-4 text-slate-600">Nenhuma prova programada para hoje.</p>
           )}
         </section>
 
@@ -76,14 +72,12 @@ export default async function AlunoDashboard() {
   const profile = session.profile;
 
   const today = new Date().toISOString().split('T')[0];
-  const { data: publishedExams } = await supabase
+  const { data: todayExam } = await supabase
     .from('exams')
     .select('*')
+    .eq('date_available', today)
     .eq('status', 'published')
-    .lte('date_available', today)
-    .gte('date_closes', today);
-
-  const todayExam = publishedExams?.[0] ?? null;
+    .maybeSingle();
 
   const { data: attempt } = todayExam
     ? await supabase
@@ -134,7 +128,7 @@ export default async function AlunoDashboard() {
               {todayExam.total_questions} questões · {todayExam.duration_minutes} minutos
             </p>
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              Mesma prova para todos. Ao terminar, você vê sua nota e o gabarito comentado.
+              Prova válida só hoje. Se não fizer hoje, você perde os pontos do dia.
             </p>
             <div className="mt-4">
               {canStart && (
@@ -164,7 +158,7 @@ export default async function AlunoDashboard() {
             </div>
           </div>
         ) : (
-          <p className="mt-4 text-slate-600">Aguardando o professor liberar a prova.</p>
+          <p className="mt-4 text-slate-600">Nenhuma prova programada para hoje.</p>
         )}
       </section>
 

@@ -30,22 +30,23 @@ export function applyReleaseWindow(exam: Exam, releaseDays: 1 | 2, startDate?: s
 
 export function isExamOpen(exam: Exam, onDate = todayDateString()): boolean {
   if (exam.status !== 'published') return false;
-  return onDate >= exam.date_available && onDate <= exam.date_closes;
+  return onDate === exam.date_available;
 }
 
 export function isExamWindowClosed(exam: Exam, onDate = todayDateString()): boolean {
-  return onDate > exam.date_closes;
+  return onDate > exam.date_available;
 }
 
 export function getActivePublishedExam(exams: Exam[], onDate = todayDateString()): Exam | null {
-  return exams.find((exam) => isExamOpen(exam, onDate)) ?? null;
+  return exams.find((exam) => exam.status === 'published' && exam.date_available === onDate) ?? null;
+}
+
+export function getTodaysExam(exams: Exam[], onDate = todayDateString()): Exam | null {
+  return getActivePublishedExam(exams, onDate);
 }
 
 export function formatReleaseWindow(exam: Exam): string {
-  if (exam.date_available === exam.date_closes) {
-    return `${exam.date_available} (1 dia)`;
-  }
-  return `${exam.date_available} a ${exam.date_closes} (${exam.release_days} dias)`;
+  return `Somente hoje (${exam.date_available})`;
 }
 
 export function defaultExamReleaseFields(dateAvailable: string): Pick<

@@ -64,6 +64,9 @@ export default async function ProvaPage({
 
   if (!exam) redirect('/aluno');
 
+  const today = new Date().toISOString().split('T')[0];
+  if (exam.date_available !== today) redirect('/aluno');
+
   let { data: attempt } = await supabase
     .from('attempts')
     .select('*')
