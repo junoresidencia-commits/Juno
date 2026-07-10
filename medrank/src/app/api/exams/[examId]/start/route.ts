@@ -2,13 +2,18 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
 import { requireAuth } from '@/lib/auth';
-import {
-  createDemoAttempt,
-  forfeitDemoAttempt,
-  getDemoAttemptByExam,
-} from '@/lib/demo/runtime';
+import { createDemoAttempt, getDemoAttemptAnswers, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { canStartExam } from '@/lib/exams/release';
+import type { OptionLetter } from '@/types/database';
+
+function mapSavedAnswers(attemptId: string): Record<string, OptionLetter> {
+  const initial: Record<string, OptionLetter> = {};
+  for (const row of getDemoAttemptAnswers(attemptId)) {
+    if (row.selected_option) initial[row.question_id] = row.selected_option;
+  }
+  return initial;
+}
 
 export async function POST(
   _request: Request,
@@ -32,15 +37,15 @@ export async function POST(
     }
 
     if (existing && !existing.finished_at) {
-      forfeitDemoAttempt(existing.id);
-      return NextResponse.json(
-        { error: 'Você saiu da prova. Perdeu o dia.', forfeited: true },
-        { status: 403 }
-      );
+      return NextResponse.json({
+        attempt: existing,
+        initialAnswers: mapSavedAnswers(existing.id),
+        resumed: true,
+      });
     }
 
     const attempt = createDemoAttempt(examId, userId);
-    return NextResponse.json({ attempt });
+    return NextResponse.json({ attempt, initialAnswers: {}, resumed: false });
   }
 
   const supabase = await createClient();
@@ -76,11 +81,19 @@ export async function POST(
   }
 
   if (existing && !existing.finished_at) {
-    await supabase.rpc('submit_attempt', { p_attempt_id: existing.id, p_auto: true });
-    return NextResponse.json(
-      { error: 'Você saiu da prova. Perdeu o dia.', forfeited: true },
-      { status: 403 }
-    );
+    const { data: saved } = await supabase
+      .from('attempt_answers')
+      .select('question_id, selected_option')
+      .eq('attempt_id', existing.id);
+
+    const initialAnswers: Record<string, OptionLetter> = {};
+    for (const row of saved ?? []) {
+      if (row.selected_option) {
+        initialAnswers[row.question_id] = row.selected_option as OptionLetter;
+      }
+    }
+
+    return NextResponse.json({ attempt: existing, initialAnswers, resumed: true });
   }
 
   const { data: attempt, error } = await supabase
@@ -97,5 +110,5 @@ export async function POST(
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ attempt });
+  return NextResponse.json({ attempt, initialAnswers: {}, resumed: false });
 }

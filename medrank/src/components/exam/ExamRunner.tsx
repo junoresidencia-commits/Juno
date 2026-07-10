@@ -47,22 +47,23 @@ export function ExamRunner({
     0,
     questions.findIndex((q) => !initialAnswers[q.id])
   );
-  const allAnswered = questions.every((q) => initialAnswers[q.id]);
 
-  const [currentIndex, setCurrentIndex] = useState(allAnswered ? questions.length - 1 : firstOpenIndex);
+  const [currentIndex, setCurrentIndex] = useState(firstOpenIndex);
   const [answers, setAnswers] = useState<Record<string, OptionLetter>>(initialAnswers);
   const [remaining, setRemaining] = useState(() =>
     getEffectiveExamRemainingSeconds(startedAt, durationMinutes)
   );
   const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
   const [submitting, setSubmitting] = useState(false);
-  const [selecting, setSelecting] = useState(false);
 
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
-  const currentIndexRef = useRef(currentIndex);
-  const submittingRef = useRef(submitting);
+  const selectingRef = useRef(false);
+  const answersRef = useRef(initialAnswers);
+  const currentIndexRef = useRef(firstOpenIndex);
+  const submittingRef = useRef(false);
 
+  answersRef.current = answers;
   currentIndexRef.current = currentIndex;
   submittingRef.current = submitting;
 
@@ -105,53 +106,51 @@ export function ExamRunner({
     [apiBase, attemptId]
   );
 
-  const selectAnswer = useCallback(
-    (questionId: string, option: OptionLetter) => {
-      if (selecting || submittingRef.current || answers[questionId]) return;
+  const handleSelect = (option: OptionLetter) => {
+    if (selectingRef.current || submittingRef.current) return;
 
-      const clickedAt = Date.now();
-      const timeSpent = secondsOnQuestion(questionStartedAt.current, clickedAt);
-      const index = currentIndexRef.current;
+    const index = currentIndexRef.current;
+    const question = questions[index];
+    if (!question || answersRef.current[question.id]) return;
 
-      setSelecting(true);
-      setAnswers((prev) => ({ ...prev, [questionId]: option }));
-      recordAnswer(questionId, option, timeSpent);
+    selectingRef.current = true;
+    const timeSpent = secondsOnQuestion(questionStartedAt.current);
+    const nextAnswers = { ...answersRef.current, [question.id]: option };
+    answersRef.current = nextAnswers;
+    setAnswers(nextAnswers);
+    recordAnswer(question.id, option, timeSpent);
 
-      if (index >= questions.length - 1) {
-        void submitExam(true);
-        return;
-      }
-
+    if (index >= questions.length - 1) {
+      void submitExam(true);
+    } else {
       setCurrentIndex(index + 1);
-      setSelecting(false);
-    },
-    [answers, questions.length, recordAnswer, selecting, submitExam]
-  );
+    }
+    selectingRef.current = false;
+  };
 
   const skipQuestion = useCallback(
     (index: number) => {
-      if (selecting || submittingRef.current) return;
+      if (selectingRef.current || submittingRef.current) return;
       const question = questions[index];
-      if (!question || answers[question.id]) return;
+      if (!question || answersRef.current[question.id]) return;
 
-      setSelecting(true);
+      selectingRef.current = true;
       recordAnswer(question.id, null, questionLimit);
 
       if (index >= questions.length - 1) {
         void submitExam(true);
-        return;
+      } else {
+        setCurrentIndex(index + 1);
       }
-
-      setCurrentIndex(index + 1);
-      setSelecting(false);
+      selectingRef.current = false;
     },
-    [answers, questionLimit, questions, recordAnswer, selecting, submitExam]
+    [questionLimit, questions, recordAnswer, submitExam]
   );
 
   useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
-    setSelecting(false);
+    selectingRef.current = false;
   }, [currentIndex, questionLimit]);
 
   useEffect(() => {
@@ -163,11 +162,11 @@ export function ExamRunner({
         return;
       }
 
-      if (!linearMode || selecting || submittingRef.current) return;
+      if (!linearMode || selectingRef.current || submittingRef.current) return;
 
       const index = currentIndexRef.current;
       const question = questions[index];
-      if (!question || answers[question.id]) return;
+      if (!question || answersRef.current[question.id]) return;
 
       const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
       const left = Math.max(0, questionLimit - elapsed);
@@ -181,17 +180,7 @@ export function ExamRunner({
     tick();
     const interval = setInterval(tick, 250);
     return () => clearInterval(interval);
-  }, [
-    answers,
-    durationMinutes,
-    linearMode,
-    questionLimit,
-    questions,
-    selecting,
-    skipQuestion,
-    startedAt,
-    submitExam,
-  ]);
+  }, [durationMinutes, linearMode, questionLimit, questions, skipQuestion, startedAt, submitExam]);
 
   const current = questions[currentIndex];
   if (!current) return null;
@@ -200,15 +189,15 @@ export function ExamRunner({
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
   const selectedLetter = answers[current.id];
-  const isLocked = Boolean(selectedLetter) || selecting || submitting;
+  const canAnswer = !selectedLetter && !submitting;
   const questionLimitLabel =
     questionLimit % 60 === 0
       ? `${questionLimit / 60} min`
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
-      {linearMode && !isLocked && (
+    <div className="mx-auto max-w-3xl px-4 py-6 pb-24">
+      {linearMode && canAnswer && (
         <div className="mb-4 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm text-amber-950 ring-1 ring-amber-200">
           <strong>Ao tocar em uma alternativa, a questão passa na hora.</strong>
           <br />
@@ -261,49 +250,49 @@ export function ExamRunner({
         )}
       </div>
 
-      <div className="mb-6 space-y-3">
+      <fieldset className="mb-6 space-y-3 border-0 p-0" disabled={!canAnswer}>
+        <legend className="sr-only">Alternativas</legend>
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
+          const inputId = `${current.id}-${letter}`;
           const selected = selectedLetter === letter;
 
           return (
-            <div
-              key={letter}
-              role="button"
-              tabIndex={isLocked ? -1 : 0}
-              onClick={() => {
-                if (isLocked) return;
-                selectAnswer(current.id, letter);
-              }}
-              onKeyDown={(e) => {
-                if (isLocked) return;
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  selectAnswer(current.id, letter);
-                }
-              }}
-              className={`flex min-h-[3.25rem] w-full cursor-pointer select-none items-start gap-3 rounded-xl border p-4 text-left transition ${
-                selected
-                  ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                  : isLocked
-                    ? 'pointer-events-none border-slate-200 bg-slate-50 opacity-50'
-                    : 'border-slate-200 bg-white active:scale-[0.99] active:border-emerald-400 active:bg-emerald-50'
-              }`}
-              style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'rgba(16, 185, 129, 0.15)' }}
-            >
-              <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                  selected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-800'
+            <div key={letter} className="relative">
+              <input
+                type="radio"
+                name={`q-${current.id}`}
+                id={inputId}
+                value={letter}
+                checked={selected}
+                onChange={() => handleSelect(letter)}
+                className="peer sr-only"
+              />
+              <label
+                htmlFor={inputId}
+                className={`flex min-h-[3.5rem] w-full cursor-pointer items-start gap-3 rounded-xl border p-4 text-left transition peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-300 ${
+                  selected
+                    ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
+                    : canAnswer
+                      ? 'border-slate-200 bg-white active:border-emerald-400 active:bg-emerald-50'
+                      : 'border-slate-200 bg-slate-50 opacity-60'
                 }`}
+                style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'rgba(16, 185, 129, 0.2)' }}
               >
-                {letter}
-              </span>
-              <span className="pt-0.5 text-sm leading-relaxed text-slate-900">{text}</span>
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                    selected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-800'
+                  }`}
+                >
+                  {letter}
+                </span>
+                <span className="pt-0.5 text-sm leading-relaxed text-slate-900">{text}</span>
+              </label>
             </div>
           );
         })}
-      </div>
+      </fieldset>
 
       {!linearMode && (
         <>
