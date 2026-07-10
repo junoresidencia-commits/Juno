@@ -68,7 +68,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-slate-900 shadow-lg ring-1 ring-slate-200">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
         <div className="mb-6 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-700">
           <p>O cadastro é só por <strong>link de convite</strong> do professor.</p>
-          <p className="mt-1 text-xs text-slate-500">Professor: use seu login habitual (admin).</p>
+          <p className="mt-1 text-xs text-slate-600">Professor: use seu login habitual (admin).</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -129,7 +129,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-slate-500">
+        <p className="mt-6 text-center text-xs text-slate-600">
           Recebeu um convite? Abra o link enviado pelo professor para criar sua conta.
         </p>
       </div>

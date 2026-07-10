@@ -39,13 +39,13 @@ export default async function RankingAlunoPage({
     return (
       <div className="mx-auto max-w-lg px-4 py-6">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-        <h1 className="mt-3 text-2xl font-bold">Ranking</h1>
+        <h1 className="mt-3 text-2xl font-bold text-slate-900">Ranking</h1>
         <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
         {period === 'daily' && !canSeeDaily && (
-          <p className="mt-3 text-sm text-slate-500">{studentRankingBeforeFinishMessage()}</p>
+          <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
         )}
         {period === 'daily' && canSeeDaily && (
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-3 text-sm text-slate-600">
             {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme os alunos terminam.
           </p>
         )}
@@ -59,7 +59,7 @@ export default async function RankingAlunoPage({
         {canSeeDaily && (
           <ol className="mt-6 space-y-2">
             {rankings.length === 0 ? (
-              <li className="text-sm text-slate-500">Aguardando primeiros resultados…</li>
+              <li className="text-sm text-slate-600">Aguardando primeiros resultados…</li>
             ) : (
               rankings.map((r) => {
                 const name = (r as { profiles?: { name?: string } }).profiles?.name ?? 'Aluno';
@@ -68,10 +68,10 @@ export default async function RankingAlunoPage({
                   <li
                     key={r.id}
                     className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-                      isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white ring-1 ring-slate-200'
+                      isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white text-slate-900 ring-1 ring-slate-200'
                     }`}
                   >
-                    <span className="font-medium">
+                    <span className="font-medium text-slate-900">
                       {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
                       {' '}{name}{isMe ? ' (você)' : ''}
                     </span>
@@ -134,13 +134,13 @@ export default async function RankingAlunoPage({
   return (
     <div className="mx-auto max-w-lg px-4 py-6">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-      <h1 className="mt-3 text-2xl font-bold">Ranking</h1>
+      <h1 className="mt-3 text-2xl font-bold text-slate-900">Ranking</h1>
       <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
       {period === 'daily' && !canSeeDaily && (
-        <p className="mt-3 text-sm text-slate-500">{studentRankingBeforeFinishMessage()}</p>
+        <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
       )}
       {period === 'daily' && canSeeDaily && (
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-slate-600">
           {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme os alunos terminam.
         </p>
       )}
@@ -156,7 +156,7 @@ export default async function RankingAlunoPage({
       {canSeeDaily && (
         <ol className="mt-6 space-y-2">
           {(rankings ?? []).length === 0 ? (
-            <li className="text-sm text-slate-500">Aguardando primeiros resultados…</li>
+            <li className="text-sm text-slate-600">Aguardando primeiros resultados…</li>
           ) : (
             rankings!.map((r) => {
               const profileData = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
@@ -166,10 +166,10 @@ export default async function RankingAlunoPage({
                 <li
                   key={r.position}
                   className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-                    isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white ring-1 ring-slate-200'
+                    isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white text-slate-900 ring-1 ring-slate-200'
                   }`}
                 >
-                  <span className="font-medium">
+                  <span className="font-medium text-slate-900">
                     {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
                     {' '}{name}{isMe ? ' (você)' : ''}
                   </span>

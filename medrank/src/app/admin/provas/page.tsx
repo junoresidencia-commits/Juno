@@ -20,7 +20,7 @@ export default async function ProvasPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-            <h1 className="mt-2 text-2xl font-bold">Provas</h1>
+            <h1 className="mt-2 text-2xl font-bold text-slate-900">Provas</h1>
             <p className="mt-1 text-sm text-slate-600">
               Uma prova por dia, publicada automaticamente · {formatExamWindowShort()} (horário de Brasília)
             </p>
@@ -46,7 +46,7 @@ export default async function ProvasPage() {
             {rankings.length > 0 && (
               <ol className="mt-4 space-y-2">
                 {rankings.map((r) => (
-                  <li key={r.id} className="flex justify-between rounded-lg bg-white px-4 py-2 text-sm">
+                  <li key={r.id} className="flex justify-between rounded-lg bg-white px-4 py-2 text-sm text-slate-900">
                     <span>{r.position}º {(r as { profiles?: { name?: string } }).profiles?.name}</span>
                     <span className="font-medium">{r.total_score} pts</span>
                   </li>
@@ -58,10 +58,10 @@ export default async function ProvasPage() {
 
         <div className="space-y-3">
           {exams.slice(0, 20).map((e) => (
-            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
               <div>
                 <p className="font-medium">{e.title}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-600">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
                   {e.selection_mode === 'manual' ? ' · manual' : ''}
                 </p>
@@ -93,7 +93,7 @@ export default async function ProvasPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-          <h1 className="mt-2 text-2xl font-bold">Provas</h1>
+          <h1 className="mt-2 text-2xl font-bold text-slate-900">Provas</h1>
         </div>
         <Link
           href="/admin/provas/nova"
@@ -113,13 +113,13 @@ export default async function ProvasPage() {
 
       <div className="space-y-3">
         {(exams ?? []).length === 0 ? (
-          <p className="text-slate-500">Nenhuma prova criada.</p>
+          <p className="text-slate-600">Nenhuma prova criada.</p>
         ) : (
           exams!.map((e) => (
-            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
               <div>
                 <p className="font-medium">{e.title}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-600">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
                 </p>
               </div>

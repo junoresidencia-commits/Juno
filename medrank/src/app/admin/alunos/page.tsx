@@ -65,7 +65,7 @@ export default async function AlunosPage() {
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
       <div className="mt-4 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Alunos</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Alunos</h1>
           <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
         </div>
         <Link
@@ -97,16 +97,16 @@ export default async function AlunosPage() {
       )}
 
       <section className="mt-8">
-        <h2 className="font-semibold">Alunos cadastrados</h2>
+        <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
         <div className="mt-4 space-y-3">
           {others.length === 0 && pending.length === 0 ? (
-            <p className="text-slate-500">Nenhum aluno ainda. Gere um link de convite.</p>
+            <p className="text-slate-600">Nenhum aluno ainda. Gere um link de convite.</p>
           ) : (
             others.map((s) => (
-              <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+              <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
                 <div>
                   <p className="font-medium">{s.name}</p>
-                  <p className="text-sm text-slate-500">{s.email}</p>
+                  <p className="text-sm text-slate-600">{s.email}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <StudentStatus active={s.active} approvedAt={s.approved_at} />

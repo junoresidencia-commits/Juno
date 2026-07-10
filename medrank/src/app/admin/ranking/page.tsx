@@ -28,13 +28,13 @@ export default async function AdminRankingPage({
     return (
       <div className="mx-auto max-w-3xl px-4 py-8">
         <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-        <h1 className="mt-4 text-2xl font-bold">Rankings</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">Rankings</h1>
         <p className="text-sm text-slate-600">{periodTitle[period]}</p>
         <RankingPeriodNav basePath="/admin/ranking" current={period} />
         <ol className="mt-6 space-y-2">
           {rankings.map((r) => {
             const name = (r as { profiles?: { name?: string } }).profiles?.name ?? 'Aluno';
-            return <li key={r.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200"><span className="flex items-center gap-3"><span className="w-8 text-lg font-bold">{r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}</span><span className={r.position && r.position <= 3 ? 'font-semibold' : ''}>{name}</span></span><span className="text-right text-sm text-slate-600"><span className="block">{r.total_correct} acertos · {formatPercent(r.average_percentage)}</span><span className="text-xs">{r.total_score} pts · streak {r.streak_days}d</span></span></li>;
+            return <li key={r.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200"><span className="flex items-center gap-3"><span className="w-8 text-lg font-bold text-slate-900">{r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}</span><span className={r.position && r.position <= 3 ? 'font-semibold text-slate-900' : 'text-slate-800'}>{name}</span></span><span className="text-right text-sm text-slate-600"><span className="block">{r.total_correct} acertos · {formatPercent(r.average_percentage)}</span><span className="text-xs text-slate-600">{r.total_score} pts · streak {r.streak_days}d</span></span></li>;
           })}
         </ol>
       </div>
@@ -61,25 +61,25 @@ export default async function AdminRankingPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <h1 className="mt-4 text-2xl font-bold">Rankings</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Rankings</h1>
       <p className="text-sm text-slate-600">{periodTitle[period]}</p>
 
       <RankingPeriodNav basePath="/admin/ranking" current={period} />
 
       <ol className="mt-6 space-y-2">
         {(rankings ?? []).length === 0 ? (
-          <li className="text-slate-500">Nenhum dado para este período.</li>
+          <li className="text-slate-600">Nenhum dado para este período.</li>
         ) : (
           rankings!.map((r) => {
             const profileData = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
             const name = (profileData as { name?: string } | null)?.name ?? 'Aluno';
             return (
-              <li key={r.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+              <li key={r.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
                 <span className="flex items-center gap-3">
                   <span className="w-8 text-lg font-bold">
                     {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
                   </span>
-                  <span className={r.position && r.position <= 3 ? 'font-semibold' : ''}>{name}</span>
+                  <span className={r.position && r.position <= 3 ? 'font-semibold text-slate-900' : 'text-slate-800'}>{name}</span>
                 </span>
                 <span className="text-right text-sm text-slate-600">
                   <span className="block">{r.total_correct} acertos · {formatPercent(r.average_percentage)}</span>

@@ -27,7 +27,7 @@ export default async function AdminDashboard() {
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-8">
         <header className="mb-8">
-          <h1 className="text-2xl font-bold">Painel do Professor</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Painel do Professor</h1>
           <p className="text-sm text-slate-600">Preparatório ENARE/USP com 5 meses de provas e questões reais importadas.</p>
         </header>
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
@@ -94,11 +94,11 @@ export default async function AdminDashboard() {
     <div className="mx-auto w-full max-w-5xl px-4 py-8">
       <header className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Painel do Professor</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Painel do Professor</h1>
           <p className="text-sm text-slate-600">MedRank — administração</p>
         </div>
         <form action="/api/auth/logout" method="post">
-          <button type="submit" className="text-sm text-slate-500 hover:text-slate-700">
+          <button type="submit" className="text-sm text-slate-600 hover:text-slate-700">
             Sair
           </button>
         </form>

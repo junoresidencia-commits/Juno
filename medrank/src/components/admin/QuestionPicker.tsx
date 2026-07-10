@@ -88,9 +88,9 @@ export function QuestionPicker({ totalQuestions, selectedIds, onChange }: Props)
 
       <div className="max-h-80 space-y-2 overflow-y-auto">
         {loading ? (
-          <p className="text-sm text-slate-500">Carregando...</p>
+          <p className="text-sm text-slate-600">Carregando...</p>
         ) : questions.length === 0 ? (
-          <p className="text-sm text-slate-500">Nenhuma questão encontrada.</p>
+          <p className="text-sm text-slate-600">Nenhuma questão encontrada.</p>
         ) : (
           questions.map((q) => {
             const checked = selectedIds.includes(q.id);
@@ -111,7 +111,7 @@ export function QuestionPicker({ totalQuestions, selectedIds, onChange }: Props)
                 />
                 <div>
                   <p className="line-clamp-2">{q.statement}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-600">
                     {q.source} · {q.topic ?? 'Sem tema'}
                   </p>
                 </div>

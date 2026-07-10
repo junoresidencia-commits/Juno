@@ -5,6 +5,42 @@
   --font-mono: var(--font-geist-mono);
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    color-scheme: light only;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+/* Readable text on every white surface (mobile dark-mode was washing out labels) */
+@layer components {
+  .surface-card {
+    @apply rounded-xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
+  }
+
+  .surface-card-lg {
+    @apply rounded-2xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
+  }
+
+  .surface-muted {
+    @apply text-slate-600;
+  }
+
+  .surface-label {
+    @apply text-sm font-medium text-slate-600;
+  }
+
+  .surface-value {
+    @apply text-3xl font-bold text-slate-900;
+  }
+}
+
+@layer utilities {
+  .bg-white {
+    color: var(--color-slate-900);
+  }
 }

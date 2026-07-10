@@ -21,7 +21,7 @@ export default async function QuestoesPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-          <h1 className="mt-2 text-2xl font-bold">Banco de questões</h1>
+          <h1 className="mt-2 text-2xl font-bold text-slate-900">Banco de questões</h1>
         </div>
         <Link
           href="/admin/questoes/nova"
@@ -33,13 +33,13 @@ export default async function QuestoesPage() {
 
       <div className="space-y-3">
         {(questions ?? []).length === 0 ? (
-          <p className="text-slate-500">Nenhuma questão cadastrada.</p>
+          <p className="text-slate-600">Nenhuma questão cadastrada.</p>
         ) : (
           questions!.map((q) => (
-            <div key={q.id} className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <div key={q.id} className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
               <div className="flex items-start justify-between gap-4">
                 <p className="line-clamp-2 text-sm">{q.statement}</p>
-                <div className="shrink-0 text-right text-xs text-slate-500">
+                <div className="shrink-0 text-right text-xs text-slate-600">
                   <p>{q.source} {q.year}</p>
                   <p>{q.topic}</p>
                   {q.difficulty && <p>{DIFFICULTY_LABELS[q.difficulty] ?? q.difficulty}</p>}

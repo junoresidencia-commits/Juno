@@ -97,7 +97,7 @@ export function CadastroForm({ token, valid, error: initialError, inviteEmail }:
           className={`${inputClass}${inviteEmail ? ' bg-slate-50' : ''}`}
         />
         {inviteEmail && (
-          <p className="mt-1 text-xs text-slate-500">Este convite é exclusivo para este e-mail.</p>
+          <p className="mt-1 text-xs text-slate-600">Este convite é exclusivo para este e-mail.</p>
         )}
       </div>
       <div>

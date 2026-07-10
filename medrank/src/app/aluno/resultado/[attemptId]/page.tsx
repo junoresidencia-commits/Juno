@@ -33,13 +33,13 @@ export default async function ResultadoPage({
     return (
       <div className="mx-auto max-w-lg px-4 py-6">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-        <h1 className="mt-4 text-2xl font-bold">Seu resultado</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
         <div className="mt-6 grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Acertos</p><p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p></div>
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Erros</p><p className="text-3xl font-bold text-red-600">{totalWrong}</p></div>
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Percentual</p><p className="text-3xl font-bold">{formatPercent(attempt.percentage)}</p></div>
-          <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Tempo</p><p className="text-3xl font-bold">{formatDuration(attempt.duration_seconds ?? 0)}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Acertos</p><p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Erros</p><p className="text-3xl font-bold text-red-600">{totalWrong}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Percentual</p><p className="text-3xl font-bold text-slate-900">{formatPercent(attempt.percentage)}</p></div>
+          <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Tempo</p><p className="text-3xl font-bold text-slate-900">{formatDuration(attempt.duration_seconds ?? 0)}</p></div>
         </div>
         {ranking?.position && (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
@@ -54,7 +54,7 @@ export default async function ResultadoPage({
               const q = a.questions as Question;
               return (
                 <div key={a.id} className={`rounded-xl p-5 ring-1 ${a.is_correct ? 'bg-emerald-50 ring-emerald-200' : 'bg-red-50 ring-red-200'}`}>
-                  <p className="text-xs font-medium text-slate-500">Questão {i + 1}</p>
+                  <p className="text-xs font-medium text-slate-600">Questão {i + 1}</p>
                   <p className="mt-2 whitespace-pre-wrap text-sm">{q.statement}</p>
                   <div className="mt-3 space-y-1 text-sm">
                     {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
@@ -129,25 +129,25 @@ export default async function ResultadoPage({
     <div className="mx-auto max-w-lg px-4 py-6">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
 
-      <h1 className="mt-4 text-2xl font-bold">Seu resultado</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
       <p className="text-slate-600">{exam.title}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Acertos</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Acertos</p>
           <p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Erros</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Erros</p>
           <p className="text-3xl font-bold text-red-600">{totalWrong}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Percentual</p>
-          <p className="text-3xl font-bold">{formatPercent(attempt.percentage)}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Percentual</p>
+          <p className="text-3xl font-bold text-slate-900">{formatPercent(attempt.percentage)}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Tempo</p>
-          <p className="text-3xl font-bold">{formatDuration(attempt.duration_seconds ?? 0)}</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Tempo</p>
+          <p className="text-3xl font-bold text-slate-900">{formatDuration(attempt.duration_seconds ?? 0)}</p>
         </div>
       </div>
 
@@ -179,7 +179,7 @@ export default async function ResultadoPage({
                       : 'bg-red-50 ring-red-200'
                   }`}
                 >
-                  <p className="text-xs font-medium text-slate-500">Questão {i + 1}</p>
+                  <p className="text-xs font-medium text-slate-600">Questão {i + 1}</p>
                   <p className="mt-2 whitespace-pre-wrap text-sm">{q.statement}</p>
                   <div className="mt-3 space-y-1 text-sm">
                     {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {

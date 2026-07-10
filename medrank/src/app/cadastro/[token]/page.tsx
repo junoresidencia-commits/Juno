@@ -43,13 +43,13 @@ export default async function CadastroPage({
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-slate-900 shadow-lg ring-1 ring-slate-200">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">Cadastro por convite</p>
         </div>
         <CadastroForm token={token} valid={valid} error={error} inviteEmail={inviteEmail} />
-        <p className="mt-6 text-center text-sm text-slate-500">
+        <p className="mt-6 text-center text-sm text-slate-600">
           Já tem conta?{' '}
           <Link href="/login" className="text-emerald-700 hover:underline">Entrar</Link>
         </p>

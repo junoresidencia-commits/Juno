@@ -21,7 +21,7 @@ export default async function DesafiosPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-8">
         <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-        <h1 className="mt-4 text-2xl font-bold">Desafios semanais</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">Desafios semanais</h1>
         <p className="text-sm text-slate-600">Metas já criadas para o preparatório ENARE/USP.</p>
         <div className="mt-6">
           <ChallengeManager challenges={challenges} weekStart={weekStart} weekEnd={weekEnd} />
@@ -41,7 +41,7 @@ export default async function DesafiosPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <h1 className="mt-4 text-2xl font-bold">Desafios semanais</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Desafios semanais</h1>
       <p className="text-sm text-slate-600">
         Crie metas para motivar os alunos. O progresso é verificado ao finalizar cada prova.
       </p>

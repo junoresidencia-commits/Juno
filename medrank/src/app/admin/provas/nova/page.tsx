@@ -61,14 +61,14 @@ export default function NovaProvaPage() {
       <Link href="/admin/provas" className="text-sm text-emerald-700 hover:underline">
         ← Voltar
       </Link>
-      <h1 className="mt-4 text-2xl font-bold">Nova prova</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Nova prova</h1>
 
       <div className="mt-4 flex gap-2">
         <button
           type="button"
           onClick={() => { setMode('auto'); setSelectedIds([]); }}
           className={`rounded-lg px-4 py-2 text-sm font-medium ${
-            mode === 'auto' ? 'bg-emerald-600 text-white' : 'bg-white ring-1 ring-slate-200'
+            mode === 'auto' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-900 ring-1 ring-slate-200'
           }`}
         >
           Sorteio automático
@@ -77,7 +77,7 @@ export default function NovaProvaPage() {
           type="button"
           onClick={() => setMode('manual')}
           className={`rounded-lg px-4 py-2 text-sm font-medium ${
-            mode === 'manual' ? 'bg-emerald-600 text-white' : 'bg-white ring-1 ring-slate-200'
+            mode === 'manual' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-900 ring-1 ring-slate-200'
           }`}
         >
           Seleção manual

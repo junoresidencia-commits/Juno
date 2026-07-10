@@ -12,30 +12,30 @@ export default async function BancoQuestoesPage() {
     <div className="mx-auto w-full max-w-5xl px-4 py-8">
       <Link href="/aluno/simulados" className="text-sm text-emerald-700 hover:underline">← Simulados</Link>
       <header className="mt-4 mb-8">
-        <h1 className="text-2xl font-bold">Banco de Questões</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Banco de Questões</h1>
         <p className="mt-1 text-slate-600">
           Questões de fontes públicas (ENARE oficial, dataset aberto Zenodo) e casos clínicos autorais para áreas complementares.
         </p>
       </header>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Total de questões</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Total de questões</p>
           <p className="text-3xl font-bold text-emerald-700">{stats.total}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Fontes</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Fontes</p>
           <p className="mt-1 text-sm font-medium">{stats.sources.join(', ')}</p>
         </div>
-        <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-500">Anos cobertos</p>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Anos cobertos</p>
           <p className="text-3xl font-bold">
             {stats.yearRange ? `${stats.yearRange[0]}–${stats.yearRange[1]}` : '—'}
           </p>
         </div>
       </div>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <h2 className="text-lg font-semibold">Cobertura por área</h2>
         <p className="mt-1 text-sm text-slate-600">
           Grandes áreas cobradas em provas de residência médica multidisciplinares.
@@ -48,7 +48,7 @@ export default async function BancoQuestoesPage() {
               <div key={area} className="rounded-lg border border-slate-200 p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium">{area}</p>
-                  <p className="text-sm text-slate-500">{count} questões</p>
+                  <p className="text-sm text-slate-600">{count} questões</p>
                 </div>
                 <div className="mt-2 h-2 rounded-full bg-slate-100">
                   <div className="h-2 rounded-full bg-emerald-500" style={{ width: `${Math.max(pct, count > 0 ? 4 : 0)}%` }} />
