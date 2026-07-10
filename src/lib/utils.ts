@@ -10,7 +10,6 @@ export {
   formatRankingScoreExplanation,
   getQuestionTimeLimitSeconds,
   MIN_ANSWER_SECONDS,
-  MIN_READING_SECONDS,
   scoreQuestionAnswer,
 } from '@/lib/exams/scoring';
 

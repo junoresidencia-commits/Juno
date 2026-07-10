@@ -1,6 +1,3 @@
-/** Segundos mínimos na questão antes de liberar alternativas (leitura) */
-export const MIN_READING_SECONDS = 10;
-
 /** Resposta mais rápida que isso: acerto vale, mas sem bônus de velocidade (anti-chute) */
 export const MIN_ANSWER_SECONDS = 8;
 
