@@ -14,8 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'MedRank — Competição de Questões Médicas',
-  description: 'Provas diárias cronometradas com ranking para grupo fechado de alunos',
+  title: 'MedRank — Prova do dia',
+  description: 'Faça a prova diária e acompanhe o ranking',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
