@@ -10,7 +10,7 @@ import {
   fetchTopicStats,
 } from '@/lib/reports/data';
 import { ReportDownloads } from '@/components/admin/ReportDownloads';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoQuestions } from '@/lib/demo/content';
 
 export default async function RelatoriosPage({
@@ -23,7 +23,7 @@ export default async function RelatoriosPage({
   const period = (periodParam ?? 'weekly') as PeriodType;
   const bounds = getPeriodBounds(period);
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const demoQuestions = getDemoQuestions();
     const topics = ['Nefrologia', 'Cardiologia', 'Pneumologia', 'Infectologia', 'Cirurgia Geral'].map((tema, index) => ({
       tema,

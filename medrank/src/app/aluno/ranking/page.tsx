@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth';
 import { getPeriodBounds } from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData, getDemoRanking } from '@/lib/demo/presenters';
 import {
   canStudentSeeTodayRanking,
@@ -27,7 +27,7 @@ export default async function RankingAlunoPage({
     ? (periodParam as PeriodType)
     : 'daily';
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const { showRanking } = getDemoDashboardData(userId);
     const canSeeDaily = period === 'weekly' || showRanking;
 

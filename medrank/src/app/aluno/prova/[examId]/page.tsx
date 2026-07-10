@@ -6,7 +6,7 @@ import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
 import { formatExamWindowLabel } from '@/lib/exams/window';
 import { ExamRunner } from '@/components/exam/ExamRunner';
 import type { OptionLetter, Question } from '@/types/database';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { createDemoAttempt, getDemoAttemptByExam, getDemoAttemptAnswers, submitDemoAttempt } from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
 
@@ -18,7 +18,7 @@ export default async function ProvaPage({
   const { examId } = await params;
   const { userId } = await requireAuth();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
     if (!exam) redirect('/aluno');
 

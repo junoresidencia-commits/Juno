@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatPercent } from '@/lib/format';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoPerformanceByTopic } from '@/lib/demo/presenters';
 
 export default async function DesempenhoPage() {
   const { userId } = await requireAuth();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const sorted = getDemoPerformanceByTopic();
     const weakest = sorted[0];
     return (

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { OptionLetter } from '@/types/database';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { saveDemoAnswer } from '@/lib/demo/runtime';
 
 export async function PUT(
@@ -16,7 +16,7 @@ export async function PUT(
     timeSpentSeconds?: number;
   };
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const ok = saveDemoAnswer(attemptId, questionId, selectedOption, timeSpentSeconds);
     return ok
       ? NextResponse.json({ ok: true })

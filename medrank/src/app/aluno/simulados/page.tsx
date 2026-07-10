@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { requireAuth } from '@/lib/auth';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getWrongQuestionIds } from '@/lib/demo-store';
 import { getQuestionBankStats } from '@/lib/question-bank/pool';
 import { getSimuladoHistory, getSimuladoRanking } from '@/lib/simulados/runtime';
@@ -11,7 +11,7 @@ import { formatPercent } from '@/lib/format';
 export default async function SimuladosPage() {
   const { userId } = await requireAuth();
 
-  if (!isSkipAuth()) {
+  if (!usesDemoStore()) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-8">
         <p className="text-slate-600">Simulados disponíveis no modo demo. Conecte o Supabase para produção.</p>

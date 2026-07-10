@@ -5,7 +5,7 @@ import { formatDateBR, formatPercent } from '@/lib/format';
 import { getPeriodBounds } from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoRanking } from '@/lib/demo/presenters';
 
 export default async function AdminRankingPage({
@@ -17,7 +17,7 @@ export default async function AdminRankingPage({
   const { period: periodParam } = await searchParams;
   const period = (periodParam ?? 'daily') as PeriodType;
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const { rankings, bounds } = getDemoRanking(period);
     const periodTitle: Record<PeriodType, string> = {
       daily: `Hoje — ${formatDateBR(bounds.start)}`,

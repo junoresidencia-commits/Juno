@@ -65,7 +65,9 @@ export async function requireRole(role: UserRole) {
   }
   const session = await getSessionProfile();
   if (!session) redirect('/login');
-  if (session.profile.role !== role) redirect('/');
+  if (session.profile.role !== role) {
+    redirect(session.profile.role === 'admin' ? '/admin' : '/aluno');
+  }
   return session;
 }
 

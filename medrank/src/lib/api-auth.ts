@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { demoCookieName, isDemoMode, parseDemoSession } from '@/lib/demo-auth';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 
 export async function requireAdminApi() {
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     return { supabase: await createClient(), demo: true as const };
   }
 

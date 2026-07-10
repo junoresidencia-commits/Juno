@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { submitSimuladoSession } from '@/lib/simulados/runtime';
 
 export async function POST(
@@ -10,7 +10,7 @@ export async function POST(
   const body = await request.json().catch(() => ({}));
   const auto = Boolean((body as { auto?: boolean }).auto);
 
-  if (!isSkipAuth()) {
+  if (!usesDemoStore()) {
     return NextResponse.json({ error: 'Não disponível' }, { status: 501 });
   }
 

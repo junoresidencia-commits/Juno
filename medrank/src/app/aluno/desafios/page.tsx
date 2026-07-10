@@ -5,13 +5,13 @@ import { requireAuth } from '@/lib/auth';
 import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
 import { getWeekEnd, getWeekStart } from '@/lib/periods';
 import { formatDateBR } from '@/lib/format';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoWeeklyChallenges } from '@/lib/demo/content';
 
 export default async function DesafiosAlunoPage() {
   const { userId } = await requireAuth();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const challenges = getDemoWeeklyChallenges().map((challenge) => ({
       challenge,
       currentValue:

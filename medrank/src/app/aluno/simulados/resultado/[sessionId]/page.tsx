@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { requireAuth } from '@/lib/auth';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getSimuladoQuestions, getSimuladoSession } from '@/lib/simulados/runtime';
 import { getDemoSimuladoById } from '@/lib/demo-store';
 import { formatDuration, formatPercent } from '@/lib/format';
@@ -15,7 +15,7 @@ export default async function SimuladoResultadoPage({
   const { sessionId } = await params;
   const { userId } = await requireAuth();
 
-  if (!isSkipAuth()) redirect('/aluno/simulados');
+  if (!usesDemoStore()) redirect('/aluno/simulados');
 
   const session = getSimuladoSession(sessionId);
   if (!session || session.user_id !== userId || !session.finished_at) {

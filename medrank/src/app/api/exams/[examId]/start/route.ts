@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { createDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
@@ -11,7 +11,7 @@ export async function POST(
 ) {
   const { examId } = await params;
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
     if (!exam || !canStartExam(exam)) {
       return NextResponse.json({ error: 'Prova não disponível neste horário (7h–22h)' }, { status: 404 });

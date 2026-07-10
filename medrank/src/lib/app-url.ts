@@ -1,4 +1,4 @@
-import { isDemoMode } from '@/lib/demo-auth';
+import { isDemoMode } from '@/lib/demo-mode';
 
 export function getAppBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');

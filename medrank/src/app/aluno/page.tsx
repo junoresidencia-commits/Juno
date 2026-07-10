@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
+import { ensureDemoSeedUsers } from '@/lib/demo/seed-users';
 import { mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { AlunoHomeSimple } from '@/components/aluno/AlunoHomeSimple';
 import {
@@ -16,7 +17,8 @@ export default async function AlunoDashboard() {
   const session = await requireAuth();
   if (!session.profile.active) redirect('/login?blocked=1');
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
+    ensureDemoSeedUsers();
     const { userId } = session;
     const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate } =
       getDemoDashboardData(userId);
@@ -39,7 +41,8 @@ export default async function AlunoDashboard() {
         showRanking={showRanking}
         todayRankings={todayRankings}
         rankingDate={rankingDate}
-        demoMode={isSkipAuth()}
+        showLogout
+        demoMode={usesDemoStore()}
       />
     );
   }

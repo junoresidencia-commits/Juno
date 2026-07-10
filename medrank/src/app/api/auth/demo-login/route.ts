@@ -7,6 +7,7 @@ import {
   signDemoSession,
   verifyDemoCredentials,
 } from '@/lib/demo-auth';
+import { ensureDemoSeedUsers } from '@/lib/demo/seed-users';
 import { findDemoStudentByEmail } from '@/lib/demo-store';
 
 export async function POST(request: Request) {
@@ -16,6 +17,8 @@ export async function POST(request: Request) {
   if (!isDemoMode()) {
     return NextResponse.json({ error: 'Use login com Supabase' }, { status: 403 });
   }
+
+  ensureDemoSeedUsers();
 
   const normalized = normalizeDemoEmail(email);
   const pending = findDemoStudentByEmail(normalized);

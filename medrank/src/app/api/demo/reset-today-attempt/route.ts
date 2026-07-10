@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { requireAuth } from '@/lib/auth';
 import { resetDemoAttempt } from '@/lib/demo/runtime';
 import { getTodaysExam } from '@/lib/exams/release';
 import { getDemoExams } from '@/lib/demo/content';
 
 export async function POST() {
-  if (!isSkipAuth()) {
+  if (!usesDemoStore()) {
     return NextResponse.json({ error: 'Disponível só no modo demo' }, { status: 403 });
   }
 
