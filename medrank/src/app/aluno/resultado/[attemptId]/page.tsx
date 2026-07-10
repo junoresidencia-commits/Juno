@@ -7,7 +7,7 @@ import type { Question, OptionLetter } from '@/types/database';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
-import { getDemoRanking } from '@/lib/demo/presenters';
+import { studentRankingAvailableTomorrowMessage } from '@/lib/exams/ranking-visibility';
 
 export default async function ResultadoPage({
   params,
@@ -21,7 +21,6 @@ export default async function ResultadoPage({
     const attempt = getDemoAttemptById(attemptId);
     if (!attempt?.finished_at) redirect('/aluno');
     const exam = getDemoExams().find((item) => item.id === attempt.exam_id);
-    const ranking = getDemoRanking('daily').rankings.find((r) => r.user_id === userId);
     const questions = new Map(getDemoQuestionsForAttempt(attemptId).map((q) => [q.id, q]));
     const answers = getDemoAttemptAnswers(attemptId).map((answer) => ({
       ...answer,
@@ -30,22 +29,19 @@ export default async function ResultadoPage({
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
 
     return (
-      <div className="mx-auto max-w-3xl px-4 py-8">
-        <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar ao início</Link>
-        <h1 className="mt-4 text-2xl font-bold">Resultado da prova</h1>
+      <div className="mx-auto max-w-lg px-4 py-6">
+        <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
+        <h1 className="mt-4 text-2xl font-bold">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Acertos</p><p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p></div>
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Erros</p><p className="text-3xl font-bold text-red-600">{totalWrong}</p></div>
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Percentual</p><p className="text-3xl font-bold">{formatPercent(attempt.percentage)}</p></div>
           <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-500">Tempo</p><p className="text-3xl font-bold">{formatDuration(attempt.duration_seconds ?? 0)}</p></div>
         </div>
-        {ranking?.position && (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
-            <p className="text-lg font-semibold text-emerald-800">{ranking.position}º lugar no ranking de hoje</p>
-            <p className="text-sm text-emerald-600">Pontuação: {attempt.score} pts</p>
-          </div>
-        )}
+        <p className="mt-4 rounded-xl bg-slate-100 px-4 py-3 text-center text-sm text-slate-600">
+          {studentRankingAvailableTomorrowMessage()}
+        </p>
         <section className="mt-8">
           <h2 className="text-lg font-semibold">Gabarito comentado</h2>
           <div className="mt-4 space-y-6">
@@ -109,16 +105,6 @@ export default async function ResultadoPage({
   const showAnswers =
     exam.show_answers_after_submit || (exam.show_answers_when_all_done && allFinished);
 
-  const { data: ranking } = exam.ranking_visible_to_students !== false
-    ? await supabase
-        .from('rankings')
-        .select('position')
-        .eq('user_id', userId)
-        .eq('period_type', 'daily')
-        .eq('period_start', exam.date_available)
-        .maybeSingle()
-    : { data: null };
-
   const { data: answers } = await supabase
     .from('attempt_answers')
     .select('*, questions(*)')
@@ -127,15 +113,13 @@ export default async function ResultadoPage({
   const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">
-        ← Voltar ao início
-      </Link>
+    <div className="mx-auto max-w-lg px-4 py-6">
+      <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
 
-      <h1 className="mt-4 text-2xl font-bold">Resultado da prova</h1>
+      <h1 className="mt-4 text-2xl font-bold">Seu resultado</h1>
       <p className="text-slate-600">{exam.title}</p>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <p className="text-sm text-slate-500">Acertos</p>
           <p className="text-3xl font-bold text-emerald-700">{attempt.total_correct}</p>
@@ -154,14 +138,9 @@ export default async function ResultadoPage({
         </div>
       </div>
 
-      {ranking?.position && (
-        <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
-          <p className="text-lg font-semibold text-emerald-800">
-            {ranking.position}º lugar no ranking de hoje
-          </p>
-          <p className="text-sm text-emerald-600">Pontuação: {attempt.score} pts</p>
-        </div>
-      )}
+      <p className="mt-4 rounded-xl bg-slate-100 px-4 py-3 text-center text-sm text-slate-600">
+        {studentRankingAvailableTomorrowMessage()}
+      </p>
 
       {attempt.submitted_automatically && (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">

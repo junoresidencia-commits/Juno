@@ -6,13 +6,22 @@ import { fetchUserChallengeProgress } from '@/lib/challenges-progress';
 import { getWeekEnd, getWeekStart } from '@/lib/periods';
 import { formatDateBR } from '@/lib/format';
 import { isSkipAuth } from '@/lib/skip-auth';
-import { getDemoDashboardData } from '@/lib/demo/presenters';
+import { getDemoWeeklyChallenges } from '@/lib/demo/content';
 
 export default async function DesafiosAlunoPage() {
   const { userId } = await requireAuth();
 
   if (isSkipAuth()) {
-    const { challenges, streak } = getDemoDashboardData();
+    const challenges = getDemoWeeklyChallenges().map((challenge) => ({
+      challenge,
+      currentValue:
+        challenge.challenge_type === 'min_exams' ? 3 :
+        challenge.challenge_type === 'min_accuracy' ? 78 :
+        72,
+      completed: false,
+      description: challenge.description ?? '',
+    }));
+    const streak = { current_streak: 7 };
     const weekStart = getWeekStart();
     const weekEnd = getWeekEnd();
     return (

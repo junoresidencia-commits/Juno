@@ -4,6 +4,7 @@ import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
 import { listDemoStudents } from '@/lib/demo-store';
 import { isExamWindowClosed } from '@/lib/exams/release';
+import { todayDateStringBrazil } from '@/lib/exams/window';
 
 export function countActiveStudents(): number {
   const active = listDemoStudents().filter((s) => s.active).length;
@@ -22,6 +23,9 @@ export function allStudentsFinished(attempts: Attempt[], exam: Exam): boolean {
 
 export function isRankingVisibleToTeachers(exam: Exam, attempts: Attempt[], now = new Date()): boolean {
   if (exam.ranking_release === 'immediate') return true;
+  if (exam.ranking_release === 'next_day') {
+    return todayDateStringBrazil(now) > exam.date_available;
+  }
   if (exam.ranking_release === 'after_window') {
     return isExamWindowClosed(exam, now);
   }

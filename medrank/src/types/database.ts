@@ -60,7 +60,7 @@ export interface Exam {
   /** Se false, ranking da prova fica só no painel do professor */
   ranking_visible_to_students: boolean;
   /** Quando o ranking da prova é consolidado para o professor */
-  ranking_release: 'after_all_done' | 'after_window' | 'immediate';
+  ranking_release: 'after_all_done' | 'after_window' | 'immediate' | 'next_day';
   status: ExamStatus;
   selection_mode?: SelectionMode;
   created_at: string;

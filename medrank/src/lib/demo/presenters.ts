@@ -3,7 +3,7 @@ import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenge
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
 import { getTodaysExam, todayDateString, getExamWindowStatus } from '@/lib/exams/release';
-import { formatExamWindowLabel } from '@/lib/exams/window';
+import { getStudentDailyRankingDate } from '@/lib/exams/ranking-visibility';
 import { buildExamRankings, isRankingVisibleToTeachers, countFinishedAttempts, countActiveStudents } from '@/lib/exams/ranking';
 import { listDemoStudents } from '@/lib/demo-store';
 
@@ -29,24 +29,13 @@ function withProfileNames(rankings: Ranking[]): (Ranking & { profiles: { name: s
 }
 
 export function getDemoDashboardData(userId = 'guest-student') {
-  const today = todayDateString();
+  const yesterdayDate = getStudentDailyRankingDate();
   const todayExam = getTodaysExam(getDemoExams(), new Date());
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
   const attempt = todayExam ? getDemoAttemptByExam(todayExam.id, userId) : null;
-  const { rankings } = getDemoRanking('daily');
-  const { rankings: weeklyRankings } = getDemoRanking('weekly');
-  const streak = { current_streak: 7 };
-  const challenges = getDemoWeeklyChallenges().map((challenge) => ({
-    challenge,
-    currentValue:
-      challenge.challenge_type === 'min_exams' ? 3 :
-      challenge.challenge_type === 'min_accuracy' ? 78 :
-      72,
-    completed: false,
-    description: challenge.description ?? '',
-  }));
+  const { rankings: yesterdayRankings } = getDemoRanking('daily', yesterdayDate);
 
-  return { todayExam, attempt, rankings, weeklyRankings, streak, challenges, windowPhase };
+  return { todayExam, attempt, yesterdayRankings, windowPhase };
 }
 
 export function getDemoAdminExamStatus() {
@@ -100,22 +89,30 @@ export function getDemoHistory() {
     .sort((a, b) => (b.finished_at ?? '').localeCompare(a.finished_at ?? ''));
 }
 
-export function getDemoRanking(period: 'daily' | 'weekly' | 'monthly' | 'general') {
+export function getDemoRanking(
+  period: 'daily' | 'weekly' | 'monthly' | 'general',
+  rankingDate?: string
+) {
   const today = todayDateString();
+  const date = rankingDate ?? today;
   const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
-  const todayExam = getTodaysExam(getDemoExams(), new Date());
 
   let rankings: Ranking[];
-  if (period === 'daily' && todayExam) {
-    const real = buildExamRankings(attempts, todayExam);
-    rankings = real.length > 0 ? real : getDemoRankings('daily', today);
+  if (period === 'daily') {
+    const exam = getDemoExams().find((e) => e.date_available === date);
+    if (exam) {
+      const real = buildExamRankings(attempts, exam);
+      rankings = real.length > 0 ? real : getDemoRankings('daily', date);
+    } else {
+      rankings = getDemoRankings('daily', date);
+    }
   } else {
     rankings = getDemoRankings(period, today);
   }
 
   const rankingsWithNames = withProfileNames(rankings);
   const bounds = {
-    daily: { start: today, end: today, label: 'Hoje' },
+    daily: { start: date, end: date, label: date === today ? 'Hoje' : `Dia ${date}` },
     weekly: { start: getWeekStart(new Date()), end: getWeekEnd(new Date()), label: 'Semana atual' },
     monthly: { start: getMonthStart(new Date()), end: getMonthEnd(new Date()), label: 'Mês atual' },
     general: { start: '2026-07-09', end: today, label: 'Geral' },
