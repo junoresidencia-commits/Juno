@@ -163,7 +163,7 @@ export function ExamRunner({
     setQuestionRemaining(questionLimit);
   }, [currentIndex, questionLimit]);
 
-  // Pula questões já respondidas ao retomar a prova
+  // Pula questões já respondidas na mesma sessão
   useEffect(() => {
     const questionId = questions[currentIndex]?.id;
     if (!questionId || !answersRef.current[questionId]) return;
@@ -174,24 +174,6 @@ export function ExamRunner({
       setCurrentIndex(nextUnanswered);
     }
   }, [currentIndex, questions]);
-
-  // Se sair sem terminar, perde a prova inteira (só ao fechar/sair da página)
-  useEffect(() => {
-    const forfeitUrl = `${apiBase}/${attemptId}/forfeit`;
-
-    function forfeitIfNeeded() {
-      if (finishedRef.current || submittingRef.current) return;
-      const payload = new Blob([JSON.stringify({})], { type: 'application/json' });
-      if (typeof navigator.sendBeacon === 'function') {
-        navigator.sendBeacon(forfeitUrl, payload);
-      } else {
-        void fetch(forfeitUrl, { method: 'POST', keepalive: true });
-      }
-    }
-
-    window.addEventListener('pagehide', forfeitIfNeeded);
-    return () => window.removeEventListener('pagehide', forfeitIfNeeded);
-  }, [apiBase, attemptId]);
 
   // Cronômetro único — mais confiável no Safari/iOS que vários setIntervals
   useEffect(() => {
@@ -231,7 +213,7 @@ export function ExamRunner({
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
   const currentAnswered = Boolean(answers[current.id]);
-  const canSelect = !currentAnswered && !submitting;
+  const isLocked = currentAnswered || submitting || advancingRef.current;
   const questionLimitLabel =
     questionLimit % 60 === 0
       ? `${questionLimit / 60} min`
@@ -288,23 +270,29 @@ export function ExamRunner({
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
           const selected = answers[current.id] === letter;
-          const inactive = !canSelect || currentAnswered;
           return (
             <button
               key={letter}
               type="button"
-              aria-disabled={inactive}
-              onClick={() => {
-                if (inactive) return;
-                selectAnswer(current.id, letter);
+              disabled={isLocked && !selected}
+              onPointerDown={(e) => {
+                if (isLocked) return;
+                e.preventDefault();
+                void selectAnswer(current.id, letter);
               }}
-              className={`flex w-full touch-manipulation items-start gap-3 rounded-xl border p-4 text-left transition active:scale-[0.99] ${
+              onClick={(e) => {
+                e.preventDefault();
+                if (isLocked) return;
+                void selectAnswer(current.id, letter);
+              }}
+              className={`flex w-full select-none items-start gap-3 rounded-xl border p-4 text-left transition active:scale-[0.99] ${
                 selected
                   ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                  : inactive
+                  : isLocked
                     ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
-                    : 'border-slate-200 bg-white hover:border-emerald-300'
+                    : 'cursor-pointer border-slate-200 bg-white hover:border-emerald-300 active:bg-emerald-50'
               }`}
+              style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
             >
               <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
