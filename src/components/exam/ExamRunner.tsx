@@ -59,6 +59,7 @@ export function ExamRunner({
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
   const selectingRef = useRef(false);
+  const lastSelectAt = useRef(0);
   const answersRef = useRef(initialAnswers);
   const currentIndexRef = useRef(firstOpenIndex);
   const submittingRef = useRef(false);
@@ -107,12 +108,15 @@ export function ExamRunner({
   );
 
   const handleSelect = (option: OptionLetter) => {
+    const now = Date.now();
+    if (now - lastSelectAt.current < 400) return;
     if (selectingRef.current || submittingRef.current) return;
 
     const index = currentIndexRef.current;
     const question = questions[index];
     if (!question || answersRef.current[question.id]) return;
 
+    lastSelectAt.current = now;
     selectingRef.current = true;
     const timeSpent = secondsOnQuestion(questionStartedAt.current);
     const nextAnswers = { ...answersRef.current, [question.id]: option };
@@ -196,7 +200,7 @@ export function ExamRunner({
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 pb-24">
+    <div className="exam-no-select mx-auto max-w-3xl px-4 py-6 pb-24">
       {linearMode && canAnswer && (
         <div className="mb-4 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm text-amber-950 ring-1 ring-amber-200">
           <strong>Ao tocar em uma alternativa, a questão passa na hora.</strong>
@@ -250,49 +254,42 @@ export function ExamRunner({
         )}
       </div>
 
-      <fieldset className="mb-6 space-y-3 border-0 p-0" disabled={!canAnswer}>
-        <legend className="sr-only">Alternativas</legend>
+      <div className="mb-6 space-y-3">
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
-          const inputId = `${current.id}-${letter}`;
           const selected = selectedLetter === letter;
 
           return (
-            <div key={letter} className="relative">
-              <input
-                type="radio"
-                name={`q-${current.id}`}
-                id={inputId}
-                value={letter}
-                checked={selected}
-                onChange={() => handleSelect(letter)}
-                className="peer sr-only"
-              />
-              <label
-                htmlFor={inputId}
-                className={`flex min-h-[3.5rem] w-full cursor-pointer items-start gap-3 rounded-xl border p-4 text-left transition peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-300 ${
-                  selected
-                    ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
-                    : canAnswer
-                      ? 'border-slate-200 bg-white active:border-emerald-400 active:bg-emerald-50'
-                      : 'border-slate-200 bg-slate-50 opacity-60'
+            <button
+              key={letter}
+              type="button"
+              aria-pressed={selected}
+              onContextMenu={(e) => e.preventDefault()}
+              onPointerUp={() => {
+                if (!canAnswer) return;
+                handleSelect(letter);
+              }}
+              className={`flex min-h-[4rem] w-full items-start gap-3 rounded-xl border p-4 text-left transition ${
+                selected
+                  ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
+                  : canAnswer
+                    ? 'border-slate-300 bg-white active:border-emerald-500 active:bg-emerald-100'
+                    : 'border-slate-200 bg-slate-100 opacity-50'
+              }`}
+            >
+              <span
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-bold ${
+                  selected ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'
                 }`}
-                style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'rgba(16, 185, 129, 0.2)' }}
               >
-                <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                    selected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-800'
-                  }`}
-                >
-                  {letter}
-                </span>
-                <span className="pt-0.5 text-sm leading-relaxed text-slate-900">{text}</span>
-              </label>
-            </div>
+                {letter}
+              </span>
+              <span className="pt-1 text-base leading-relaxed text-slate-900">{text}</span>
+            </button>
           );
         })}
-      </fieldset>
+      </div>
 
       {!linearMode && (
         <>
