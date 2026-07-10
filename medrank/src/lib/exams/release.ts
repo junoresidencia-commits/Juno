@@ -7,7 +7,6 @@ import {
   todayDateStringBrazil,
 } from '@/lib/exams/window';
 
-export const MAX_STUDENTS = 15;
 export const MAX_ADMINS = 7;
 
 export { formatExamWindowLabel, formatExamWindowShort, EXAM_WINDOW_START_HOUR, EXAM_WINDOW_END_HOUR } from '@/lib/exams/window';

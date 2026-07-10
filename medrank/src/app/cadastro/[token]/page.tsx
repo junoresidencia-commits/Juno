@@ -14,11 +14,13 @@ export default async function CadastroPage({
 
   let valid = false;
   let error: string | undefined;
+  let inviteEmail: string | undefined;
 
   if (isDemoMode()) {
     const result = validateDemoInvite(token);
     valid = result.valid;
     error = result.error;
+    inviteEmail = result.email;
   } else if (isSupabaseConfigured()) {
     const admin = createAdminClient();
     const { data: invite } = admin
@@ -33,6 +35,7 @@ export default async function CadastroPage({
       error = 'Este link expirou.';
     } else {
       valid = true;
+      inviteEmail = invite.email ?? undefined;
     }
   } else {
     error = 'Sistema indisponível no momento.';
@@ -45,7 +48,7 @@ export default async function CadastroPage({
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">Cadastro por convite</p>
         </div>
-        <CadastroForm token={token} valid={valid} error={error} />
+        <CadastroForm token={token} valid={valid} error={error} inviteEmail={inviteEmail} />
         <p className="mt-6 text-center text-sm text-slate-500">
           Já tem conta?{' '}
           <Link href="/login" className="text-emerald-700 hover:underline">Entrar</Link>

@@ -13,6 +13,7 @@ export async function GET() {
     const invites = listDemoInvites().map((i) => ({
       id: i.token,
       token: i.token,
+      email: i.email,
       expires_at: i.expiresAt,
       used_at: i.usedAt,
       note: i.note,
@@ -43,16 +44,26 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => ({}));
   const note = (body as { note?: string }).note ?? null;
+  const email = (body as { email?: string }).email?.trim().toLowerCase() ?? '';
+
+  if (!email || !email.includes('@')) {
+    return NextResponse.json({ error: 'Informe o e-mail do aluno.' }, { status: 400 });
+  }
 
   if (isDemoMode() || auth.demo) {
-    const invite = createDemoInvite(note ?? undefined);
-    return NextResponse.json({
-      invite: {
-        token: invite.token,
-        link: buildInviteLink(invite.token),
-        expires_at: invite.expiresAt,
-      },
-    });
+    try {
+      const invite = createDemoInvite(email, note ?? undefined);
+      return NextResponse.json({
+        invite: {
+          token: invite.token,
+          email: invite.email,
+          link: buildInviteLink(invite.token),
+          expires_at: invite.expiresAt,
+        },
+      });
+    } catch (err) {
+      return NextResponse.json({ error: err instanceof Error ? err.message : 'Erro ao gerar convite' }, { status: 400 });
+    }
   }
 
   if (!isSupabaseConfigured()) {
@@ -72,6 +83,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await admin.from('invite_tokens').insert({
     token,
+    email,
     created_by: session?.userId,
     expires_at: expiresAt,
     note,

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/auth';
 import { isDemoMode } from '@/lib/demo-auth';
-import { listDemoStudents, MAX_STUDENTS } from '@/lib/demo-store';
+import { listDemoStudents } from '@/lib/demo-store';
 import { createClient } from '@/lib/supabase/server';
 import { StudentActions } from '@/components/admin/StudentActions';
 
@@ -66,7 +66,7 @@ export default async function AlunosPage() {
       <div className="mt-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Alunos</h1>
-          <p className="text-sm text-slate-600">{activeCount}/{MAX_STUDENTS} alunos ativos</p>
+          <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
         </div>
         <Link
           href="/admin/convites"
