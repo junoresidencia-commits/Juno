@@ -2,11 +2,24 @@ import { redirect } from 'next/navigation';
 import { requireAuth } from '@/lib/auth';
 import { canStartExam } from '@/lib/exams/release';
 import { formatExamWindowLabel } from '@/lib/exams/window';
-import { ExamSession } from '@/components/exam/ExamSession';
-import type { Question } from '@/types/database';
+import { ExamRunner } from '@/components/exam/ExamRunner';
+import type { OptionLetter, Question } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
+import {
+  createDemoAttempt,
+  getDemoAttemptAnswers,
+  getDemoAttemptByExam,
+} from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
 import { createClient } from '@/lib/supabase/server';
+
+function mapDemoAnswers(attemptId: string): Record<string, OptionLetter> {
+  const initial: Record<string, OptionLetter> = {};
+  for (const row of getDemoAttemptAnswers(attemptId)) {
+    if (row.selected_option) initial[row.question_id] = row.selected_option;
+  }
+  return initial;
+}
 
 export default async function ProvaPage({
   params,
@@ -14,23 +27,36 @@ export default async function ProvaPage({
   params: Promise<{ examId: string }>;
 }) {
   const { examId } = await params;
-  await requireAuth();
+  const { userId } = await requireAuth();
 
   if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
     if (!exam || !canStartExam(exam)) redirect('/aluno');
 
+    let attempt = getDemoAttemptByExam(examId, userId);
+    if (attempt?.finished_at) {
+      redirect(`/aluno/resultado/${attempt.id}`);
+    }
+
+    if (!attempt) {
+      attempt = createDemoAttempt(examId, userId);
+    }
+
     const questions = getDemoExamQuestions(examId);
+    const initialAnswers = mapDemoAnswers(attempt.id);
 
     return (
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
           {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
         </div>
-        <ExamSession
+        <ExamRunner
+          attemptId={attempt.id}
           examId={examId}
           durationMinutes={exam.duration_minutes}
+          startedAt={attempt.started_at}
           questions={questions}
+          initialAnswers={initialAnswers}
         />
       </div>
     );
@@ -47,6 +73,32 @@ export default async function ProvaPage({
 
   if (!exam || !canStartExam(exam)) redirect('/aluno');
 
+  let { data: attempt } = await supabase
+    .from('attempts')
+    .select('*')
+    .eq('exam_id', examId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (attempt?.finished_at) {
+    redirect(`/aluno/resultado/${attempt.id}`);
+  }
+
+  if (!attempt) {
+    const { data: newAttempt, error } = await supabase
+      .from('attempts')
+      .insert({
+        exam_id: examId,
+        user_id: userId,
+        total_questions: exam.total_questions,
+      })
+      .select()
+      .single();
+
+    if (error || !newAttempt) redirect('/aluno');
+    attempt = newAttempt;
+  }
+
   const { data: examQuestions } = await supabase
     .from('exam_questions')
     .select('order_number, questions(*)')
@@ -60,15 +112,30 @@ export default async function ProvaPage({
     })
     .filter((q) => q.id);
 
+  const { data: savedAnswers } = await supabase
+    .from('attempt_answers')
+    .select('question_id, selected_option')
+    .eq('attempt_id', attempt.id);
+
+  const initialAnswers: Record<string, OptionLetter> = {};
+  for (const row of savedAnswers ?? []) {
+    if (row.selected_option) {
+      initialAnswers[row.question_id] = row.selected_option as OptionLetter;
+    }
+  }
+
   return (
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
         {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
       </div>
-      <ExamSession
+      <ExamRunner
+        attemptId={attempt.id}
         examId={examId}
         durationMinutes={exam.duration_minutes}
+        startedAt={attempt.started_at}
         questions={questions}
+        initialAnswers={initialAnswers}
       />
     </div>
   );

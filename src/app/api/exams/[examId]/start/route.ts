@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
-import { requireAuth } from '@/lib/auth';
+import { getSessionProfile } from '@/lib/auth';
 import { createDemoAttempt, getDemoAttemptAnswers, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { canStartExam } from '@/lib/exams/release';
@@ -20,7 +20,11 @@ export async function POST(
   { params }: { params: Promise<{ examId: string }> }
 ) {
   const { examId } = await params;
-  const { userId } = await requireAuth();
+  const session = await getSessionProfile();
+  if (!session) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+  const { userId } = session;
 
   if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
