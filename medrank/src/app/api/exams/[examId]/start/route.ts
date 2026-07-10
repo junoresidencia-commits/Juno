@@ -1,26 +1,46 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
-import { createDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
+import { requireAuth } from '@/lib/auth';
+import {
+  createDemoAttempt,
+  forfeitDemoAttempt,
+  getDemoAttemptByExam,
+} from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
-import { canStartExam, getExamWindowStatus } from '@/lib/exams/release';
+import { canStartExam } from '@/lib/exams/release';
 
 export async function POST(
   _request: Request,
   { params }: { params: Promise<{ examId: string }> }
 ) {
   const { examId } = await params;
+  const { userId } = await requireAuth();
 
   if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
     if (!exam || !canStartExam(exam)) {
       return NextResponse.json({ error: 'Prova não disponível neste horário (7h–22h)' }, { status: 404 });
     }
-    const existing = getDemoAttemptByExam(examId);
+
+    const existing = getDemoAttemptByExam(examId, userId);
     if (existing?.finished_at) {
-      return NextResponse.json({ error: 'Prova já finalizada', attemptId: existing.id }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Prova já finalizada', attemptId: existing.id },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ attempt: existing ?? createDemoAttempt(examId) });
+
+    if (existing && !existing.finished_at) {
+      forfeitDemoAttempt(existing.id);
+      return NextResponse.json(
+        { error: 'Você saiu da prova. Perdeu o dia.', forfeited: true },
+        { status: 403 }
+      );
+    }
+
+    const attempt = createDemoAttempt(examId, userId);
+    return NextResponse.json({ attempt });
   }
 
   const supabase = await createClient();
@@ -37,17 +57,8 @@ export async function POST(
     .eq('status', 'published')
     .single();
 
-  if (!exam) {
-    return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
-  }
-
-  if (!canStartExam(exam)) {
-    const phase = getExamWindowStatus(exam);
-    const message =
-      phase === 'before'
-        ? 'A prova abre às 7h (horário de Brasília)'
-        : 'O prazo de hoje encerrou às 22h. Você perdeu os pontos do dia.';
-    return NextResponse.json({ error: message }, { status: 403 });
+  if (!exam || !canStartExam(exam)) {
+    return NextResponse.json({ error: 'Prova não disponível' }, { status: 404 });
   }
 
   const { data: existing } = await supabase
@@ -58,11 +69,18 @@ export async function POST(
     .maybeSingle();
 
   if (existing?.finished_at) {
-    return NextResponse.json({ error: 'Prova já finalizada', attemptId: existing.id }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Prova já finalizada', attemptId: existing.id },
+      { status: 400 }
+    );
   }
 
-  if (existing) {
-    return NextResponse.json({ attempt: existing });
+  if (existing && !existing.finished_at) {
+    await supabase.rpc('submit_attempt', { p_attempt_id: existing.id, p_auto: true });
+    return NextResponse.json(
+      { error: 'Você saiu da prova. Perdeu o dia.', forfeited: true },
+      { status: 403 }
+    );
   }
 
   const { data: attempt, error } = await supabase
