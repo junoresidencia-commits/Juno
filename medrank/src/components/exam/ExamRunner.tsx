@@ -6,7 +6,6 @@ import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import {
   getQuestionTimeLimitSeconds,
-  MIN_READING_SECONDS,
 } from '@/lib/exams/scoring';
 import { formatDuration } from '@/lib/format';
 
@@ -54,7 +53,6 @@ export function ExamRunner({
     getEffectiveExamRemainingSeconds(startedAt, durationMinutes)
   );
   const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
-  const [readingRemaining, setReadingRemaining] = useState(MIN_READING_SECONDS);
   const [submitting, setSubmitting] = useState(false);
 
   const questionStartedAt = useRef(Date.now());
@@ -139,8 +137,6 @@ export function ExamRunner({
       if (answersRef.current[questionId]) return;
 
       const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
-      if (linearMode && elapsed < MIN_READING_SECONDS) return;
-
       const timeSpent = Math.max(1, elapsed);
       const newAnswers = { ...answersRef.current, [questionId]: option };
       setAnswers(newAnswers);
@@ -163,7 +159,6 @@ export function ExamRunner({
   useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
-    setReadingRemaining(MIN_READING_SECONDS);
   }, [currentIndex, questionLimit]);
 
   // Pula questões já respondidas ao retomar a prova
@@ -201,10 +196,8 @@ export function ExamRunner({
 
       const elapsed = Math.floor((Date.now() - questionStartedAt.current) / 1000);
       const left = Math.max(0, questionLimit - elapsed);
-      const readingLeft = Math.max(0, MIN_READING_SECONDS - elapsed);
 
       setQuestionRemaining(left);
-      setReadingRemaining(readingLeft);
 
       if (left <= 0) {
         skipQuestion(index);
@@ -223,7 +216,11 @@ export function ExamRunner({
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
   const currentAnswered = Boolean(answers[current.id]);
-  const canSelect = readingRemaining <= 0 && !currentAnswered && !submitting;
+  const canSelect = !currentAnswered && !submitting;
+  const questionLimitLabel =
+    questionLimit % 60 === 0
+      ? `${questionLimit / 60} min`
+      : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
@@ -252,17 +249,11 @@ export function ExamRunner({
               {formatDuration(questionRemaining)}
             </p>
             <p className="mt-1 text-xs text-slate-600">
-              Máx. {Math.floor(questionLimit / 60)} min por questão · bônus para quem acerta mais rápido
+              Máx. {questionLimitLabel} por questão · bônus para quem acerta mais rápido
             </p>
           </div>
         )}
       </div>
-
-      {linearMode && readingRemaining > 0 && !currentAnswered && (
-        <div className="mb-4 rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-900 ring-1 ring-blue-100">
-          Leia a questão com atenção. As alternativas liberam em <strong>{readingRemaining}s</strong>.
-        </div>
-      )}
 
       <div className="mb-4 rounded-xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
         {current.topic && (
@@ -366,7 +357,7 @@ export function ExamRunner({
 
       {linearMode && (
         <p className="text-center text-xs text-slate-600">
-          Responda para avançar. Sem resposta no tempo = 0 ponto. Acerto rápido (após leitura) vale mais.
+          Responda para avançar. Sem resposta no tempo = 0 ponto. Acerto rápido vale mais pontos.
         </p>
       )}
     </div>
