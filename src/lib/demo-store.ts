@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
+import type { Question } from '@/types/database';
 
 export interface DemoInvite {
   token: string;
@@ -38,12 +39,13 @@ interface DemoStore {
     submittedAutomatically: boolean;
     answers: Record<string, string>;
   }[];
+  customQuestions?: Question[];
 }
 
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
 function defaultStore(): DemoStore {
-  return { invites: [], students: [], attempts: [] };
+  return { invites: [], students: [], attempts: [], customQuestions: [] };
 }
 
 export function readDemoStore(): DemoStore {
@@ -188,4 +190,60 @@ export function listDemoStudents(): DemoStudent[] {
 
 export function listDemoInvites(): DemoInvite[] {
   return readDemoStore().invites;
+}
+
+type ImportableQuestion = {
+  statement?: string | null;
+  option_a?: string | null;
+  option_b?: string | null;
+  option_c?: string | null;
+  option_d?: string | null;
+  option_e?: string | null;
+  correct_option: Question['correct_option'];
+  explanation?: string | null;
+  source?: string | null;
+  year?: number | null;
+  specialty?: string | null;
+  topic?: string | null;
+  subtopic?: string | null;
+  difficulty?: Question['difficulty'];
+  tags?: string[];
+};
+
+export function getDemoCustomQuestions(): Question[] {
+  return readDemoStore().customQuestions ?? [];
+}
+
+export function appendDemoImportedQuestions(rows: ImportableQuestion[]): number {
+  const store = readDemoStore();
+  const current = store.customQuestions ?? [];
+  const now = new Date().toISOString();
+
+  for (const row of rows) {
+    current.push({
+      id: `custom-q-${randomBytes(4).toString('hex')}`,
+      statement: row.statement ?? '',
+      option_a: row.option_a ?? '',
+      option_b: row.option_b ?? '',
+      option_c: row.option_c ?? '',
+      option_d: row.option_d ?? '',
+      option_e: row.option_e ?? '',
+      correct_option: row.correct_option,
+      explanation: row.explanation ?? null,
+      source: row.source ?? null,
+      year: row.year ?? null,
+      specialty: row.specialty ?? null,
+      topic: row.topic ?? null,
+      subtopic: row.subtopic ?? null,
+      difficulty: row.difficulty ?? 'medio',
+      tags: row.tags ?? ['importado'],
+      image_url: null,
+      bibliography: null,
+      created_at: now,
+    });
+  }
+
+  store.customQuestions = current;
+  writeDemoStore(store);
+  return rows.length;
 }

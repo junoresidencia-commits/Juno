@@ -2,26 +2,11 @@ import { NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import { createClient } from '@/lib/supabase/server';
 import { parseImportRow } from '@/lib/utils';
+import { isSkipAuth } from '@/lib/skip-auth';
+import { appendDemoImportedQuestions } from '@/lib/demo-store';
 import type { ImportQuestionRow } from '@/types/database';
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin') {
-    return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
-  }
-
   const formData = await request.formData();
   const file = formData.get('file') as File;
 
@@ -49,6 +34,28 @@ export async function POST(request: Request) {
 
   if (toInsert.length === 0) {
     return NextResponse.json({ error: 'Nenhuma questão válida encontrada', errors }, { status: 400 });
+  }
+
+  if (isSkipAuth()) {
+    const imported = appendDemoImportedQuestions(toInsert);
+    return NextResponse.json({ imported, errors });
+  }
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'admin') {
+    return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
   }
 
   const { error } = await supabase.from('questions').insert(toInsert);
