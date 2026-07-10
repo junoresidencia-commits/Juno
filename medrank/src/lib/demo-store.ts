@@ -350,7 +350,7 @@ export function releaseDemoExam(examId: string, releaseDays: 1 | 2, startDate?: 
       release_days: releaseDays,
       duration_minutes: 30,
       total_questions: 20,
-      show_answers_after_submit: true,
+      show_answers_after_submit: false,
       show_answers_when_all_done: false,
       ranking_visible_to_students: false,
       ranking_release: 'after_all_done',

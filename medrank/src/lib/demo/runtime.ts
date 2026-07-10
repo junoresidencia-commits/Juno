@@ -106,7 +106,7 @@ export function getDemoAttemptAnswers(attemptId: string): AttemptAnswer[] {
       attempt_id: attemptId,
       question_id: question.id,
       selected_option: selected,
-      is_correct: selected ? selected === question.correct_option : null,
+      is_correct: selected ? selected === question.correct_option : false,
       answered_at: attempt.finishedAt ?? null,
     };
   });

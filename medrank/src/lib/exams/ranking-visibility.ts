@@ -39,6 +39,20 @@ export function studentRankingAfterWindowMessage(): string {
   return 'Ranking liberado após o horário da prova (22h).';
 }
 
+/** Gabarito só depois das 22h (fim da janela), para quem terminou a prova */
+export function canStudentSeeExamGabarito(
+  exam: Pick<import('@/types/database').Exam, 'date_available'> | null,
+  hasFinishedAttempt: boolean,
+  now = new Date()
+): boolean {
+  if (!exam || !hasFinishedAttempt) return false;
+  return getExamWindowPhase(exam.date_available, now) === 'after';
+}
+
+export function studentGabaritoBeforeWindowMessage(): string {
+  return 'O gabarito comentado será liberado após 22h (horário de Brasília), quando a janela da prova encerrar.';
+}
+
 export function getTodayRankingDate(now = new Date()): string {
   return todayDateStringBrazil(now);
 }
