@@ -13,7 +13,7 @@ import {
 import { getQuestionById } from '@/lib/question-bank/pool';
 import { SIMULADO_DURATION_MINUTES } from '@/lib/question-bank/areas';
 import { buildSimuladoQuestions, getSimuladoTitle } from '@/lib/simulados/selection';
-import { calculateRankingScore } from '@/lib/utils';
+import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 
 function mapSession(stored: StoredSimulado): SimuladoSession {
   return {
@@ -101,14 +101,23 @@ export function getSimuladoQuestions(sessionId: string): (Question & { order_num
     .filter((q): q is Question & { order_number: number } => q != null);
 }
 
-export function saveSimuladoAnswer(sessionId: string, questionId: string, option: OptionLetter | null) {
+export function saveSimuladoAnswer(
+  sessionId: string,
+  questionId: string,
+  option: OptionLetter | null,
+  timeSpentSeconds?: number
+) {
   const stored = getDemoSimuladoById(sessionId);
   if (!stored || stored.finishedAt) return false;
 
+  if (!stored.answerTimes) stored.answerTimes = {};
+
   if (option) {
     stored.answers[questionId] = option;
+    if (timeSpentSeconds != null) stored.answerTimes[questionId] = timeSpentSeconds;
   } else {
     delete stored.answers[questionId];
+    if (timeSpentSeconds != null) stored.answerTimes[questionId] = timeSpentSeconds;
   }
 
   saveDemoSimulado(stored);
@@ -138,10 +147,17 @@ export function submitSimuladoSession(sessionId: string, auto = false): Simulado
   }
 
   const startedAt = new Date(stored.startedAt).getTime();
-  const durationSeconds = Math.max(60, Math.floor((Date.now() - startedAt) / 1000));
+  const durationSeconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
   const totalQuestions = questions.length;
   const percentage = Math.round((totalCorrect / totalQuestions) * 1000) / 10;
-  const score = calculateRankingScore(totalCorrect, totalQuestions, durationSeconds);
+  const questionLimit = getQuestionTimeLimitSeconds(stored.durationMinutes, totalQuestions);
+  const scoreResults = questions.map((question) => {
+    const selected = stored.answers[question.id] as OptionLetter | undefined;
+    const isCorrect = selected === question.correct_option;
+    const timeSpent = stored.answerTimes?.[question.id] ?? questionLimit;
+    return { isCorrect, timeSpentSeconds: timeSpent };
+  });
+  const score = calculateExamScoreFromAnswers(scoreResults, questionLimit);
 
   stored.finishedAt = new Date().toISOString();
   stored.durationSeconds = durationSeconds;

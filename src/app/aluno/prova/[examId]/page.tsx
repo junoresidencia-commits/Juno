@@ -46,8 +46,8 @@ export default async function ProvaPage({
 
     return (
       <div>
-        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800">
-          {formatExamWindowLabel()}. A prova encerra automaticamente às 22h.
+        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
+          {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
         </div>
         <ExamRunner
           attemptId={attempt.id}
@@ -138,8 +138,8 @@ export default async function ProvaPage({
 
   return (
     <div>
-      <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800">
-        {formatExamWindowLabel()}. A prova encerra automaticamente às 22h.
+      <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
+        {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
       </div>
       <ExamRunner
         attemptId={attempt.id}
