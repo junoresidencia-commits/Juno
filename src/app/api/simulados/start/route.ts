@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionProfile } from '@/lib/auth';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { createSimuladoSession } from '@/lib/simulados/runtime';
 import type { SimuladoMode } from '@/types/simulado';
 
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const area = (body as { area?: string }).area;
   const theme = (body as { theme?: string }).theme;
 
-  if (!isSkipAuth()) {
+  if (!usesDemoStore()) {
     return NextResponse.json(
       { error: 'Simulados disponíveis no modo demo. Conecte o Supabase para produção.' },
       { status: 501 }

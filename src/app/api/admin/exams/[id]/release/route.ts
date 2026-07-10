@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { releaseDemoExam } from '@/lib/demo-store';
 import { getDemoExams } from '@/lib/demo/content';
 import { applyReleaseWindow } from '@/lib/exams/release';
@@ -13,7 +13,7 @@ export async function POST(
   const body = await request.json();
   const releaseDays = body.release_days === 2 ? 2 : 1;
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === id);
     if (!exam) {
       return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });

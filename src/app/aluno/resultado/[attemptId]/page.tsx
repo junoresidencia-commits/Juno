@@ -9,7 +9,7 @@ import {
   studentGabaritoBeforeWindowMessage,
 } from '@/lib/exams/ranking-visibility';
 import type { Question, OptionLetter } from '@/types/database';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { getDemoRanking } from '@/lib/demo/presenters';
@@ -56,7 +56,7 @@ export default async function ResultadoPage({
   const { attemptId } = await params;
   const { userId } = await requireAuth();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const attempt = getDemoAttemptById(attemptId);
     if (!attempt?.finished_at) redirect('/aluno');
     const exam = getDemoExams().find((item) => item.id === attempt.exam_id);

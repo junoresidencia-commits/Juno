@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import { createClient } from '@/lib/supabase/server';
 import { parseImportRow } from '@/lib/utils';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { appendDemoImportedQuestions } from '@/lib/demo-store';
 import { invalidateQuestionBankCache } from '@/lib/question-bank/pool';
 import type { ImportQuestionRow } from '@/types/database';
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Nenhuma questão válida encontrada', errors }, { status: 400 });
   }
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const imported = appendDemoImportedQuestions(toInsert);
     invalidateQuestionBankCache();
     return NextResponse.json({ imported, errors });

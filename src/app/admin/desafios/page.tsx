@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { getWeekEnd, getWeekStart } from '@/lib/periods';
 import { ChallengeManager } from '@/components/admin/ChallengeManager';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoWeeklyChallenges } from '@/lib/demo/content';
 
 export default async function DesafiosPage() {
@@ -11,7 +11,7 @@ export default async function DesafiosPage() {
   const weekStart = getWeekStart();
   const weekEnd = getWeekEnd();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const challenges = getDemoWeeklyChallenges().map((challenge) => ({
       ...challenge,
       weekly_challenge_completions: challenge.id === 'demo-ch-1'

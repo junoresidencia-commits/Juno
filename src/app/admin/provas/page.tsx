@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { formatDateBR } from '@/lib/format';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoExams } from '@/lib/demo/content';
 import { getTodaysExam, todayDateString, formatExamWindowShort } from '@/lib/exams/release';
 import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
@@ -11,7 +11,7 @@ export default async function ProvasPage() {
   await requireRole('admin');
   const today = todayDateString();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const exams = getDemoExams().slice().reverse();
     const { todayExam, finishedCount, activeStudents, rankings } = getDemoAdminExamStatus();
 

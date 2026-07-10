@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { DIFFICULTY_LABELS } from '@/lib/format';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoQuestions } from '@/lib/demo/content';
 
 export default async function QuestoesPage() {
   await requireRole('admin');
-  const questions = isSkipAuth()
+  const questions = usesDemoStore()
     ? getDemoQuestions().slice(0, 120)
     : (await createClient()
         .then((supabase) => supabase

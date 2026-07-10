@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatDateBR, formatDuration, formatPercent } from '@/lib/format';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoHistory } from '@/lib/demo/presenters';
 
 export default async function HistoricoPage() {
   const { userId } = await requireAuth();
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     const attempts = getDemoHistory();
     return (
       <div className="mx-auto max-w-3xl px-4 py-8">

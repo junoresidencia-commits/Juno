@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { saveSimuladoAnswer } from '@/lib/simulados/runtime';
 import type { OptionLetter } from '@/types/database';
 
@@ -9,7 +9,7 @@ export async function PUT(
 ) {
   const { sessionId } = await params;
 
-  if (!isSkipAuth()) {
+  if (!usesDemoStore()) {
     return NextResponse.json({ error: 'Não disponível' }, { status: 501 });
   }
 

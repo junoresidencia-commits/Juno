@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import type { Profile, UserRole } from '@/types/database';
+import { isDemoMode } from '@/lib/demo-mode';
 import { findDemoStudentByEmail } from '@/lib/demo-store';
 
 const COOKIE_NAME = 'medrank_demo_session';
@@ -16,17 +17,13 @@ export interface DemoUser {
 const DEMO_ADMIN: DemoUser = {
   id: 'demo-admin-001',
   email: 'admin@medrank.com',
-  name: 'Professor Admin',
+  name: 'Professor',
   role: 'admin',
-  password: 'admin',
+  password: 'professor',
   active: true,
 };
 
-export function isDemoMode(): boolean {
-  if (process.env.DEMO_MODE === 'true') return true;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  return url.includes('seu-projeto.supabase.co');
-}
+export { isDemoMode } from '@/lib/demo-mode';
 
 function getSecret(): string {
   return process.env.DEMO_AUTH_SECRET ?? 'medrank-demo-dev-secret';
@@ -34,14 +31,15 @@ function getSecret(): string {
 
 export function normalizeDemoEmail(input: string): string {
   const value = input.trim().toLowerCase();
-  if (value === 'admin') return 'admin@medrank.com';
+  if (value === 'admin' || value === 'professor') return 'admin@medrank.com';
+  if (value === 'aluno') return 'aluno@medrank.com';
   return value;
 }
 
 export function verifyDemoCredentials(email: string, password: string): DemoUser | null {
   const normalized = normalizeDemoEmail(email);
 
-  if (normalized === DEMO_ADMIN.email && password === DEMO_ADMIN.password) {
+  if (normalized === DEMO_ADMIN.email && (password === DEMO_ADMIN.password || password === 'admin')) {
     return DEMO_ADMIN;
   }
 
@@ -115,9 +113,15 @@ export function demoCookieName(): string {
   return COOKIE_NAME;
 }
 
+function isSecureCookieContext(): boolean {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  if (siteUrl.startsWith('https://')) return true;
+  return process.env.NODE_ENV === 'production' && !siteUrl.startsWith('http://localhost');
+}
+
 export const demoCookieOptions = {
   httpOnly: true,
-  secure: true,
+  secure: isSecureCookieContext(),
   sameSite: 'lax' as const,
   path: '/',
   maxAge: 60 * 60 * 24 * 7,

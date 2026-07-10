@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { isSkipAuth } from '@/lib/skip-auth';
+import { usesDemoStore } from '@/lib/demo-data';
 import { submitDemoAttempt } from '@/lib/demo/runtime';
 
 export async function POST(
@@ -11,7 +11,7 @@ export async function POST(
   const body = await request.json().catch(() => ({}));
   const auto = Boolean((body as { auto?: boolean }).auto);
 
-  if (isSkipAuth()) {
+  if (usesDemoStore()) {
     try {
       const data = submitDemoAttempt(attemptId, auto);
       return NextResponse.json(data);

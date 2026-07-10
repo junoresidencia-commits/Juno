@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { DEMO_ACCESS } from '@/lib/demo/credentials';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('admin');
-  const [password, setPassword] = useState('admin');
+  const [email, setEmail] = useState('professor');
+  const [password, setPassword] = useState('professor');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +24,7 @@ export default function LoginPage() {
     const data = await res.json();
 
     if (res.ok) {
-      window.location.href = '/';
+      window.location.href = data.role === 'admin' ? '/admin' : '/aluno';
       return;
     }
 
@@ -66,25 +67,49 @@ export default function LoginPage() {
     window.location.href = '/';
   }
 
+  function fill(role: 'professor' | 'aluno') {
+    setEmail(DEMO_ACCESS[role].user);
+    setPassword(DEMO_ACCESS[role].password);
+    setError('');
+  }
+
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 text-slate-900 shadow-lg ring-1 ring-slate-200">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">
-            Competição de questões médicas — acesso restrito
+            Prova diária e ranking — entre com sua conta
           </p>
         </div>
 
-        <div className="mb-6 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-700">
-          <p>O cadastro é só por <strong>link de convite</strong> do professor.</p>
-          <p className="mt-1 text-xs text-slate-600">Professor: use seu login habitual (admin).</p>
+        <div className="mb-6 grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => fill('professor')}
+            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-left text-sm text-emerald-950 hover:bg-emerald-100"
+          >
+            <span className="font-semibold">Professor</span>
+            <span className="mt-0.5 block text-xs text-emerald-800">
+              {DEMO_ACCESS.professor.user} / {DEMO_ACCESS.professor.password}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => fill('aluno')}
+            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-left text-sm text-slate-900 hover:bg-slate-100"
+          >
+            <span className="font-semibold">Aluno</span>
+            <span className="mt-0.5 block text-xs text-slate-600">
+              {DEMO_ACCESS.aluno.user} / {DEMO_ACCESS.aluno.password}
+            </span>
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-              E-mail ou usuário
+              Usuário ou e-mail
             </label>
             <input
               id="email"
@@ -130,7 +155,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-xs text-slate-600">
-          Recebeu um convite? Abra o link enviado pelo professor para criar sua conta.
+          Novo aluno? O professor envia um <strong>link de convite</strong> por e-mail.
         </p>
       </div>
     </div>
