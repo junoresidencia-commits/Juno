@@ -5,7 +5,10 @@ import { isSkipAuth } from '@/lib/skip-auth';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
 import { mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { AlunoHomeSimple } from '@/components/aluno/AlunoHomeSimple';
-import { getStudentDailyRankingDate } from '@/lib/exams/ranking-visibility';
+import {
+  canStudentSeeTodayRanking,
+  getTodayRankingDate,
+} from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
@@ -14,11 +17,10 @@ export default async function AlunoDashboard() {
   if (!session) redirect('/login');
   if (!session.profile.active) redirect('/login?blocked=1');
 
-  const yesterdayDate = getStudentDailyRankingDate();
-
   if (isSkipAuth()) {
     const { userId } = session;
-    const { todayExam, attempt, yesterdayRankings, windowPhase } = getDemoDashboardData(userId);
+    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate } =
+      getDemoDashboardData(userId);
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
     const inProgress = Boolean(todayExam && attempt && !attempt.finished_at && windowPhase !== 'after');
     const completed = Boolean(todayExam && attempt?.finished_at);
@@ -27,6 +29,7 @@ export default async function AlunoDashboard() {
     return (
       <AlunoHomeSimple
         name={session.profile.name}
+        userId={userId}
         todayExam={todayExam}
         windowPhase={windowPhase}
         canStart={canStart}
@@ -34,8 +37,9 @@ export default async function AlunoDashboard() {
         completed={completed}
         missedToday={missedToday}
         attemptId={attempt?.id}
-        yesterdayRankings={yesterdayRankings}
-        yesterdayDate={yesterdayDate}
+        showRanking={showRanking}
+        todayRankings={todayRankings}
+        rankingDate={rankingDate}
       />
     );
   }
@@ -61,13 +65,19 @@ export default async function AlunoDashboard() {
         .maybeSingle()
     : { data: null };
 
-  const { data: yesterdayRankings } = await supabase
-    .from('rankings')
-    .select('id, position, total_score, user_id, profiles(name)')
-    .eq('period_type', 'daily')
-    .eq('period_start', yesterdayDate)
-    .order('position', { ascending: true })
-    .limit(15);
+  const hasFinished = Boolean(attempt?.finished_at);
+  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
+  const rankingDate = getTodayRankingDate();
+
+  const { data: todayRankings } = showRanking
+    ? await supabase
+        .from('rankings')
+        .select('id, position, total_score, user_id, profiles(name)')
+        .eq('period_type', 'daily')
+        .eq('period_start', rankingDate)
+        .order('position', { ascending: true })
+        .limit(15)
+    : { data: null };
 
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
   const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
@@ -78,6 +88,7 @@ export default async function AlunoDashboard() {
   return (
     <AlunoHomeSimple
       name={profile.name ?? 'Aluno'}
+      userId={userId}
       todayExam={todayExam}
       windowPhase={windowPhase}
       canStart={canStart}
@@ -85,8 +96,9 @@ export default async function AlunoDashboard() {
       completed={completed}
       missedToday={missedToday}
       attemptId={attempt?.id}
-      yesterdayRankings={mapRankingPreviewRows(yesterdayRankings)}
-      yesterdayDate={yesterdayDate}
+      showRanking={showRanking}
+      todayRankings={mapRankingPreviewRows(todayRankings)}
+      rankingDate={rankingDate}
       showLogout
     />
   );
