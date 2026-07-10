@@ -2,11 +2,12 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMobileAction } from '@/hooks/use-mobile-action';
 
 export function InviteGenerator() {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
-  const lastTapAtRef = useRef(0);
+  const loadingRef = useRef(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [link, setLink] = useState('');
@@ -19,20 +20,16 @@ export function InviteGenerator() {
     return fromDom || email.trim().toLowerCase();
   }, [email]);
 
-  const tapOnce = useCallback((action: () => void) => {
-    const now = Date.now();
-    if (now - lastTapAtRef.current < 300) return;
-    lastTapAtRef.current = now;
-    action();
-  }, []);
-
   async function generate() {
+    if (loadingRef.current) return;
+
     const emailValue = readEmail();
     if (!emailValue || !emailValue.includes('@')) {
       setError('Informe o e-mail do aluno.');
       return;
     }
 
+    loadingRef.current = true;
     setLoading(true);
     setError('');
     setCopied(false);
@@ -58,18 +55,23 @@ export function InviteGenerator() {
     } catch {
       setError('Erro de conexão. Tente de novo.');
     } finally {
+      loadingRef.current = false;
       setLoading(false);
     }
   }
 
   async function copy() {
+    if (!link) return;
     try {
       await navigator.clipboard.writeText(link);
       setCopied(true);
+      setError('');
     } catch {
       setError('Não foi possível copiar. Selecione o link e copie manualmente.');
     }
   }
+
+  const copyHandlers = useMobileAction(() => void copy());
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -121,8 +123,7 @@ export function InviteGenerator() {
           <p className="mt-2 break-all text-sm text-slate-800">{link}</p>
           <button
             type="button"
-            onPointerUp={() => tapOnce(() => void copy())}
-            onClick={() => tapOnce(() => void copy())}
+            {...copyHandlers}
             className="exam-tap mt-2 text-sm font-medium text-emerald-700 hover:underline"
           >
             {copied ? 'Copiado!' : 'Copiar link'}

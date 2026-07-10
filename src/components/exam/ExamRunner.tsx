@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMobileAction } from '@/hooks/use-mobile-action';
 import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import { getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
@@ -64,14 +65,6 @@ export function ExamRunner({
   const answersRef = useRef(initialAnswers);
   const currentIndexRef = useRef(firstOpenIndex);
   const submittingRef = useRef(false);
-  const lastTapAtRef = useRef(0);
-
-  const tapOnce = useCallback((action: () => void) => {
-    const now = Date.now();
-    if (now - lastTapAtRef.current < 300) return;
-    lastTapAtRef.current = now;
-    action();
-  }, []);
 
   answersRef.current = answers;
   currentIndexRef.current = currentIndex;
@@ -153,6 +146,8 @@ export function ExamRunner({
     selectingRef.current = false;
   }, [questions, recordAnswer, submitExam]);
 
+  const nextHandlers = useMobileAction(handleNext);
+
   const skipQuestion = useCallback(
     (index: number) => {
       if (selectingRef.current || submittingRef.current) return;
@@ -178,7 +173,6 @@ export function ExamRunner({
     pendingRef.current = null;
     setPendingChoice(null);
     selectingRef.current = false;
-    lastTapAtRef.current = 0;
   }, [currentIndex, questionLimit]);
 
   useEffect(() => {
@@ -279,33 +273,14 @@ export function ExamRunner({
           const selected = pendingChoice === letter;
 
           return (
-            <button
+            <ExamOptionButton
               key={letter}
-              type="button"
-              aria-pressed={selected}
-              aria-disabled={!canPick}
-              onPointerUp={(e) => {
-                if (e.pointerType === 'mouse' && e.button !== 0) return;
-                tapOnce(() => pickOption(letter));
-              }}
-              onClick={() => tapOnce(() => pickOption(letter))}
-              className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] ${
-                selected
-                  ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
-                  : canPick
-                    ? 'border-slate-300 bg-white active:bg-slate-50'
-                    : 'border-slate-200 bg-slate-100 opacity-50'
-              }`}
-            >
-              <span
-                className={`pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
-                  selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
-                }`}
-              >
-                {letter}
-              </span>
-              <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
-            </button>
+              letter={letter}
+              text={text}
+              selected={selected}
+              canPick={canPick}
+              onPick={pickOption}
+            />
           );
         })}
       </div>
@@ -322,19 +297,7 @@ export function ExamRunner({
           <button
             type="button"
             aria-disabled={!pendingChoice}
-            onPointerUp={(e) => {
-              if (e.pointerType === 'mouse' && e.button !== 0) return;
-              tapOnce(() => {
-                if (!pendingRef.current) return;
-                handleNext();
-              });
-            }}
-            onClick={() =>
-              tapOnce(() => {
-                if (!pendingRef.current) return;
-                handleNext();
-              })
-            }
+            {...nextHandlers}
             className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] ${
               pendingChoice ? 'bg-emerald-600 active:bg-emerald-700' : 'bg-slate-300'
             }`}
@@ -395,5 +358,46 @@ export function ExamRunner({
         </>
       )}
     </div>
+  );
+}
+
+function ExamOptionButton({
+  letter,
+  text,
+  selected,
+  canPick,
+  onPick,
+}: {
+  letter: OptionLetter;
+  text: string;
+  selected: boolean;
+  canPick: boolean;
+  onPick: (letter: OptionLetter) => void;
+}) {
+  const handlers = useMobileAction(() => onPick(letter));
+
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      aria-disabled={!canPick}
+      {...handlers}
+      className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] ${
+        selected
+          ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
+          : canPick
+            ? 'border-slate-300 bg-white active:bg-slate-50'
+            : 'border-slate-200 bg-slate-100 opacity-50'
+      }`}
+    >
+      <span
+        className={`pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
+          selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
+        }`}
+      >
+        {letter}
+      </span>
+      <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
+    </button>
   );
 }
