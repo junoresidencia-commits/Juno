@@ -23,7 +23,6 @@ interface Props {
   showRanking: boolean;
   todayRankings: RankingPreviewRow[];
   rankingDate: string;
-  showLogout?: boolean;
 }
 
 export function AlunoHomeSimple({
@@ -39,28 +38,18 @@ export function AlunoHomeSimple({
   showRanking,
   todayRankings,
   rankingDate,
-  showLogout,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-2rem)] w-full max-w-lg flex-col px-4 py-6">
-      <header className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm text-slate-600">Olá,</p>
-          <h1 className="text-2xl font-bold tracking-tight">{name}</h1>
-        </div>
-        {showLogout && (
-          <form action="/api/auth/logout" method="post">
-            <button type="submit" className="text-sm text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline">
-              Sair
-            </button>
-          </form>
-        )}
+    <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
+      <header>
+        <p className="text-sm text-slate-600">Olá,</p>
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{name}</h1>
       </header>
 
-      <section className="mt-10 flex flex-1 flex-col">
+      <section className="mt-10 flex flex-1 flex-col md:max-w-xl">
         {todayExam ? (
           <>
             {canStart && (
@@ -123,7 +112,7 @@ export function AlunoHomeSimple({
         )}
       </section>
 
-      <section className="mt-8 rounded-2xl bg-white p-5 text-slate-900 ring-1 ring-slate-200">
+      <section className="mt-8 rounded-2xl bg-white p-5 text-slate-900 ring-1 ring-slate-200 md:max-w-xl">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-semibold text-slate-900">{studentDailyRankingLabel(rankingDate)}</h2>
           {showRanking && (

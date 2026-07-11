@@ -37,9 +37,8 @@ export default async function RankingAlunoPage({
     const myRanking = rankings.find((r) => r.user_id === userId);
 
     return (
-      <div className="mx-auto max-w-lg px-4 py-6">
-        <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-        <h1 className="mt-3 text-2xl font-bold text-slate-900">Ranking</h1>
+      <div className="mx-auto w-full px-4 py-6 md:px-6">
+        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking</h1>
         <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
         {period === 'daily' && !canSeeDaily && (
           <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
@@ -132,9 +131,8 @@ export default async function RankingAlunoPage({
     : { data: null };
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-6">
-      <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-      <h1 className="mt-3 text-2xl font-bold text-slate-900">Ranking</h1>
+      <div className="mx-auto w-full px-4 py-6 md:px-6">
+        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking</h1>
       <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
       {period === 'daily' && !canSeeDaily && (
         <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>

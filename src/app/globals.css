@@ -58,7 +58,7 @@
     touch-action: manipulation;
   }
 
-  /* Botões da prova: alvo de toque grande, sem delay, qualquer celular */
+  /* Botões da prova: alvo grande no celular, clique no desktop */
   .exam-tap {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -66,5 +66,9 @@
     user-select: none;
     cursor: pointer;
     min-height: 3rem;
+  }
+
+  .exam-tap:hover:not(:disabled) {
+    filter: brightness(0.98);
   }
 }

@@ -176,6 +176,30 @@ export function ExamRunner({
   );
 
   useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (submittingRef.current) return;
+      const index = currentIndexRef.current;
+      const question = questions[index];
+      if (!question || answersRef.current[question.id]) return;
+
+      const key = e.key.toUpperCase();
+      if (['A', 'B', 'C', 'D', 'E'].includes(key)) {
+        e.preventDefault();
+        pickOption(key as OptionLetter);
+        return;
+      }
+
+      if (e.key === 'Enter' && pendingRef.current) {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [questions, pickOption, handleNext]);
+
+  useEffect(() => {
     questionStartedAt.current = Date.now();
     setQuestionRemaining(questionLimit);
     pendingRef.current = null;
@@ -232,7 +256,7 @@ export function ExamRunner({
   const questionTimerDisplay = mounted ? formatDuration(questionRemaining) : '--:--';
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 pb-8">
+    <div className="mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8">
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
@@ -294,7 +318,7 @@ export function ExamRunner({
               disabled={!canPick}
               aria-pressed={selected}
               onClick={() => pickOption(letter)}
-              className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] disabled:opacity-50 ${
+              className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition hover:border-emerald-400 active:scale-[0.99] disabled:opacity-50 ${
                 selected
                   ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
                   : 'border-slate-300 bg-white active:bg-slate-50'
@@ -317,10 +341,12 @@ export function ExamRunner({
         <div className="mb-8">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
-              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — toque abaixo para continuar
+              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — confirme abaixo para continuar
             </p>
           ) : (
-            <p className="mb-2 text-center text-sm text-slate-500">Toque uma alternativa acima</p>
+            <p className="mb-2 text-center text-sm text-slate-500">
+              Selecione uma alternativa (A–E no teclado) ou clique na opção
+            </p>
           )}
           <button
             type="button"

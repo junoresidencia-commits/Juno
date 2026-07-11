@@ -81,7 +81,7 @@ export default async function ResultadoPage({
     const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
 
     return (
-      <div className="mx-auto max-w-lg px-4 py-6 text-slate-900">
+      <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
@@ -177,7 +177,7 @@ export default async function ResultadoPage({
   const maxScore = getExamMaxScore(attempt.total_questions ?? exam.total_questions);
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-6 text-slate-900">
+    <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6 text-slate-900">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
       <p className="text-slate-600">{exam.title}</p>

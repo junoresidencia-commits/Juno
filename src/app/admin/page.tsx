@@ -25,14 +25,9 @@ export default async function AdminDashboard() {
     ];
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-8">
-        <header className="mb-8 flex items-start justify-between gap-4">
-          <div>
-          <h1 className="text-2xl font-bold text-slate-900">Painel do Professor</h1>
+        <header className="mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Painel do Professor</h1>
           <p className="text-sm text-slate-600">Preparatório ENARE/USP com 5 meses de provas e questões reais importadas.</p>
-          </div>
-          <form action="/api/auth/logout" method="post">
-            <button type="submit" className="text-sm text-slate-600 hover:text-slate-900">Sair</button>
-          </form>
         </header>
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"><p className="text-sm text-slate-600">Alunos ativos</p><p className="text-3xl font-bold text-emerald-700">0</p></div>
@@ -95,16 +90,9 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8">
-      <header className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Painel do Professor</h1>
-          <p className="text-sm text-slate-600">MedRank — administração</p>
-        </div>
-        <form action="/api/auth/logout" method="post">
-          <button type="submit" className="text-sm text-slate-600 hover:text-slate-700">
-            Sair
-          </button>
-        </form>
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Painel do Professor</h1>
+        <p className="text-sm text-slate-600">MedRank — administração</p>
       </header>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
