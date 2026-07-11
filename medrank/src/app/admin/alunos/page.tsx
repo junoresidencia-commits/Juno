@@ -4,6 +4,7 @@ import { isDemoMode } from '@/lib/demo-auth';
 import { listDemoStudents } from '@/lib/demo-store';
 import { createClient } from '@/lib/supabase/server';
 import { StudentActions } from '@/components/admin/StudentActions';
+import { CreateStudentForm } from '@/components/admin/CreateStudentForm';
 
 function StudentStatus({ active, approvedAt }: { active: boolean; approvedAt: string | null }) {
   if (!active && !approvedAt) {
@@ -27,8 +28,13 @@ function StudentStatus({ active, approvedAt }: { active: boolean; approvedAt: st
   );
 }
 
-export default async function AlunosPage() {
+export default async function AlunosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ok?: string; name?: string; email?: string; error?: string }>;
+}) {
   await requireRole('admin');
+  const params = await searchParams;
 
   let students: {
     id: string;
@@ -60,20 +66,21 @@ export default async function AlunosPage() {
   const others = students.filter((s) => s.active || s.approved_at);
   const activeCount = students.filter((s) => s.active).length;
 
+  const initialSuccess =
+    params.ok === '1' && params.name && params.email
+      ? { name: params.name, email: params.email }
+      : undefined;
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <div className="mt-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Alunos</h1>
-          <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
-        </div>
-        <Link
-          href="/admin/convites"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-        >
-          Gerar convite
-        </Link>
+      <div className="mt-4">
+        <h1 className="text-2xl font-bold text-slate-900">Alunos</h1>
+        <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
+      </div>
+
+      <div className="mt-6">
+        <CreateStudentForm initialError={params.error} initialSuccess={initialSuccess} />
       </div>
 
       {pending.length > 0 && (
@@ -100,7 +107,7 @@ export default async function AlunosPage() {
         <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
         <div className="mt-4 space-y-3">
           {others.length === 0 && pending.length === 0 ? (
-            <p className="text-slate-600">Nenhum aluno ainda. Gere um link de convite.</p>
+            <p className="text-slate-600">Nenhum aluno ainda. Crie o primeiro login acima.</p>
           ) : (
             others.map((s) => (
               <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
