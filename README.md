@@ -1,15 +1,25 @@
 # MedRank
 
-Web app de competição de questões médicas para grupo fechado de até 10 alunos.
+Web app de competição de questões médicas para grupo fechado (até 10 alunos + 1 professor).
 
 ## Funcionalidades
 
-- **Prova diária** cronometrada (30 min, sem pausa, auto-envio)
+- **Prova diária** cronometrada (20 questões · 30 min · auto-envio)
 - **Banco de questões** com cadastro manual e importação CSV/Excel
 - **Ranking** diário, semanal, mensal e geral
 - **Gamificação** com medalhas, streak e desafios semanais
-- **Painel do professor** com relatórios e estatísticas
-- **Área do aluno** com histórico e desempenho por tema
+- **Painel do professor** — criar logins de alunos, provas, relatórios
+- **Área do aluno** — prova, ranking, histórico, simulados
+
+## Pontuação
+
+| Por questão | Prova (20 questões) |
+|-------------|---------------------|
+| 0–100 pts | máx. **2.000 pts** |
+
+- Acerto: **85 pts** + até **15** de bônus por velocidade
+- Resposta em menos de 8 s: sem bônus (anti-chute)
+- Erro ou em branco: **0**
 
 ## Stack
 
@@ -18,40 +28,44 @@ Web app de competição de questões médicas para grupo fechado de até 10 alun
 - **Banco:** PostgreSQL (Supabase)
 - **Auth:** Supabase Auth
 
-## Documentação
+## Deploy em produção
 
-A especificação completa está em [`../docs/ESPECIFICACAO.md`](../docs/ESPECIFICACAO.md).
+👉 **Guia completo:** [`DEPLOY.md`](./DEPLOY.md)
 
-## Setup local
+Resumo:
+
+1. Supabase → rodar migrations `001`–`014`
+2. Criar professor no Auth + `supabase/setup-production.sql`
+3. Vercel → importar repo, **Root Directory = `medrank`**
+4. Env vars: `DEMO_MODE=false`, chaves Supabase, `NEXT_PUBLIC_SITE_URL`
+5. Importar questões → criar prova → criar alunos
+
+```bash
+./scripts/verify-production-ready.sh   # checagem pré-deploy
+```
+
+## Setup local (demo)
 
 ```bash
 cd medrank
 cp .env.example .env.local
-# Preencher NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY
-
+# DEMO_MODE=true (padrão no .env.example)
 npm install
 npm run dev
 ```
 
+**Logins demo:**
+
+| Papel | Usuário | Senha |
+|-------|---------|-------|
+| Professor | `professor` | `professor` |
+| Aluno | `aluno` | `aluno` |
+
 ## Banco de dados
 
-1. Criar projeto no [Supabase](https://supabase.com)
-2. Executar as migrations em ordem:
-   - `supabase/migrations/001_initial_schema.sql`
-   - `supabase/migrations/002_rls_and_submit.sql`
-   - `supabase/migrations/003_period_rankings.sql`
-   - `supabase/migrations/004_weekly_challenges.sql`
-3. Criar usuário admin no Auth e inserir perfil:
+Migrations em `supabase/migrations/` (14 arquivos, executar em ordem).
 
-```sql
-INSERT INTO public.profiles (id, name, email, role)
-VALUES ('<uuid-do-auth-user>', 'Professor', 'prof@email.com', 'admin');
-```
-
-## Deploy
-
-- **Frontend:** Vercel
-- **Banco/Auth:** Supabase (plano gratuito suficiente para 10 alunos)
+Setup do professor: `supabase/setup-production.sql`
 
 ## Importação de questões
 
@@ -59,13 +73,9 @@ Colunas do CSV/Excel:
 
 `enunciado`, `alternativa_a`, `alternativa_b`, `alternativa_c`, `alternativa_d`, `alternativa_e`, `correta`, `comentario`, `origem`, `ano`, `especialidade`, `tema`, `subtema`, `dificuldade`, `tags`
 
-## Fases de desenvolvimento
+## Documentação
 
-| Fase | Escopo | Status |
-|------|--------|--------|
-| 1 — MVP | Auth, CRUD questões, prova com cronômetro, ranking diário | ✅ Implementado |
-| 2 | Importação, dashboard admin, relatórios, rankings completos | ✅ Implementado |
-| 3 | Gamificação, medalhas, streak, desafios semanais | ✅ Implementado |
+Especificação completa: [`../docs/ESPECIFICACAO.md`](../docs/ESPECIFICACAO.md)
 
 ## Direitos autorais
 
