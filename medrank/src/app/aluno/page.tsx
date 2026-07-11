@@ -51,7 +51,6 @@ export default async function AlunoDashboard() {
         showRanking={showRanking}
         todayRankings={todayRankings}
         rankingDate={rankingDate}
-        showLogout
       />
     );
   }
@@ -129,7 +128,6 @@ export default async function AlunoDashboard() {
       showRanking={showRanking}
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}
-      showLogout
     />
   );
 }
