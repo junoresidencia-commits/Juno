@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { isDemoMode } from '@/lib/demo-auth';
 import { registerDemoStudent, validateDemoInvite } from '@/lib/demo-store';
-import { isSupabaseConfigured } from '@/lib/app-url';
+import { getRequestOrigin, isSupabaseConfigured } from '@/lib/app-url';
+import { parseRequestFields } from '@/lib/parse-request-body';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 async function validateSupabaseInvite(token: string) {
@@ -20,6 +21,14 @@ async function validateSupabaseInvite(token: string) {
     return { valid: false as const, error: 'Este link expirou.' };
   }
   return { valid: true as const, email: invite.email as string | null };
+}
+
+function cadastroRedirect(request: Request, token: string, params: Record<string, string>) {
+  const url = new URL(`/cadastro/${token}`, getRequestOrigin(request));
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+  return NextResponse.redirect(url);
 }
 
 export async function GET(
@@ -46,43 +55,69 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
-  const body = await request.json();
-  const { name, email, password } = body as { name: string; email: string; password: string };
+  const { values, formSubmit } = await parseRequestFields(request, ['name', 'email', 'password', 'confirm']);
+  const name = values.name;
+  const email = values.email;
+  const password = values.password;
+  const confirm = values.confirm;
 
-  if (!name?.trim() || !email?.trim() || !password || password.length < 4) {
-    return NextResponse.json({ error: 'Preencha nome, e-mail e senha (mín. 4 caracteres).' }, { status: 400 });
+  if (formSubmit && password !== confirm) {
+    return cadastroRedirect(request, token, { error: 'As senhas não coincidem.' });
+  }
+
+  if (!name || !email || !password || password.length < 4) {
+    const message = 'Preencha nome, e-mail e senha (mín. 4 caracteres).';
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: message });
+    }
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 
   if (isDemoMode()) {
     const result = registerDemoStudent(token, name, email, password);
     if (!result.ok) {
+      if (formSubmit) {
+        return cadastroRedirect(request, token, { error: result.error ?? 'Erro ao cadastrar' });
+      }
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
-    return NextResponse.json({
-      ok: true,
-      message: 'Cadastro realizado! Aguarde o professor liberar seu acesso.',
-    });
+
+    const message = 'Cadastro realizado! Aguarde o professor liberar seu acesso.';
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { ok: '1' });
+    }
+    return NextResponse.json({ ok: true, message });
   }
 
   if (!isSupabaseConfigured()) {
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: 'Sistema indisponível' });
+    }
     return NextResponse.json({ error: 'Sistema indisponível' }, { status: 503 });
   }
 
   const validation = await validateSupabaseInvite(token);
   if (!validation.valid) {
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: validation.error ?? 'Link inválido' });
+    }
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
   const emailNorm = email.trim().toLowerCase();
   if (validation.email && emailNorm !== validation.email.trim().toLowerCase()) {
-    return NextResponse.json(
-      { error: 'Use o mesmo e-mail para o qual o convite foi enviado.' },
-      { status: 400 }
-    );
+    const message = 'Use o mesmo e-mail para o qual o convite foi enviado.';
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: message });
+    }
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 
   const admin = createAdminClient();
   if (!admin) {
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: 'Sistema indisponível' });
+    }
     return NextResponse.json({ error: 'Sistema indisponível' }, { status: 503 });
   }
 
@@ -94,6 +129,9 @@ export async function POST(
   });
 
   if (authError) {
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: authError.message });
+    }
     return NextResponse.json({ error: authError.message }, { status: 500 });
   }
 
@@ -108,6 +146,9 @@ export async function POST(
 
   if (profileError) {
     await admin.auth.admin.deleteUser(authUser.user.id);
+    if (formSubmit) {
+      return cadastroRedirect(request, token, { error: profileError.message });
+    }
     return NextResponse.json({ error: profileError.message }, { status: 500 });
   }
 
@@ -116,8 +157,10 @@ export async function POST(
     .update({ used_at: new Date().toISOString(), used_by: authUser.user.id })
     .eq('token', token);
 
-  return NextResponse.json({
-    ok: true,
-    message: 'Cadastro realizado! Aguarde o professor liberar seu acesso.',
-  });
+  const message = 'Cadastro realizado! Aguarde o professor liberar seu acesso.';
+  if (formSubmit) {
+    return cadastroRedirect(request, token, { ok: '1' });
+  }
+
+  return NextResponse.json({ ok: true, message });
 }

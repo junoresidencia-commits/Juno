@@ -7,19 +7,23 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function CadastroPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<{ ok?: string; error?: string }>;
 }) {
   const { token } = await params;
+  const query = await searchParams;
 
   let valid = false;
-  let error: string | undefined;
+  let error: string | undefined = query.error;
   let inviteEmail: string | undefined;
+  const success = query.ok === '1';
 
   if (isDemoMode()) {
     const result = validateDemoInvite(token);
     valid = result.valid;
-    error = result.error;
+    if (!error) error = result.error;
     inviteEmail = result.email;
   } else if (isSupabaseConfigured()) {
     const admin = createAdminClient();
@@ -28,17 +32,17 @@ export default async function CadastroPage({
       : { data: null };
 
     if (!invite) {
-      error = 'Link inválido ou expirado.';
+      error = error ?? 'Link inválido ou expirado.';
     } else if (invite.used_at) {
-      error = 'Este link já foi utilizado.';
+      error = error ?? 'Este link já foi utilizado.';
     } else if (new Date(invite.expires_at) < new Date()) {
-      error = 'Este link expirou.';
+      error = error ?? 'Este link expirou.';
     } else {
       valid = true;
       inviteEmail = invite.email ?? undefined;
     }
   } else {
-    error = 'Sistema indisponível no momento.';
+    error = error ?? 'Sistema indisponível no momento.';
   }
 
   return (
@@ -48,7 +52,13 @@ export default async function CadastroPage({
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">Cadastro por convite</p>
         </div>
-        <CadastroForm token={token} valid={valid} error={error} inviteEmail={inviteEmail} />
+        <CadastroForm
+          token={token}
+          valid={valid}
+          error={error}
+          inviteEmail={inviteEmail}
+          success={success}
+        />
         <p className="mt-6 text-center text-sm text-slate-600">
           Já tem conta?{' '}
           <Link href="/login" className="text-emerald-700 hover:underline">Entrar</Link>

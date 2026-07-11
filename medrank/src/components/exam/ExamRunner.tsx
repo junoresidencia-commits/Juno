@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMobileAction } from '@/hooks/use-mobile-action';
 import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import { getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
@@ -49,12 +48,11 @@ export function ExamRunner({
     questions.findIndex((q) => !initialAnswers[q.id])
   );
 
+  const [mounted, setMounted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(firstOpenIndex);
   const [answers, setAnswers] = useState<Record<string, OptionLetter>>(initialAnswers);
-  const [remaining, setRemaining] = useState(() =>
-    getEffectiveExamRemainingSeconds(startedAt, durationMinutes)
-  );
-  const [questionRemaining, setQuestionRemaining] = useState(questionLimit);
+  const [remaining, setRemaining] = useState(0);
+  const [questionRemaining, setQuestionRemaining] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [pendingChoice, setPendingChoice] = useState<OptionLetter | null>(null);
 
@@ -70,6 +68,12 @@ export function ExamRunner({
   currentIndexRef.current = currentIndex;
   submittingRef.current = submitting;
 
+  useEffect(() => {
+    setMounted(true);
+    setRemaining(getEffectiveExamRemainingSeconds(startedAt, durationMinutes));
+    setQuestionRemaining(questionLimit);
+  }, [startedAt, durationMinutes, questionLimit]);
+
   const submitExam = useCallback(async (auto = false) => {
     if (submittingRef.current) return;
     setSubmitting(true);
@@ -80,13 +84,13 @@ export function ExamRunner({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ auto }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         finishedRef.current = true;
         router.push(resultPath ?? `/aluno/resultado/${attemptId}`);
         router.refresh();
       } else {
-        alert(data.error ?? 'Erro ao enviar prova');
+        alert((data as { error?: string }).error ?? 'Erro ao enviar prova');
         setSubmitting(false);
         submittingRef.current = false;
       }
@@ -130,39 +134,43 @@ export function ExamRunner({
     if (!question || answersRef.current[question.id]) return;
 
     selectingRef.current = true;
-    const timeSpent = secondsOnQuestion(questionStartedAt.current);
-    const nextAnswers = { ...answersRef.current, [question.id]: choice };
-    answersRef.current = nextAnswers;
-    setAnswers(nextAnswers);
-    recordAnswer(question.id, choice, timeSpent);
-    pendingRef.current = null;
-    setPendingChoice(null);
-
-    if (index >= questions.length - 1) {
-      void submitExam(true);
-    } else {
-      setCurrentIndex(index + 1);
-    }
-    selectingRef.current = false;
-  }, [questions, recordAnswer, submitExam]);
-
-  const nextHandlers = useMobileAction(handleNext);
-
-  const skipQuestion = useCallback(
-    (index: number) => {
-      if (selectingRef.current || submittingRef.current) return;
-      const question = questions[index];
-      if (!question || answersRef.current[question.id]) return;
-
-      selectingRef.current = true;
-      recordAnswer(question.id, null, questionLimit);
+    try {
+      const timeSpent = secondsOnQuestion(questionStartedAt.current);
+      const nextAnswers = { ...answersRef.current, [question.id]: choice };
+      answersRef.current = nextAnswers;
+      setAnswers(nextAnswers);
+      recordAnswer(question.id, choice, timeSpent);
+      pendingRef.current = null;
+      setPendingChoice(null);
 
       if (index >= questions.length - 1) {
         void submitExam(true);
       } else {
         setCurrentIndex(index + 1);
       }
+    } finally {
       selectingRef.current = false;
+    }
+  }, [questions, recordAnswer, submitExam]);
+
+  const skipQuestion = useCallback(
+    (index: number) => {
+      if (selectingRef.current || submittingRef.current || pendingRef.current) return;
+      const question = questions[index];
+      if (!question || answersRef.current[question.id]) return;
+
+      selectingRef.current = true;
+      try {
+        recordAnswer(question.id, null, questionLimit);
+
+        if (index >= questions.length - 1) {
+          void submitExam(true);
+        } else {
+          setCurrentIndex(index + 1);
+        }
+      } finally {
+        selectingRef.current = false;
+      }
     },
     [questionLimit, questions, recordAnswer, submitExam]
   );
@@ -176,6 +184,8 @@ export function ExamRunner({
   }, [currentIndex, questionLimit]);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const tick = () => {
       const examSecs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
       setRemaining(examSecs);
@@ -202,7 +212,7 @@ export function ExamRunner({
     tick();
     const interval = setInterval(tick, 250);
     return () => clearInterval(interval);
-  }, [durationMinutes, linearMode, questionLimit, questions, skipQuestion, startedAt, submitExam]);
+  }, [durationMinutes, linearMode, mounted, questionLimit, questions, skipQuestion, startedAt, submitExam]);
 
   const current = questions[currentIndex];
   if (!current) return null;
@@ -218,6 +228,9 @@ export function ExamRunner({
       ? `${questionLimit / 60} min`
       : `${Math.floor(questionLimit / 60)} min ${questionLimit % 60}s`;
 
+  const timerDisplay = mounted ? formatDuration(remaining) : '--:--';
+  const questionTimerDisplay = mounted ? formatDuration(questionRemaining) : '--:--';
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 pb-8">
 
@@ -225,11 +238,12 @@ export function ExamRunner({
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo total</p>
           <p
+            suppressHydrationWarning
             className={`mt-1 font-mono text-2xl font-bold tabular-nums ${
               isUrgent ? 'text-red-700' : 'text-emerald-800'
             }`}
           >
-            {formatDuration(remaining)}
+            {timerDisplay}
           </p>
           <p className="mt-1 text-xs text-slate-600">
             Questão {currentIndex + 1} de {questions.length} · {answeredCount} respondidas
@@ -239,11 +253,12 @@ export function ExamRunner({
           <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
             <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo nesta questão</p>
             <p
+              suppressHydrationWarning
               className={`mt-1 font-mono text-2xl font-bold tabular-nums ${
                 questionUrgent ? 'text-red-700' : 'text-slate-900'
               }`}
             >
-              {formatDuration(questionRemaining)}
+              {questionTimerDisplay}
             </p>
             <p className="mt-1 text-xs text-slate-600">
               Máx. {questionLimitLabel} · acerto rápido vale mais
@@ -273,14 +288,27 @@ export function ExamRunner({
           const selected = pendingChoice === letter;
 
           return (
-            <ExamOptionButton
+            <button
               key={letter}
-              letter={letter}
-              text={text}
-              selected={selected}
-              canPick={canPick}
-              onPick={pickOption}
-            />
+              type="button"
+              disabled={!canPick}
+              aria-pressed={selected}
+              onClick={() => pickOption(letter)}
+              className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] disabled:opacity-50 ${
+                selected
+                  ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
+                  : 'border-slate-300 bg-white active:bg-slate-50'
+              }`}
+            >
+              <span
+                className={`pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
+                  selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
+                }`}
+              >
+                {letter}
+              </span>
+              <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
+            </button>
           );
         })}
       </div>
@@ -289,16 +317,16 @@ export function ExamRunner({
         <div className="mb-8">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
-              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span>
+              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — toque abaixo para continuar
             </p>
           ) : (
             <p className="mb-2 text-center text-sm text-slate-500">Toque uma alternativa acima</p>
           )}
           <button
             type="button"
-            aria-disabled={!pendingChoice}
-            {...nextHandlers}
-            className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] ${
+            disabled={!pendingChoice || submitting}
+            onClick={handleNext}
+            className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] disabled:opacity-50 ${
               pendingChoice ? 'bg-emerald-600 active:bg-emerald-700' : 'bg-slate-300'
             }`}
           >
@@ -315,7 +343,7 @@ export function ExamRunner({
                 key={q.id}
                 type="button"
                 onClick={() => setCurrentIndex(i)}
-                className={`h-9 w-9 rounded-lg text-sm font-medium ${
+                className={`exam-tap h-9 w-9 rounded-lg text-sm font-medium ${
                   i === currentIndex
                     ? 'bg-emerald-600 text-white'
                     : answers[q.id]
@@ -332,7 +360,7 @@ export function ExamRunner({
               type="button"
               disabled={currentIndex === 0}
               onClick={() => setCurrentIndex((i) => i - 1)}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+              className="exam-tap rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
             >
               Anterior
             </button>
@@ -340,7 +368,7 @@ export function ExamRunner({
               type="button"
               disabled={currentIndex === questions.length - 1}
               onClick={() => setCurrentIndex((i) => i + 1)}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+              className="exam-tap rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
             >
               Próxima
             </button>
@@ -350,7 +378,7 @@ export function ExamRunner({
               onClick={() => {
                 if (confirm('Deseja finalizar a prova?')) submitExam(false);
               }}
-              className="ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+              className="exam-tap ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
             >
               {submitting ? 'Enviando...' : finishLabel}
             </button>
@@ -358,46 +386,5 @@ export function ExamRunner({
         </>
       )}
     </div>
-  );
-}
-
-function ExamOptionButton({
-  letter,
-  text,
-  selected,
-  canPick,
-  onPick,
-}: {
-  letter: OptionLetter;
-  text: string;
-  selected: boolean;
-  canPick: boolean;
-  onPick: (letter: OptionLetter) => void;
-}) {
-  const handlers = useMobileAction(() => onPick(letter));
-
-  return (
-    <button
-      type="button"
-      aria-pressed={selected}
-      aria-disabled={!canPick}
-      {...handlers}
-      className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left active:scale-[0.99] ${
-        selected
-          ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
-          : canPick
-            ? 'border-slate-300 bg-white active:bg-slate-50'
-            : 'border-slate-200 bg-slate-100 opacity-50'
-      }`}
-    >
-      <span
-        className={`pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
-          selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
-        }`}
-      >
-        {letter}
-      </span>
-      <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
-    </button>
   );
 }

@@ -19,6 +19,27 @@ export async function updateSession(request: NextRequest) {
   const demoToken = request.cookies.get(demoCookieName())?.value;
   const demoProfile = isDemoMode() ? parseDemoSessionLite(demoToken) : null;
 
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login');
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+  const isAlunoRoute = request.nextUrl.pathname.startsWith('/aluno');
+  const isProtected = isAdminRoute || isAlunoRoute;
+
+  if (demoProfile) {
+    if (isAdminRoute && demoProfile.role !== 'admin') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/aluno';
+      return NextResponse.redirect(url);
+    }
+
+    if (isAuthPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/';
+      return NextResponse.redirect(url);
+    }
+
+    return supabaseResponse;
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -44,21 +65,11 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthenticated = Boolean(user || demoProfile);
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login');
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
-  const isAlunoRoute = request.nextUrl.pathname.startsWith('/aluno');
-  const isProtected = isAdminRoute || isAlunoRoute;
+  const isAuthenticated = Boolean(user);
 
   if (!isAuthenticated && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
-
-  if (demoProfile && isAdminRoute && demoProfile.role !== 'admin') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/aluno';
     return NextResponse.redirect(url);
   }
 

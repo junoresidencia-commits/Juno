@@ -2,32 +2,27 @@
 
 import { useCallback, useRef } from 'react';
 
-/** Evita duplo disparo quando pointerup e click disparam no mesmo toque */
+/** Evita duplo disparo no mesmo toque */
 export function useTapOnce() {
   const lastRef = useRef(0);
   return useCallback((action: () => void) => {
     const now = Date.now();
-    if (now - lastRef.current < 300) return;
+    if (now - lastRef.current < 250) return;
     lastRef.current = now;
     action();
   }, []);
 }
 
-/** Handlers de toque + clique para qualquer celular */
+/** Clique/toque unificado — confiável em iPhone, Android e desktop */
 export function useMobileAction(action: () => void) {
   const tapOnce = useTapOnce();
-  const run = useCallback(() => tapOnce(action), [tapOnce, action]);
-
-  const onPointerUp = useCallback(
-    (e: React.PointerEvent<HTMLElement>) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      if (e.pointerType === 'mouse') return;
-      run();
+  const onClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      tapOnce(action);
     },
-    [run]
+    [tapOnce, action]
   );
 
-  const onClick = useCallback(() => run(), [run]);
-
-  return { onPointerUp, onClick };
+  return { onClick };
 }
