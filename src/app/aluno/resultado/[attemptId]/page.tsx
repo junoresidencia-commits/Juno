@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatDuration, formatPercent } from '@/lib/format';
-import { formatRankingScoreExplanation } from '@/lib/exams/scoring';
+import { formatRankingScoreExplanation, getExamMaxScore } from '@/lib/exams/scoring';
 import {
   canStudentSeeExamGabarito,
   studentGabaritoBeforeWindowMessage,
@@ -77,6 +77,7 @@ export default async function ResultadoPage({
     }
 
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
+    const maxScore = getExamMaxScore(attempt.total_questions ?? exam?.total_questions ?? 20);
     const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
 
     return (
@@ -84,7 +85,9 @@ export default async function ResultadoPage({
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
         <p className="text-slate-600">{exam?.title}</p>
-        <p className="mt-2 text-xs text-slate-600">{formatRankingScoreExplanation()}</p>
+        <p className="mt-2 text-xs text-slate-600">
+          {formatRankingScoreExplanation(attempt.total_questions ?? exam?.total_questions ?? 20)}
+        </p>
         <ResultStats
           totalCorrect={attempt.total_correct ?? 0}
           totalWrong={totalWrong}
@@ -94,7 +97,9 @@ export default async function ResultadoPage({
         {ranking?.position && (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
             <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
-            <p className="text-sm text-emerald-800">{attempt.score} pts · atualiza conforme outros terminam</p>
+            <p className="text-sm text-emerald-800">
+              {attempt.score} de {maxScore} pts · atualiza conforme outros terminam
+            </p>
           </div>
         )}
         {attempt.submitted_automatically && (
@@ -169,12 +174,16 @@ export default async function ResultadoPage({
   }
 
   const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
+  const maxScore = getExamMaxScore(attempt.total_questions ?? exam.total_questions);
 
   return (
     <div className="mx-auto max-w-lg px-4 py-6 text-slate-900">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
       <p className="text-slate-600">{exam.title}</p>
+      <p className="mt-2 text-xs text-slate-600">
+        {formatRankingScoreExplanation(attempt.total_questions ?? exam.total_questions)}
+      </p>
       <ResultStats
         totalCorrect={attempt.total_correct ?? 0}
         totalWrong={totalWrong}
@@ -184,7 +193,9 @@ export default async function ResultadoPage({
       {ranking?.position && (
         <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
           <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
-          <p className="text-sm text-emerald-800">{attempt.score} pts · atualiza conforme outros terminam</p>
+          <p className="text-sm text-emerald-800">
+            {attempt.score} de {maxScore} pts · atualiza conforme outros terminam
+          </p>
         </div>
       )}
       {attempt.submitted_automatically && (
