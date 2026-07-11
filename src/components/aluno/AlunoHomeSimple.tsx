@@ -16,6 +16,7 @@ interface Props {
   todayExam: Exam | null;
   windowPhase: WindowPhase;
   canStart: boolean;
+  canContinue?: boolean;
   completed: boolean;
   forfeitedToday: boolean;
   missedToday: boolean;
@@ -31,6 +32,7 @@ export function AlunoHomeSimple({
   todayExam,
   windowPhase,
   canStart,
+  canContinue = false,
   completed,
   forfeitedToday,
   missedToday,
@@ -52,6 +54,15 @@ export function AlunoHomeSimple({
       <section className="mt-10 flex flex-1 flex-col md:max-w-xl">
         {todayExam ? (
           <>
+            {canContinue && (
+              <Link
+                href={examHref}
+                prefetch={false}
+                className="exam-tap flex w-full items-center justify-center rounded-2xl bg-amber-500 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-amber-500/25 active:scale-[0.98] hover:bg-amber-600"
+              >
+                Continuar a prova →
+              </Link>
+            )}
             {canStart && (
               <Link
                 href={examHref}
@@ -101,7 +112,12 @@ export function AlunoHomeSimple({
             </p>
             {canStart && (
               <p className="mt-2 text-center text-xs text-slate-500">
-                Uma chance por dia. Se sair, perde a prova inteira.
+                Uma chance por dia · 20 questões · máx. 2.000 pts
+              </p>
+            )}
+            {canContinue && (
+              <p className="mt-2 text-center text-xs text-slate-500">
+                Prova em andamento — continue de onde parou antes do tempo acabar.
               </p>
             )}
           </>
