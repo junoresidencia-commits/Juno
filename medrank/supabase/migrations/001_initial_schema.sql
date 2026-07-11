@@ -190,7 +190,15 @@ CREATE POLICY "Admin manages exams" ON public.exams
   FOR ALL USING (public.is_admin());
 
 CREATE POLICY "Students see published exams" ON public.exams
-  FOR SELECT USING (status = 'published' AND public.profiles.active = true);
+  FOR SELECT USING (
+    status = 'published'
+    AND EXISTS (
+      SELECT 1
+      FROM public.profiles p
+      WHERE p.id = auth.uid()
+        AND p.active = true
+    )
+  );
 
 -- Policies: attempts
 CREATE POLICY "Users manage own attempts" ON public.attempts
