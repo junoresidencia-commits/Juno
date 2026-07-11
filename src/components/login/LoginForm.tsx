@@ -7,6 +7,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   invalid: 'Usuário ou senha inválidos.',
   pending: 'Cadastro recebido! Aguarde o professor liberar seu acesso.',
   unavailable: 'Sistema indisponível no momento.',
+  blocked: 'Seu acesso foi bloqueado. Fale com o professor.',
 };
 
 interface Props {
@@ -15,7 +16,7 @@ interface Props {
 
 export function LoginForm({ demoMode }: Props) {
   const searchParams = useSearchParams();
-  const errorCode = searchParams.get('error');
+  const errorCode = searchParams.get('error') ?? (searchParams.get('blocked') ? 'blocked' : null);
   const [error, setError] = useState(
     errorCode ? ERROR_MESSAGES[errorCode] ?? 'Não foi possível entrar.' : ''
   );

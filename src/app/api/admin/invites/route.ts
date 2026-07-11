@@ -3,7 +3,16 @@ import { isDemoMode } from '@/lib/demo-auth';
 import { createDemoInvite, listDemoInvites } from '@/lib/demo-store';
 import { buildInviteLinkFromOrigin, getRequestOrigin, isSupabaseConfigured } from '@/lib/app-url';
 import { requireAdminApi } from '@/lib/api-auth';
+import { parseRequestFields } from '@/lib/parse-request-body';
 import { randomBytes } from 'crypto';
+
+function inviteRedirect(request: Request, params: Record<string, string>) {
+  const url = new URL('/admin/convites', getRequestOrigin(request));
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+  return NextResponse.redirect(url);
+}
 
 export async function GET(request: Request) {
   const auth = await requireAdminApi();
@@ -44,11 +53,14 @@ export async function POST(request: Request) {
   const auth = await requireAdminApi();
   if ('error' in auth && auth.error) return auth.error;
 
-  const body = await request.json().catch(() => ({}));
-  const note = (body as { note?: string }).note ?? null;
-  const email = (body as { email?: string }).email?.trim().toLowerCase() ?? '';
+  const { values, formSubmit } = await parseRequestFields(request, ['email', 'note']);
+  const note = values.note || null;
+  const email = values.email.trim().toLowerCase();
 
   if (!email || !email.includes('@')) {
+    if (formSubmit) {
+      return inviteRedirect(request, { error: 'Informe o e-mail do aluno.' });
+    }
     return NextResponse.json({ error: 'Informe o e-mail do aluno.' }, { status: 400 });
   }
 
@@ -56,26 +68,42 @@ export async function POST(request: Request) {
     try {
       const origin = getRequestOrigin(request);
       const invite = createDemoInvite(email, note ?? undefined);
+      const link = buildInviteLinkFromOrigin(origin, invite.token);
+
+      if (formSubmit) {
+        return inviteRedirect(request, { ok: '1', email: invite.email ?? email, link });
+      }
+
       return NextResponse.json({
         invite: {
           token: invite.token,
           email: invite.email,
-          link: buildInviteLinkFromOrigin(origin, invite.token),
+          link,
           expires_at: invite.expiresAt,
         },
       });
     } catch (err) {
-      return NextResponse.json({ error: err instanceof Error ? err.message : 'Erro ao gerar convite' }, { status: 400 });
+      const message = err instanceof Error ? err.message : 'Erro ao gerar convite';
+      if (formSubmit) {
+        return inviteRedirect(request, { error: message });
+      }
+      return NextResponse.json({ error: message }, { status: 400 });
     }
   }
 
   if (!isSupabaseConfigured()) {
+    if (formSubmit) {
+      return inviteRedirect(request, { error: 'Supabase não configurado' });
+    }
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 });
   }
 
   const { createAdminClient } = await import('@/lib/supabase/admin');
   const admin = createAdminClient();
   if (!admin) {
+    if (formSubmit) {
+      return inviteRedirect(request, { error: 'Service role necessária' });
+    }
     return NextResponse.json({ error: 'Service role necessária' }, { status: 503 });
   }
 
@@ -92,9 +120,20 @@ export async function POST(request: Request) {
     note,
   }).select().single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    if (formSubmit) {
+      return inviteRedirect(request, { error: error.message });
+    }
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  const link = buildInviteLinkFromOrigin(getRequestOrigin(request), token);
+
+  if (formSubmit) {
+    return inviteRedirect(request, { ok: '1', email, link });
+  }
 
   return NextResponse.json({
-    invite: { ...data, link: buildInviteLinkFromOrigin(getRequestOrigin(request), token) },
+    invite: { ...data, link },
   });
 }

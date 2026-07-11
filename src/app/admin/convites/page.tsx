@@ -7,9 +7,14 @@ import { buildInviteLinkFromOrigin, getServerOrigin } from '@/lib/app-url';
 import { createClient } from '@/lib/supabase/server';
 import { formatDateBR } from '@/lib/format';
 
-export default async function ConvitesPage() {
+export default async function ConvitesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ok?: string; email?: string; link?: string; error?: string }>;
+}) {
   await requireRole('admin');
   const origin = await getServerOrigin();
+  const params = await searchParams;
 
   let invites: {
     token: string;
@@ -40,7 +45,11 @@ export default async function ConvitesPage() {
       <p className="text-sm text-slate-600">Cada convite é para um e-mail específico. Você libera o acesso depois do cadastro.</p>
 
       <div className="mt-6">
-        <InviteGenerator />
+        <InviteGenerator
+          initialError={params.error}
+          initialLink={params.ok === '1' ? params.link : undefined}
+          initialEmail={params.ok === '1' ? params.email : undefined}
+        />
       </div>
 
       <section className="mt-8">
