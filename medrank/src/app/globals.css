@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+  html {
+    color-scheme: light only;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+/* Readable text on every white surface (mobile dark-mode was washing out labels) */
+@layer components {
+  .surface-card {
+    @apply rounded-xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
+  }
+
+  .surface-card-lg {
+    @apply rounded-2xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
+  }
+
+  .surface-muted {
+    @apply text-slate-600;
+  }
+
+  .surface-label {
+    @apply text-sm font-medium text-slate-600;
+  }
+
+  .surface-value {
+    @apply text-3xl font-bold text-slate-900;
+  }
+}
+
+@layer utilities {
+  .bg-white {
+    color: var(--color-slate-900);
+  }
+
+  .bg-emerald-50,
+  .bg-red-50,
+  .bg-slate-50,
+  .bg-amber-50 {
+    color: var(--color-slate-900);
+  }
+
+  .exam-no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+
+  /* Botões da prova: alvo grande no celular, clique no desktop */
+  .exam-tap {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    min-height: 3rem;
+  }
+
+  .exam-tap:hover:not(:disabled) {
+    filter: brightness(0.98);
+  }
+}
