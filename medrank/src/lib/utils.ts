@@ -8,8 +8,10 @@ import {
 export {
   calculateExamScoreFromAnswers,
   formatRankingScoreExplanation,
+  getExamMaxScore,
   getQuestionTimeLimitSeconds,
   MIN_ANSWER_SECONDS,
+  QUESTION_MAX_POINTS,
   scoreQuestionAnswer,
 } from '@/lib/exams/scoring';
 

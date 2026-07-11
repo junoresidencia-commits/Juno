@@ -5,6 +5,7 @@ import { usesDemoStore } from '@/lib/demo-data';
 import { getSimuladoQuestions, getSimuladoSession } from '@/lib/simulados/runtime';
 import { getDemoSimuladoById } from '@/lib/demo-store';
 import { formatDuration, formatPercent } from '@/lib/format';
+import { getExamMaxScore } from '@/lib/exams/scoring';
 import type { OptionLetter, Question } from '@/types/database';
 
 export default async function SimuladoResultadoPage({
@@ -25,6 +26,7 @@ export default async function SimuladoResultadoPage({
   const stored = getDemoSimuladoById(sessionId);
   const questions = getSimuladoQuestions(sessionId);
   const totalWrong = session.total_questions - session.total_correct;
+  const maxScore = getExamMaxScore(session.total_questions);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -52,7 +54,9 @@ export default async function SimuladoResultadoPage({
       </div>
 
       <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center">
-        <p className="text-lg font-semibold text-emerald-800">Pontuação: {session.score} pts</p>
+        <p className="text-lg font-semibold text-emerald-800">
+          Pontuação: {session.score} de {maxScore} pts
+        </p>
       </div>
 
       <section className="mt-8">
