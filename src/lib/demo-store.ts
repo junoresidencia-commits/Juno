@@ -207,6 +207,37 @@ export function registerDemoStudent(
   return { ok: true };
 }
 
+export function createDemoStudentByAdmin(
+  name: string,
+  email: string,
+  password: string
+): { ok: boolean; error?: string; id?: string } {
+  const emailNorm = normalizeEmail(email);
+  if (!name.trim()) return { ok: false, error: 'Informe o nome do aluno.' };
+  if (!emailNorm.includes('@')) return { ok: false, error: 'E-mail inválido.' };
+  if (!password || password.length < 4) return { ok: false, error: 'Senha com no mínimo 4 caracteres.' };
+
+  const store = readDemoStore();
+  if (store.students.some((s) => s.email === emailNorm)) {
+    return { ok: false, error: 'Este e-mail já está cadastrado.' };
+  }
+
+  const id = `demo-student-${randomBytes(4).toString('hex')}`;
+  const now = new Date().toISOString();
+  store.students.push({
+    id,
+    name: name.trim(),
+    email: emailNorm,
+    password,
+    active: true,
+    approvedAt: now,
+    createdAt: now,
+  });
+  writeDemoStore(store);
+
+  return { ok: true, id };
+}
+
 export function findDemoStudentByEmail(email: string): DemoStudent | null {
   const store = readDemoStore();
   return store.students.find((s) => s.email === email.trim().toLowerCase()) ?? null;

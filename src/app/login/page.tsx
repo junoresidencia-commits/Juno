@@ -20,7 +20,7 @@ export default function LoginPage() {
         </Suspense>
 
         <p className="mt-6 text-center text-xs text-slate-600">
-          Novo aluno? O professor envia um <strong>link de convite</strong> por e-mail.
+          Novo aluno? O professor cria seu login em <strong>Alunos</strong>.
         </p>
       </div>
     </div>
