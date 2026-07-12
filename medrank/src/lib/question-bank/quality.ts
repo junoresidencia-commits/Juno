@@ -1,4 +1,5 @@
 import type { Question, OptionLetter } from '@/types/database';
+import { sanitizeExplanation } from '@/lib/question-bank/presentation';
 
 const GENERIC_DISTRACTOR_PATTERNS = [
   'observação ambulatorial sem investigação',
@@ -39,9 +40,10 @@ export function hasGenericDistractors(question: Question): boolean {
 }
 
 export function isThinExplanation(explanation: string | null | undefined): boolean {
-  if (!explanation?.trim()) return true;
-  if (OFFICIAL_GABARITO_PATTERN.test(explanation)) return true;
-  return explanation.trim().length < 50;
+  const cleaned = sanitizeExplanation(explanation);
+  if (!cleaned) return true;
+  if (OFFICIAL_GABARITO_PATTERN.test(cleaned)) return true;
+  return cleaned.trim().length < 50;
 }
 
 export type QuestionQualityIssue =
@@ -72,14 +74,15 @@ export function isExamReadyQuestion(question: Question): boolean {
 export function formatQuestionExplanation(question: Question): string {
   const letter = question.correct_option as OptionLetter;
   const correctText = question[`option_${letter.toLowerCase()}` as keyof Question] as string;
+  const explanation = sanitizeExplanation(question.explanation);
 
-  if (!isThinExplanation(question.explanation)) {
-    return question.explanation!.trim();
+  if (explanation && !isThinExplanation(explanation)) {
+    return explanation;
   }
 
   const parts = [`Alternativa correta (${letter}): ${correctText}`];
-  if (question.explanation?.trim()) {
-    parts.push(question.explanation.trim());
+  if (explanation) {
+    parts.push(explanation);
   }
   return parts.join('\n\n');
 }

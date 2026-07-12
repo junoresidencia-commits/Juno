@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'MedRank — Prova do dia',
-  description: 'Faça a prova diária e acompanhe o ranking',
+  title: 'MedRank — Disputa do dia',
+  description: 'Faça a disputa diária e acompanhe o ranking',
 };
 
 export const viewport = {

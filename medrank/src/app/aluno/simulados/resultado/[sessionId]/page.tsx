@@ -126,9 +126,9 @@ function QuestionReview({
         <strong>Comentário:</strong>
         <span className="mt-1 block whitespace-pre-wrap">{formatQuestionExplanation(question)}</span>
       </p>
-      <p className="mt-2 text-xs text-slate-600">
-        {question.source} {question.year} · {question.difficulty}
-      </p>
+      {question.difficulty && (
+        <p className="mt-2 text-xs text-slate-600">{question.difficulty}</p>
+      )}
     </div>
   );
 }

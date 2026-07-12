@@ -28,9 +28,9 @@ export default async function SimuladosPage() {
     <div className="mx-auto w-full max-w-5xl px-4 py-8">
       <Link href="/aluno" className="text-sm text-emerald-700 hover:underline">← Voltar ao início</Link>
       <header className="mt-4 mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">Simulados</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Disputas</h1>
         <p className="mt-1 text-slate-600">
-          Banco com {stats.examReady} questões validadas para prova · 20 aleatórias · 30 min · gabarito com alternativa correta destacada
+          Banco com {stats.examReady} questões validadas · disputa mista com 20 questões novas · 30 min
         </p>
       </header>
 

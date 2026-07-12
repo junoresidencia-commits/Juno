@@ -4,30 +4,19 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { SimuladoMode } from '@/types/simulado';
 import { RESIDENCY_AREAS } from '@/lib/question-bank/areas';
+import { getMixedDisputeDescription } from '@/lib/question-bank/presentation';
 
 const MODES: { mode: SimuladoMode; title: string; description: string; icon: string }[] = [
   {
     mode: 'geral',
-    title: 'Simulado geral aleatório',
-    description: '20 questões multidisciplinares misturando todas as áreas.',
-    icon: '🎲',
-  },
-  {
-    mode: 'enare',
-    title: 'Estilo ENARE',
-    description: 'Distribuição equilibrada: CM, Cirurgia, GO, Pediatria e Preventiva.',
-    icon: '🏥',
-  },
-  {
-    mode: 'usp',
-    title: 'Estilo USP',
-    description: 'Questões com perfil de provas USP e casos clínicos integrados.',
-    icon: '🎓',
+    title: 'Disputa mista',
+    description: getMixedDisputeDescription(),
+    icon: '⚔️',
   },
   {
     mode: 'revisao_erros',
     title: 'Revisão de erros',
-    description: 'Somente questões que você errou em simulados anteriores.',
+    description: 'Somente questões que você errou em disputas anteriores.',
     icon: '🔁',
   },
 ];
@@ -52,7 +41,7 @@ export function SimuladoLauncher({ wrongCount }: Props) {
       });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error ?? 'Erro ao iniciar simulado');
+        alert(data.error ?? 'Erro ao iniciar disputa');
         return;
       }
       router.push(`/aluno/simulados/${data.id}`);
@@ -66,6 +55,13 @@ export function SimuladoLauncher({ wrongCount }: Props) {
 
   return (
     <div className="space-y-8">
+      <div className="rounded-2xl bg-emerald-50 p-5 ring-1 ring-emerald-200">
+        <p className="font-semibold text-emerald-900">É uma disputa!</p>
+        <p className="mt-1 text-sm text-emerald-800">
+          Cada rodada traz questões novas misturando todas as áreas e provas de residência — sem repetir o mesmo estilo.
+        </p>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         {MODES.map((item) => (
           <button
@@ -89,7 +85,7 @@ export function SimuladoLauncher({ wrongCount }: Props) {
       </div>
 
       <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900">Simulado por área</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Disputa por área</h2>
         <p className="mt-1 text-sm text-slate-600">Foque em uma grande área da residência médica.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <select
@@ -113,7 +109,7 @@ export function SimuladoLauncher({ wrongCount }: Props) {
       </section>
 
       <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900">Simulado por tema</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Disputa por tema</h2>
         <p className="mt-1 text-sm text-slate-600">Busque por tema, subtema ou palavra-chave.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <input

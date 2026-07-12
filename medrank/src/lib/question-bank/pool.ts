@@ -2,10 +2,11 @@ import type { Question } from '@/types/database';
 import { getImportedQuestions } from '@/lib/demo/imported-questions';
 import { getDemoCustomQuestions } from '@/lib/demo-store';
 import { getSupplementQuestions } from '@/lib/question-bank/supplement';
-import { classifyQuestionArea, isEnareStyleQuestion, isUspStyleQuestion } from '@/lib/question-bank/classify';
+import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import type { ResidencyArea } from '@/lib/question-bank/areas';
 import type { QuestionBankStats } from '@/types/simulado';
 import { auditQuestionBank, isExamReadyQuestion } from '@/lib/question-bank/quality';
+import { formatBankSourcesLabel } from '@/lib/question-bank/presentation';
 
 let cache: Question[] | null = null;
 
@@ -56,7 +57,7 @@ export function getQuestionBankStats(): QuestionBankStats {
   }
 
   const years = examReady.map((q) => q.year).filter((y): y is number => y != null);
-  const sources = [...new Set(examReady.map((q) => q.source).filter(Boolean) as string[])];
+  const sources = [formatBankSourcesLabel([...new Set(examReady.map((q) => q.source).filter(Boolean) as string[])])];
 
   return {
     total: bank.length,
@@ -85,13 +86,8 @@ export function filterBank(options: {
     return pool.length > 0 ? pool : getQuestionBank().filter((q) => idSet.has(q.id));
   }
 
-  if (options.mode === 'enare') {
-    pool = pool.filter((q) => isEnareStyleQuestion(q) || !isUspStyleQuestion(q));
-  }
-
-  if (options.mode === 'usp') {
-    const usp = pool.filter((q) => isUspStyleQuestion(q));
-    pool = usp.length >= 20 ? usp : pool;
+  if (options.mode === 'enare' || options.mode === 'usp') {
+    return pool;
   }
 
   if (options.area) {
