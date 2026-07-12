@@ -6,6 +6,7 @@ import { getSimuladoQuestions, getSimuladoSession } from '@/lib/simulados/runtim
 import { getDemoSimuladoById } from '@/lib/demo-store';
 import { formatDuration, formatPercent } from '@/lib/format';
 import { getExamMaxScore } from '@/lib/exams/scoring';
+import { formatQuestionExplanation } from '@/lib/question-bank/quality';
 import type { OptionLetter, Question } from '@/types/database';
 
 export default async function SimuladoResultadoPage({
@@ -121,11 +122,10 @@ function QuestionReview({
           );
         })}
       </div>
-      {question.explanation && (
-        <p className="mt-3 rounded-lg bg-white/70 p-3 text-sm text-slate-700">
-          <strong>Comentário:</strong> {question.explanation}
-        </p>
-      )}
+      <p className="mt-3 rounded-lg bg-white/70 p-3 text-sm text-slate-700">
+        <strong>Comentário:</strong>
+        <span className="mt-1 block whitespace-pre-wrap">{formatQuestionExplanation(question)}</span>
+      </p>
       <p className="mt-2 text-xs text-slate-600">
         {question.source} {question.year} · {question.difficulty}
       </p>

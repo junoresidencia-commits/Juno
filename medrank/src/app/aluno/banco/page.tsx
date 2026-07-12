@@ -14,14 +14,19 @@ export default async function BancoQuestoesPage() {
       <header className="mt-4 mb-8">
         <h1 className="text-2xl font-bold text-slate-900">Banco de Questões</h1>
         <p className="mt-1 text-slate-600">
-          Questões de fontes públicas (ENARE oficial, dataset aberto Zenodo) e casos clínicos autorais para áreas complementares.
+          {stats.examReady} questões ENARE validadas para provas e simulados. Comentários didáticos completos em expansão.
         </p>
       </header>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Total de questões</p>
-          <p className="text-3xl font-bold text-emerald-700">{stats.total}</p>
+          <p className="text-sm text-slate-600">Total no banco</p>
+          <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
+        </div>
+        <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Aptas para prova</p>
+          <p className="text-3xl font-bold text-emerald-700">{stats.examReady}</p>
+          <p className="mt-1 text-xs text-slate-500">{stats.excluded} filtradas (truncadas ou genéricas)</p>
         </div>
         <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <p className="text-sm text-slate-600">Fontes</p>
@@ -57,6 +62,16 @@ export default async function BancoQuestoesPage() {
             );
           })}
         </div>
+      </section>
+
+      <section className="mt-8 rounded-2xl bg-blue-50 p-5 ring-1 ring-blue-200">
+        <h2 className="font-semibold text-blue-900">Qualidade do banco</h2>
+        <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-blue-900">
+          <li>Provas e simulados usam apenas questões sem alternativa truncada</li>
+          <li>Questões com distrativas genéricas ficam fora do sorteio automático</li>
+          <li>Gabarito mostra a alternativa correta por completo, mesmo quando o comentário é só o gabarito oficial</li>
+          <li>{stats.thinExplanations} questões aguardam comentário didático do professor</li>
+        </ul>
       </section>
 
       <section className="mt-8 rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">

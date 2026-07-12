@@ -10,7 +10,8 @@ import type {
 } from '@/types/database';
 import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
-import { getQuestionBank } from '@/lib/question-bank/pool';
+import { getQuestionBank, getExamReadyQuestionBank } from '@/lib/question-bank/pool';
+import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
 import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
@@ -151,12 +152,12 @@ export function getDemoExamQuestions(examId: string): (Question & { order_number
   const exam = getDemoExams().find((item) => item.id === examId);
   if (!exam) return [];
 
-  const questions = getDemoQuestions();
+  const pool = getExamReadyQuestionBank();
   const examNumber = Number(examId.replace('demo-exam-', '')) || 1;
-  const startIndex = ((examNumber - 1) * 11) % questions.length;
+  const picked = pickDailyExamQuestions(pool, exam.total_questions, examNumber * 9973);
 
-  return Array.from({ length: exam.total_questions }, (_, index) => ({
-    ...questions[(startIndex + index) % questions.length],
+  return picked.map((question, index) => ({
+    ...question,
     order_number: index + 1,
   }));
 }
