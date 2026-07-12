@@ -11,7 +11,7 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-emerald-700">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">
-            Prova diária e ranking — entre com sua conta
+            Disputa diária e ranking — entre com sua conta
           </p>
         </div>
 

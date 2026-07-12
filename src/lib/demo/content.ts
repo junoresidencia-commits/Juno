@@ -12,6 +12,7 @@ import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
 import { getQuestionBank, getExamReadyQuestionBank } from '@/lib/question-bank/pool';
 import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
+import { getDailyExamTitle, normalizeQuestionForDispute } from '@/lib/question-bank/presentation';
 import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
@@ -132,7 +133,7 @@ export function getDemoExams(): Exam[] {
     const dateStr = dateString(date);
     exams.push({
       id: `demo-exam-${day + 1}`,
-      title: `Prova Diária ${day + 1} — ENARE/USP`,
+      title: getDailyExamTitle(day + 1),
       date_available: dateStr,
       ...defaultExamReleaseFields(dateStr),
       duration_minutes: 30,
@@ -157,7 +158,7 @@ export function getDemoExamQuestions(examId: string): (Question & { order_number
   const picked = pickDailyExamQuestions(pool, exam.total_questions, examNumber * 9973);
 
   return picked.map((question, index) => ({
-    ...question,
+    ...normalizeQuestionForDispute(question),
     order_number: index + 1,
   }));
 }
@@ -170,7 +171,7 @@ export function getDemoWeeklyChallenges(): WeeklyChallenge[] {
   return [
     {
       id: 'demo-ch-1',
-      title: 'Ritmo ENARE',
+      title: 'Ritmo da disputa',
       description: 'Complete pelo menos 5 provas nesta semana.',
       week_start: weekStart,
       week_end: weekEnd,
@@ -183,7 +184,7 @@ export function getDemoWeeklyChallenges(): WeeklyChallenge[] {
     },
     {
       id: 'demo-ch-2',
-      title: 'Precisão USP',
+      title: 'Precisão clínica',
       description: 'Mantenha média de 80% ou mais.',
       week_start: weekStart,
       week_end: weekEnd,

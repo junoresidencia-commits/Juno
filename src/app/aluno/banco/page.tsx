@@ -14,7 +14,7 @@ export default async function BancoQuestoesPage() {
       <header className="mt-4 mb-8">
         <h1 className="text-2xl font-bold text-slate-900">Banco de Questões</h1>
         <p className="mt-1 text-slate-600">
-          {stats.examReady} questões ENARE validadas para provas e simulados. Comentários didáticos completos em expansão.
+          {stats.examReady} questões validadas para disputas e provas diárias. Comentários didáticos completos em expansão.
         </p>
       </header>
 
@@ -77,9 +77,9 @@ export default async function BancoQuestoesPage() {
       <section className="mt-8 rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
         <h2 className="font-semibold text-amber-900">Sobre as fontes</h2>
         <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-amber-900">
-          <li>ENARE — provas públicas Ebserh/AOCP (2020–2025)</li>
-          <li>Zenodo DOI 10.5281/zenodo.17571003 — dataset aberto para pesquisa</li>
-          <li>Questões autorais MedRank — casos clínicos para áreas com menor cobertura em provas públicas</li>
+          <li>Provas públicas de residência médica (acesso direto e multidisciplinares)</li>
+          <li>Dataset aberto Zenodo DOI 10.5281/zenodo.17571003 — pesquisa e educação</li>
+          <li>Questões autorais MedRank — casos clínicos para áreas com menor cobertura</li>
           <li>Sem cópia de bancos comerciais protegidos</li>
         </ul>
       </section>

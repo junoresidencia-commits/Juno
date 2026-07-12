@@ -1,13 +1,13 @@
 import type { Question } from '@/types/database';
 import type { SimuladoMode } from '@/types/simulado';
 import {
-  ENARE_AREA_WEIGHTS,
   RESIDENCY_AREAS,
   SIMULADO_QUESTION_COUNT,
-  type ResidencyArea,
 } from '@/lib/question-bank/areas';
 import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import { filterBank } from '@/lib/question-bank/pool';
+import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
+import { getMixedDisputeDescription, normalizeQuestionForDispute } from '@/lib/question-bank/presentation';
 
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -25,57 +25,8 @@ function sampleUnique(pool: Question[], count: number, used: Set<string>): Quest
   return picked;
 }
 
-function pickMultidisciplinary(pool: Question[], count: number): Question[] {
-  const used = new Set<string>();
-  const byArea = new Map<ResidencyArea, Question[]>();
-
-  for (const question of pool) {
-    const area = classifyQuestionArea(question);
-    if (!byArea.has(area)) byArea.set(area, []);
-    byArea.get(area)!.push(question);
-  }
-
-  const areas = shuffle([...byArea.keys()]);
-  const selected: Question[] = [];
-  let areaIndex = 0;
-
-  while (selected.length < count && areas.length > 0) {
-    const area = areas[areaIndex % areas.length];
-    const areaPool = byArea.get(area) ?? [];
-    const next = areaPool.find((q) => !used.has(q.id));
-    if (next) {
-      selected.push(next);
-      used.add(next.id);
-    } else {
-      areas.splice(areaIndex % areas.length, 1);
-      if (areas.length === 0) break;
-      continue;
-    }
-    areaIndex++;
-  }
-
-  if (selected.length < count) {
-    selected.push(...sampleUnique(pool, count - selected.length, used));
-  }
-
-  return shuffle(selected).slice(0, count);
-}
-
-function pickEnareStyle(pool: Question[], count: number): Question[] {
-  const used = new Set<string>();
-  const selected: Question[] = [];
-  const slotsPerArea = Math.floor(count / ENARE_AREA_WEIGHTS.length);
-
-  for (const { area, slots } of ENARE_AREA_WEIGHTS) {
-    const areaPool = pool.filter((q) => classifyQuestionArea(q) === area);
-    selected.push(...sampleUnique(areaPool, Math.min(slots, slotsPerArea), used));
-  }
-
-  if (selected.length < count) {
-    selected.push(...sampleUnique(pool, count - selected.length, used));
-  }
-
-  return shuffle(selected).slice(0, count);
+function pickMixedDispute(pool: Question[], count: number, seed: number): Question[] {
+  return pickDailyExamQuestions(pool, count, seed).map(normalizeQuestionForDispute);
 }
 
 export function buildSimuladoQuestions(options: {
@@ -84,54 +35,68 @@ export function buildSimuladoQuestions(options: {
   theme?: string;
   wrongQuestionIds?: string[];
   count?: number;
+  seed?: number;
 }): Question[] {
   const count = options.count ?? SIMULADO_QUESTION_COUNT;
+  const seed = options.seed ?? Date.now();
 
   if (options.mode === 'revisao_erros') {
     const reviewPool = filterBank({ questionIds: options.wrongQuestionIds });
     if (reviewPool.length === 0) return [];
-    return shuffle(reviewPool).slice(0, Math.min(count, reviewPool.length));
+    return shuffle(reviewPool)
+      .slice(0, Math.min(count, reviewPool.length))
+      .map(normalizeQuestionForDispute);
   }
 
   let pool: Question[];
 
   switch (options.mode) {
     case 'enare':
-      pool = filterBank({ mode: 'enare' });
-      return pickEnareStyle(pool, count);
     case 'usp':
-      pool = filterBank({ mode: 'usp' });
-      return pickMultidisciplinary(pool.length >= count ? pool : filterBank({}), count);
+    case 'geral':
+      pool = filterBank({});
+      return pickMixedDispute(pool, count, seed);
     case 'area':
       pool = filterBank({ area: options.area });
-      return sampleUnique(pool.length ? pool : filterBank({}), count, new Set());
+      return sampleUnique(pool.length ? pool : filterBank({}), count, new Set()).map(
+        normalizeQuestionForDispute
+      );
     case 'tema':
       pool = filterBank({ theme: options.theme });
-      return sampleUnique(pool.length ? pool : filterBank({}), count, new Set());
-    case 'geral':
+      return sampleUnique(pool.length ? pool : filterBank({}), count, new Set()).map(
+        normalizeQuestionForDispute
+      );
     default:
       pool = filterBank({});
-      return pickMultidisciplinary(pool, count);
+      return pickMixedDispute(pool, count, seed);
   }
 }
 
 export function getSimuladoTitle(mode: SimuladoMode, area?: string, theme?: string): string {
   switch (mode) {
     case 'geral':
-      return 'Simulado Geral Multidisciplinar';
     case 'enare':
-      return 'Simulado Estilo ENARE';
     case 'usp':
-      return 'Simulado Estilo USP';
+      return 'Disputa mista';
     case 'area':
-      return `Simulado — ${area ?? 'Área'}`;
+      return `Disputa — ${area ?? 'Área'}`;
     case 'tema':
-      return `Simulado — ${theme ?? 'Tema'}`;
+      return `Disputa — ${theme ?? 'Tema'}`;
     case 'revisao_erros':
-      return 'Revisão de Questões Erradas';
+      return 'Revisão de questões erradas';
     default:
-      return 'Simulado';
+      return 'Disputa';
   }
+}
+
+export function getSimuladoDescription(mode: SimuladoMode): string {
+  if (mode === 'geral' || mode === 'enare' || mode === 'usp') {
+    return getMixedDisputeDescription();
+  }
+  if (mode === 'revisao_erros') {
+    return 'Somente questões que você errou em disputas anteriores.';
+  }
+  return '20 questões para treino focado.';
 }
 
 export function listAvailableThemes(): string[] {
