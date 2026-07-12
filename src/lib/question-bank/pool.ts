@@ -1,17 +1,30 @@
 import type { Question } from '@/types/database';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 import { getImportedQuestions } from '@/lib/demo/imported-questions';
-import { getDemoCustomQuestions } from '@/lib/demo-store';
+import { getDemoCustomQuestions, getQuestionExplanationOverrides } from '@/lib/demo-store';
 import { getSupplementQuestions } from '@/lib/question-bank/supplement';
 import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import type { ResidencyArea } from '@/lib/question-bank/areas';
 import type { QuestionBankStats } from '@/types/simulado';
-import { auditQuestionBank, isExamReadyQuestion } from '@/lib/question-bank/quality';
+import { auditQuestionBank, isExamReadyQuestion, isThinExplanation } from '@/lib/question-bank/quality';
 import { formatBankSourcesLabel } from '@/lib/question-bank/presentation';
 
 let cache: Question[] | null = null;
 
+function loadSampleExplanations(): Record<string, string> {
+  const path = join(process.cwd(), 'data', 'sample-explanations.json');
+  if (!existsSync(path)) return {};
+  try {
+    return JSON.parse(readFileSync(path, 'utf-8')) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
 function mergeQuestionBank(): Question[] {
   const base = [...getImportedQuestions(), ...getDemoCustomQuestions(), ...getSupplementQuestions()];
+  const overrides = { ...loadSampleExplanations(), ...getQuestionExplanationOverrides() };
   const seen = new Set<string>();
   const merged: Question[] = [];
 
@@ -19,7 +32,10 @@ function mergeQuestionBank(): Question[] {
     const key = question.statement.slice(0, 100).toLowerCase().replace(/\s+/g, ' ');
     if (seen.has(key)) continue;
     seen.add(key);
-    merged.push(question);
+    const patched = overrides[question.id]
+      ? { ...question, explanation: overrides[question.id] }
+      : question;
+    merged.push(patched);
   }
 
   return merged;
@@ -109,4 +125,10 @@ export function filterBank(options: {
 
 export function invalidateQuestionBankCache() {
   cache = null;
+}
+
+export function listQuestionsNeedingComments(limit = 50): Question[] {
+  return getQuestionBank()
+    .filter((q) => isThinExplanation(q.explanation))
+    .slice(0, limit);
 }

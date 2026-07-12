@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Exam } from '@/types/database';
 import type { RankingPreviewRow } from '@/components/ranking/RankingPreviewList';
 import { RankingPreviewList } from '@/components/ranking/RankingPreviewList';
+import { DisputeOnboarding } from '@/components/aluno/DisputeOnboarding';
 import { formatExamWindowShort } from '@/lib/exams/window';
 import {
   studentDailyRankingLabel,
@@ -24,6 +25,8 @@ interface Props {
   showRanking: boolean;
   todayRankings: RankingPreviewRow[];
   rankingDate: string;
+  finishedToday?: number;
+  streakDays?: number;
 }
 
 export function AlunoHomeSimple({
@@ -40,6 +43,8 @@ export function AlunoHomeSimple({
   showRanking,
   todayRankings,
   rankingDate,
+  finishedToday = 0,
+  streakDays = 0,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
@@ -48,10 +53,26 @@ export function AlunoHomeSimple({
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
       <header>
         <p className="text-sm text-slate-600">Olá,</p>
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{name}</h1>
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{name}</h1>
+          {streakDays > 0 && (
+            <span className="shrink-0 rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-800 ring-1 ring-orange-200">
+              🔥 {streakDays} {streakDays === 1 ? 'dia' : 'dias'}
+            </span>
+          )}
+        </div>
       </header>
 
-      <section className="mt-10 flex flex-1 flex-col md:max-w-xl">
+      <DisputeOnboarding />
+
+      {(canStart || windowPhase === 'open') && finishedToday > 0 && (
+        <p className="mb-4 text-center text-sm text-slate-600">
+          <strong className="text-emerald-700">{finishedToday}</strong>{' '}
+          {finishedToday === 1 ? 'aluno já disputou' : 'alunos já disputaram'} hoje
+        </p>
+      )}
+
+      <section className="mt-4 flex flex-1 flex-col md:max-w-xl">
         {todayExam ? (
           <>
             {canContinue && (
@@ -60,7 +81,7 @@ export function AlunoHomeSimple({
                 prefetch={false}
                 className="exam-tap flex w-full items-center justify-center rounded-2xl bg-amber-500 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-amber-500/25 active:scale-[0.98] hover:bg-amber-600"
               >
-                Continuar a prova →
+                Continuar a disputa →
               </Link>
             )}
             {canStart && (
@@ -74,7 +95,7 @@ export function AlunoHomeSimple({
             )}
             {forfeitedToday && (
               <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Você saiu da prova</p>
+                <p className="text-lg font-semibold text-red-900">Você saiu da disputa</p>
                 <p className="mt-2 text-sm text-red-700">Perdeu o dia — não dá para refazer hoje.</p>
                 {attemptId && (
                   <Link
@@ -96,13 +117,13 @@ export function AlunoHomeSimple({
             )}
             {windowPhase === 'before' && (
               <div className="rounded-2xl bg-blue-50 px-6 py-8 text-center ring-1 ring-blue-100">
-                <p className="text-lg font-semibold text-blue-900">Prova abre às 7h</p>
-                <p className="mt-2 text-sm text-blue-700">Volte mais tarde para fazer a prova de hoje.</p>
+                <p className="text-lg font-semibold text-blue-900">Disputa abre às 7h</p>
+                <p className="mt-2 text-sm text-blue-700">Volte mais tarde para a disputa de hoje.</p>
               </div>
             )}
             {missedToday && (
               <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Você não fez a prova hoje</p>
+                <p className="text-lg font-semibold text-red-900">Você não fez a disputa hoje</p>
                 <p className="mt-2 text-sm text-red-700">Sem pontos neste dia — veja o ranking abaixo.</p>
               </div>
             )}
@@ -112,18 +133,18 @@ export function AlunoHomeSimple({
             </p>
             {canStart && (
               <p className="mt-2 text-center text-xs text-slate-500">
-                Uma chance por dia · 20 questões · máx. 2.000 pts
+                Uma chance por dia · 20 questões mistas · máx. 2.000 pts
               </p>
             )}
             {canContinue && (
               <p className="mt-2 text-center text-xs text-slate-500">
-                Prova em andamento — continue de onde parou antes do tempo acabar.
+                Disputa em andamento — continue antes do tempo acabar.
               </p>
             )}
           </>
         ) : (
           <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
-            <p className="text-slate-600">Nenhuma prova para hoje.</p>
+            <p className="text-slate-600">Nenhuma disputa para hoje.</p>
           </div>
         )}
       </section>

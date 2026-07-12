@@ -41,7 +41,7 @@ export function RankingPreviewList({
   return (
     <ol className="space-y-2">
       {rankings.map((r) => (
-        <li key={r.id} className="flex justify-between text-sm text-slate-800">
+        <li key={r.id} className={`flex justify-between text-sm ${userId && r.user_id === userId ? 'rounded-lg bg-emerald-50 px-2 py-1.5 font-semibold text-emerald-900 ring-1 ring-emerald-200' : 'text-slate-800'}`}>
           <span>
             {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
             {' '}{r.profiles?.name ?? 'Aluno'}
