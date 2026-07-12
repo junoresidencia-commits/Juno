@@ -1,5 +1,6 @@
 import type { Ranking } from '@/types/database';
 import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenges } from '@/lib/demo/content';
+import { getExamReadyQuestionBank } from '@/lib/question-bank/pool';
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
 import { getTodaysExam, todayDateString, getExamWindowStatus } from '@/lib/exams/release';
@@ -130,7 +131,7 @@ export function getDemoRanking(
 export function getDemoReportData() {
   const { rankings } = getDemoRanking('weekly');
   return {
-    questionCount: getDemoQuestions().length,
+    questionCount: getExamReadyQuestionBank().length,
     examCount: getDemoExams().length,
     rankings,
     challenges: getDemoWeeklyChallenges(),

@@ -30,14 +30,14 @@ export default async function SimuladosPage() {
       <header className="mt-4 mb-8">
         <h1 className="text-2xl font-bold text-slate-900">Simulados</h1>
         <p className="mt-1 text-slate-600">
-          Banco com {stats.total} questões públicas · 20 questões aleatórias · 30 minutos · gabarito comentado
+          Banco com {stats.examReady} questões validadas para prova · 20 aleatórias · 30 min · gabarito com alternativa correta destacada
         </p>
       </header>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Questões no banco</p>
-          <p className="text-2xl font-bold text-emerald-700">{stats.total}</p>
+          <p className="text-sm text-slate-600">Aptas para prova</p>
+          <p className="text-2xl font-bold text-emerald-700">{stats.examReady}</p>
         </div>
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <p className="text-sm text-slate-600">Áreas cobertas</p>

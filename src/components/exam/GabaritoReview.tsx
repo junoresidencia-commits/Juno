@@ -1,6 +1,7 @@
 'use client';
 
 import type { Question, OptionLetter } from '@/types/database';
+import { formatQuestionExplanation } from '@/lib/question-bank/quality';
 
 export type GabaritoRow = {
   id: string;
@@ -64,11 +65,10 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
               {wrong && (
                 <p className="mt-3 text-sm font-medium text-red-900">Sua resposta: {a.selected_option}</p>
               )}
-              {q.explanation && (
-                <p className="mt-3 rounded-lg bg-white p-3 text-sm text-slate-800 ring-1 ring-slate-200">
-                  <strong className="text-slate-900">Comentário:</strong> {q.explanation}
-                </p>
-              )}
+              <div className="mt-3 rounded-lg bg-white p-3 text-sm text-slate-800 ring-1 ring-slate-200">
+                <strong className="text-slate-900">Comentário:</strong>
+                <p className="mt-1 whitespace-pre-wrap">{formatQuestionExplanation(q)}</p>
+              </div>
             </div>
           );
         })}
