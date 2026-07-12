@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import { formatDuration, formatPercent } from '@/lib/format';
 import { formatRankingScoreExplanation, getExamMaxScore } from '@/lib/exams/scoring';
+import { buildResultInsights } from '@/lib/exams/result-analysis';
 import {
   canStudentSeeExamGabarito,
   studentGabaritoBeforeWindowMessage,
@@ -12,8 +13,9 @@ import type { Question, OptionLetter } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
-import { getDemoRanking } from '@/lib/demo/presenters';
+import { getDemoRanking, getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { GabaritoReview, type GabaritoRow } from '@/components/exam/GabaritoReview';
+import { ResultInsightsPanel } from '@/components/exam/ResultInsightsPanel';
 
 function ResultStats({
   totalCorrect,
@@ -27,25 +29,32 @@ function ResultStats({
   durationSeconds: number;
 }) {
   return (
-    <div className="mt-6 grid grid-cols-2 gap-3">
-      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+    <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <p className="text-sm text-slate-600">Acertos</p>
-        <p className="text-3xl font-bold text-emerald-700">{totalCorrect}</p>
+        <p className="text-2xl font-bold text-emerald-700">{totalCorrect}</p>
       </div>
-      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <p className="text-sm text-slate-600">Erros / em branco</p>
-        <p className="text-3xl font-bold text-red-600">{totalWrong}</p>
+        <p className="text-2xl font-bold text-red-600">{totalWrong}</p>
       </div>
-      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <p className="text-sm text-slate-600">Percentual</p>
-        <p className="text-3xl font-bold text-slate-900">{formatPercent(percentage)}</p>
+        <p className="text-2xl font-bold text-slate-900">{formatPercent(percentage)}</p>
       </div>
-      <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
         <p className="text-sm text-slate-600">Tempo</p>
-        <p className="text-3xl font-bold text-slate-900">{formatDuration(durationSeconds)}</p>
+        <p className="text-2xl font-bold text-slate-900">{formatDuration(durationSeconds)}</p>
       </div>
     </div>
   );
+}
+
+function buildAnalysisRows(gabaritoRows: GabaritoRow[]) {
+  return gabaritoRows.map((row) => ({
+    question: row.questions,
+    isCorrect: !!row.is_correct,
+  }));
 }
 
 export default async function ResultadoPage({
@@ -62,6 +71,7 @@ export default async function ResultadoPage({
     const exam = getDemoExams().find((item) => item.id === attempt.exam_id);
     const { rankings } = getDemoRanking('daily', exam?.date_available);
     const ranking = rankings.find((r) => r.user_id === userId);
+    const { finishedCount } = getDemoAdminExamStatus();
     const questions = new Map(getDemoQuestionsForAttempt(attemptId).map((q) => [q.id, q]));
     const gabaritoRows: GabaritoRow[] = [];
     for (const answer of getDemoAttemptAnswers(attemptId)) {
@@ -79,32 +89,42 @@ export default async function ResultadoPage({
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
     const maxScore = getExamMaxScore(attempt.total_questions ?? exam?.total_questions ?? 20);
     const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
+    const insights = buildResultInsights({
+      rows: buildAnalysisRows(gabaritoRows),
+      userScore: attempt.score ?? 0,
+      rankings: rankings.map((r) => ({
+        position: r.position,
+        total_score: r.total_score,
+        user_id: r.user_id,
+      })),
+      userId,
+      finishedToday: finishedCount,
+    });
 
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-        <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">Resultado da disputa</h1>
         <p className="text-slate-600">{exam?.title}</p>
         <p className="mt-2 text-xs text-slate-600">
           {formatRankingScoreExplanation(attempt.total_questions ?? exam?.total_questions ?? 20)}
         </p>
+        <ResultInsightsPanel
+          score={attempt.score ?? 0}
+          maxScore={maxScore}
+          position={ranking?.position ?? null}
+          insights={insights}
+          showGabarito={showGabarito}
+        />
         <ResultStats
           totalCorrect={attempt.total_correct ?? 0}
           totalWrong={totalWrong}
           percentage={attempt.percentage}
           durationSeconds={attempt.duration_seconds ?? 0}
         />
-        {ranking?.position && (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
-            <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
-            <p className="text-sm text-emerald-800">
-              {attempt.score} de {maxScore} pts · atualiza conforme outros terminam
-            </p>
-          </div>
-        )}
         {attempt.submitted_automatically && (
           <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
-            Prova enviada automaticamente ao fim do tempo.
+            Disputa enviada automaticamente ao fim do tempo.
           </p>
         )}
         {showGabarito ? (
@@ -145,6 +165,18 @@ export default async function ResultadoPage({
     .eq('period_start', exam.date_available)
     .maybeSingle();
 
+  const { data: allRankings } = await supabase
+    .from('rankings')
+    .select('position, total_score, user_id')
+    .eq('period_type', 'daily')
+    .eq('period_start', exam.date_available);
+
+  const { count: finishedToday } = await supabase
+    .from('attempts')
+    .select('id', { count: 'exact', head: true })
+    .eq('exam_id', attempt.exam_id)
+    .not('finished_at', 'is', null);
+
   const { data: examQuestions } = await supabase
     .from('exam_questions')
     .select('order_number, questions(*)')
@@ -175,32 +207,42 @@ export default async function ResultadoPage({
 
   const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
   const maxScore = getExamMaxScore(attempt.total_questions ?? exam.total_questions);
+  const insights = buildResultInsights({
+    rows: buildAnalysisRows(gabaritoRows),
+    userScore: attempt.score ?? 0,
+    rankings: (allRankings ?? []).map((r) => ({
+      position: r.position,
+      total_score: r.total_score,
+      user_id: r.user_id,
+    })),
+    userId,
+    finishedToday: finishedToday ?? 0,
+  });
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6 text-slate-900">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-      <h1 className="mt-4 text-2xl font-bold text-slate-900">Seu resultado</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Resultado da disputa</h1>
       <p className="text-slate-600">{exam.title}</p>
       <p className="mt-2 text-xs text-slate-600">
         {formatRankingScoreExplanation(attempt.total_questions ?? exam.total_questions)}
       </p>
+      <ResultInsightsPanel
+        score={attempt.score ?? 0}
+        maxScore={maxScore}
+        position={ranking?.position ?? null}
+        insights={insights}
+        showGabarito={showGabarito}
+      />
       <ResultStats
         totalCorrect={attempt.total_correct ?? 0}
         totalWrong={totalWrong}
         percentage={attempt.percentage}
         durationSeconds={attempt.duration_seconds ?? 0}
       />
-      {ranking?.position && (
-        <div className="mt-4 rounded-xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
-          <p className="text-lg font-semibold text-emerald-900">{ranking.position}º no ranking de hoje</p>
-          <p className="text-sm text-emerald-800">
-            {attempt.score} de {maxScore} pts · atualiza conforme outros terminam
-          </p>
-        </div>
-      )}
       {attempt.submitted_automatically && (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
-          Prova enviada automaticamente ao fim do tempo.
+          Disputa enviada automaticamente ao fim do tempo.
         </p>
       )}
       {showGabarito ? (

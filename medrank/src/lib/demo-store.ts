@@ -46,6 +46,7 @@ interface DemoStore {
     answerTimes?: Record<string, number>;
   }[];
   customQuestions?: Question[];
+  questionExplanationOverrides?: Record<string, string>;
   simulados?: StoredSimulado[];
   wrongQuestions?: Record<string, string[]>;
 }
@@ -74,7 +75,7 @@ export interface StoredSimulado {
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
 function defaultStore(): DemoStore {
-  return { invites: [], students: [], examOverrides: {}, attempts: [], customQuestions: [], simulados: [], wrongQuestions: {} };
+  return { invites: [], students: [], examOverrides: {}, attempts: [], customQuestions: [], questionExplanationOverrides: {}, simulados: [], wrongQuestions: {} };
 }
 
 export function readDemoStore(): DemoStore {
@@ -279,6 +280,19 @@ type ImportableQuestion = {
   difficulty?: Question['difficulty'];
   tags?: string[];
 };
+
+export function getQuestionExplanationOverrides(): Record<string, string> {
+  return readDemoStore().questionExplanationOverrides ?? {};
+}
+
+export function setQuestionExplanationOverride(questionId: string, explanation: string): void {
+  const store = readDemoStore();
+  store.questionExplanationOverrides = {
+    ...(store.questionExplanationOverrides ?? {}),
+    [questionId]: explanation,
+  };
+  writeDemoStore(store);
+}
 
 export function getDemoCustomQuestions(): Question[] {
   return readDemoStore().customQuestions ?? [];

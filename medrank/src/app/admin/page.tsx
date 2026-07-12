@@ -17,6 +17,7 @@ export default async function AdminDashboard() {
     const menu = [
       { href: '/admin/alunos', label: 'Alunos', desc: 'Criar login e gerenciar acesso' },
       { href: '/admin/questoes', label: 'Banco de questões', desc: `${demo.questionCount} questões de provas públicas` },
+      { href: '/admin/questoes/comentarios', label: 'Fila de comentários', desc: 'Questões sem gabarito didático' },
       { href: '/admin/provas', label: 'Provas', desc: `${demo.examCount} provas diárias (5 meses)` },
       { href: '/admin/importar', label: 'Importar questões', desc: 'Excel / CSV' },
       { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },

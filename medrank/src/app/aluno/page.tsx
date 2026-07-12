@@ -20,7 +20,7 @@ export default async function AlunoDashboard() {
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
     const { userId } = session;
-    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate } =
+    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
       getDemoDashboardData(userId);
 
     const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
@@ -44,6 +44,8 @@ export default async function AlunoDashboard() {
         showRanking={showRanking}
         todayRankings={todayRankings}
         rankingDate={rankingDate}
+        finishedToday={finishedToday}
+        streakDays={streakDays}
       />
     );
   }
