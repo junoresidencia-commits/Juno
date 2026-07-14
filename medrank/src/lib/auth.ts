@@ -50,6 +50,19 @@ export async function getSessionProfile(): Promise<{
 
   if (!user) return null;
 
+  // Prefer service_role para ler o próprio profile (evita recursão RLS).
+  const { createAdminClient } = await import('@/lib/supabase/admin');
+  const admin = createAdminClient();
+  if (admin) {
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (!profile) return null;
+    return { userId: user.id, profile: profile as Profile };
+  }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
