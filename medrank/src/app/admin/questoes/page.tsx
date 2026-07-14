@@ -5,6 +5,7 @@ import { DIFFICULTY_LABELS } from '@/lib/format';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoQuestions } from '@/lib/demo/content';
 import { SeedQuestionBankButton } from '@/components/admin/SeedQuestionBankButton';
+import { RefreshQuestionBankButton } from '@/components/admin/RefreshQuestionBankButton';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function QuestoesPage() {
@@ -73,9 +74,10 @@ export default async function QuestoesPage() {
             {totalCount < 500
               ? 'Banco vazio ou incompleto. Importe ENARE + Revalida (abertos) e originais MedRank com tags estilo-USP/UNICAMP/SUS-SP/etc. (sem copiar prova oficial).'
               : 'Reinstalar: botão abaixo (upsert). Tags estilo-* permitem filtrar por banca pedagógica.'}{' '}
-            Política: docs/BANCO-QUESTOES.md.
+            A atualização automática consulta portais oficiais (metadados), calcula incidência de temas e gera questões inéditas. Política: docs/BANCO-QUESTOES.md.
           </p>
           <SeedQuestionBankButton />
+          <RefreshQuestionBankButton />
         </div>
       ) : null}
 

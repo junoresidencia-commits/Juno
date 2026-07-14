@@ -1,0 +1,86 @@
+{
+  "updated_at": "2026-07-14",
+  "policy": "Indexa apenas URLs/metadados de fontes oficiais ou datasets abertos. Não armazena texto de PDFs protegidos. Questões novas são inéditas MedRank inspiradas em incidência temática.",
+  "open_datasets": [
+    {
+      "id": "zenodo-enare",
+      "name": "ENARE Zenodo (acesso direto 2020–2024)",
+      "license": "open research dataset",
+      "url": "https://doi.org/10.5281/zenodo.17571003",
+      "local_file": "data/source/enare-zenodo.json",
+      "years_from": 2020
+    },
+    {
+      "id": "healthqa-br",
+      "name": "HealthQA-BR (ENARE + Revalida)",
+      "license": "research benchmark / public exams corpus",
+      "url": "https://huggingface.co/datasets/Larxel/healthqa-br",
+      "download_url": "https://huggingface.co/datasets/Larxel/healthqa-br/resolve/main/healthqa-br.parquet",
+      "years_from": 2011
+    }
+  ],
+  "official_portals": [
+    {
+      "id": "enare-ebserh",
+      "institution": "ENARE",
+      "organizer": "Ebserh / HU Brasil",
+      "home": "https://www.gov.br/ebserh/pt-br",
+      "search_hints": ["ENARE provas", "caderno de questões", "gabarito"],
+      "notes": "Portal oficial; acompanhar publicações de provas/gabaritos."
+    },
+    {
+      "id": "usp-fm",
+      "institution": "USP",
+      "home": "https://www.fm.usp.br/",
+      "notes": "Indexar editais/comunicados públicos; não copiar cadernos protegidos."
+    },
+    {
+      "id": "usp-rp",
+      "institution": "USP-RP",
+      "home": "https://www.fmrp.usp.br/",
+      "notes": "Fontes oficiais FMRP."
+    },
+    {
+      "id": "unifesp",
+      "institution": "UNIFESP",
+      "home": "https://www.unifesp.br/",
+      "notes": "Editais e comunicados públicos."
+    },
+    {
+      "id": "unicamp",
+      "institution": "UNICAMP",
+      "home": "https://www.fcm.unicamp.br/",
+      "notes": "Fontes oficiais FCM."
+    },
+    {
+      "id": "sus-sp",
+      "institution": "SUS-SP",
+      "home": "https://www.saude.sp.gov.br/",
+      "notes": "Processos seletivos estaduais publicados."
+    },
+    {
+      "id": "ufmg",
+      "institution": "UFMG",
+      "home": "https://ufmg.br/",
+      "notes": "Editais públicos."
+    },
+    {
+      "id": "ufrgs-hcpa",
+      "institution": "HCPA/UFRGS",
+      "home": "https://www.hcpa.edu.br/",
+      "notes": "Processos seletivos publicados pelo hospital."
+    },
+    {
+      "id": "ufpr",
+      "institution": "UFPR",
+      "home": "https://www.ufpr.br/",
+      "notes": "Editais públicos."
+    },
+    {
+      "id": "amp",
+      "institution": "AMP",
+      "home": "https://www.amp.org.br/",
+      "notes": "Quando houver materiais públicos oficiais."
+    }
+  ]
+}
