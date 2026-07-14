@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   const { id } = await params;
   const body = await request.json();
@@ -24,6 +24,10 @@ export async function POST(
     releaseDemoExam(id, releaseDays);
     const updated = getDemoExams().find((item) => item.id === id);
     return NextResponse.json({ exam: updated });
+  }
+
+  if (auth.demo) {
+    return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 });
   }
 
   const supabase = auth.supabase;
