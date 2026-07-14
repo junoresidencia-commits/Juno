@@ -41,6 +41,8 @@ export async function getSessionProfile(): Promise<{
     if (demoProfile) {
       return { userId: demoProfile.id, profile: demoProfile };
     }
+    // Demo ativo sem cookie: não tenta Supabase (env ausente no Vercel).
+    return null;
   }
 
   const supabase = await createClient();
