@@ -155,37 +155,71 @@ function SupabaseLoginForm({
     setError('');
     setLoading(true);
 
-    const supabase = await import('@/lib/supabase/client').then((m) => m.createClient());
-    const loginEmail = email.includes('@') ? email : `${email}@medrank.com`;
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password,
-    });
+    try {
+      const supabase = await import('@/lib/supabase/client').then((m) => m.createClient());
+      const loginEmail = email.trim().includes('@')
+        ? email.trim().toLowerCase()
+        : `${email.trim().toLowerCase()}@medrank.com`;
 
-    if (authError) {
-      setError('E-mail ou senha inválidos.');
-      setLoading(false);
-      return;
-    }
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password,
+      });
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('active, approved_at')
-      .eq('id', authData.user.id)
-      .single();
+      if (authError) {
+        const msg = authError.message?.toLowerCase() ?? '';
+        if (msg.includes('email not confirmed')) {
+          setError('E-mail ainda não confirmado. No Supabase → Users, confirme o usuário (Auto Confirm).');
+        } else if (msg.includes('invalid') || msg.includes('credentials')) {
+          setError('E-mail ou senha inválidos. Use o e-mail completo e a senha definida em Authentication → Users.');
+        } else {
+          setError(`Não entrou: ${authError.message}`);
+        }
+        setLoading(false);
+        return;
+      }
 
-    if (profile && !profile.active) {
-      await supabase.auth.signOut();
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('active, approved_at, role')
+        .eq('id', authData.user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        await supabase.auth.signOut();
+        setError(`Login ok, mas falhou ao ler perfil: ${profileError.message}`);
+        setLoading(false);
+        return;
+      }
+
+      if (!profile) {
+        await supabase.auth.signOut();
+        setError('Login ok, mas não há profile de professor. Rode o SQL do admin de novo.');
+        setLoading(false);
+        return;
+      }
+
+      if (!profile.active) {
+        await supabase.auth.signOut();
+        setError(
+          profile.approved_at
+            ? 'Seu acesso foi bloqueado. Fale com o professor.'
+            : 'Cadastro recebido! Aguarde o professor liberar seu acesso.'
+        );
+        setLoading(false);
+        return;
+      }
+
+      window.location.href = profile.role === 'admin' ? '/admin' : '/aluno';
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(
-        profile.approved_at
-          ? 'Seu acesso foi bloqueado. Fale com o professor.'
-          : 'Cadastro recebido! Aguarde o professor liberar seu acesso.'
+        message.includes('Supabase não configurado')
+          ? 'Supabase não configurado na Vercel (URL/ANON key). Confira as env vars e faça Redeploy.'
+          : `Erro ao entrar: ${message}`
       );
       setLoading(false);
-      return;
     }
-
-    window.location.href = '/';
   }
 
   return (
