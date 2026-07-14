@@ -3,12 +3,24 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { isSkipAuth } from '@/lib/skip-auth';
 import { getSupabaseAnonKey, getSupabaseUrl, isSupabaseEnvConfigured } from '@/lib/supabase/env';
 
+function redirectWithCookies(
+  request: NextRequest,
+  pathname: string,
+  from: NextResponse
+) {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  const redirectResponse = NextResponse.redirect(url);
+  from.cookies.getAll().forEach(({ name, value }) => {
+    redirectResponse.cookies.set(name, value);
+  });
+  return redirectResponse;
+}
+
 export async function updateSession(request: NextRequest) {
   if (isSkipAuth()) {
     if (request.nextUrl.pathname === '/login') {
-      const url = request.nextUrl.clone();
-      url.pathname = '/admin';
-      return NextResponse.redirect(url);
+      return redirectWithCookies(request, '/admin', NextResponse.next({ request }));
     }
     return NextResponse.next({ request });
   }
@@ -27,15 +39,11 @@ export async function updateSession(request: NextRequest) {
 
   if (demoProfile) {
     if (isAdminRoute && demoProfile.role !== 'admin') {
-      const url = request.nextUrl.clone();
-      url.pathname = '/aluno';
-      return NextResponse.redirect(url);
+      return redirectWithCookies(request, '/aluno', supabaseResponse);
     }
 
     if (isAuthPage) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
+      return redirectWithCookies(request, '/', supabaseResponse);
     }
 
     return supabaseResponse;
@@ -44,30 +52,25 @@ export async function updateSession(request: NextRequest) {
   // Demo / env incompleto: nunca cria client Supabase (evita crash com URL vazia).
   if (isDemoMode() || !isSupabaseEnvConfigured()) {
     if (isProtected) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      return NextResponse.redirect(url);
+      return redirectWithCookies(request, '/login', supabaseResponse);
     }
     return supabaseResponse;
   }
 
   const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        supabaseResponse = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options)
+        );
+      },
+    },
+  });
 
   const {
     data: { user },
@@ -76,16 +79,12 @@ export async function updateSession(request: NextRequest) {
   const isAuthenticated = Boolean(user);
 
   if (!isAuthenticated && isProtected) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+    return redirectWithCookies(request, '/login', supabaseResponse);
   }
 
-  if (isAuthenticated && isAuthPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    return NextResponse.redirect(url);
-  }
+  // Não redirecionar /login → / aqui.
+  // Usuário autenticado sem profile (ou cookie quebrado) gerava ERR_TOO_MANY_REDIRECTS.
+  // A página /login decide o destino depois de validar o perfil.
 
   return supabaseResponse;
 }

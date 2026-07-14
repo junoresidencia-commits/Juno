@@ -1,8 +1,15 @@
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 import { LoginForm } from '@/components/login/LoginForm';
+import { getSessionProfile } from '@/lib/auth';
 import { isDemoMode } from '@/lib/demo-mode';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getSessionProfile();
+  if (session) {
+    redirect(session.profile.role === 'admin' ? '/admin' : '/aluno');
+  }
+
   const demoMode = isDemoMode();
 
   return (
