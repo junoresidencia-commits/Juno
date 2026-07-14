@@ -12,10 +12,14 @@ const SEED_STUDENT = {
 };
 
 export function ensureDemoSeedUsers(): void {
-  const store = readDemoStore();
-  const hasAluno = store.students.some((s) => s.email === SEED_STUDENT.email);
-  if (!hasAluno) {
-    store.students.push(SEED_STUDENT);
-    writeDemoStore(store);
+  try {
+    const store = readDemoStore();
+    const hasAluno = store.students.some((s) => s.email === SEED_STUDENT.email);
+    if (!hasAluno) {
+      store.students.push(SEED_STUDENT);
+      writeDemoStore(store);
+    }
+  } catch {
+    // Vercel read-only ou store indisponível — seed já vem no defaultStore.
   }
 }

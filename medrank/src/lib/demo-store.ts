@@ -74,26 +74,68 @@ export interface StoredSimulado {
 
 const STORE_PATH = join(process.cwd(), 'data', 'demo-store.json');
 
+/** Persistência em memória (Vercel / filesystem read-only). */
+let memoryStore: DemoStore | null = null;
+
+const SEED_ALUNO: DemoStudent = {
+  id: 'demo-student-aluno',
+  name: 'Aluno',
+  email: 'aluno@medrank.com',
+  password: 'aluno',
+  active: true,
+  approvedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
+};
+
 function defaultStore(): DemoStore {
-  return { invites: [], students: [], examOverrides: {}, attempts: [], customQuestions: [], questionExplanationOverrides: {}, simulados: [], wrongQuestions: {} };
+  return {
+    invites: [],
+    students: [{ ...SEED_ALUNO }],
+    examOverrides: {},
+    attempts: [],
+    customQuestions: [],
+    questionExplanationOverrides: {},
+    simulados: [],
+    wrongQuestions: {},
+  };
 }
 
-export function readDemoStore(): DemoStore {
+function ensureSeedStudent(store: DemoStore): DemoStore {
+  if (!store.students.some((s) => s.email === SEED_ALUNO.email)) {
+    store.students.push({ ...SEED_ALUNO });
+  }
+  return store;
+}
+
+function tryPersist(store: DemoStore): void {
   try {
-    if (!existsSync(STORE_PATH)) {
-      mkdirSync(join(process.cwd(), 'data'), { recursive: true });
-      writeFileSync(STORE_PATH, JSON.stringify(defaultStore(), null, 2));
-      return defaultStore();
-    }
-    return JSON.parse(readFileSync(STORE_PATH, 'utf-8')) as DemoStore;
+    mkdirSync(join(process.cwd(), 'data'), { recursive: true });
+    writeFileSync(STORE_PATH, JSON.stringify(store, null, 2));
   } catch {
-    return defaultStore();
+    // Serverless / read-only — fica só em memória nesta instância.
   }
 }
 
+export function readDemoStore(): DemoStore {
+  if (memoryStore) return memoryStore;
+
+  try {
+    if (existsSync(STORE_PATH)) {
+      memoryStore = ensureSeedStudent(JSON.parse(readFileSync(STORE_PATH, 'utf-8')) as DemoStore);
+      return memoryStore;
+    }
+  } catch {
+    // fall through to memory default
+  }
+
+  memoryStore = defaultStore();
+  tryPersist(memoryStore);
+  return memoryStore;
+}
+
 export function writeDemoStore(store: DemoStore): void {
-  mkdirSync(join(process.cwd(), 'data'), { recursive: true });
-  writeFileSync(STORE_PATH, JSON.stringify(store, null, 2));
+  memoryStore = ensureSeedStudent(store);
+  tryPersist(memoryStore);
 }
 
 export function getDemoAttempts() {

@@ -107,6 +107,7 @@ Adicione em **Production** e **Preview**:
 | Erro | Causa | Fix |
 |------|--------|-----|
 | `500` / `MIDDLEWARE_INVOCATION_FAILED` | Production em `main` **antigo** (middleware cria Supabase com URL vazia) | Faça merge do PR MedRank com o fix de env, confira **Root Directory = `medrank`**, **Redeploy** |
+| `500` em `/` ou no login demo | Demo store tentava gravar arquivo no Vercel (read-only) | Já corrigido: store em memória + seed `aluno` embutido |
 | `URL and API key are required` | Env vazia/errada | Confira as 3 chaves na Vercel e redeploy — ou use só `DEMO_MODE=true` **sem** chaves Supabase |
 | Login inválido | User sem confirm / sem profile | Auto Confirm + `setup-production.sql` |
 | Página sem estilo | Deploy antigo | Redeploy no projeto **novo** |
