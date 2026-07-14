@@ -30,6 +30,21 @@ export async function POST(request: Request) {
 
   let selected: { id: string }[] = [];
 
+  const STYLE_FILTERS = new Set([
+    'USP',
+    'USP-RP',
+    'UNIFESP',
+    'UNICAMP',
+    'SUS-SP',
+    'PSU-MG',
+    'AMP',
+    'SES-PE',
+    'HCPA',
+    'UFRGS',
+    'UFMG',
+    'UFPR',
+  ]);
+
   if (mode === 'manual') {
     if (manualIds.length !== totalQuestions) {
       return NextResponse.json(
@@ -42,7 +57,13 @@ export async function POST(request: Request) {
     selected = manualIds.map((id) => ({ id }));
   } else {
     let query = supabase.from('questions').select('id');
-    if (sourceFilter) query = query.eq('source', sourceFilter);
+    if (sourceFilter) {
+      if (STYLE_FILTERS.has(sourceFilter)) {
+        query = query.contains('tags', [`estilo-${sourceFilter}`]);
+      } else {
+        query = query.eq('source', sourceFilter);
+      }
+    }
     if (topicFilter) query = query.eq('topic', topicFilter);
 
     const { data: allQuestions, error: qError } = await query;

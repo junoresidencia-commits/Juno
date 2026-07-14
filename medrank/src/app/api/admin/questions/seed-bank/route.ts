@@ -66,16 +66,26 @@ export async function POST() {
   const combined = [
     ...loadBankFile('imported-questions.json'),
     ...loadBankFile('supplement-questions.json'),
+    ...loadBankFile('original-style-questions.json'),
   ];
 
-  if (combined.length === 0) {
+  // Deduplicate by statement
+  const seen = new Set<string>();
+  const unique = combined.filter((q) => {
+    const key = q.statement.slice(0, 120).toLowerCase().replace(/\s+/g, ' ');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  if (unique.length === 0) {
     return NextResponse.json(
       { error: 'Arquivos data/imported-questions.json não encontrados no deploy.' },
       { status: 404 }
     );
   }
 
-  const rows = combined.map(toInsertRow);
+  const rows = unique.map(toInsertRow);
   const chunkSize = 100;
   let imported = 0;
   const errors: string[] = [];
@@ -92,11 +102,19 @@ export async function POST() {
 
   const { count } = await admin.from('questions').select('*', { count: 'exact', head: true });
 
+  const styleTags = new Set<string>();
+  for (const q of unique) {
+    for (const tag of q.tags ?? []) {
+      if (tag.startsWith('estilo-')) styleTags.add(tag.replace('estilo-', ''));
+    }
+  }
+
   return NextResponse.json({
     ok: errors.length === 0,
     imported,
     totalInDb: count ?? imported,
-    sources: 'ENARE + Revalida (HealthQA-BR) + suplemento MedRank — ~2900 questões',
+    sources: 'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.)',
+    styleBanks: [...styleTags].sort(),
     errors,
   });
 }

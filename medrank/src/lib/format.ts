@@ -23,5 +23,20 @@ export const DIFFICULTY_LABELS: Record<string, string> = {
 };
 
 export const SOURCE_OPTIONS = [
-  'ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS', 'UFRJ', 'UFMG', 'Outra',
+  'ENARE',
+  'Revalida',
+  'MedRank',
+  'USP',
+  'USP-RP',
+  'UNIFESP',
+  'UNICAMP',
+  'SUS-SP',
+  'PSU-MG',
+  'AMP',
+  'SES-PE',
+  'HCPA',
+  'UFRGS',
+  'UFMG',
+  'UFPR',
+  'Outra',
 ];
