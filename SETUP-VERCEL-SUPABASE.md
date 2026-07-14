@@ -106,10 +106,22 @@ Adicione em **Production** e **Preview**:
 
 | Erro | Causa | Fix |
 |------|--------|-----|
-| `URL and API key are required` | Env vazia/errada | Confira as 3 chaves na Vercel e redeploy |
+| `500` / `MIDDLEWARE_INVOCATION_FAILED` | Production em `main` **antigo** (middleware cria Supabase com URL vazia) | Faça merge do PR MedRank com o fix de env, confira **Root Directory = `medrank`**, **Redeploy** |
+| `URL and API key are required` | Env vazia/errada | Confira as 3 chaves na Vercel e redeploy — ou use só `DEMO_MODE=true` **sem** chaves Supabase |
 | Login inválido | User sem confirm / sem profile | Auto Confirm + `setup-production.sql` |
 | Página sem estilo | Deploy antigo | Redeploy no projeto **novo** |
 | 404 em tudo | Root Directory errado | Tem que ser `medrank` |
+
+### Env vars mínimas para demo (sem Supabase ainda)
+
+| Nome | Valor |
+|------|--------|
+| `DEMO_MODE` | `true` |
+| `SKIP_AUTH` | `false` |
+| `NEXT_PUBLIC_APP_NAME` | `MedRank` |
+| `NEXT_PUBLIC_SITE_URL` | `https://medrank-app.vercel.app` |
+
+Não precisa de `NEXT_PUBLIC_SUPABASE_*` nesse modo. O código **com o fix** entra em demo; o `main` antigo **quebra** sem as chaves.
 
 Arquivos no repo:
 - `supabase/setup-all-migrations.sql` — banco
