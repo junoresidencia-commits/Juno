@@ -13,6 +13,7 @@ import {
 import { getQuestionById } from '@/lib/question-bank/pool';
 import { SIMULADO_DURATION_MINUTES } from '@/lib/question-bank/areas';
 import { buildSimuladoQuestions, getSimuladoTitle } from '@/lib/simulados/selection';
+import { normalizeQuestionForDispute } from '@/lib/question-bank/presentation';
 import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 
 function mapSession(stored: StoredSimulado): SimuladoSession {
@@ -96,7 +97,7 @@ export function getSimuladoQuestions(sessionId: string): (Question & { order_num
     .map((id, index) => {
       const question = getQuestionById(id);
       if (!question) return null;
-      return { ...question, order_number: index + 1 };
+      return { ...normalizeQuestionForDispute(question), order_number: index + 1 };
     })
     .filter((q): q is Question & { order_number: number } => q != null);
 }

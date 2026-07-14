@@ -24,6 +24,12 @@ export default async function QuestoesPage() {
           <h1 className="mt-2 text-2xl font-bold text-slate-900">Banco de questões</h1>
         </div>
         <Link
+          href="/admin/questoes/comentarios"
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+        >
+          Fila de comentários
+        </Link>
+        <Link
           href="/admin/questoes/nova"
           className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
         >

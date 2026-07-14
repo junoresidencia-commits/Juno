@@ -47,7 +47,7 @@ export default async function RelatoriosPage({
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Relatórios e estatísticas</h1>
         <div className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
           <p className="font-semibold">Modo teste preenchido</p>
-          <p className="mt-1 text-sm text-slate-600">Base com 150 provas e {demoQuestions.length} questões reais ENARE importadas.</p>
+          <p className="mt-1 text-sm text-slate-600">Base com 150 disputas e {demoQuestions.length} questões reais importadas.</p>
         </div>
         <RankingPeriodNav basePath="/admin/relatorios" current={period} />
         <div className="mt-8 grid gap-6 md:grid-cols-2">

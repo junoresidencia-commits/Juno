@@ -9,7 +9,7 @@ import type { ImportQuestionRow } from '@/types/database';
 
 export async function POST(request: Request) {
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   const formData = await request.formData();
   const file = formData.get('file') as File;
@@ -44,6 +44,10 @@ export async function POST(request: Request) {
     const imported = appendDemoImportedQuestions(toInsert);
     invalidateQuestionBankCache();
     return NextResponse.json({ imported, errors });
+  }
+
+  if (auth.demo) {
+    return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 });
   }
 
   const supabase = auth.supabase;

@@ -6,7 +6,7 @@ import { formatDateBR } from '@/lib/format';
 /**
  * Ranking diário visível:
  * - Quem terminou a prova: vê o ranking (atualiza conforme outros terminam)
- * - Após 22h: todos veem (quem fez e quem não fez)
+ * - Após 23h59: todos veem (quem fez e quem não fez)
  */
 export function canStudentSeeTodayRanking(
   exam: Pick<Exam, 'date_available'> | null,
@@ -32,25 +32,25 @@ export function studentDailyRankingLabel(date: string): string {
 }
 
 export function studentRankingBeforeFinishMessage(): string {
-  return 'Termine a prova de hoje para ver o ranking.';
+  return 'Termine a disputa de hoje para ver o ranking.';
 }
 
 export function studentRankingAfterWindowMessage(): string {
-  return 'Ranking liberado após o horário da prova (22h).';
+  return 'Ranking liberado após o horário da disputa (23h59).';
 }
 
-/** Gabarito só depois das 22h (fim da janela), para quem terminou a prova */
+/** Gabarito logo após terminar — reforço imediato do aprendizado */
 export function canStudentSeeExamGabarito(
   exam: Pick<import('@/types/database').Exam, 'date_available'> | null,
   hasFinishedAttempt: boolean,
-  now = new Date()
+  _now = new Date()
 ): boolean {
   if (!exam || !hasFinishedAttempt) return false;
-  return getExamWindowPhase(exam.date_available, now) === 'after';
+  return true;
 }
 
 export function studentGabaritoBeforeWindowMessage(): string {
-  return 'O gabarito comentado será liberado após 22h (horário de Brasília), quando a janela da prova encerrar.';
+  return 'Finalize a disputa para ver o gabarito comentado.';
 }
 
 export function getTodayRankingDate(now = new Date()): string {

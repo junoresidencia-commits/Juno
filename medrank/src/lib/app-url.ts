@@ -1,5 +1,6 @@
 import { isDemoMode } from '@/lib/demo-mode';
 import { headers } from 'next/headers';
+import { isSupabaseEnvConfigured } from '@/lib/supabase/env';
 
 export function getAppBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
@@ -51,7 +52,5 @@ export function buildInviteLink(token: string): string {
 }
 
 export function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
-  return !isDemoMode() && url.includes('supabase.co') && !key.includes('sua-anon-key');
+  return !isDemoMode() && isSupabaseEnvConfigured();
 }

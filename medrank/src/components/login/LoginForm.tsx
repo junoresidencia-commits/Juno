@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -9,6 +9,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   unavailable: 'Sistema indisponível no momento.',
   blocked: 'Seu acesso foi bloqueado. Fale com o professor.',
 };
+
+const INPUT_CLASS =
+  'mt-2 block w-full min-h-[3rem] rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200';
 
 interface Props {
   demoMode: boolean;
@@ -21,68 +24,127 @@ export function LoginForm({ demoMode }: Props) {
     errorCode ? ERROR_MESSAGES[errorCode] ?? 'Não foi possível entrar.' : ''
   );
   const [loading, setLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  function fillDemoCredentials(user: string, password: string) {
+    if (emailRef.current) emailRef.current.value = user;
+    if (passwordRef.current) passwordRef.current.value = password;
+    formRef.current?.requestSubmit();
+  }
 
   if (demoMode) {
     return (
-      <form
-        action="/api/auth/demo-login"
-        method="POST"
-        className="space-y-4"
-        onSubmit={() => setLoading(true)}
-      >
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-            Usuário ou e-mail
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="text"
-            required
-            autoComplete="username"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-            Senha
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-          />
-        </div>
-
-        {error && (
-          <p
-            className={`rounded-lg px-3 py-2 text-sm ${
-              error.includes('Aguarde') ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'
-            }`}
+      <div className="space-y-5">
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => fillDemoCredentials('aluno', 'aluno')}
+            className="exam-tap rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-50"
           >
-            {error}
-          </p>
-        )}
+            Entrar como aluno
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => fillDemoCredentials('professor', 'professor')}
+            className="exam-tap rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+          >
+            Entrar como professor
+          </button>
+        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="exam-tap w-full rounded-lg bg-emerald-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center" aria-hidden>
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase tracking-wide">
+            <span className="bg-white px-3 text-slate-500">ou use login</span>
+          </div>
+        </div>
+
+        <form
+          ref={formRef}
+          action="/api/auth/demo-login"
+          method="POST"
+          className="space-y-4"
+          onSubmit={() => setLoading(true)}
         >
-          {loading ? 'Entrando...' : 'Entrar'}
-        </button>
-      </form>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+              Usuário ou e-mail
+            </label>
+            <input
+              ref={emailRef}
+              id="email"
+              name="email"
+              type="text"
+              required
+              autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              enterKeyHint="next"
+              placeholder="aluno"
+              className={INPUT_CLASS}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+              Senha
+            </label>
+            <input
+              ref={passwordRef}
+              id="password"
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              enterKeyHint="go"
+              placeholder="••••••••"
+              className={INPUT_CLASS}
+            />
+          </div>
+
+          {error && <ErrorMessage message={error} />}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="exam-tap w-full rounded-xl bg-emerald-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 disabled:opacity-50"
+          >
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
+      </div>
     );
   }
 
-  return <SupabaseLoginForm initialError={error} />;
+  return <SupabaseLoginForm initialError={error} inputClass={INPUT_CLASS} />;
 }
 
-function SupabaseLoginForm({ initialError }: { initialError: string }) {
+function ErrorMessage({ message }: { message: string }) {
+  const isPending = message.includes('Aguarde');
+  return (
+    <p
+      className={`rounded-xl px-4 py-3 text-sm ${
+        isPending ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200' : 'bg-red-50 text-red-800 ring-1 ring-red-200'
+      }`}
+    >
+      {message}
+    </p>
+  );
+}
+
+function SupabaseLoginForm({
+  initialError,
+  inputClass,
+}: {
+  initialError: string;
+  inputClass: string;
+}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(initialError);
@@ -137,9 +199,10 @@ function SupabaseLoginForm({ initialError }: { initialError: string }) {
           type="text"
           required
           autoComplete="username"
+          autoCapitalize="none"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          className={inputClass}
         />
       </div>
 
@@ -154,24 +217,16 @@ function SupabaseLoginForm({ initialError }: { initialError: string }) {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          className={inputClass}
         />
       </div>
 
-      {error && (
-        <p
-          className={`rounded-lg px-3 py-2 text-sm ${
-            error.includes('Aguarde') ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'
-          }`}
-        >
-          {error}
-        </p>
-      )}
+      {error && <ErrorMessage message={error} />}
 
       <button
         type="submit"
         disabled={loading}
-        className="exam-tap w-full rounded-lg bg-emerald-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+        className="exam-tap w-full rounded-xl bg-emerald-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 disabled:opacity-50"
       >
         {loading ? 'Entrando...' : 'Entrar'}
       </button>

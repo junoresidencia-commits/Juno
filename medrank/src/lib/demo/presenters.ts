@@ -1,5 +1,6 @@
 import type { Ranking } from '@/types/database';
 import { getDemoExams, getDemoQuestions, getDemoRankings, getDemoWeeklyChallenges } from '@/lib/demo/content';
+import { getExamReadyQuestionBank } from '@/lib/question-bank/pool';
 import { getAllDemoAttempts, getDemoAttemptByExam, getDemoAttemptAnswers, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
 import { getWeekEnd, getWeekStart, getMonthStart, getMonthEnd } from '@/lib/periods';
 import { getTodaysExam, todayDateString, getExamWindowStatus } from '@/lib/exams/release';
@@ -24,6 +25,36 @@ function studentName(userId: string): string {
   return DEMO_NAMES[userId] ?? 'Aluno';
 }
 
+function computeStreakDays(userId: string): number {
+  const examsByDate = new Map(getDemoExams().map((e) => [e.date_available, e.id]));
+  const finishedDates = new Set(
+    getAllDemoAttempts()
+      .filter((a) => a.user_id === userId && a.finished_at && !(a as { forfeited?: boolean }).forfeited)
+      .map((a) => {
+        for (const [date, examId] of examsByDate) {
+          if (examId === a.exam_id) return date;
+        }
+        return null;
+      })
+      .filter((d): d is string => !!d)
+  );
+
+  let streak = 0;
+  const cursor = new Date();
+  for (let i = 0; i < 365; i++) {
+    const date = cursor.toISOString().split('T')[0];
+    if (finishedDates.has(date)) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else if (i === 0) {
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
 function withProfileNames(rankings: Ranking[]): (Ranking & { profiles: { name: string } })[] {
   return rankings.map((ranking) => ({
     ...ranking,
@@ -42,7 +73,22 @@ export function getDemoDashboardData(userId = 'guest-student') {
     ? getDemoRanking('daily', rankingDate)
     : { rankings: [] };
 
-  return { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate };
+  const allAttempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
+  const finishedToday = todayExam
+    ? countFinishedAttempts(allAttempts, todayExam.id)
+    : 0;
+  const streakDays = computeStreakDays(userId);
+
+  return {
+    todayExam,
+    attempt,
+    todayRankings,
+    windowPhase,
+    showRanking,
+    rankingDate,
+    finishedToday,
+    streakDays,
+  };
 }
 
 export function getDemoAdminExamStatus() {
@@ -130,7 +176,7 @@ export function getDemoRanking(
 export function getDemoReportData() {
   const { rankings } = getDemoRanking('weekly');
   return {
-    questionCount: getDemoQuestions().length,
+    questionCount: getExamReadyQuestionBank().length,
     examCount: getDemoExams().length,
     rankings,
     challenges: getDemoWeeklyChallenges(),

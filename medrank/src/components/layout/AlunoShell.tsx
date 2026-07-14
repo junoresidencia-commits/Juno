@@ -7,7 +7,7 @@ const NAV = [
   { href: '/aluno', label: 'Início', exact: true },
   { href: '/aluno/ranking', label: 'Ranking' },
   { href: '/aluno/historico', label: 'Histórico' },
-  { href: '/aluno/simulados', label: 'Simulados' },
+  { href: '/aluno/simulados', label: 'Disputas' },
   { href: '/aluno/desempenho', label: 'Desempenho' },
   { href: '/aluno/desafios', label: 'Desafios' },
 ] as const;

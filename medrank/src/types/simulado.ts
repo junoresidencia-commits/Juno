@@ -37,6 +37,9 @@ export interface SimuladoAnswer {
 
 export interface QuestionBankStats {
   total: number;
+  examReady: number;
+  excluded: number;
+  thinExplanations: number;
   byArea: { area: string; count: number }[];
   sources: string[];
   yearRange: [number, number] | null;

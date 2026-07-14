@@ -22,7 +22,7 @@ export default async function DesafiosPage() {
       <div className="mx-auto max-w-3xl px-4 py-8">
         <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Desafios semanais</h1>
-        <p className="text-sm text-slate-600">Metas já criadas para o preparatório ENARE/USP.</p>
+        <p className="text-sm text-slate-600">Metas já criadas para a disputa diária.</p>
         <div className="mt-6">
           <ChallengeManager challenges={challenges} weekStart={weekStart} weekEnd={weekEnd} />
         </div>

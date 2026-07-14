@@ -4,16 +4,23 @@ import { createClient } from '@/lib/supabase/server';
 import { demoCookieName, isDemoMode, parseDemoSession } from '@/lib/demo-auth';
 import { isSkipAuth } from '@/lib/skip-auth';
 
-export async function requireAdminApi() {
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+export type AdminApiAuth =
+  | { error: NextResponse }
+  | { demo: true; supabase: null }
+  | { demo: false; supabase: SupabaseServerClient };
+
+export async function requireAdminApi(): Promise<AdminApiAuth> {
   if (isSkipAuth()) {
-    return { supabase: await createClient(), demo: true as const };
+    return { supabase: null, demo: true };
   }
 
   if (isDemoMode()) {
     const cookieStore = await cookies();
     const demoProfile = parseDemoSession(cookieStore.get(demoCookieName())?.value);
     if (demoProfile?.role === 'admin') {
-      return { supabase: await createClient(), demo: true as const };
+      return { supabase: null, demo: true };
     }
     if (demoProfile) {
       return { error: NextResponse.json({ error: 'Acesso negado' }, { status: 403 }) };
@@ -38,5 +45,5 @@ export async function requireAdminApi() {
     return { error: NextResponse.json({ error: 'Acesso negado' }, { status: 403 }) };
   }
 
-  return { supabase, demo: false as const };
+  return { supabase, demo: false };
 }

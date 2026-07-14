@@ -74,6 +74,16 @@ export function ExamRunner({
     setQuestionRemaining(questionLimit);
   }, [startedAt, durationMinutes, questionLimit]);
 
+  useEffect(() => {
+    if (finishedRef.current) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, []);
+
   const submitExam = useCallback(async (auto = false) => {
     if (submittingRef.current) return;
     setSubmitting(true);
@@ -255,8 +265,22 @@ export function ExamRunner({
   const timerDisplay = mounted ? formatDuration(remaining) : '--:--';
   const questionTimerDisplay = mounted ? formatDuration(questionRemaining) : '--:--';
 
+  const progressPct = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
+
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8">
+      <div className="mb-4">
+        <div className="mb-1 flex justify-between text-xs font-medium text-slate-600">
+          <span>Progresso</span>
+          <span>{answeredCount}/{questions.length} · {progressPct}%</span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+          <div
+            className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+            style={{ width: `${Math.max(progressPct, answeredCount > 0 ? 4 : 0)}%` }}
+          />
+        </div>
+      </div>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">

@@ -16,7 +16,7 @@ function redirectAlunos(request: Request, params: Record<string, string>) {
 
 export async function POST(request: Request) {
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   const { values, formSubmit } = await parseRequestFields(request, ['name', 'email', 'password', 'confirm']);
   const name = values.name;

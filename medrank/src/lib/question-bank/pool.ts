@@ -1,15 +1,30 @@
 import type { Question } from '@/types/database';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 import { getImportedQuestions } from '@/lib/demo/imported-questions';
-import { getDemoCustomQuestions } from '@/lib/demo-store';
+import { getDemoCustomQuestions, getQuestionExplanationOverrides } from '@/lib/demo-store';
 import { getSupplementQuestions } from '@/lib/question-bank/supplement';
-import { classifyQuestionArea, isEnareStyleQuestion, isUspStyleQuestion } from '@/lib/question-bank/classify';
+import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import type { ResidencyArea } from '@/lib/question-bank/areas';
 import type { QuestionBankStats } from '@/types/simulado';
+import { auditQuestionBank, isExamReadyQuestion, isThinExplanation } from '@/lib/question-bank/quality';
+import { formatBankSourcesLabel } from '@/lib/question-bank/presentation';
 
 let cache: Question[] | null = null;
 
+function loadSampleExplanations(): Record<string, string> {
+  const path = join(process.cwd(), 'data', 'sample-explanations.json');
+  if (!existsSync(path)) return {};
+  try {
+    return JSON.parse(readFileSync(path, 'utf-8')) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
 function mergeQuestionBank(): Question[] {
   const base = [...getImportedQuestions(), ...getDemoCustomQuestions(), ...getSupplementQuestions()];
+  const overrides = { ...loadSampleExplanations(), ...getQuestionExplanationOverrides() };
   const seen = new Set<string>();
   const merged: Question[] = [];
 
@@ -17,7 +32,10 @@ function mergeQuestionBank(): Question[] {
     const key = question.statement.slice(0, 100).toLowerCase().replace(/\s+/g, ' ');
     if (seen.has(key)) continue;
     seen.add(key);
-    merged.push(question);
+    const patched = overrides[question.id]
+      ? { ...question, explanation: overrides[question.id] }
+      : question;
+    merged.push(patched);
   }
 
   return merged;
@@ -30,6 +48,11 @@ export function getQuestionBank(): Question[] {
   return cache;
 }
 
+/** Questões aptas para prova diária e simulados (sem truncadas nem templates genéricos) */
+export function getExamReadyQuestionBank(): Question[] {
+  return getQuestionBank().filter(isExamReadyQuestion);
+}
+
 export function getQuestionById(id: string): Question | undefined {
   return getQuestionBank().find((q) => q.id === id);
 }
@@ -40,18 +63,23 @@ export function getQuestionsByArea(area: ResidencyArea): Question[] {
 
 export function getQuestionBankStats(): QuestionBankStats {
   const bank = getQuestionBank();
+  const examReady = getExamReadyQuestionBank();
+  const audit = auditQuestionBank(bank);
   const byAreaMap = new Map<string, number>();
 
-  for (const question of bank) {
+  for (const question of examReady) {
     const area = classifyQuestionArea(question);
     byAreaMap.set(area, (byAreaMap.get(area) ?? 0) + 1);
   }
 
-  const years = bank.map((q) => q.year).filter((y): y is number => y != null);
-  const sources = [...new Set(bank.map((q) => q.source).filter(Boolean) as string[])];
+  const years = examReady.map((q) => q.year).filter((y): y is number => y != null);
+  const sources = [formatBankSourcesLabel([...new Set(examReady.map((q) => q.source).filter(Boolean) as string[])])];
 
   return {
     total: bank.length,
+    examReady: examReady.length,
+    excluded: audit.excluded,
+    thinExplanations: audit.thinExplanations,
     byArea: [...byAreaMap.entries()]
       .map(([area, count]) => ({ area, count }))
       .sort((a, b) => b.count - a.count),
@@ -66,21 +94,16 @@ export function filterBank(options: {
   theme?: string;
   questionIds?: string[];
 }): Question[] {
-  let pool = getQuestionBank();
+  let pool = getExamReadyQuestionBank();
 
   if (options.questionIds?.length) {
     const idSet = new Set(options.questionIds);
     pool = pool.filter((q) => idSet.has(q.id));
+    return pool.length > 0 ? pool : getQuestionBank().filter((q) => idSet.has(q.id));
+  }
+
+  if (options.mode === 'enare' || options.mode === 'usp') {
     return pool;
-  }
-
-  if (options.mode === 'enare') {
-    pool = pool.filter((q) => isEnareStyleQuestion(q) || !isUspStyleQuestion(q));
-  }
-
-  if (options.mode === 'usp') {
-    const usp = pool.filter((q) => isUspStyleQuestion(q));
-    pool = usp.length >= 20 ? usp : pool;
   }
 
   if (options.area) {
@@ -102,4 +125,10 @@ export function filterBank(options: {
 
 export function invalidateQuestionBankCache() {
   cache = null;
+}
+
+export function listQuestionsNeedingComments(limit = 50): Question[] {
+  return getQuestionBank()
+    .filter((q) => isThinExplanation(q.explanation))
+    .slice(0, limit);
 }

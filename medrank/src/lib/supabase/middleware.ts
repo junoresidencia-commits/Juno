@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { isSkipAuth } from '@/lib/skip-auth';
+import { getSupabaseAnonKey, getSupabaseUrl, isSupabaseEnvConfigured } from '@/lib/supabase/env';
 
 export async function updateSession(request: NextRequest) {
   if (isSkipAuth()) {
@@ -40,10 +41,17 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  // Demo / env incompleto: nunca cria client Supabase (evita crash com URL vazia).
+  if (isDemoMode() || !isSupabaseEnvConfigured()) {
+    if (isProtected) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+    return supabaseResponse;
+  }
+
+  const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
       cookies: {
         getAll() {
           return request.cookies.getAll();
