@@ -4,56 +4,102 @@ import { requireRole } from '@/lib/auth';
 import { DIFFICULTY_LABELS } from '@/lib/format';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoQuestions } from '@/lib/demo/content';
+import { SeedQuestionBankButton } from '@/components/admin/SeedQuestionBankButton';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function QuestoesPage() {
   await requireRole('admin');
-  const questions = usesDemoStore()
-    ? getDemoQuestions().slice(0, 120)
-    : (await createClient()
-        .then((supabase) => supabase
-          .from('questions')
-          .select('id, statement, source, topic, difficulty, year')
-          .order('created_at', { ascending: false })
-          .limit(100))).data;
+
+  let questions:
+    | {
+        id: string;
+        statement: string;
+        source: string | null;
+        topic: string | null;
+        difficulty: string | null;
+        year: number | null;
+      }[]
+    | null = null;
+  let totalCount = 0;
+
+  if (usesDemoStore()) {
+    const demo = getDemoQuestions();
+    questions = demo.slice(0, 120);
+    totalCount = demo.length;
+  } else {
+    const admin = createAdminClient();
+    const client = admin ?? (await createClient());
+    const [{ data }, countRes] = await Promise.all([
+      client
+        .from('questions')
+        .select('id, statement, source, topic, difficulty, year')
+        .order('created_at', { ascending: false })
+        .limit(100),
+      client.from('questions').select('*', { count: 'exact', head: true }),
+    ]);
+    questions = data;
+    totalCount = countRes.count ?? data?.length ?? 0;
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
+          <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
+            ← Painel
+          </Link>
           <h1 className="mt-2 text-2xl font-bold text-slate-900">Banco de questões</h1>
+          <p className="mt-1 text-sm text-slate-600">{totalCount} questões no banco</p>
         </div>
-        <Link
-          href="/admin/questoes/comentarios"
-          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
-        >
-          Fila de comentários
-        </Link>
-        <Link
-          href="/admin/questoes/nova"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-        >
-          Nova questão
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/admin/questoes/comentarios"
+            className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+          >
+            Fila de comentários
+          </Link>
+          <Link
+            href="/admin/questoes/nova"
+            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+          >
+            Nova questão
+          </Link>
+        </div>
       </div>
 
+      {!usesDemoStore() ? (
+        <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+          <p className="mb-3 text-sm text-emerald-950">
+            {totalCount < 50
+              ? 'Banco vazio ou incompleto (o reset do Supabase apagou as questões). Importe de novo as 500 questões ENARE (+ suplemento) do projeto.'
+              : 'Se precisar reinstalar o banco de questões, use o botão abaixo (não duplica: faz upsert).'}{' '}
+            Na disputa o aluno não vê branding “ENARE”.
+          </p>
+          <SeedQuestionBankButton />
+        </div>
+      ) : null}
+
       <div className="space-y-3">
+        {(questions ?? []).map((q) => (
+          <div key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="line-clamp-2 text-sm text-slate-900">{q.statement}</p>
+            <p className="mt-2 text-xs text-slate-500">
+              {[
+                q.source,
+                q.year,
+                q.topic,
+                q.difficulty
+                  ? DIFFICULTY_LABELS[q.difficulty as keyof typeof DIFFICULTY_LABELS] ?? q.difficulty
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          </div>
+        ))}
         {(questions ?? []).length === 0 ? (
-          <p className="text-slate-600">Nenhuma questão cadastrada.</p>
-        ) : (
-          questions!.map((q) => (
-            <div key={q.id} className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-              <div className="flex items-start justify-between gap-4">
-                <p className="line-clamp-2 text-sm">{q.statement}</p>
-                <div className="shrink-0 text-right text-xs text-slate-600">
-                  <p>{q.source} {q.year}</p>
-                  <p>{q.topic}</p>
-                  {q.difficulty && <p>{DIFFICULTY_LABELS[q.difficulty] ?? q.difficulty}</p>}
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+          <p className="text-sm text-slate-500">Nenhuma questão ainda.</p>
+        ) : null}
       </div>
     </div>
   );
