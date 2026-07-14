@@ -84,7 +84,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error }, { status: 401 });
   }
 
-  const { data: profile, error: profileError } = await supabase
+  // Lê profile com service_role (ignora RLS) — evita "infinite recursion" em policies.
+  const { createAdminClient } = await import('@/lib/supabase/admin');
+  const admin = createAdminClient();
+  if (!admin) {
+    await supabase.auth.signOut();
+    const error =
+      'SUPABASE_SERVICE_ROLE_KEY ausente na Vercel. Adicione a service_role e faça Redeploy.';
+    if (formSubmit) return redirectLogin(request, error);
+    return NextResponse.json({ error }, { status: 503 });
+  }
+
+  const { data: profile, error: profileError } = await admin
     .from('profiles')
     .select('active, approved_at, role')
     .eq('id', authData.user.id)
