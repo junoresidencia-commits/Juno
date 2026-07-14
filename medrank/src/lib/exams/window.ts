@@ -1,6 +1,7 @@
 export const EXAM_TIMEZONE = 'America/Sao_Paulo';
 export const EXAM_WINDOW_START_HOUR = 7;
-export const EXAM_WINDOW_END_HOUR = 22;
+/** Fecha à meia-noite (disputa disponível o dia todo após 7h). */
+export const EXAM_WINDOW_END_HOUR = 24;
 
 export type ExamWindowPhase = 'before' | 'open' | 'after' | 'wrong_day';
 
@@ -71,9 +72,9 @@ export function getExamWindowPhase(examDate: string, now = new Date()): ExamWind
 }
 
 export function formatExamWindowLabel(): string {
-  return `Das ${EXAM_WINDOW_START_HOUR}h às ${EXAM_WINDOW_END_HOUR}h (horário de Brasília)`;
+  return `Das ${EXAM_WINDOW_START_HOUR}h às 23h59 (horário de Brasília)`;
 }
 
 export function formatExamWindowShort(): string {
-  return `${EXAM_WINDOW_START_HOUR}h–${EXAM_WINDOW_END_HOUR}h`;
+  return `${EXAM_WINDOW_START_HOUR}h–23h59`;
 }

@@ -29,7 +29,7 @@ export async function POST(
   if (usesDemoStore()) {
     const exam = getDemoExams().find((item) => item.id === examId);
     if (!exam || !canStartExam(exam)) {
-      return NextResponse.json({ error: 'Prova não disponível neste horário (7h–22h)' }, { status: 404 });
+      return NextResponse.json({ error: 'Disputa não disponível neste horário (7h–23h59)' }, { status: 404 });
     }
 
     const existing = getDemoAttemptByExam(examId, userId);
