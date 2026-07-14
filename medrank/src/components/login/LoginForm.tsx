@@ -19,9 +19,9 @@ interface Props {
 
 export function LoginForm({ demoMode }: Props) {
   const searchParams = useSearchParams();
-  const errorCode = searchParams.get('error') ?? (searchParams.get('blocked') ? 'blocked' : null);
+  const errorParam = searchParams.get('error') ?? (searchParams.get('blocked') ? 'blocked' : null);
   const [error, setError] = useState(
-    errorCode ? ERROR_MESSAGES[errorCode] ?? 'Não foi possível entrar.' : ''
+    errorParam ? ERROR_MESSAGES[errorParam] ?? decodeURIComponent(errorParam) : ''
   );
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -122,121 +122,31 @@ export function LoginForm({ demoMode }: Props) {
     );
   }
 
-  return <SupabaseLoginForm initialError={error} inputClass={INPUT_CLASS} />;
-}
-
-function ErrorMessage({ message }: { message: string }) {
-  const isPending = message.includes('Aguarde');
   return (
-    <p
-      className={`rounded-xl px-4 py-3 text-sm ${
-        isPending ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200' : 'bg-red-50 text-red-800 ring-1 ring-red-200'
-      }`}
+    <form
+      action="/api/auth/login"
+      method="POST"
+      className="space-y-4"
+      onSubmit={() => {
+        setError('');
+        setLoading(true);
+      }}
     >
-      {message}
-    </p>
-  );
-}
-
-function SupabaseLoginForm({
-  initialError,
-  inputClass,
-}: {
-  initialError: string;
-  inputClass: string;
-}) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(initialError);
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const supabase = await import('@/lib/supabase/client').then((m) => m.createClient());
-      const loginEmail = email.trim().includes('@')
-        ? email.trim().toLowerCase()
-        : `${email.trim().toLowerCase()}@medrank.com`;
-
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password,
-      });
-
-      if (authError) {
-        const msg = authError.message?.toLowerCase() ?? '';
-        if (msg.includes('email not confirmed')) {
-          setError('E-mail ainda não confirmado. No Supabase → Users, confirme o usuário (Auto Confirm).');
-        } else if (msg.includes('invalid') || msg.includes('credentials')) {
-          setError('E-mail ou senha inválidos. Use o e-mail completo e a senha definida em Authentication → Users.');
-        } else {
-          setError(`Não entrou: ${authError.message}`);
-        }
-        setLoading(false);
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('active, approved_at, role')
-        .eq('id', authData.user.id)
-        .maybeSingle();
-
-      if (profileError) {
-        await supabase.auth.signOut();
-        setError(`Login ok, mas falhou ao ler perfil: ${profileError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      if (!profile) {
-        await supabase.auth.signOut();
-        setError('Login ok, mas não há profile de professor. Rode o SQL do admin de novo.');
-        setLoading(false);
-        return;
-      }
-
-      if (!profile.active) {
-        await supabase.auth.signOut();
-        setError(
-          profile.approved_at
-            ? 'Seu acesso foi bloqueado. Fale com o professor.'
-            : 'Cadastro recebido! Aguarde o professor liberar seu acesso.'
-        );
-        setLoading(false);
-        return;
-      }
-
-      window.location.href = profile.role === 'admin' ? '/admin' : '/aluno';
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erro desconhecido';
-      setError(
-        message.includes('Supabase não configurado')
-          ? 'Supabase não configurado na Vercel (URL/ANON key). Confira as env vars e faça Redeploy.'
-          : `Erro ao entrar: ${message}`
-      );
-      setLoading(false);
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-          Usuário ou e-mail
+          E-mail
         </label>
         <input
           id="email"
-          type="text"
+          name="email"
+          type="email"
           required
           autoComplete="username"
           autoCapitalize="none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={inputClass}
+          autoCorrect="off"
+          defaultValue="junoresidencia@gmail.com"
+          placeholder="seu@email.com"
+          className={INPUT_CLASS}
         />
       </div>
 
@@ -246,12 +156,13 @@ function SupabaseLoginForm({
         </label>
         <input
           id="password"
+          name="password"
           type="password"
           required
           autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={inputClass}
+          enterKeyHint="go"
+          placeholder="••••••••"
+          className={INPUT_CLASS}
         />
       </div>
 
@@ -265,5 +176,18 @@ function SupabaseLoginForm({
         {loading ? 'Entrando...' : 'Entrar'}
       </button>
     </form>
+  );
+}
+
+function ErrorMessage({ message }: { message: string }) {
+  const isPending = message.includes('Aguarde');
+  return (
+    <p
+      className={`rounded-xl px-4 py-3 text-sm ${
+        isPending ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200' : 'bg-red-50 text-red-800 ring-1 ring-red-200'
+      }`}
+    >
+      {message}
+    </p>
   );
 }
