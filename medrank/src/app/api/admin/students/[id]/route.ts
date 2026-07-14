@@ -11,7 +11,7 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   const body = await request.json();
   const action = (body as { action: string }).action;
@@ -86,7 +86,7 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   if (isDemoMode() || auth.demo) {
     const store = readDemoStore();

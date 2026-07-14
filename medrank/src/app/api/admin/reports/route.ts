@@ -35,7 +35,7 @@ async function buildReportData(supabase: SupabaseClient, period: PeriodType) {
 
 export async function GET(request: Request) {
   const auth = await requireAdminApi();
-  if ('error' in auth && auth.error) return auth.error;
+  if ('error' in auth) return auth.error;
 
   const { searchParams } = new URL(request.url);
   const format = searchParams.get('format') ?? 'excel';
@@ -43,6 +43,13 @@ export async function GET(request: Request) {
 
   if (!['daily', 'weekly', 'monthly', 'general'].includes(period)) {
     return NextResponse.json({ error: 'Período inválido' }, { status: 400 });
+  }
+
+  if (auth.demo) {
+    return NextResponse.json(
+      { error: 'Relatórios com banco requerem Supabase configurado' },
+      { status: 503 }
+    );
   }
 
   const data = await buildReportData(auth.supabase, period);

@@ -1,11 +1,11 @@
 import type { Profile, UserRole } from '@/types/database';
+import { isSupabaseEnvConfigured } from '@/lib/supabase/env';
 
 const COOKIE_NAME = 'medrank_demo_session';
 
 export function isDemoMode(): boolean {
   if (process.env.DEMO_MODE === 'true') return true;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  return url.includes('seu-projeto.supabase.co');
+  return !isSupabaseEnvConfigured();
 }
 
 export function demoCookieName(): string {
