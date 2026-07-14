@@ -84,28 +84,47 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error }, { status: 401 });
   }
 
-  // Lê profile com service_role (ignora RLS) — evita "infinite recursion" em policies.
-  const { createAdminClient } = await import('@/lib/supabase/admin');
-  const admin = createAdminClient();
-  if (!admin) {
-    await supabase.auth.signOut();
-    const error =
-      'SUPABASE_SERVICE_ROLE_KEY ausente na Vercel. Adicione a service_role e faça Redeploy.';
-    if (formSubmit) return redirectLogin(request, error);
-    return NextResponse.json({ error }, { status: 503 });
-  }
+  // Prefer sessão do usuário; se RLS/grants falharem, cai no service_role.
+  let profile: {
+    active: boolean;
+    approved_at: string | null;
+    role: string;
+  } | null = null;
+  let profileErrorMessage: string | null = null;
 
-  const { data: profile, error: profileError } = await admin
-    .from('profiles')
-    .select('active, approved_at, role')
-    .eq('id', authData.user.id)
-    .maybeSingle();
-
-  if (profileError) {
-    await supabase.auth.signOut();
-    const error = `Perfil: ${profileError.message}`;
-    if (formSubmit) return redirectLogin(request, error);
-    return NextResponse.json({ error }, { status: 500 });
+  {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('active, approved_at, role')
+      .eq('id', authData.user.id)
+      .maybeSingle();
+    if (!error && data) {
+      profile = data;
+    } else {
+      profileErrorMessage = error?.message ?? null;
+      const { createAdminClient } = await import('@/lib/supabase/admin');
+      const admin = createAdminClient();
+      if (!admin) {
+        await supabase.auth.signOut();
+        const errorText =
+          profileErrorMessage ??
+          'SUPABASE_SERVICE_ROLE_KEY ausente na Vercel. Adicione a service_role e Redeploy.';
+        if (formSubmit) return redirectLogin(request, `Perfil: ${errorText}`);
+        return NextResponse.json({ error: `Perfil: ${errorText}` }, { status: 503 });
+      }
+      const adminResult = await admin
+        .from('profiles')
+        .select('active, approved_at, role')
+        .eq('id', authData.user.id)
+        .maybeSingle();
+      if (adminResult.error) {
+        await supabase.auth.signOut();
+        const errorText = adminResult.error.message;
+        if (formSubmit) return redirectLogin(request, `Perfil: ${errorText}`);
+        return NextResponse.json({ error: `Perfil: ${errorText}` }, { status: 500 });
+      }
+      profile = adminResult.data;
+    }
   }
 
   if (!profile) {
