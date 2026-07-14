@@ -96,7 +96,7 @@ export async function POST() {
     ok: errors.length === 0,
     imported,
     totalInDb: count ?? imported,
-    sources: 'ENARE (500) + MedRank suplemento (34)',
+    sources: 'ENARE + Revalida (HealthQA-BR) + suplemento MedRank — ~2900 questões',
     errors,
   });
 }

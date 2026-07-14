@@ -70,10 +70,10 @@ export default async function QuestoesPage() {
       {!usesDemoStore() ? (
         <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
           <p className="mb-3 text-sm text-emerald-950">
-            {totalCount < 50
-              ? 'Banco vazio ou incompleto (o reset do Supabase apagou as questões). Importe de novo as 500 questões ENARE (+ suplemento) do projeto.'
-              : 'Se precisar reinstalar o banco de questões, use o botão abaixo (não duplica: faz upsert).'}{' '}
-            Na disputa o aluno não vê branding “ENARE”.
+            {totalCount < 500
+              ? 'Banco vazio ou incompleto. Importe o banco completo: ENARE + Revalida (~2900 questões públicas). Não há dataset aberto de USP; Revalida e mais ENARE entram neste pacote.'
+              : 'Se precisar reinstalar o banco, use o botão abaixo (upsert, não duplica).'}{' '}
+            Na disputa o aluno não vê branding de banca.
           </p>
           <SeedQuestionBankButton />
         </div>

@@ -35,7 +35,7 @@ export function SeedQuestionBankButton() {
         onClick={handleSeed}
         className="rounded-lg border border-emerald-600 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 disabled:opacity-50"
       >
-        {loading ? 'Importando…' : 'Importar banco ENARE (500+)'}
+        {loading ? 'Importando…' : 'Importar banco completo (ENARE + Revalida, ~2900)'}
       </button>
       {message ? <p className="text-sm text-slate-600">{message}</p> : null}
     </div>
