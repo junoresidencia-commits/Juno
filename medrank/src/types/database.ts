@@ -144,6 +144,7 @@ export interface WeeklyChallenge {
   bonus_points: number;
   active: boolean;
   created_at: string;
+  group_id?: string | null;
 }
 
 export interface WeeklyChallengeCompletion {
@@ -151,4 +152,34 @@ export interface WeeklyChallengeCompletion {
   challenge_id: string;
   user_id: string;
   completed_at: string;
+}
+
+export interface StudyGroup {
+  id: string;
+  name: string;
+  description: string | null;
+  active: boolean;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface StudyGroupMember {
+  group_id: string;
+  user_id: string;
+  joined_at: string;
+}
+
+export interface StudyGroupRanking {
+  id: string;
+  group_id: string;
+  user_id: string;
+  period_type: PeriodType;
+  period_start: string;
+  period_end: string;
+  total_score: number;
+  total_correct: number;
+  total_questions: number;
+  average_percentage: number;
+  total_time_seconds: number;
+  position: number | null;
 }

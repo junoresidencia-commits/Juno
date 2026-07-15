@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const NAV = [
   { href: '/aluno', label: 'Início', exact: true },
   { href: '/aluno/ranking', label: 'Ranking' },
+  { href: '/aluno/grupos', label: 'Grupos' },
   { href: '/aluno/historico', label: 'Histórico' },
   { href: '/aluno/simulados', label: 'Disputas' },
   { href: '/aluno/desempenho', label: 'Desempenho' },
