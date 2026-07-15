@@ -3,6 +3,7 @@ import { requireRole } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { listDemoStudyGroups } from '@/lib/groups/demo';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { GroupsManager } from '@/components/admin/GroupsManager';
 
 export default async function AdminGruposPage() {
@@ -19,7 +20,7 @@ export default async function AdminGruposPage() {
   if (usesDemoStore()) {
     groups = listDemoStudyGroups();
   } else {
-    const supabase = await createClient();
+    const supabase = createAdminClient() ?? (await createClient());
     const { data } = await supabase
       .from('study_groups')
       .select('id, name, description, active, created_at, study_group_members(count)')
