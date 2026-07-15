@@ -25,7 +25,7 @@ export interface DemoStudent {
   createdAt: string;
 }
 
-interface DemoStore {
+export interface DemoStore {
   invites: DemoInvite[];
   students: DemoStudent[];
   examOverrides?: Record<string, Partial<Exam>>;
@@ -49,6 +49,15 @@ interface DemoStore {
   questionExplanationOverrides?: Record<string, string>;
   simulados?: StoredSimulado[];
   wrongQuestions?: Record<string, string[]>;
+  studyGroups?: {
+    id: string;
+    name: string;
+    description: string | null;
+    active: boolean;
+    created_by: string | null;
+    created_at: string;
+    members: string[];
+  }[];
 }
 
 export interface StoredSimulado {

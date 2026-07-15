@@ -76,3 +76,10 @@ export const STUDENT_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
   { value: 'daily', label: 'Diário' },
   { value: 'weekly', label: 'Semanal' },
 ];
+
+/** Rankings internos de grupo (inclui mensal) */
+export const GROUP_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
+  { value: 'daily', label: 'Diário' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'monthly', label: 'Mensal' },
+];

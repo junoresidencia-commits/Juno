@@ -71,6 +71,7 @@ export async function POST(request: Request) {
       topic: body.topic || null,
       bonus_points: Number(body.bonus_points ?? 50),
       active: true,
+      group_id: body.group_id || null,
     })
     .select()
     .single();
