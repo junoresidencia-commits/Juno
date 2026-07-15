@@ -49,6 +49,29 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
     router.refresh();
   }
 
+  async function handleDelete(group: GroupRow, e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (
+      !confirm(
+        `Apagar o grupo "${group.name}"?\n\nIsso remove membros, rankings e desafios deste grupo.`
+      )
+    ) {
+      return;
+    }
+    setLoading(true);
+    setError('');
+    const res = await fetch(`/api/admin/groups/${group.id}`, { method: 'DELETE' });
+    const data = await res.json().catch(() => ({}));
+    setLoading(false);
+    if (!res.ok) {
+      setError((data as { error?: string }).error ?? 'Erro ao apagar grupo');
+      return;
+    }
+    setGroups((prev) => prev.filter((g) => g.id !== group.id));
+    router.refresh();
+  }
+
   return (
     <div className="space-y-8">
       <form
@@ -95,24 +118,32 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
           <p className="text-sm text-slate-600">Nenhum grupo ainda.</p>
         ) : (
           groups.map((g) => (
-            <Link
+            <div
               key={g.id}
-              href={`/admin/grupos/${g.id}`}
-              className="flex items-center justify-between rounded-xl bg-white px-4 py-4 ring-1 ring-slate-200 hover:ring-emerald-300"
+              className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-4 ring-1 ring-slate-200"
             >
-              <div>
+              <Link href={`/admin/grupos/${g.id}`} className="min-w-0 flex-1 hover:opacity-90">
                 <p className="font-semibold text-slate-900">{g.name}</p>
                 {g.description ? (
                   <p className="text-sm text-slate-600">{g.description}</p>
                 ) : null}
-              </div>
-              <div className="text-right text-sm text-slate-600">
-                <p>{g.member_count} {g.member_count === 1 ? 'membro' : 'membros'}</p>
-                <p className={g.active ? 'text-emerald-700' : 'text-slate-400'}>
-                  {g.active ? 'Ativo' : 'Inativo'}
+                <p className="mt-1 text-sm text-slate-600">
+                  {g.member_count} {g.member_count === 1 ? 'membro' : 'membros'}
+                  {' · '}
+                  <span className={g.active ? 'text-emerald-700' : 'text-slate-400'}>
+                    {g.active ? 'Ativo' : 'Inativo'}
+                  </span>
                 </p>
-              </div>
-            </Link>
+              </Link>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={(e) => handleDelete(g, e)}
+                className="shrink-0 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+              >
+                Apagar
+              </button>
+            </div>
           ))
         )}
       </div>

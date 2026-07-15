@@ -95,6 +95,27 @@ export function GroupDetailManager({
     router.refresh();
   }
 
+  async function deleteGroup() {
+    if (
+      !confirm(
+        `Apagar o grupo "${groupName}"?\n\nIsso remove membros, rankings e desafios exclusivos deste grupo. Não tem volta.`
+      )
+    ) {
+      return;
+    }
+    setLoading(true);
+    setError('');
+    const res = await fetch(`/api/admin/groups/${groupId}`, { method: 'DELETE' });
+    const data = await res.json().catch(() => ({}));
+    setLoading(false);
+    if (!res.ok) {
+      setError((data as { error?: string }).error ?? 'Falha ao apagar grupo');
+      return;
+    }
+    router.push('/admin/grupos');
+    router.refresh();
+  }
+
   async function createChallenge(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -132,11 +153,21 @@ export function GroupDetailManager({
 
   return (
     <div className="space-y-8">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">{groupName}</h1>
-        {groupDescription ? <p className="mt-1 text-slate-600">{groupDescription}</p> : null}
-        {message ? <p className="mt-2 text-sm text-emerald-700">{message}</p> : null}
-        {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">{groupName}</h1>
+          {groupDescription ? <p className="mt-1 text-slate-600">{groupDescription}</p> : null}
+          {message ? <p className="mt-2 text-sm text-emerald-700">{message}</p> : null}
+          {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+        </div>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={deleteGroup}
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-50"
+        >
+          Apagar grupo
+        </button>
       </header>
 
       <section className="rounded-xl bg-white p-5 ring-1 ring-slate-200">
