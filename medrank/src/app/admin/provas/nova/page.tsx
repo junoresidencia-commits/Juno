@@ -119,13 +119,21 @@ export default function NovaProvaPage() {
           {mode === 'auto' && (
             <>
               <div>
-                <label className="block text-sm font-medium">Filtrar por origem</label>
+                <label className="block text-sm font-medium">
+                  Filtrar por origem / estilo de banca
+                </label>
                 <select name="source_filter" className={inputClass}>
-                  <option value="">Todas</option>
+                  <option value="">Todas (recomendado se banco misto)</option>
                   {SOURCE_OPTIONS.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-slate-500">
+                  USP/UNICAMP/etc. usam questões originais MedRank com tag de estilo (não cópia
+                  oficial). ENARE/Revalida usam o banco aberto. Precisa de ≥20 no filtro escolhido.
+                </p>
               </div>
               <div>
                 <label className="block text-sm font-medium">Filtrar por tema</label>

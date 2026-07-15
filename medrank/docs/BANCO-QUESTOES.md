@@ -15,5 +15,6 @@
 
 ## Como atualizar
 1. Novas provas oficiais **públicas/licenciadas** → script de import / Admin → Importar.
-2. Originais MedRank → `data/original-style-questions.json` + seed-bank.
+2. Originais MedRank (estilo USP/UNICAMP/…) → `data/original-style-questions.json` (≥45 por estilo).
 3. Admin → **Questões** → **Importar banco completo**.
+4. Ampliar estilos localmente: `node scripts/expand-style-bank.cjs`
