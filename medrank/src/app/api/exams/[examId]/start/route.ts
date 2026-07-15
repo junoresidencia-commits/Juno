@@ -2,18 +2,9 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getSessionProfile } from '@/lib/auth';
-import { createDemoAttempt, forfeitDemoAttempt, getDemoAttemptAnswers, getDemoAttemptByExam } from '@/lib/demo/runtime';
+import { createDemoAttempt, forfeitDemoAttempt, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { canStartExam } from '@/lib/exams/release';
-import type { OptionLetter } from '@/types/database';
-
-function mapSavedAnswers(attemptId: string): Record<string, OptionLetter> {
-  const initial: Record<string, OptionLetter> = {};
-  for (const row of getDemoAttemptAnswers(attemptId)) {
-    if (row.selected_option) initial[row.question_id] = row.selected_option;
-  }
-  return initial;
-}
 
 export async function POST(
   _request: Request,
