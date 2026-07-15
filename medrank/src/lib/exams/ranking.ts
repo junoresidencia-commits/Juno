@@ -37,7 +37,13 @@ export function buildExamRankings(
   exam: Exam
 ): Ranking[] {
   const finished = attempts
-    .filter((a) => a.exam_id === exam.id && a.finished_at && a.score != null)
+    .filter(
+      (a) =>
+        a.exam_id === exam.id &&
+        a.finished_at &&
+        a.score != null &&
+        !a.forfeited
+    )
     .sort((a, b) => {
       if (b.total_correct !== a.total_correct) return b.total_correct - a.total_correct;
       if ((a.duration_seconds ?? 0) !== (b.duration_seconds ?? 0)) {

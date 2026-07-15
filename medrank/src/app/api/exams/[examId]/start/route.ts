@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getSessionProfile } from '@/lib/auth';
-import { createDemoAttempt, getDemoAttemptAnswers, getDemoAttemptByExam } from '@/lib/demo/runtime';
+import { createDemoAttempt, forfeitDemoAttempt, getDemoAttemptAnswers, getDemoAttemptByExam } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
 import { canStartExam } from '@/lib/exams/release';
 import type { OptionLetter } from '@/types/database';
@@ -41,11 +41,11 @@ export async function POST(
     }
 
     if (existing && !existing.finished_at) {
-      return NextResponse.json({
-        attempt: existing,
-        initialAnswers: mapSavedAnswers(existing.id),
-        resumed: true,
-      });
+      const attempt = forfeitDemoAttempt(existing.id, { violationType: 'abandoned_session' });
+      return NextResponse.json(
+        { error: 'Prova encerrada por segurança (retomada não permitida)', attemptId: attempt.id, forfeited: true },
+        { status: 400 }
+      );
     }
 
     const attempt = createDemoAttempt(examId, userId);
@@ -85,19 +85,26 @@ export async function POST(
   }
 
   if (existing && !existing.finished_at) {
-    const { data: saved } = await supabase
-      .from('attempt_answers')
-      .select('question_id, selected_option')
-      .eq('attempt_id', existing.id);
-
-    const initialAnswers: Record<string, OptionLetter> = {};
-    for (const row of saved ?? []) {
-      if (row.selected_option) {
-        initialAnswers[row.question_id] = row.selected_option as OptionLetter;
-      }
-    }
-
-    return NextResponse.json({ attempt: existing, initialAnswers, resumed: true });
+    await supabase.rpc('forfeit_attempt', {
+      p_attempt_id: existing.id,
+      p_violation_type: 'abandoned_session',
+      p_question_id: null,
+      p_elapsed_seconds: null,
+      p_ip: null,
+      p_device: null,
+      p_browser: null,
+      p_os: null,
+      p_user_agent: null,
+      p_metadata: { source: 'exam_start_resume_blocked' },
+    });
+    return NextResponse.json(
+      {
+        error: 'Prova encerrada por segurança (retomada não permitida)',
+        attemptId: existing.id,
+        forfeited: true,
+      },
+      { status: 400 }
+    );
   }
 
   const { data: attempt, error } = await supabase

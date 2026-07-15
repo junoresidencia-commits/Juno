@@ -6,6 +6,9 @@ import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import { getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 import { formatDuration } from '@/lib/format';
+import { useExamAntiFraud } from '@/hooks/useExamAntiFraud';
+import { ExamTerminatedOverlay } from '@/components/exam/ExamTerminatedOverlay';
+import type { ViolationType } from '@/lib/exams/anti-fraud';
 
 interface ExamQuestion extends Question {
   order_number: number;
@@ -22,6 +25,8 @@ interface Props {
   apiBase?: string;
   finishLabel?: string;
   linearMode?: boolean;
+  /** Tolerância zero — disputa diária. Desligado em simulados. */
+  antiFraud?: boolean;
 }
 
 function secondsOnQuestion(questionStartedAtMs: number, now = Date.now()): number {
@@ -39,6 +44,7 @@ export function ExamRunner({
   apiBase = '/api/attempts',
   finishLabel = 'Finalizar prova',
   linearMode = true,
+  antiFraud = true,
 }: Props) {
   const router = useRouter();
   const questionLimit = getQuestionTimeLimitSeconds(durationMinutes, questions.length);
@@ -55,9 +61,11 @@ export function ExamRunner({
   const [questionRemaining, setQuestionRemaining] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [pendingChoice, setPendingChoice] = useState<OptionLetter | null>(null);
+  const [terminated, setTerminated] = useState(false);
 
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
+  const antiFraudLockedRef = useRef(false);
   const selectingRef = useRef(false);
   const pendingRef = useRef<OptionLetter | null>(null);
   const answersRef = useRef(initialAnswers);
@@ -68,26 +76,37 @@ export function ExamRunner({
   currentIndexRef.current = currentIndex;
   submittingRef.current = submitting;
 
+  const currentQuestionId = questions[currentIndex]?.id ?? null;
+
+  const handleTerminated = useCallback((_type: ViolationType) => {
+    finishedRef.current = true;
+    antiFraudLockedRef.current = true;
+    setTerminated(true);
+    setSubmitting(true);
+    submittingRef.current = true;
+  }, []);
+
+  useExamAntiFraud({
+    enabled: antiFraud && !terminated,
+    attemptId,
+    apiBase,
+    questionId: currentQuestionId,
+    startedAt,
+    lockedRef: antiFraudLockedRef,
+    onTerminated: handleTerminated,
+  });
+
   useEffect(() => {
     setMounted(true);
     setRemaining(getEffectiveExamRemainingSeconds(startedAt, durationMinutes));
     setQuestionRemaining(questionLimit);
   }, [startedAt, durationMinutes, questionLimit]);
 
-  useEffect(() => {
-    if (finishedRef.current) return;
-    const handler = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = '';
-    };
-    window.addEventListener('beforeunload', handler);
-    return () => window.removeEventListener('beforeunload', handler);
-  }, []);
-
   const submitExam = useCallback(async (auto = false) => {
-    if (submittingRef.current) return;
+    if (submittingRef.current || finishedRef.current) return;
     setSubmitting(true);
     submittingRef.current = true;
+    antiFraudLockedRef.current = true;
     try {
       const res = await fetch(`${apiBase}/${attemptId}/submit`, {
         method: 'POST',
@@ -100,11 +119,13 @@ export function ExamRunner({
         router.push(resultPath ?? `/aluno/resultado/${attemptId}`);
         router.refresh();
       } else {
+        antiFraudLockedRef.current = false;
         alert((data as { error?: string }).error ?? 'Erro ao enviar prova');
         setSubmitting(false);
         submittingRef.current = false;
       }
     } catch {
+      antiFraudLockedRef.current = false;
       alert('Erro de conexão ao enviar prova');
       setSubmitting(false);
       submittingRef.current = false;
@@ -125,7 +146,7 @@ export function ExamRunner({
 
   const pickOption = useCallback(
     (option: OptionLetter) => {
-      if (submittingRef.current) return;
+      if (submittingRef.current || finishedRef.current) return;
       const question = questions[currentIndexRef.current];
       if (!question || answersRef.current[question.id]) return;
 
@@ -137,7 +158,7 @@ export function ExamRunner({
 
   const handleNext = useCallback(() => {
     const choice = pendingRef.current;
-    if (!choice || selectingRef.current || submittingRef.current) return;
+    if (!choice || selectingRef.current || submittingRef.current || finishedRef.current) return;
 
     const index = currentIndexRef.current;
     const question = questions[index];
@@ -165,7 +186,9 @@ export function ExamRunner({
 
   const skipQuestion = useCallback(
     (index: number) => {
-      if (selectingRef.current || submittingRef.current || pendingRef.current) return;
+      if (selectingRef.current || submittingRef.current || pendingRef.current || finishedRef.current) {
+        return;
+      }
       const question = questions[index];
       if (!question || answersRef.current[question.id]) return;
 
@@ -187,7 +210,7 @@ export function ExamRunner({
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (submittingRef.current) return;
+      if (submittingRef.current || finishedRef.current) return;
       const index = currentIndexRef.current;
       const question = questions[index];
       if (!question || answersRef.current[question.id]) return;
@@ -218,9 +241,10 @@ export function ExamRunner({
   }, [currentIndex, questionLimit]);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || terminated) return;
 
     const tick = () => {
+      if (finishedRef.current) return;
       const examSecs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
       setRemaining(examSecs);
       if (examSecs <= 0) {
@@ -246,7 +270,17 @@ export function ExamRunner({
     tick();
     const interval = setInterval(tick, 250);
     return () => clearInterval(interval);
-  }, [durationMinutes, linearMode, mounted, questionLimit, questions, skipQuestion, startedAt, submitExam]);
+  }, [
+    durationMinutes,
+    linearMode,
+    mounted,
+    questionLimit,
+    questions,
+    skipQuestion,
+    startedAt,
+    submitExam,
+    terminated,
+  ]);
 
   const current = questions[currentIndex];
   if (!current) return null;
@@ -255,7 +289,7 @@ export function ExamRunner({
   const isUrgent = remaining <= 300;
   const questionUrgent = questionRemaining <= 20;
   const questionConfirmed = Boolean(answers[current.id]);
-  const canPick = !questionConfirmed && !submitting;
+  const canPick = !questionConfirmed && !submitting && !terminated;
   const isLastQuestion = currentIndex >= questions.length - 1;
   const questionLimitLabel =
     questionLimit % 60 === 0
@@ -268,11 +302,26 @@ export function ExamRunner({
   const progressPct = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8">
+    <div
+      className={`exam-secure-shell mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8 ${
+        antiFraud ? 'exam-no-select' : ''
+      }`}
+    >
+      {terminated ? <ExamTerminatedOverlay attemptId={attemptId} /> : null}
+
+      {antiFraud ? (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+          <strong>Modo prova — tolerância zero.</strong> Sair da tela, trocar de aba, copiar,
+          selecionar texto, botão direito ou abrir DevTools encerra a prova imediatamente.
+        </div>
+      ) : null}
+
       <div className="mb-4">
         <div className="mb-1 flex justify-between text-xs font-medium text-slate-600">
           <span>Progresso</span>
-          <span>{answeredCount}/{questions.length} · {progressPct}%</span>
+          <span>
+            {answeredCount}/{questions.length} · {progressPct}%
+          </span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-slate-200">
           <div
@@ -299,7 +348,9 @@ export function ExamRunner({
         </div>
         {linearMode && (
           <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo nesta questão</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
+              Tempo nesta questão
+            </p>
             <p
               suppressHydrationWarning
               className={`mt-1 font-mono text-2xl font-bold tabular-nums ${
@@ -322,10 +373,17 @@ export function ExamRunner({
             {current.subtopic ? ` · ${current.subtopic}` : ''}
           </p>
         )}
-        <p className="exam-no-select whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
+        <p className="exam-no-select whitespace-pre-wrap text-base leading-relaxed text-slate-900">
+          {current.statement}
+        </p>
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={current.image_url} alt="Imagem da questão" className="mt-4 max-h-64 rounded-lg" />
+          <img
+            src={current.image_url}
+            alt="Imagem da questão"
+            className="mt-4 max-h-64 rounded-lg pointer-events-none"
+            draggable={false}
+          />
         )}
       </div>
 
@@ -355,7 +413,9 @@ export function ExamRunner({
               >
                 {letter}
               </span>
-              <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
+              <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">
+                {text}
+              </span>
             </button>
           );
         })}
@@ -365,7 +425,8 @@ export function ExamRunner({
         <div className="mb-8">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
-              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — confirme abaixo para continuar
+              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — confirme
+              abaixo para continuar
             </p>
           ) : (
             <p className="mb-2 text-center text-sm text-slate-500">
@@ -385,7 +446,7 @@ export function ExamRunner({
         </div>
       )}
 
-      {!linearMode && (
+      {!linearMode && !terminated && (
         <>
           <div className="mb-6 flex flex-wrap gap-2">
             {questions.map((q, i) => (

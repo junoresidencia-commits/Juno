@@ -12,6 +12,7 @@ import {
 } from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import { forfeitDemoAttempt } from '@/lib/demo/runtime';
 
 export default async function AlunoDashboard() {
   const session = await requireAuth();
@@ -20,12 +21,19 @@ export default async function AlunoDashboard() {
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
     const { userId } = session;
-    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
+    let { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
       getDemoDashboardData(userId);
 
-    const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
+    // Tolerância zero: tentativa abandonada / sem forfeit = anulada
+    if (todayExam && attempt && !attempt.finished_at) {
+      attempt = forfeitDemoAttempt(attempt.id, { violationType: 'abandoned_session' });
+      ({ todayRankings, showRanking, finishedToday, streakDays } = getDemoDashboardData(userId));
+      showRanking = canStudentSeeTodayRanking(todayExam, true);
+    }
+
+    const canContinue = false;
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-    const completed = Boolean(todayExam && attempt?.finished_at);
+    const completed = Boolean(todayExam && attempt?.finished_at && !attempt.forfeited);
     const forfeitedToday = Boolean(todayExam && attempt?.finished_at && attempt.forfeited);
     const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
 
@@ -67,27 +75,36 @@ export default async function AlunoDashboard() {
   let { data: attempt } = todayExam
     ? await supabase
         .from('attempts')
-        .select('id, finished_at, submitted_automatically')
+        .select('id, finished_at, submitted_automatically, forfeited, forfeit_reason')
         .eq('exam_id', todayExam.id)
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
 
-  if (attempt && !attempt.finished_at && windowPhase === 'after') {
-    await supabase.rpc('submit_attempt', {
+  if (attempt && !attempt.finished_at) {
+    // Sessão abandonada (sem Continuar): anula com tolerância zero
+    await supabase.rpc('forfeit_attempt', {
       p_attempt_id: attempt.id,
-      p_auto: true,
+      p_violation_type: 'abandoned_session',
+      p_question_id: null,
+      p_elapsed_seconds: null,
+      p_ip: null,
+      p_device: null,
+      p_browser: null,
+      p_os: null,
+      p_user_agent: null,
+      p_metadata: { source: 'aluno_home' },
     });
     const { data: refreshed } = await supabase
       .from('attempts')
-      .select('id, finished_at, submitted_automatically')
+      .select('id, finished_at, submitted_automatically, forfeited, forfeit_reason')
       .eq('id', attempt.id)
       .single();
     attempt = refreshed;
   }
 
-  const hasFinished = Boolean(attempt?.finished_at);
-  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
+  const hasFinished = Boolean(attempt?.finished_at && !attempt?.forfeited);
+  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished || Boolean(attempt?.forfeited));
   const rankingDate = getTodayRankingDate();
 
   const { data: todayRankings } = showRanking
@@ -100,10 +117,10 @@ export default async function AlunoDashboard() {
         .limit(15)
     : { data: null };
 
-  const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
+  const canContinue = false;
   const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-  const completed = Boolean(todayExam && attempt?.finished_at);
-  const forfeitedToday = false;
+  const completed = Boolean(todayExam && attempt?.finished_at && !attempt.forfeited);
+  const forfeitedToday = Boolean(todayExam && attempt?.finished_at && attempt.forfeited);
   const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
 
   return (

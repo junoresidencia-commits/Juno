@@ -7,6 +7,7 @@ import type { OptionLetter, Question } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
 import {
   createDemoAttempt,
+  forfeitDemoAttempt,
   getDemoAttemptAnswers,
   getDemoAttemptByExam,
 } from '@/lib/demo/runtime';
@@ -38,8 +39,15 @@ export default async function ProvaPage({
       redirect(`/aluno/resultado/${attempt.id}`);
     }
 
-    if (!attempt) {
-      attempt = createDemoAttempt(examId, userId);
+    if (attempt && !attempt.finished_at) {
+      // Retomada proibida (tolerância zero)
+      attempt = forfeitDemoAttempt(attempt.id, { violationType: 'abandoned_session' });
+      redirect(`/aluno/resultado/${attempt.id}`);
+    }
+
+    attempt = createDemoAttempt(examId, userId);
+    if (attempt.finished_at) {
+      redirect(`/aluno/resultado/${attempt.id}`);
     }
 
     const questions = getDemoExamQuestions(examId);
@@ -47,8 +55,8 @@ export default async function ProvaPage({
 
     return (
       <div>
-        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-          {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
+        <div className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-950">
+          Modo prova · tolerância zero. Sair da tela encerra imediatamente. {formatExamWindowLabel()}.
         </div>
         <ExamRunner
           attemptId={attempt.id}
@@ -57,6 +65,7 @@ export default async function ProvaPage({
           startedAt={attempt.started_at}
           questions={questions}
           initialAnswers={initialAnswers}
+          antiFraud
         />
       </div>
     );
@@ -81,6 +90,22 @@ export default async function ProvaPage({
     .maybeSingle();
 
   if (attempt?.finished_at) {
+    redirect(`/aluno/resultado/${attempt.id}`);
+  }
+
+  if (attempt && !attempt.finished_at) {
+    await supabase.rpc('forfeit_attempt', {
+      p_attempt_id: attempt.id,
+      p_violation_type: 'abandoned_session',
+      p_question_id: null,
+      p_elapsed_seconds: null,
+      p_ip: null,
+      p_device: null,
+      p_browser: null,
+      p_os: null,
+      p_user_agent: null,
+      p_metadata: { source: 'prova_resume_blocked' },
+    });
     redirect(`/aluno/resultado/${attempt.id}`);
   }
 
@@ -126,8 +151,8 @@ export default async function ProvaPage({
 
   return (
     <div>
-      <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-        {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
+      <div className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-sm text-red-950">
+        Modo prova · tolerância zero. Sair da tela encerra imediatamente. {formatExamWindowLabel()}.
       </div>
       <ExamRunner
         attemptId={attempt.id}
@@ -136,6 +161,7 @@ export default async function ProvaPage({
         startedAt={attempt.started_at}
         questions={questions}
         initialAnswers={initialAnswers}
+        antiFraud
       />
     </div>
   );

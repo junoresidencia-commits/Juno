@@ -95,14 +95,16 @@ export function AlunoHomeSimple({
             )}
             {forfeitedToday && (
               <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Você saiu da disputa</p>
-                <p className="mt-2 text-sm text-red-700">Perdeu o dia — não dá para refazer hoje.</p>
+                <p className="text-lg font-semibold text-red-900">PROVA ENCERRADA</p>
+                <p className="mt-2 text-sm text-red-700">
+                  Violação de segurança detectada. Pontuação zerada — nova tentativa só no próximo dia.
+                </p>
                 {attemptId && (
                   <Link
                     href={resultHref}
                     className="mt-4 inline-block text-sm font-medium text-red-800 underline-offset-2 hover:underline"
                   >
-                    Ver o que ficou registrado →
+                    Ver registro →
                   </Link>
                 )}
               </div>

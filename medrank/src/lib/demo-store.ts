@@ -42,6 +42,18 @@ interface DemoStore {
     percentage: number | null;
     submittedAutomatically: boolean;
     forfeited?: boolean;
+    forfeitReason?: string;
+    violation?: {
+      type: string;
+      questionId?: string | null;
+      at: string;
+      ip?: string | null;
+      device?: string | null;
+      browser?: string | null;
+      os?: string | null;
+      userAgent?: string | null;
+      metadata?: Record<string, unknown>;
+    };
     answers: Record<string, string>;
     answerTimes?: Record<string, number>;
   }[];

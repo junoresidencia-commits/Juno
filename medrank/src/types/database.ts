@@ -87,6 +87,8 @@ export interface Attempt {
   submitted_automatically: boolean;
   created_at: string;
   forfeited?: boolean;
+  forfeit_reason?: string | null;
+  forfeited_at?: string | null;
 }
 
 export interface AttemptAnswer {
