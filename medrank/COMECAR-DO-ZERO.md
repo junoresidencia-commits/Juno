@@ -8,6 +8,11 @@ fazia o middleware crashar.
 
 → **[`SETUP-VERCEL-SUPABASE.md`](./SETUP-VERCEL-SUPABASE.md)**
 
+## Grupos (ligas / turmas)
+
+→ **[`docs/PASSO-A-PASSO-GRUPOS.md`](./docs/PASSO-A-PASSO-GRUPOS.md)**  
+PR: https://github.com/junoresidencia-commits/Juno/pull/18
+
 ## Só demo rápido (sem Supabase ainda)
 
 Se quiser um link fixo hoje e plugar Supabase depois:
