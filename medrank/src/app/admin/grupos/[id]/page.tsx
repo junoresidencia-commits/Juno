@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireRole } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
-import { isDemoMode } from '@/lib/demo-auth';
 import { listDemoStudents } from '@/lib/demo-store';
 import {
   buildDemoGroupRankings,
@@ -10,10 +9,10 @@ import {
   listDemoGroupMembers,
 } from '@/lib/groups/demo';
 import { createClient } from '@/lib/supabase/server';
-import { getWeekEnd, getWeekStart } from '@/lib/periods';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { getWeekEnd, getWeekStart, getPeriodBounds } from '@/lib/periods';
 import { GroupDetailManager } from '@/components/admin/GroupDetailManager';
 import { todayDateStringBrazil } from '@/lib/exams/window';
-import { getPeriodBounds } from '@/lib/periods';
 
 export default async function AdminGrupoDetailPage({
   params,
@@ -25,7 +24,7 @@ export default async function AdminGrupoDetailPage({
   const weekStart = getWeekStart();
   const weekEnd = getWeekEnd();
 
-  if (usesDemoStore() || isDemoMode()) {
+  if (usesDemoStore()) {
     const group = getDemoStudyGroup(id);
     if (!group) notFound();
     const members = listDemoGroupMembers(id);
@@ -62,8 +61,17 @@ export default async function AdminGrupoDetailPage({
     );
   }
 
-  const supabase = await createClient();
-  const { data: group } = await supabase.from('study_groups').select('*').eq('id', id).maybeSingle();
+  // Prefer service_role: evita 404 quando RLS/is_admin falha na sessão
+  const supabase = createAdminClient() ?? (await createClient());
+  const { data: group, error: groupError } = await supabase
+    .from('study_groups')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (groupError) {
+    console.error('[admin/grupos/id]', groupError.message);
+  }
   if (!group) notFound();
 
   const [{ data: members }, { data: students }, { data: challenges }] = await Promise.all([

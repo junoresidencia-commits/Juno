@@ -41,6 +41,11 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
       { ...data.group, member_count: 0 },
       ...prev,
     ]);
+    if (data.group?.id) {
+      router.push(`/admin/grupos/${data.group.id}`);
+      router.refresh();
+      return;
+    }
     router.refresh();
   }
 
