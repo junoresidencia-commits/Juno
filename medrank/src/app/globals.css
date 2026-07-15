@@ -74,6 +74,18 @@
     touch-action: manipulation;
   }
 
+  .exam-secure-shell {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .exam-secure-shell img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+  }
+
   /* Botões da prova: alvo grande no celular, clique no desktop */
   .exam-tap {
     touch-action: manipulation;

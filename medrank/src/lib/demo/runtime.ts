@@ -25,6 +25,8 @@ function mapStoredAttempt(item: StoredAttempt): Attempt {
     submitted_automatically: item.submittedAutomatically,
     created_at: item.startedAt,
     forfeited: item.forfeited ?? false,
+    forfeit_reason: item.forfeitReason ?? null,
+    forfeited_at: item.forfeited ? item.finishedAt : null,
   };
 }
 
@@ -114,13 +116,53 @@ export function getDemoAttemptAnswers(attemptId: string): AttemptAnswer[] {
   });
 }
 
-export function forfeitDemoAttempt(attemptId: string) {
+export function forfeitDemoAttempt(
+  attemptId: string,
+  details?: {
+    violationType?: string;
+    questionId?: string | null;
+    elapsedSeconds?: number | null;
+    ip?: string | null;
+    device?: string | null;
+    browser?: string | null;
+    os?: string | null;
+    userAgent?: string | null;
+    metadata?: Record<string, unknown>;
+  }
+) {
   const attempt = (getDemoAttempts() ?? []).find((item) => item.id === attemptId);
   if (!attempt) throw new Error('Tentativa não encontrada');
-  if (attempt.finishedAt) return mapStoredAttempt(attempt);
+  if (attempt.finishedAt) {
+    return { ...mapStoredAttempt(attempt), already_finished: true };
+  }
+
+  const startedAt = new Date(attempt.startedAt).getTime();
+  const elapsed =
+    details?.elapsedSeconds != null
+      ? Math.max(0, details.elapsedSeconds)
+      : Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+
   attempt.forfeited = true;
+  attempt.forfeitReason = details?.violationType ?? 'other';
+  attempt.finishedAt = new Date().toISOString();
+  attempt.durationSeconds = elapsed;
+  attempt.totalCorrect = 0;
+  attempt.percentage = 0;
+  attempt.score = 0;
+  attempt.submittedAutomatically = true;
+  attempt.violation = {
+    type: details?.violationType ?? 'other',
+    questionId: details?.questionId ?? null,
+    at: attempt.finishedAt,
+    ip: details?.ip ?? null,
+    device: details?.device ?? null,
+    browser: details?.browser ?? null,
+    os: details?.os ?? null,
+    userAgent: details?.userAgent ?? null,
+    metadata: details?.metadata ?? {},
+  };
   saveDemoAttempt(attempt);
-  return submitDemoAttempt(attemptId, true);
+  return mapStoredAttempt(attempt);
 }
 
 export function forfeitAbandonedDemoAttempt(examId: string, userId: string): Attempt | null {

@@ -16,6 +16,24 @@ import { getDemoExams } from '@/lib/demo/content';
 import { getDemoRanking, getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { GabaritoReview, type GabaritoRow } from '@/components/exam/GabaritoReview';
 import { ResultInsightsPanel } from '@/components/exam/ResultInsightsPanel';
+import { EXAM_TERMINATED_BODY, EXAM_TERMINATED_TITLE } from '@/lib/exams/anti-fraud';
+
+function ForfeitBanner() {
+  return (
+    <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-950">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-700">Segurança</p>
+      <h2 className="mt-2 text-xl font-bold">{EXAM_TERMINATED_TITLE}</h2>
+      <div className="mt-3 space-y-2 text-sm leading-relaxed text-red-900">
+        {EXAM_TERMINATED_BODY.split('\n\n').map((para) => (
+          <p key={para.slice(0, 24)}>{para}</p>
+        ))}
+      </div>
+      <p className="mt-3 text-sm font-medium text-red-800">
+        Pontuação zerada · sem XP/moedas · acertos não computados · ranking não atualizado por esta tentativa.
+      </p>
+    </div>
+  );
+}
 
 function ResultStats({
   totalCorrect,
@@ -104,35 +122,55 @@ export default async function ResultadoPage({
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6">
         <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-        <h1 className="mt-4 text-2xl font-bold text-slate-900">Resultado da disputa</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">
+          {attempt.forfeited ? 'Prova encerrada' : 'Resultado da disputa'}
+        </h1>
         <p className="text-slate-600">{exam?.title}</p>
-        <p className="mt-2 text-xs text-slate-600">
-          {formatRankingScoreExplanation(attempt.total_questions ?? exam?.total_questions ?? 20)}
-        </p>
-        <ResultInsightsPanel
-          score={attempt.score ?? 0}
-          maxScore={maxScore}
-          position={ranking?.position ?? null}
-          insights={insights}
-          showGabarito={showGabarito}
-        />
-        <ResultStats
-          totalCorrect={attempt.total_correct ?? 0}
-          totalWrong={totalWrong}
-          percentage={attempt.percentage}
-          durationSeconds={attempt.duration_seconds ?? 0}
-        />
-        {attempt.submitted_automatically && (
-          <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
-            Disputa enviada automaticamente ao fim do tempo.
-          </p>
-        )}
-        {showGabarito ? (
-          <GabaritoReview rows={gabaritoRows} />
+        {attempt.forfeited ? <ForfeitBanner /> : null}
+        {!attempt.forfeited ? (
+          <>
+            <p className="mt-2 text-xs text-slate-600">
+              {formatRankingScoreExplanation(attempt.total_questions ?? exam?.total_questions ?? 20)}
+            </p>
+            <ResultInsightsPanel
+              score={attempt.score ?? 0}
+              maxScore={maxScore}
+              position={ranking?.position ?? null}
+              insights={insights}
+              showGabarito={showGabarito}
+            />
+            <ResultStats
+              totalCorrect={attempt.total_correct ?? 0}
+              totalWrong={totalWrong}
+              percentage={attempt.percentage}
+              durationSeconds={attempt.duration_seconds ?? 0}
+            />
+            {attempt.submitted_automatically && (
+              <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
+                Disputa enviada automaticamente ao fim do tempo.
+              </p>
+            )}
+            {showGabarito ? (
+              <GabaritoReview rows={gabaritoRows} />
+            ) : (
+              <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
+                {studentGabaritoBeforeWindowMessage()}
+              </p>
+            )}
+          </>
         ) : (
-          <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
-            {studentGabaritoBeforeWindowMessage()}
-          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <p className="text-sm text-slate-600">Pontuação</p>
+              <p className="text-2xl font-bold text-red-700">0</p>
+            </div>
+            <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <p className="text-sm text-slate-600">Tempo até encerrar</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {formatDuration(attempt.duration_seconds ?? 0)}
+              </p>
+            </div>
+          </div>
         )}
       </div>
     );
@@ -222,35 +260,61 @@ export default async function ResultadoPage({
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6 text-slate-900">
       <Link href="/aluno" className="text-sm text-emerald-700">← Voltar</Link>
-      <h1 className="mt-4 text-2xl font-bold text-slate-900">Resultado da disputa</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">
+        {attempt.forfeited ? 'Prova encerrada' : 'Resultado da disputa'}
+      </h1>
       <p className="text-slate-600">{exam.title}</p>
-      <p className="mt-2 text-xs text-slate-600">
-        {formatRankingScoreExplanation(attempt.total_questions ?? exam.total_questions)}
-      </p>
-      <ResultInsightsPanel
-        score={attempt.score ?? 0}
-        maxScore={maxScore}
-        position={ranking?.position ?? null}
-        insights={insights}
-        showGabarito={showGabarito}
-      />
-      <ResultStats
-        totalCorrect={attempt.total_correct ?? 0}
-        totalWrong={totalWrong}
-        percentage={attempt.percentage}
-        durationSeconds={attempt.duration_seconds ?? 0}
-      />
-      {attempt.submitted_automatically && (
-        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
-          Disputa enviada automaticamente ao fim do tempo.
-        </p>
-      )}
-      {showGabarito ? (
-        <GabaritoReview rows={gabaritoRows} />
+      {attempt.forfeited ? <ForfeitBanner /> : null}
+      {!attempt.forfeited ? (
+        <>
+          <p className="mt-2 text-xs text-slate-600">
+            {formatRankingScoreExplanation(attempt.total_questions ?? exam.total_questions)}
+          </p>
+          <ResultInsightsPanel
+            score={attempt.score ?? 0}
+            maxScore={maxScore}
+            position={ranking?.position ?? null}
+            insights={insights}
+            showGabarito={showGabarito}
+          />
+          <ResultStats
+            totalCorrect={attempt.total_correct ?? 0}
+            totalWrong={totalWrong}
+            percentage={attempt.percentage}
+            durationSeconds={attempt.duration_seconds ?? 0}
+          />
+          {attempt.submitted_automatically && (
+            <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
+              Disputa enviada automaticamente ao fim do tempo.
+            </p>
+          )}
+          {showGabarito ? (
+            <GabaritoReview rows={gabaritoRows} />
+          ) : (
+            <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
+              {studentGabaritoBeforeWindowMessage()}
+            </p>
+          )}
+        </>
       ) : (
-        <p className="mt-8 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
-          {studentGabaritoBeforeWindowMessage()}
-        </p>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+            <p className="text-sm text-slate-600">Pontuação</p>
+            <p className="text-2xl font-bold text-red-700">0</p>
+          </div>
+          <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+            <p className="text-sm text-slate-600">Tempo até encerrar</p>
+            <p className="text-2xl font-bold text-slate-900">
+              {formatDuration(attempt.duration_seconds ?? 0)}
+            </p>
+          </div>
+          {attempt.forfeit_reason ? (
+            <div className="col-span-2 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <p className="text-sm text-slate-600">Tipo da infração</p>
+              <p className="mt-1 font-mono text-sm font-semibold">{attempt.forfeit_reason}</p>
+            </div>
+          ) : null}
+        </div>
       )}
     </div>
   );

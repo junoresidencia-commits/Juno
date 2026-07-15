@@ -36,6 +36,7 @@ export function DisputeOnboarding() {
             <li>• <strong className="text-white">1 chance por dia</strong> — 20 questões mistas</li>
             <li>• <strong className="text-white">Máx. 2.000 pts</strong> — acerto rápido vale mais</li>
             <li>• <strong className="text-white">Janela 7h–23h59</strong> (horário de Brasília)</li>
+            <li>• <strong className="text-white">Tolerância zero</strong> — sair da tela ou copiar/selecionar encerra a prova na hora</li>
             <li>• Ranking atualiza conforme a turma termina</li>
           </ul>
         </div>
