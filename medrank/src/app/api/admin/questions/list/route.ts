@@ -25,13 +25,34 @@ export async function GET(request: Request) {
   const search = searchParams.get('search');
   const limit = Math.min(Number(searchParams.get('limit') ?? 50), 100);
 
+  const STYLE_FILTERS = new Set([
+    'USP',
+    'USP-RP',
+    'UNIFESP',
+    'UNICAMP',
+    'SUS-SP',
+    'PSU-MG',
+    'AMP',
+    'SES-PE',
+    'HCPA',
+    'UFRGS',
+    'UFMG',
+    'UFPR',
+  ]);
+
   let query = supabase
     .from('questions')
     .select('id, statement, source, topic, subtopic, difficulty, year')
     .order('created_at', { ascending: false })
     .limit(limit);
 
-  if (source) query = query.eq('source', source);
+  if (source) {
+    if (STYLE_FILTERS.has(source)) {
+      query = query.contains('tags', [`estilo-${source}`]);
+    } else {
+      query = query.eq('source', source);
+    }
+  }
   if (topic) query = query.eq('topic', topic);
   if (search) query = query.ilike('statement', `%${search}%`);
 
