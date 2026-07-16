@@ -76,7 +76,8 @@ export function GroupDetailManager({
     router.refresh();
   }
 
-  async function removeMember(userId: string) {
+  async function removeMember(userId: string, memberName: string) {
+    if (!confirm(`Excluir ${memberName} deste grupo?`)) return;
     setLoading(true);
     setError('');
     const res = await fetch(`/api/admin/groups/${groupId}/members`, {
@@ -87,11 +88,11 @@ export function GroupDetailManager({
     const data = await res.json();
     setLoading(false);
     if (!res.ok) {
-      setError(data.error ?? 'Falha ao remover');
+      setError(data.error ?? 'Falha ao excluir pessoa do grupo');
       return;
     }
     setMembers((prev) => prev.filter((m) => m.user_id !== userId));
-    setMessage('Membro removido');
+    setMessage('Pessoa excluída do grupo');
     router.refresh();
   }
 
