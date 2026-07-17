@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.practice_sessions (
   title TEXT NOT NULL,
   mode TEXT NOT NULL DEFAULT 'prova',
   topic_filter TEXT,
+  liga TEXT,
   question_ids TEXT[] NOT NULL,
   answers JSONB NOT NULL DEFAULT '{}'::jsonb,
   answer_times JSONB NOT NULL DEFAULT '{}'::jsonb,

@@ -68,6 +68,7 @@ export async function POST() {
     ...loadBankFile('supplement-questions.json'),
     ...loadBankFile('original-style-questions.json'),
     ...loadBankFile('nefropediatria-questions.json'),
+    ...loadBankFile('nefrologia-avancada-questions.json'),
   ];
 
   // Deduplicate by statement

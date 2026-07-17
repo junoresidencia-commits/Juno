@@ -5,11 +5,14 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 import {
   durationForCount,
-  getNefropediatriaQuestionsFromFile,
-  listNefropediatriaTopics,
+  getTrackQuestionsFromFile,
+  leagueTopicBias,
+  listTrackTopics,
   NEFROPEDIATRIA_TRACK,
   shufflePick,
+  TRACK_CONFIG,
   type TreinoSize,
+  type TreinoTrack,
 } from '@/lib/treino/bank';
 import {
   applySrsResult,
@@ -29,7 +32,7 @@ import {
   type StoredTreino,
 } from '@/lib/demo-store';
 
-export type TreinoMode = 'prova' | 'tema' | 'srs';
+export type TreinoMode = 'prova' | 'tema' | 'srs' | 'liga';
 
 export interface TreinoSession {
   id: string;
@@ -38,6 +41,7 @@ export interface TreinoSession {
   title: string;
   mode: TreinoMode;
   topic_filter: string | null;
+  liga: string | null;
   question_ids: string[];
   duration_minutes: number;
   started_at: string;
@@ -52,9 +56,11 @@ export interface TreinoSession {
 
 export interface CreateTreinoOptions {
   userId: string;
+  track?: TreinoTrack;
   count?: TreinoSize | number;
   mode?: TreinoMode;
   topic?: string | null;
+  liga?: string | null;
 }
 
 function mapStored(stored: StoredTreino): TreinoSession {
@@ -65,6 +71,7 @@ function mapStored(stored: StoredTreino): TreinoSession {
     title: stored.title,
     mode: (stored.mode as TreinoMode) || 'prova',
     topic_filter: stored.topicFilter ?? null,
+    liga: stored.liga ?? null,
     question_ids: stored.questionIds,
     duration_minutes: stored.durationMinutes,
     started_at: stored.startedAt,
@@ -86,6 +93,7 @@ function mapDbRow(row: Record<string, unknown>): TreinoSession {
     title: String(row.title),
     mode: (row.mode as TreinoMode) || 'prova',
     topic_filter: (row.topic_filter as string | null) ?? null,
+    liga: (row.liga as string | null) ?? null,
     question_ids: (row.question_ids as string[]) ?? [],
     duration_minutes: Number(row.duration_minutes),
     started_at: String(row.started_at),
@@ -129,15 +137,17 @@ async function saveProgress(userId: string, progress: TreinoProgressStore): Prom
 }
 
 async function pickProductionQuestions(
+  track: TreinoTrack,
   count: number,
-  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[] }
+  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[]; liga?: string | null }
 ): Promise<Question[]> {
   const admin = createAdminClient();
   if (!admin) {
     throw new Error('Supabase não configurado para treino. Peça ao admin para importar o banco.');
   }
 
-  let query = admin.from('questions').select('*').contains('tags', ['nefropediatria']);
+  const tag = TRACK_CONFIG[track].tag;
+  let query = admin.from('questions').select('*').contains('tags', [tag]);
   if (opts.topic) {
     query = query.eq('topic', opts.topic);
   }
@@ -146,17 +156,14 @@ async function pickProductionQuestions(
   if (error) throw new Error(error.message);
 
   let pool = (data ?? []) as Question[];
-  if (pool.length < count && !opts.topic) {
-    const { data: sbnPool } = await admin
-      .from('questions')
-      .select('*')
-      .contains('tags', ['estilo-SBN']);
-    const seen = new Set(pool.map((q) => q.id));
-    for (const q of (sbnPool ?? []) as Question[]) {
-      if (!seen.has(q.id)) {
-        pool.push(q);
-        seen.add(q.id);
-      }
+
+  const bias = leagueTopicBias(opts.liga);
+  if (bias?.length && !opts.topic) {
+    const boosted = pool.filter((q) =>
+      bias.some((b) => q.topic?.includes(b) || q.subtopic?.includes(b) || q.tags?.some((t) => t.includes(b)))
+    );
+    if (boosted.length >= Math.ceil(count * 0.5)) {
+      pool = [...boosted, ...pool.filter((q) => !boosted.includes(q))];
     }
   }
 
@@ -183,7 +190,7 @@ async function pickProductionQuestions(
       pool.filter((q) => opts.preferIds!.includes(q.id)),
       count
     );
-    if (preferred.length >= Math.min(count, opts.preferIds.length)) {
+    if (preferred.length > 0) {
       if (preferred.length >= count) return preferred.slice(0, count);
       const fill = mixDifficulty(
         pool.filter((q) => !preferred.some((p) => p.id === q.id)),
@@ -193,14 +200,29 @@ async function pickProductionQuestions(
     }
   }
 
+  if (bias?.length && !opts.topic) {
+    const preferred = mixDifficulty(
+      pool.filter((q) =>
+        bias.some((b) => q.topic?.includes(b) || q.subtopic?.includes(b))
+      ),
+      Math.min(count, Math.ceil(count * 0.6))
+    );
+    const fill = mixDifficulty(
+      pool.filter((q) => !preferred.some((p) => p.id === q.id)),
+      count - preferred.length
+    );
+    return shufflePick([...preferred, ...fill], count);
+  }
+
   return mixDifficulty(pool, count);
 }
 
 function pickDemoQuestions(
+  track: TreinoTrack,
   count: number,
-  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[] }
+  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[]; liga?: string | null }
 ): Question[] {
-  let pool = getNefropediatriaQuestionsFromFile();
+  let pool = getTrackQuestionsFromFile(track);
   if (opts.topic) {
     pool = pool.filter((q) => q.topic === opts.topic || q.subtopic === opts.topic);
   }
@@ -208,9 +230,11 @@ function pickDemoQuestions(
     throw new Error(
       opts.topic
         ? `Poucas questões no tema "${opts.topic}" (${pool.length}/${count}).`
-        : 'Banco de nefropediatria não encontrado no deploy.'
+        : `Banco ${TRACK_CONFIG[track].label} não encontrado no deploy.`
     );
   }
+
+  const bias = leagueTopicBias(opts.liga);
 
   if (opts.preferIds?.length) {
     const preferred = shufflePick(
@@ -233,45 +257,78 @@ function pickDemoQuestions(
     if (filtered.length >= count) pool = filtered;
   }
 
+  if (bias?.length && !opts.topic) {
+    const preferred = mixDifficulty(
+      pool.filter((q) =>
+        bias.some((b) => q.topic?.includes(b) || q.subtopic?.includes(b))
+      ),
+      Math.min(count, Math.ceil(count * 0.6))
+    );
+    const fill = mixDifficulty(
+      pool.filter((q) => !preferred.some((p) => p.id === q.id)),
+      count - preferred.length
+    );
+    return shufflePick([...preferred, ...fill], count);
+  }
+
   return mixDifficulty(pool, count);
 }
 
-function titleFor(mode: TreinoMode, count: number, topic?: string | null): string {
-  if (mode === 'srs') return `Revisão espaçada · ${count} questões`;
-  if (mode === 'tema' && topic) return `Treino · ${topic} · ${count} Q`;
-  if (count === 60) return 'Simulado SBN · 60 questões';
-  if (count === 30) return 'Treino intermediário · 30 questões';
-  return 'Treino rápido · 20 questões';
+function titleFor(
+  track: TreinoTrack,
+  mode: TreinoMode,
+  count: number,
+  topic?: string | null,
+  liga?: string | null
+): string {
+  const label = TRACK_CONFIG[track].label;
+  if (mode === 'srs') return `${label} · Revisão espaçada · ${count} Q`;
+  if (mode === 'liga' && liga) return `${liga} · ${count} Q`;
+  if (mode === 'tema' && topic) return `${label} · ${topic} · ${count} Q`;
+  if (count === 100) return `${label} · Simulado 100 questões`;
+  if (count === 60) return `${label} · Simulado 60 questões`;
+  if (count === 30) return `${label} · Treino 30 questões`;
+  return `${label} · Treino 20 questões`;
 }
 
 export async function createTreinoSession(options: CreateTreinoOptions): Promise<TreinoSession> {
+  const track: TreinoTrack = options.track ?? 'nefropediatria';
   const count = Number(options.count) || 20;
   const mode: TreinoMode = options.mode ?? 'prova';
   const topic = options.topic?.trim() || null;
+  const liga = options.liga?.trim() || null;
   const progress = await loadProgress(options.userId);
 
+  if (!TRACK_CONFIG[track].sizes.includes(count)) {
+    throw new Error(`Tamanho inválido para este banco. Use: ${TRACK_CONFIG[track].sizes.join(', ')}`);
+  }
+
   const preferIds = mode === 'srs' ? dueSrsQuestionIds(progress) : [];
-  const avoidIds = progress.recentQuestionIds.slice(0, 80);
+  const avoidIds = progress.recentQuestionIds.slice(0, 120);
+
+  const pickOpts = {
+    topic: mode === 'tema' ? topic : null,
+    preferIds,
+    avoidIds,
+    liga: mode === 'liga' ? liga : null,
+  };
 
   const questions = usesDemoStore()
-    ? pickDemoQuestions(count, { topic: mode === 'tema' ? topic : null, preferIds, avoidIds })
-    : await pickProductionQuestions(count, {
-        topic: mode === 'tema' ? topic : null,
-        preferIds,
-        avoidIds,
-      });
+    ? pickDemoQuestions(track, count, pickOpts)
+    : await pickProductionQuestions(track, count, pickOpts);
 
-  const title = titleFor(mode, count, topic);
+  const title = titleFor(track, mode, count, topic, liga);
   const durationMinutes = durationForCount(count);
 
   if (usesDemoStore()) {
     const stored: StoredTreino = {
       id: `treino-${randomUUID()}`,
       userId: options.userId,
-      track: NEFROPEDIATRIA_TRACK,
+      track,
       title,
       mode,
       topicFilter: topic,
+      liga,
       questionIds: questions.map((q) => q.id),
       durationMinutes,
       startedAt: new Date().toISOString(),
@@ -284,6 +341,7 @@ export async function createTreinoSession(options: CreateTreinoOptions): Promise
       submittedAutomatically: false,
       answers: {},
       answerTimes: {},
+      confidences: {},
     };
     saveDemoTreino(stored);
     return mapStored(stored);
@@ -298,13 +356,15 @@ export async function createTreinoSession(options: CreateTreinoOptions): Promise
   const row = {
     id,
     user_id: options.userId,
-    track: NEFROPEDIATRIA_TRACK,
+    track,
     title,
     mode,
     topic_filter: topic,
+    liga,
     question_ids: questions.map((q) => q.id),
     answers: {},
     answer_times: {},
+    confidences: {},
     duration_minutes: durationMinutes,
     started_at: new Date().toISOString(),
     finished_at: null,
@@ -318,13 +378,11 @@ export async function createTreinoSession(options: CreateTreinoOptions): Promise
 
   const { data, error } = await admin.from('practice_sessions').insert(row).select('*').single();
   if (error) {
-    // Fallback sem migration: cookie compacto (até ~30 Q)
-    if (count > 30) {
-      throw new Error(
-        `Rode a migration 020_practice_sessions.sql no Supabase para simulados de ${count} questões. (${error.message})`
-      );
-    }
-    throw new Error(error.message);
+    throw new Error(
+      error.message.includes('liga')
+        ? `${error.message} — rode a migration 020 atualizada (coluna liga).`
+        : error.message
+    );
   }
 
   return mapDbRow(data as Record<string, unknown>);
@@ -352,7 +410,7 @@ export async function getTreinoQuestions(
   let byId: Map<string, Question>;
 
   if (usesDemoStore()) {
-    byId = new Map(getNefropediatriaQuestionsFromFile().map((q) => [q.id, q]));
+    byId = new Map(getTrackQuestionsFromFile(session.track as TreinoTrack).map((q) => [q.id, q]));
   } else {
     const admin = createAdminClient();
     if (!admin) return [];
@@ -561,10 +619,11 @@ export async function getTreinoUserStats(userId: string) {
   return computeTreinoStats(progress);
 }
 
-export async function getTreinoRanking(userId: string) {
+export async function getTreinoRanking(userId: string, track?: TreinoTrack) {
+  const trackFilter = track ?? NEFROPEDIATRIA_TRACK;
   if (usesDemoStore()) {
     return getDemoTreinos()
-      .filter((s) => s.finishedAt && s.totalQuestions >= 20)
+      .filter((s) => s.finishedAt && s.totalQuestions >= 20 && s.track === trackFilter)
       .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
       .slice(0, 10)
       .map((s, index) => ({
@@ -583,7 +642,7 @@ export async function getTreinoRanking(userId: string) {
   const { data } = await admin
     .from('practice_sessions')
     .select('user_id, title, score, percentage, finished_at, total_questions')
-    .eq('track', NEFROPEDIATRIA_TRACK)
+    .eq('track', trackFilter)
     .not('finished_at', 'is', null)
     .gte('total_questions', 20)
     .order('score', { ascending: false })
@@ -600,12 +659,20 @@ export async function getTreinoRanking(userId: string) {
   }));
 }
 
+export function getTrackBankCount(track: TreinoTrack): number {
+  return getTrackQuestionsFromFile(track).length;
+}
+
 export function getNefropediatriaBankCount(): number {
-  return getNefropediatriaQuestionsFromFile().length;
+  return getTrackBankCount('nefropediatria');
 }
 
 export function getNefropediatriaTopics(): string[] {
-  return listNefropediatriaTopics();
+  return listTrackTopics('nefropediatria');
+}
+
+export function getTrackTopics(track: TreinoTrack): string[] {
+  return listTrackTopics(track);
 }
 
 /** @deprecated */

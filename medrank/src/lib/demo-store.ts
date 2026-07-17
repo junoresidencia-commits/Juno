@@ -69,6 +69,7 @@ export interface StoredTreino {
   title: string;
   mode?: string;
   topicFilter?: string | null;
+  liga?: string | null;
   questionIds: string[];
   durationMinutes: number;
   startedAt: string;

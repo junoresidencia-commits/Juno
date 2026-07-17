@@ -1,0 +1,412 @@
+{
+  "meta": {
+    "sample": 15
+  },
+  "questions": [
+    {
+      "id": "NA-000001",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Nefrites intersticiais",
+      "subtema": "Biópsia",
+      "dificuldade": "Fácil",
+      "tipo": "Caso clínico",
+      "idade": "68 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 68 anos (90 kg), área Nefrologia — Nefrites intersticiais / Biópsia. PA 110/60 mmHg, FC 70 bpm, SpO₂ 92%. Tipo: Caso clínico. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "B": "Intervenção agressiva sem indicação",
+        "C": "Observação sem seguimento em risco alto",
+        "D": "Terapia empírica sem fisiopatologia",
+        "E": "Suspender nefroproteção sem motivo"
+      },
+      "gabarito": "A",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 60,
+      "referencias": [
+        "KDIGO Guidelines (CKD, GN, BP, AKI, lipids)",
+        "Brenner & Rector's The Kidney"
+      ]
+    },
+    {
+      "id": "NA-000002",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "SLED",
+      "subtema": "Prescrição",
+      "dificuldade": "Médio",
+      "tipo": "Conduta",
+      "idade": "30 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 30 anos, em choque séptico sob noradrenalina, K 6.5, anúria e acidose. Indicação/prescrição mais adequada?",
+      "alternativas": {
+        "A": "CRRT em todo paciente estável preferindo HD intermitente sem motivo",
+        "B": "Sem anticoagulação nunca",
+        "C": "Ignorar clearance de fármacos",
+        "D": "Dose fixa sem peso",
+        "E": "Indicar CRRT em IRA com instabilidade hemodinâmica e ajustar dose de efluente/anticoagulação"
+      },
+      "gabarito": "E",
+      "explicacao": "CRRT: escolha em choque; dose e anticoagulação importam.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: lembrar ajuste de antibióticos na CRRT.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: lembrar ajuste de antibióticos na CRRT.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "ISN / ASN nephrology curricula",
+        "Jornal Brasileiro de Nefrologia — revisões"
+      ]
+    },
+    {
+      "id": "NA-000003",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Onconefrologia",
+      "subtema": "Cisplatina",
+      "dificuldade": "Médio",
+      "tipo": "Diagnóstico",
+      "idade": "41 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 41 anos (90 kg), área Nefrologia — Onconefrologia / Cisplatina. PA 112/62 mmHg, FC 72 bpm, SpO₂ 94%. Tipo: Diagnóstico. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Observação sem seguimento em risco alto",
+        "B": "Terapia empírica sem fisiopatologia",
+        "C": "Suspender nefroproteção sem motivo",
+        "D": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "E": "Intervenção agressiva sem indicação"
+      },
+      "gabarito": "D",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "UpToDate — Nephrology",
+        "Kidney International / CJASN reviews"
+      ]
+    },
+    {
+      "id": "NA-000004",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Anti-MBG",
+      "subtema": "Plasmaférese",
+      "dificuldade": "Médio",
+      "tipo": "Diagnóstico diferencial",
+      "idade": "81 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 81 anos (82 kg), área Nefrologia — Anti-MBG / Plasmaférese. PA 113/63 mmHg, FC 73 bpm, SpO₂ 95%. Tipo: Diagnóstico diferencial. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Terapia empírica sem fisiopatologia",
+        "B": "Suspender nefroproteção sem motivo",
+        "C": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "D": "Intervenção agressiva sem indicação",
+        "E": "Observação sem seguimento em risco alto"
+      },
+      "gabarito": "C",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "Harrison / Cecil — capítulos reno-cardio-metabólicos",
+        "Surviving Sepsis / KDIGO AKI em UTI"
+      ]
+    },
+    {
+      "id": "NA-000005",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Membranosa",
+      "subtema": "Anti-PLA2R",
+      "dificuldade": "Difícil",
+      "tipo": "Dose de medicamentos",
+      "idade": "80 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 80 anos, edema, albumina 1.8 g/dL, proteinúria 4.4 g/dia, creatinina 1.5. PA 114/64 mmHg, FC 74 bpm, SpO₂ 96%. Próximo passo?",
+      "alternativas": {
+        "A": "Suspender nefroproteção sem motivo",
+        "B": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "C": "Intervenção agressiva sem indicação",
+        "D": "Observação sem seguimento em risco alto",
+        "E": "Terapia empírica sem fisiopatologia"
+      },
+      "gabarito": "B",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 120,
+      "referencias": [
+        "Brenner & Rector's The Kidney",
+        "ESCMID / guidelines de infecção em diálise e transplante"
+      ]
+    },
+    {
+      "id": "NA-000006",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Síndrome nefrótica",
+      "subtema": "Membranosa",
+      "dificuldade": "Fácil",
+      "tipo": "Interpretação de exames",
+      "idade": "48 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 48 anos, edema, albumina 2.2 g/dL, proteinúria 8.8 g/dia, creatinina 1.3. PA 115/65 mmHg, FC 75 bpm, SpO₂ 97%. Próximo passo?",
+      "alternativas": {
+        "A": "Confirmar SN, investigar causa (PLA2R, etc.) e tratar conforme histologia/etiologia",
+        "B": "Diálise imediata pela proteinúria",
+        "C": "Antibiótico empírico sem infecção",
+        "D": "Nefrectomia diagnóstica",
+        "E": "Ignorar risco trombótico"
+      },
+      "gabarito": "A",
+      "explicacao": "SN do adulto exige etiologia (muitas vezes biópsia) antes de imunossuprimir.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: membranosa → checar anti-PLA2R e trombose.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: membranosa → checar anti-PLA2R e trombose.",
+      "tempo_medio_segundos": 60,
+      "referencias": [
+        "Jornal Brasileiro de Nefrologia — revisões",
+        "ACC/AHA — cardiorrenal e anticoagulação"
+      ]
+    },
+    {
+      "id": "NA-000007",
+      "especialidade": "Nefrologia",
+      "area": "Clínica Médica aplicada à Nefrologia",
+      "tema": "Endocrinologia",
+      "subtema": "DI",
+      "dificuldade": "Médio",
+      "tipo": "ECG",
+      "idade": "81 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 81 anos em HD, K 7.2, ECG com alterações. Conduta imediata?",
+      "alternativas": {
+        "A": "Intervenção agressiva sem indicação",
+        "B": "Observação sem seguimento em risco alto",
+        "C": "Terapia empírica sem fisiopatologia",
+        "D": "Suspender nefroproteção sem motivo",
+        "E": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica"
+      },
+      "gabarito": "E",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "Kidney International / CJASN reviews",
+        "KDIGO Guidelines (CKD, GN, BP, AKI, lipids)"
+      ]
+    },
+    {
+      "id": "NA-000008",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Hematúria",
+      "subtema": "Familial",
+      "dificuldade": "Médio",
+      "tipo": "Gasometria",
+      "idade": "62 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 62 anos, pH 7.11, HCO₃ 15, pCO₂ 27, ânion gap 25, K 4.9. Interpretação e conduta?",
+      "alternativas": {
+        "A": "Observação sem seguimento em risco alto",
+        "B": "Terapia empírica sem fisiopatologia",
+        "C": "Suspender nefroproteção sem motivo",
+        "D": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "E": "Intervenção agressiva sem indicação"
+      },
+      "gabarito": "D",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "Surviving Sepsis / KDIGO AKI em UTI",
+        "ISN / ASN nephrology curricula"
+      ]
+    },
+    {
+      "id": "NA-000009",
+      "especialidade": "Nefrologia",
+      "area": "Clínica Médica aplicada à Nefrologia",
+      "tema": "Endocrinologia",
+      "subtema": "Diabetes",
+      "dificuldade": "Médio",
+      "tipo": "Radiografia",
+      "idade": "64 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 64 anos (62 kg), área Endocrinologia — Endocrinologia / Diabetes. PA 118/68 mmHg, FC 78 bpm, SpO₂ 92%. Tipo: Radiografia. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Terapia empírica sem fisiopatologia",
+        "B": "Suspender nefroproteção sem motivo",
+        "C": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "D": "Intervenção agressiva sem indicação",
+        "E": "Observação sem seguimento em risco alto"
+      },
+      "gabarito": "C",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "ESCMID / guidelines de infecção em diálise e transplante",
+        "UpToDate — Nephrology"
+      ]
+    },
+    {
+      "id": "NA-000010",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Vasculites ANCA",
+      "subtema": "MPA",
+      "dificuldade": "Difícil",
+      "tipo": "Tomografia",
+      "idade": "80 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 80 anos (82 kg), área Nefrologia — Vasculites ANCA / MPA. PA 119/69 mmHg, FC 79 bpm, SpO₂ 93%. Tipo: Tomografia. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Suspender nefroproteção sem motivo",
+        "B": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "C": "Intervenção agressiva sem indicação",
+        "D": "Observação sem seguimento em risco alto",
+        "E": "Terapia empírica sem fisiopatologia"
+      },
+      "gabarito": "B",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 120,
+      "referencias": [
+        "ACC/AHA — cardiorrenal e anticoagulação",
+        "Harrison / Cecil — capítulos reno-cardio-metabólicos"
+      ]
+    },
+    {
+      "id": "NA-000011",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Doença renovascular",
+      "subtema": "Estenose",
+      "dificuldade": "Fácil",
+      "tipo": "Ultrassonografia",
+      "idade": "48 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 48 anos (78 kg), área Nefrologia — Doença renovascular / Estenose. PA 120/70 mmHg, FC 80 bpm, SpO₂ 94%. Tipo: Ultrassonografia. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "B": "Intervenção agressiva sem indicação",
+        "C": "Observação sem seguimento em risco alto",
+        "D": "Terapia empírica sem fisiopatologia",
+        "E": "Suspender nefroproteção sem motivo"
+      },
+      "gabarito": "A",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 60,
+      "referencias": [
+        "KDIGO Guidelines (CKD, GN, BP, AKI, lipids)",
+        "Brenner & Rector's The Kidney"
+      ]
+    },
+    {
+      "id": "NA-000012",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Ultrassonografia renal",
+      "subtema": "Cistos",
+      "dificuldade": "Médio",
+      "tipo": "Histopatologia",
+      "idade": "74 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 74 anos (83 kg), área Nefrologia — Ultrassonografia renal / Cistos. PA 121/71 mmHg, FC 81 bpm, SpO₂ 95%. Tipo: Histopatologia. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Intervenção agressiva sem indicação",
+        "B": "Observação sem seguimento em risco alto",
+        "C": "Terapia empírica sem fisiopatologia",
+        "D": "Suspender nefroproteção sem motivo",
+        "E": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica"
+      },
+      "gabarito": "E",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "ISN / ASN nephrology curricula",
+        "Jornal Brasileiro de Nefrologia — revisões"
+      ]
+    },
+    {
+      "id": "NA-000013",
+      "especialidade": "Nefrologia",
+      "area": "Clínica Médica aplicada à Nefrologia",
+      "tema": "Endocrinologia",
+      "subtema": "HPT secundário",
+      "dificuldade": "Médio",
+      "tipo": "Guidelines",
+      "idade": "46 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 46 anos (84 kg), área Endocrinologia — Endocrinologia / HPT secundário. PA 122/72 mmHg, FC 82 bpm, SpO₂ 96%. Tipo: Guidelines. Labs e contexto compatíveis com prática nefrológica. Melhor conduta/diagnóstico?",
+      "alternativas": {
+        "A": "Observação sem seguimento em risco alto",
+        "B": "Terapia empírica sem fisiopatologia",
+        "C": "Suspender nefroproteção sem motivo",
+        "D": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "E": "Intervenção agressiva sem indicação"
+      },
+      "gabarito": "D",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "UpToDate — Nephrology",
+        "Kidney International / CJASN reviews"
+      ]
+    },
+    {
+      "id": "NA-000014",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "SLED",
+      "subtema": "Hemodinâmica",
+      "dificuldade": "Médio",
+      "tipo": "Caso clínico",
+      "idade": "43 anos",
+      "sexo": "Feminino",
+      "questao": "Mulher, 43 anos, em choque séptico sob noradrenalina, K 6.5, anúria e acidose. Indicação/prescrição mais adequada?",
+      "alternativas": {
+        "A": "Ignorar clearance de fármacos",
+        "B": "Dose fixa sem peso",
+        "C": "Indicar CRRT em IRA com instabilidade hemodinâmica e ajustar dose de efluente/anticoagulação",
+        "D": "CRRT em todo paciente estável preferindo HD intermitente sem motivo",
+        "E": "Sem anticoagulação nunca"
+      },
+      "gabarito": "C",
+      "explicacao": "CRRT: escolha em choque; dose e anticoagulação importam.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: lembrar ajuste de antibióticos na CRRT.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: lembrar ajuste de antibióticos na CRRT.",
+      "tempo_medio_segundos": 90,
+      "referencias": [
+        "Harrison / Cecil — capítulos reno-cardio-metabólicos",
+        "Surviving Sepsis / KDIGO AKI em UTI"
+      ]
+    },
+    {
+      "id": "NA-000015",
+      "especialidade": "Nefrologia",
+      "area": "Nefrologia",
+      "tema": "Membranosa",
+      "subtema": "Risco trombótico",
+      "dificuldade": "Difícil",
+      "tipo": "Conduta",
+      "idade": "37 anos",
+      "sexo": "Masculino",
+      "questao": "Homem, 37 anos, edema, albumina 2.2 g/dL, proteinúria 9.5 g/dia, creatinina 1.8. PA 124/74 mmHg, FC 84 bpm, SpO₂ 98%. Próximo passo?",
+      "alternativas": {
+        "A": "Suspender nefroproteção sem motivo",
+        "B": "Integrar achados clínicos/labs e seguir guideline (KDIGO/SBN) na conduta nefrológica",
+        "C": "Intervenção agressiva sem indicação",
+        "D": "Observação sem seguimento em risco alto",
+        "E": "Terapia empírica sem fisiopatologia"
+      },
+      "gabarito": "B",
+      "explicacao": "Raciocínio de nefrologista: clínica + labs + imagem + guideline.\n\nPor que as outras falham: alternativas agressivas ou omissas sem suporte clínico.\n\nPearl: sempre ligar o rim ao contexto sistêmico.\n\nQuestão inédita MedRank (Nefrologia Avançada) — não é cópia de prova oficial.",
+      "pearls": "Pearl: sempre ligar o rim ao contexto sistêmico.",
+      "tempo_medio_segundos": 120,
+      "referencias": [
+        "Brenner & Rector's The Kidney",
+        "ESCMID / guidelines de infecção em diálise e transplante"
+      ]
+    }
+  ]
+}
