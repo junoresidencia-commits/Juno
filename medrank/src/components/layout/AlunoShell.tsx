@@ -9,6 +9,7 @@ const NAV = [
   { href: '/aluno/grupos', label: 'Grupos' },
   { href: '/aluno/historico', label: 'Histórico' },
   { href: '/aluno/simulados', label: 'Disputas' },
+  { href: '/aluno/treino/nefropediatria', label: 'Nefroped' },
   { href: '/aluno/desempenho', label: 'Desempenho' },
   { href: '/aluno/desafios', label: 'Desafios' },
 ] as const;
@@ -20,7 +21,11 @@ function isActive(pathname: string, href: string, exact?: boolean) {
 
 export function AlunoShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? '';
-  const hideNav = pathname.startsWith('/aluno/prova/');
+  const hideNav =
+    pathname.startsWith('/aluno/prova/') ||
+    (pathname.startsWith('/aluno/treino/') &&
+      pathname.split('/').length >= 5 &&
+      !pathname.includes('/resultado/'));
 
   if (hideNav) {
     return <>{children}</>;

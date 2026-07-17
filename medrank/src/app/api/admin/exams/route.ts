@@ -43,6 +43,8 @@ export async function POST(request: Request) {
     'UFRGS',
     'UFMG',
     'UFPR',
+    'SBN',
+    'SBNPed',
   ]);
 
   if (mode === 'manual') {

@@ -4,6 +4,7 @@ import { join } from 'path';
 import { getImportedQuestions } from '@/lib/demo/imported-questions';
 import { getDemoCustomQuestions, getQuestionExplanationOverrides } from '@/lib/demo-store';
 import { getSupplementQuestions } from '@/lib/question-bank/supplement';
+import { getNefropediatriaQuestionsFromFile } from '@/lib/treino/bank';
 import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import type { ResidencyArea } from '@/lib/question-bank/areas';
 import type { QuestionBankStats } from '@/types/simulado';
@@ -23,7 +24,12 @@ function loadSampleExplanations(): Record<string, string> {
 }
 
 function mergeQuestionBank(): Question[] {
-  const base = [...getImportedQuestions(), ...getDemoCustomQuestions(), ...getSupplementQuestions()];
+  const base = [
+    ...getImportedQuestions(),
+    ...getDemoCustomQuestions(),
+    ...getSupplementQuestions(),
+    ...getNefropediatriaQuestionsFromFile(),
+  ];
   const overrides = { ...loadSampleExplanations(), ...getQuestionExplanationOverrides() };
   const seen = new Set<string>();
   const merged: Question[] = [];

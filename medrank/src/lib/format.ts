@@ -38,5 +38,7 @@ export const SOURCE_OPTIONS = [
   'UFRGS',
   'UFMG',
   'UFPR',
+  'SBN',
+  'SBNPed',
   'Outra',
 ];

@@ -16,4 +16,6 @@
 ## Como atualizar
 1. Novas provas oficiais **públicas/licenciadas** → script de import / Admin → Importar.
 2. Originais MedRank → `data/original-style-questions.json` + seed-bank.
-3. Admin → **Questões** → **Importar banco completo**.
+3. Nefropediatria (estilo SBN/SBNPed) → `data/nefropediatria-questions.json` + seed-bank.
+4. Admin → **Questões** → **Importar banco completo**.
+5. Treino do aluno: `/aluno/treino/nefropediatria`.

@@ -67,6 +67,7 @@ export async function POST() {
     ...loadBankFile('imported-questions.json'),
     ...loadBankFile('supplement-questions.json'),
     ...loadBankFile('original-style-questions.json'),
+    ...loadBankFile('nefropediatria-questions.json'),
   ];
 
   // Deduplicate by statement
@@ -113,7 +114,8 @@ export async function POST() {
     ok: errors.length === 0,
     imported,
     totalInDb: count ?? imported,
-    sources: 'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.)',
+    sources:
+      'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.) + nefropediatria (SBN/SBNPed)',
     styleBanks: [...styleTags].sort(),
     errors,
   });
