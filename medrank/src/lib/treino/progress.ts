@@ -7,23 +7,21 @@ export type SrsEntry = {
   correctStreak: number;
   lastResult: 'correct' | 'wrong';
   topic: string | null;
+  avgConfidence: number | null;
   updatedAt: string;
 };
 
 export type TreinoProgressStore = {
   srs: Record<string, SrsEntry>;
   recentQuestionIds: string[];
-  topicStats: Record<string, { correct: number; total: number; timeSum: number }>;
+  topicStats: Record<
+    string,
+    { correct: number; total: number; timeSum: number; confidenceSum: number; confidenceN: number }
+  >;
   weekly: { week: string; correct: number; total: number }[];
   sessions: number;
-};
-
-const EMPTY: TreinoProgressStore = {
-  srs: {},
-  recentQuestionIds: [],
-  topicStats: {},
-  weekly: [],
-  sessions: 0,
+  confidenceSum: number;
+  confidenceN: number;
 };
 
 export function emptyTreinoProgress(): TreinoProgressStore {
@@ -33,6 +31,8 @@ export function emptyTreinoProgress(): TreinoProgressStore {
     topicStats: {},
     weekly: [],
     sessions: 0,
+    confidenceSum: 0,
+    confidenceN: 0,
   };
 }
 
@@ -51,14 +51,16 @@ export function addDaysIso(days: number, from = new Date()): string {
   return d.toISOString();
 }
 
-const INTERVALS = [1, 7, 30, 90];
+/** Revisão espaçada: 1 · 7 · 15 · 30 · 90 dias */
+export const SRS_INTERVALS_DAYS = [1, 7, 15, 30, 90] as const;
 
 export function applySrsResult(
   progress: TreinoProgressStore,
   questionId: string,
   correct: boolean,
   topic: string | null,
-  timeSpentSeconds?: number
+  timeSpentSeconds?: number,
+  confidence?: number | null
 ): TreinoProgressStore {
   const now = new Date().toISOString();
   const prev = progress.srs[questionId];
@@ -68,13 +70,23 @@ export function applySrsResult(
 
   if (correct) {
     correctStreak += 1;
-    const idx = Math.min(INTERVALS.length - 1, correctStreak - 1);
-    intervalDays = INTERVALS[idx];
+    const idx = Math.min(SRS_INTERVALS_DAYS.length - 1, correctStreak - 1);
+    intervalDays = SRS_INTERVALS_DAYS[idx];
   } else {
     wrongCount += 1;
     correctStreak = 0;
     intervalDays = 1;
   }
+
+  const conf =
+    confidence != null && confidence >= 1 && confidence <= 5 ? confidence : null;
+  const prevConf = prev?.avgConfidence;
+  const avgConfidence =
+    conf == null
+      ? prevConf ?? null
+      : prevConf == null
+        ? conf
+        : Math.round(((prevConf + conf) / 2) * 10) / 10;
 
   const srs = {
     ...progress.srs,
@@ -85,22 +97,31 @@ export function applySrsResult(
       correctStreak,
       lastResult: correct ? ('correct' as const) : ('wrong' as const),
       topic,
+      avgConfidence,
       updatedAt: now,
     },
   };
 
   const recent = [questionId, ...progress.recentQuestionIds.filter((id) => id !== questionId)].slice(
     0,
-    200
+    300
   );
 
   const topicStats = { ...progress.topicStats };
   if (topic) {
-    const cur = topicStats[topic] ?? { correct: 0, total: 0, timeSum: 0 };
+    const cur = topicStats[topic] ?? {
+      correct: 0,
+      total: 0,
+      timeSum: 0,
+      confidenceSum: 0,
+      confidenceN: 0,
+    };
     topicStats[topic] = {
       correct: cur.correct + (correct ? 1 : 0),
       total: cur.total + 1,
       timeSum: cur.timeSum + (timeSpentSeconds ?? 0),
+      confidenceSum: cur.confidenceSum + (conf ?? 0),
+      confidenceN: cur.confidenceN + (conf != null ? 1 : 0),
     };
   }
 
@@ -123,6 +144,8 @@ export function applySrsResult(
     topicStats,
     weekly: weekly.slice(-12),
     sessions: progress.sessions,
+    confidenceSum: progress.confidenceSum + (conf ?? 0),
+    confidenceN: progress.confidenceN + (conf != null ? 1 : 0),
   };
 }
 
@@ -150,6 +173,10 @@ export function computeTreinoStats(progress: TreinoProgressStore) {
 
   const accuracy = total > 0 ? Math.round((correct / total) * 1000) / 10 : null;
   const avgSeconds = total > 0 ? Math.round(timeSum / total) : null;
+  const avgConfidence =
+    progress.confidenceN > 0
+      ? Math.round((progress.confidenceSum / progress.confidenceN) * 10) / 10
+      : null;
 
   const worstTopics = Object.entries(progress.topicStats)
     .filter(([, s]) => s.total >= 3)
@@ -161,14 +188,18 @@ export function computeTreinoStats(progress: TreinoProgressStore) {
     .sort((a, b) => a.accuracy - b.accuracy)
     .slice(0, 5);
 
-  // Heurística simples de “chance de aprovação” (não é predição clínica formal)
   const hardPenalty = worstTopics[0]?.accuracy != null ? (100 - worstTopics[0].accuracy) * 0.15 : 10;
+  const confBoost = avgConfidence != null ? (avgConfidence - 3) * 2 : 0;
   const base = accuracy ?? 40;
-  const approvalChance = Math.max(5, Math.min(95, Math.round(base * 0.85 + 10 - hardPenalty)));
+  const approvalChance = Math.max(
+    5,
+    Math.min(95, Math.round(base * 0.85 + 10 - hardPenalty + confBoost))
+  );
 
   return {
     accuracy,
     avgSeconds,
+    avgConfidence,
     totalAnswered: total,
     sessions: progress.sessions,
     dueReview: dueSrsQuestionIds(progress).length,

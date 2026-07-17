@@ -19,7 +19,7 @@ export function durationForCount(count: number): number {
   return Math.max(30, count * 3);
 }
 
-export const SRS_INTERVALS_DAYS = [1, 7, 30, 90] as const;
+export const SRS_INTERVALS_DAYS = [1, 7, 15, 30, 90] as const;
 
 let cache: Question[] | null = null;
 let topicsCache: string[] | null = null;
@@ -42,7 +42,8 @@ export function listNefropediatriaTopics(): string[] {
   if (topicsCache) return topicsCache;
   const set = new Set<string>();
   for (const q of getNefropediatriaQuestionsFromFile()) {
-    if (q.subtopic) set.add(q.subtopic);
+    if (q.topic) set.add(q.topic);
+    else if (q.subtopic) set.add(q.subtopic);
   }
   topicsCache = [...set].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   return topicsCache;

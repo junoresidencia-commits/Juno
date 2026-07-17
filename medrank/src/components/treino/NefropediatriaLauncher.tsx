@@ -107,7 +107,7 @@ export function NefropediatriaLauncher({ bankCount, topics, dueReview }: Props) 
       <section className="rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-100">
         <h2 className="font-semibold text-amber-950">Revisão espaçada</h2>
         <p className="mt-1 text-sm text-amber-900">
-          Questões erradas voltam em 1 · 7 · 30 · 90 dias. Agora: {dueReview} na fila.
+          Questões erradas voltam em 1 · 7 · 15 · 30 · 90 dias. Agora: {dueReview} na fila.
         </p>
         <button
           type="button"

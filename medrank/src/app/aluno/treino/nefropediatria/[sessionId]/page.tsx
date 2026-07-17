@@ -51,6 +51,7 @@ export default async function NefropediatriaSessionPage({
         resultPath={`/aluno/treino/nefropediatria/resultado/${sessionId}`}
         apiBase="/api/treino"
         finishLabel="Finalizar treino"
+        collectConfidence
       />
     </div>
   );

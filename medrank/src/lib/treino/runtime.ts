@@ -139,7 +139,7 @@ async function pickProductionQuestions(
 
   let query = admin.from('questions').select('*').contains('tags', ['nefropediatria']);
   if (opts.topic) {
-    query = query.eq('subtopic', opts.topic);
+    query = query.eq('topic', opts.topic);
   }
 
   const { data, error } = await query;
@@ -202,7 +202,7 @@ function pickDemoQuestions(
 ): Question[] {
   let pool = getNefropediatriaQuestionsFromFile();
   if (opts.topic) {
-    pool = pool.filter((q) => q.subtopic === opts.topic);
+    pool = pool.filter((q) => q.topic === opts.topic || q.subtopic === opts.topic);
   }
   if (pool.length < count) {
     throw new Error(
@@ -375,6 +375,7 @@ export async function getTreinoQuestions(
 async function readAnswersAndTimes(sessionId: string): Promise<{
   answers: Record<string, OptionLetter>;
   answerTimes: Record<string, number>;
+  confidences: Record<string, number>;
 }> {
   if (usesDemoStore()) {
     const stored = getDemoTreinoById(sessionId);
@@ -383,18 +384,20 @@ async function readAnswersAndTimes(sessionId: string): Promise<{
         Object.entries(stored?.answers ?? {}).map(([k, v]) => [k, v as OptionLetter])
       ),
       answerTimes: { ...(stored?.answerTimes ?? {}) },
+      confidences: { ...(stored?.confidences ?? {}) },
     };
   }
   const admin = createAdminClient();
-  if (!admin) return { answers: {}, answerTimes: {} };
+  if (!admin) return { answers: {}, answerTimes: {}, confidences: {} };
   const { data } = await admin
     .from('practice_sessions')
-    .select('answers, answer_times')
+    .select('answers, answer_times, confidences')
     .eq('id', sessionId)
     .maybeSingle();
   return {
     answers: (data?.answers as Record<string, OptionLetter>) ?? {},
     answerTimes: (data?.answer_times as Record<string, number>) ?? {},
+    confidences: (data?.confidences as Record<string, number>) ?? {},
   };
 }
 
@@ -407,15 +410,18 @@ export async function saveTreinoAnswer(
   sessionId: string,
   questionId: string,
   option: OptionLetter | null,
-  timeSpentSeconds?: number
+  timeSpentSeconds?: number,
+  confidence?: number | null
 ): Promise<boolean> {
   if (usesDemoStore()) {
     const stored = getDemoTreinoById(sessionId);
     if (!stored || stored.finishedAt) return false;
     if (!stored.answerTimes) stored.answerTimes = {};
+    if (!stored.confidences) stored.confidences = {};
     if (option) {
       stored.answers[questionId] = option;
       if (timeSpentSeconds != null) stored.answerTimes[questionId] = timeSpentSeconds;
+      if (confidence != null) stored.confidences[questionId] = confidence;
     } else {
       delete stored.answers[questionId];
       if (timeSpentSeconds != null) stored.answerTimes[questionId] = timeSpentSeconds;
@@ -428,16 +434,18 @@ export async function saveTreinoAnswer(
   if (!admin) return false;
   const { data } = await admin
     .from('practice_sessions')
-    .select('answers, answer_times, finished_at')
+    .select('answers, answer_times, confidences, finished_at')
     .eq('id', sessionId)
     .maybeSingle();
   if (!data || data.finished_at) return false;
 
   const answers = { ...((data.answers as Record<string, OptionLetter>) ?? {}) };
   const answerTimes = { ...((data.answer_times as Record<string, number>) ?? {}) };
+  const confidences = { ...((data.confidences as Record<string, number>) ?? {}) };
   if (option) {
     answers[questionId] = option;
     if (timeSpentSeconds != null) answerTimes[questionId] = timeSpentSeconds;
+    if (confidence != null) confidences[questionId] = confidence;
   } else {
     delete answers[questionId];
     if (timeSpentSeconds != null) answerTimes[questionId] = timeSpentSeconds;
@@ -445,7 +453,7 @@ export async function saveTreinoAnswer(
 
   const { error } = await admin
     .from('practice_sessions')
-    .update({ answers, answer_times: answerTimes })
+    .update({ answers, answer_times: answerTimes, confidences })
     .eq('id', sessionId);
   return !error;
 }
@@ -461,7 +469,7 @@ export async function submitTreinoSession(
   if (!session) throw new Error('Sessão de treino não encontrada');
   if (session.finished_at) return session;
 
-  const { answers, answerTimes } = await readAnswersAndTimes(sessionId);
+  const { answers, answerTimes, confidences } = await readAnswersAndTimes(sessionId);
 
   let totalCorrect = 0;
   const questionLimit = getQuestionTimeLimitSeconds(session.duration_minutes, questions.length);
@@ -487,8 +495,9 @@ export async function submitTreinoSession(
       progress,
       question.id,
       isCorrect,
-      question.subtopic,
-      answerTimes[question.id]
+      question.topic ?? question.subtopic,
+      answerTimes[question.id],
+      confidences[question.id] ?? null
     );
   }
   progress = bumpSessionCount(progress);
@@ -550,6 +559,45 @@ export async function getTreinoHistory(userId: string): Promise<TreinoSession[]>
 export async function getTreinoUserStats(userId: string) {
   const progress = await loadProgress(userId);
   return computeTreinoStats(progress);
+}
+
+export async function getTreinoRanking(userId: string) {
+  if (usesDemoStore()) {
+    return getDemoTreinos()
+      .filter((s) => s.finishedAt && s.totalQuestions >= 20)
+      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+      .slice(0, 10)
+      .map((s, index) => ({
+        position: index + 1,
+        user_id: s.userId,
+        title: s.title,
+        score: s.score ?? 0,
+        percentage: s.percentage ?? 0,
+        finished_at: s.finishedAt,
+        isCurrentUser: s.userId === userId,
+      }));
+  }
+
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const { data } = await admin
+    .from('practice_sessions')
+    .select('user_id, title, score, percentage, finished_at, total_questions')
+    .eq('track', NEFROPEDIATRIA_TRACK)
+    .not('finished_at', 'is', null)
+    .gte('total_questions', 20)
+    .order('score', { ascending: false })
+    .limit(10);
+
+  return (data ?? []).map((row, index) => ({
+    position: index + 1,
+    user_id: String(row.user_id),
+    title: String(row.title),
+    score: Number(row.score ?? 0),
+    percentage: Number(row.percentage ?? 0),
+    finished_at: row.finished_at as string | null,
+    isCurrentUser: String(row.user_id) === userId,
+  }));
 }
 
 export function getNefropediatriaBankCount(): number {

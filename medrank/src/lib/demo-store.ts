@@ -81,6 +81,7 @@ export interface StoredTreino {
   submittedAutomatically: boolean;
   answers: Record<string, string>;
   answerTimes?: Record<string, number>;
+  confidences?: Record<string, number>;
 }
 
 export interface StoredSimulado {

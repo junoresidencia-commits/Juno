@@ -22,6 +22,8 @@ interface Props {
   apiBase?: string;
   finishLabel?: string;
   linearMode?: boolean;
+  /** Coleta confiança 1–5 antes de confirmar (treino) */
+  collectConfidence?: boolean;
 }
 
 function secondsOnQuestion(questionStartedAtMs: number, now = Date.now()): number {
@@ -39,6 +41,7 @@ export function ExamRunner({
   apiBase = '/api/attempts',
   finishLabel = 'Finalizar prova',
   linearMode = true,
+  collectConfidence = false,
 }: Props) {
   const router = useRouter();
   const questionLimit = getQuestionTimeLimitSeconds(durationMinutes, questions.length);
@@ -55,6 +58,7 @@ export function ExamRunner({
   const [questionRemaining, setQuestionRemaining] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [pendingChoice, setPendingChoice] = useState<OptionLetter | null>(null);
+  const [confidence, setConfidence] = useState<number | null>(null);
 
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
@@ -112,11 +116,21 @@ export function ExamRunner({
   }, [attemptId, apiBase, router, resultPath]);
 
   const recordAnswer = useCallback(
-    (questionId: string, option: OptionLetter | null, timeSpentSeconds: number) => {
+    (
+      questionId: string,
+      option: OptionLetter | null,
+      timeSpentSeconds: number,
+      confidenceValue?: number | null
+    ) => {
       void fetch(`${apiBase}/${attemptId}/answer`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionId, selectedOption: option, timeSpentSeconds }),
+        body: JSON.stringify({
+          questionId,
+          selectedOption: option,
+          timeSpentSeconds,
+          confidence: confidenceValue ?? null,
+        }),
         keepalive: true,
       });
     },
@@ -131,6 +145,7 @@ export function ExamRunner({
 
       pendingRef.current = option;
       setPendingChoice(option);
+      setConfidence(null);
     },
     [questions]
   );
@@ -138,6 +153,7 @@ export function ExamRunner({
   const handleNext = useCallback(() => {
     const choice = pendingRef.current;
     if (!choice || selectingRef.current || submittingRef.current) return;
+    if (collectConfidence && confidence == null) return;
 
     const index = currentIndexRef.current;
     const question = questions[index];
@@ -149,9 +165,10 @@ export function ExamRunner({
       const nextAnswers = { ...answersRef.current, [question.id]: choice };
       answersRef.current = nextAnswers;
       setAnswers(nextAnswers);
-      recordAnswer(question.id, choice, timeSpent);
+      recordAnswer(question.id, choice, timeSpent, confidence);
       pendingRef.current = null;
       setPendingChoice(null);
+      setConfidence(null);
 
       if (index >= questions.length - 1) {
         void submitExam(true);
@@ -161,7 +178,7 @@ export function ExamRunner({
     } finally {
       selectingRef.current = false;
     }
-  }, [questions, recordAnswer, submitExam]);
+  }, [questions, recordAnswer, submitExam, collectConfidence, confidence]);
 
   const skipQuestion = useCallback(
     (index: number) => {
@@ -214,6 +231,7 @@ export function ExamRunner({
     setQuestionRemaining(questionLimit);
     pendingRef.current = null;
     setPendingChoice(null);
+    setConfidence(null);
     selectingRef.current = false;
   }, [currentIndex, questionLimit]);
 
@@ -365,22 +383,44 @@ export function ExamRunner({
         <div className="mb-8">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
-              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span> — confirme abaixo para continuar
+              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span>
+              {collectConfidence ? ' — informe sua confiança e confirme' : ' — confirme abaixo para continuar'}
             </p>
           ) : (
             <p className="mb-2 text-center text-sm text-slate-500">
-              Selecione uma alternativa (A–E no teclado) ou clique na opção
+              Selecione uma alternativa (A–{questions.some((q) => q.option_e) ? 'E' : 'D'} no teclado) ou clique na opção
             </p>
+          )}
+          {collectConfidence && pendingChoice && (
+            <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
+              <span className="text-xs text-slate-600">Confiança:</span>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setConfidence(n)}
+                  className={`h-9 w-9 rounded-lg text-sm font-semibold ${
+                    confidence === n
+                      ? 'bg-teal-700 text-white'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
           )}
           <button
             type="button"
-            disabled={!pendingChoice || submitting}
+            disabled={!pendingChoice || submitting || (collectConfidence && confidence == null)}
             onClick={handleNext}
             className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] disabled:opacity-50 ${
-              pendingChoice ? 'bg-emerald-600 active:bg-emerald-700' : 'bg-slate-300'
+              pendingChoice && (!collectConfidence || confidence != null)
+                ? 'bg-emerald-600 active:bg-emerald-700'
+                : 'bg-slate-300'
             }`}
           >
-            {isLastQuestion ? 'Finalizar prova' : 'Próxima questão →'}
+            {isLastQuestion ? finishLabel : 'Próxima questão →'}
           </button>
         </div>
       )}

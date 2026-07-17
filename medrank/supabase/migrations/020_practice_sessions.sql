@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.practice_sessions (
   question_ids TEXT[] NOT NULL,
   answers JSONB NOT NULL DEFAULT '{}'::jsonb,
   answer_times JSONB NOT NULL DEFAULT '{}'::jsonb,
+  confidences JSONB NOT NULL DEFAULT '{}'::jsonb,
   duration_minutes INT NOT NULL,
   started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   finished_at TIMESTAMPTZ,
