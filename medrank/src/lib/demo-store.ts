@@ -48,6 +48,8 @@ export interface DemoStore {
   customQuestions?: Question[];
   questionExplanationOverrides?: Record<string, string>;
   simulados?: StoredSimulado[];
+  treinos?: StoredTreino[];
+  treinoProgress?: Record<string, import('@/lib/treino/progress').TreinoProgressStore>;
   wrongQuestions?: Record<string, string[]>;
   studyGroups?: {
     id: string;
@@ -58,6 +60,29 @@ export interface DemoStore {
     created_at: string;
     members: string[];
   }[];
+}
+
+export interface StoredTreino {
+  id: string;
+  userId: string;
+  track: string;
+  title: string;
+  mode?: string;
+  topicFilter?: string | null;
+  liga?: string | null;
+  questionIds: string[];
+  durationMinutes: number;
+  startedAt: string;
+  finishedAt: string | null;
+  durationSeconds: number | null;
+  score: number | null;
+  totalCorrect: number;
+  totalQuestions: number;
+  percentage: number | null;
+  submittedAutomatically: boolean;
+  answers: Record<string, string>;
+  answerTimes?: Record<string, number>;
+  confidences?: Record<string, number>;
 }
 
 export interface StoredSimulado {
@@ -105,6 +130,7 @@ function defaultStore(): DemoStore {
     customQuestions: [],
     questionExplanationOverrides: {},
     simulados: [],
+    treinos: [],
     wrongQuestions: {},
   };
 }
@@ -402,6 +428,41 @@ export function saveDemoSimulado(simulado: StoredSimulado): void {
     simulados.push(simulado);
   }
   store.simulados = simulados;
+  writeDemoStore(store);
+}
+
+export function getDemoTreinos(userId?: string): StoredTreino[] {
+  const treinos = readDemoStore().treinos ?? [];
+  return userId ? treinos.filter((s) => s.userId === userId) : treinos;
+}
+
+export function getDemoTreinoById(id: string): StoredTreino | null {
+  return getDemoTreinos().find((s) => s.id === id) ?? null;
+}
+
+export function saveDemoTreino(treino: StoredTreino): void {
+  const store = readDemoStore();
+  const treinos = store.treinos ?? [];
+  const index = treinos.findIndex((s) => s.id === treino.id);
+  if (index >= 0) {
+    treinos[index] = treino;
+  } else {
+    treinos.push(treino);
+  }
+  store.treinos = treinos;
+  writeDemoStore(store);
+}
+
+export function getDemoTreinoProgress(userId: string) {
+  return readDemoStore().treinoProgress?.[userId] ?? null;
+}
+
+export function saveDemoTreinoProgress(
+  userId: string,
+  data: import('@/lib/treino/progress').TreinoProgressStore
+): void {
+  const store = readDemoStore();
+  store.treinoProgress = { ...(store.treinoProgress ?? {}), [userId]: data };
   writeDemoStore(store);
 }
 

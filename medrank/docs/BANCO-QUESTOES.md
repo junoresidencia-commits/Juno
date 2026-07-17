@@ -16,4 +16,8 @@
 ## Como atualizar
 1. Novas provas oficiais **públicas/licenciadas** → script de import / Admin → Importar.
 2. Originais MedRank → `data/original-style-questions.json` + seed-bank.
-3. Admin → **Questões** → **Importar banco completo**.
+3. Nefropediatria → `data/nefropediatria-questions.json` (~5.000) — ver `docs/NEFROPEDIATRIA.md`.
+4. Nefrologia Avançada (CM aplicada ao rim) → `data/nefrologia-avancada-questions.json` (~5.000, meta 20.000) — ver `docs/NEFROLOGIA-AVANCADA.md`.
+5. Admin → **Questões** → **Importar banco completo**.
+6. Treino: `/aluno/treino` (hub).
+7. Produção: migration `020_practice_sessions.sql`.

@@ -171,6 +171,19 @@ export function AlunoHomeSimple({
         </div>
       </section>
 
+      <section className="mt-6 rounded-2xl bg-teal-50 p-5 ring-1 ring-teal-100 md:max-w-xl">
+        <h2 className="font-semibold text-teal-950">Treinos de Nefrologia</h2>
+        <p className="mt-1 text-sm text-teal-900">
+          Banco vivo: Nefrologia Avançada (adulto) e Nefropediatria — estilo título SBN.
+        </p>
+        <Link
+          href="/aluno/treino"
+          className="mt-3 inline-block text-sm font-semibold text-teal-800 underline-offset-2 hover:underline"
+        >
+          Abrir treinos →
+        </Link>
+      </section>
+
       <footer className="mt-6 pb-4 text-center">
         <Link href="/aluno/ranking?period=weekly" className="text-sm text-slate-600 underline-offset-2 hover:text-emerald-700 hover:underline">
           Ranking da semana

@@ -36,7 +36,7 @@ function toInsertRow(question: Question) {
     option_b: question.option_b,
     option_c: question.option_c,
     option_d: question.option_d,
-    option_e: question.option_e,
+    option_e: question.option_e ?? '',
     correct_option: ['A', 'B', 'C', 'D', 'E'].includes(correct) ? correct : 'A',
     explanation: question.explanation ?? null,
     source: question.source ?? null,
@@ -67,6 +67,8 @@ export async function POST() {
     ...loadBankFile('imported-questions.json'),
     ...loadBankFile('supplement-questions.json'),
     ...loadBankFile('original-style-questions.json'),
+    ...loadBankFile('nefropediatria-questions.json'),
+    ...loadBankFile('nefrologia-avancada-questions.json'),
   ];
 
   // Deduplicate by statement
@@ -113,7 +115,8 @@ export async function POST() {
     ok: errors.length === 0,
     imported,
     totalInDb: count ?? imported,
-    sources: 'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.)',
+    sources:
+      'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.) + nefropediatria (SBN/SBNPed)',
     styleBanks: [...styleTags].sort(),
     errors,
   });

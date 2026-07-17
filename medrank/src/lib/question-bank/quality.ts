@@ -12,9 +12,9 @@ const GENERIC_DISTRACTOR_PATTERNS = [
 const OFFICIAL_GABARITO_PATTERN = /gabarito oficial/i;
 
 function optionTexts(question: Question): string[] {
-  return ['A', 'B', 'C', 'D', 'E'].map(
-    (letter) => question[`option_${letter.toLowerCase()}` as keyof Question] as string
-  );
+  return (['A', 'B', 'C', 'D', 'E'] as const)
+    .map((letter) => question[`option_${letter.toLowerCase()}` as keyof Question] as string)
+    .filter((text) => Boolean(text?.trim()));
 }
 
 /** Alternativa possivelmente cortada na extração do PDF */
