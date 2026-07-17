@@ -36,7 +36,7 @@ function toInsertRow(question: Question) {
     option_b: question.option_b,
     option_c: question.option_c,
     option_d: question.option_d,
-    option_e: question.option_e,
+    option_e: question.option_e ?? '',
     correct_option: ['A', 'B', 'C', 'D', 'E'].includes(correct) ? correct : 'A',
     explanation: question.explanation ?? null,
     source: question.source ?? null,

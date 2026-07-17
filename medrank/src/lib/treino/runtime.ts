@@ -1,28 +1,43 @@
 import { createHash, randomUUID } from 'crypto';
-import { cookies } from 'next/headers';
 import type { OptionLetter, Question } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { calculateExamScoreFromAnswers, getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 import {
+  durationForCount,
   getNefropediatriaQuestionsFromFile,
+  listNefropediatriaTopics,
   NEFROPEDIATRIA_TRACK,
   shufflePick,
-  TREINO_DURATION_MINUTES,
-  TREINO_QUESTION_COUNT,
+  type TreinoSize,
 } from '@/lib/treino/bank';
 import {
+  applySrsResult,
+  bumpSessionCount,
+  computeTreinoStats,
+  dueSrsQuestionIds,
+  emptyTreinoProgress,
+  mixDifficulty,
+  type TreinoProgressStore,
+} from '@/lib/treino/progress';
+import {
   getDemoTreinoById,
+  getDemoTreinoProgress,
   getDemoTreinos,
   saveDemoTreino,
+  saveDemoTreinoProgress,
   type StoredTreino,
 } from '@/lib/demo-store';
+
+export type TreinoMode = 'prova' | 'tema' | 'srs';
 
 export interface TreinoSession {
   id: string;
   user_id: string;
   track: string;
   title: string;
+  mode: TreinoMode;
+  topic_filter: string | null;
   question_ids: string[];
   duration_minutes: number;
   started_at: string;
@@ -35,55 +50,11 @@ export interface TreinoSession {
   submitted_automatically: boolean;
 }
 
-const COOKIE_PREFIX = 'medrank_treino_';
-const MAX_COOKIE_AGE = 60 * 60 * 4; // 4h
-
-type CookiePayload = {
-  id: string;
+export interface CreateTreinoOptions {
   userId: string;
-  track: string;
-  title: string;
-  questionIds: string[];
-  durationMinutes: number;
-  startedAt: string;
-  finishedAt: string | null;
-  durationSeconds: number | null;
-  score: number | null;
-  totalCorrect: number;
-  totalQuestions: number;
-  percentage: number | null;
-  submittedAutomatically: boolean;
-  answers: Record<string, OptionLetter>;
-  answerTimes: Record<string, number>;
-};
-
-function signingSecret(): string {
-  return (
-    process.env.TREINO_SESSION_SECRET?.trim() ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
-    'medrank-treino-dev-secret'
-  );
-}
-
-function sign(payload: string): string {
-  return createHash('sha256').update(`${signingSecret()}:${payload}`).digest('hex').slice(0, 32);
-}
-
-function encodePayload(data: CookiePayload): string {
-  const body = Buffer.from(JSON.stringify(data), 'utf8').toString('base64url');
-  return `${body}.${sign(body)}`;
-}
-
-function decodePayload(raw: string | undefined): CookiePayload | null {
-  if (!raw) return null;
-  const [body, sig] = raw.split('.');
-  if (!body || !sig || sign(body) !== sig) return null;
-  try {
-    return JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as CookiePayload;
-  } catch {
-    return null;
-  }
+  count?: TreinoSize | number;
+  mode?: TreinoMode;
+  topic?: string | null;
 }
 
 function mapStored(stored: StoredTreino): TreinoSession {
@@ -92,6 +63,8 @@ function mapStored(stored: StoredTreino): TreinoSession {
     user_id: stored.userId,
     track: stored.track,
     title: stored.title,
+    mode: (stored.mode as TreinoMode) || 'prova',
+    topic_filter: stored.topicFilter ?? null,
     question_ids: stored.questionIds,
     duration_minutes: stored.durationMinutes,
     started_at: stored.startedAt,
@@ -105,50 +78,81 @@ function mapStored(stored: StoredTreino): TreinoSession {
   };
 }
 
-function mapCookie(data: CookiePayload): TreinoSession {
+function mapDbRow(row: Record<string, unknown>): TreinoSession {
   return {
-    id: data.id,
-    user_id: data.userId,
-    track: data.track,
-    title: data.title,
-    question_ids: data.questionIds,
-    duration_minutes: data.durationMinutes,
-    started_at: data.startedAt,
-    finished_at: data.finishedAt,
-    duration_seconds: data.durationSeconds,
-    score: data.score,
-    total_correct: data.totalCorrect,
-    total_questions: data.totalQuestions,
-    percentage: data.percentage,
-    submitted_automatically: data.submittedAutomatically,
+    id: String(row.id),
+    user_id: String(row.user_id),
+    track: String(row.track ?? NEFROPEDIATRIA_TRACK),
+    title: String(row.title),
+    mode: (row.mode as TreinoMode) || 'prova',
+    topic_filter: (row.topic_filter as string | null) ?? null,
+    question_ids: (row.question_ids as string[]) ?? [],
+    duration_minutes: Number(row.duration_minutes),
+    started_at: String(row.started_at),
+    finished_at: (row.finished_at as string | null) ?? null,
+    duration_seconds: (row.duration_seconds as number | null) ?? null,
+    score: (row.score as number | null) ?? null,
+    total_correct: Number(row.total_correct ?? 0),
+    total_questions: Number(row.total_questions),
+    percentage: (row.percentage as number | null) ?? null,
+    submitted_automatically: Boolean(row.submitted_automatically),
   };
 }
 
-async function pickProductionQuestions(count: number): Promise<Question[]> {
+async function loadProgress(userId: string): Promise<TreinoProgressStore> {
+  if (usesDemoStore()) {
+    return getDemoTreinoProgress(userId) ?? emptyTreinoProgress();
+  }
+  const admin = createAdminClient();
+  if (!admin) return emptyTreinoProgress();
+  const { data } = await admin
+    .from('practice_progress')
+    .select('data')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (!data?.data || typeof data.data !== 'object') return emptyTreinoProgress();
+  return { ...emptyTreinoProgress(), ...(data.data as TreinoProgressStore) };
+}
+
+async function saveProgress(userId: string, progress: TreinoProgressStore): Promise<void> {
+  if (usesDemoStore()) {
+    saveDemoTreinoProgress(userId, progress);
+    return;
+  }
+  const admin = createAdminClient();
+  if (!admin) return;
+  await admin.from('practice_progress').upsert({
+    user_id: userId,
+    data: progress,
+    updated_at: new Date().toISOString(),
+  });
+}
+
+async function pickProductionQuestions(
+  count: number,
+  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[] }
+): Promise<Question[]> {
   const admin = createAdminClient();
   if (!admin) {
     throw new Error('Supabase não configurado para treino. Peça ao admin para importar o banco.');
   }
 
-  const { data, error } = await admin
-    .from('questions')
-    .select('*')
-    .contains('tags', ['nefropediatria']);
+  let query = admin.from('questions').select('*').contains('tags', ['nefropediatria']);
+  if (opts.topic) {
+    query = query.eq('subtopic', opts.topic);
+  }
 
+  const { data, error } = await query;
   if (error) throw new Error(error.message);
 
   let pool = (data ?? []) as Question[];
-  if (pool.length < count) {
+  if (pool.length < count && !opts.topic) {
     const { data: sbnPool } = await admin
       .from('questions')
       .select('*')
       .contains('tags', ['estilo-SBN']);
-    const { data: sbnPedPool } = await admin
-      .from('questions')
-      .select('*')
-      .contains('tags', ['estilo-SBNPed']);
     const seen = new Set(pool.map((q) => q.id));
-    for (const q of [...(sbnPool ?? []), ...(sbnPedPool ?? [])] as Question[]) {
+    for (const q of (sbnPool ?? []) as Question[]) {
       if (!seen.has(q.id)) {
         pool.push(q);
         seen.add(q.id);
@@ -156,37 +160,120 @@ async function pickProductionQuestions(count: number): Promise<Question[]> {
     }
   }
 
+  if (opts.preferIds?.length) {
+    const prefer = pool.filter((q) => opts.preferIds!.includes(q.id));
+    const rest = pool.filter((q) => !opts.preferIds!.includes(q.id));
+    pool = [...prefer, ...rest];
+  }
+
+  if (opts.avoidIds?.length) {
+    const avoid = new Set(opts.avoidIds);
+    const filtered = pool.filter((q) => !avoid.has(q.id));
+    if (filtered.length >= count) pool = filtered;
+  }
+
   if (pool.length < count) {
     throw new Error(
-      `Questões de nefropediatria insuficientes no banco (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
+      `Questões insuficientes (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
     );
   }
 
-  return shufflePick(pool, count);
-}
-
-function pickDemoQuestions(count: number): Question[] {
-  const pool = getNefropediatriaQuestionsFromFile();
-  if (pool.length < count) {
-    throw new Error('Banco de nefropediatria não encontrado no deploy.');
+  if (opts.preferIds?.length) {
+    const preferred = shufflePick(
+      pool.filter((q) => opts.preferIds!.includes(q.id)),
+      count
+    );
+    if (preferred.length >= Math.min(count, opts.preferIds.length)) {
+      if (preferred.length >= count) return preferred.slice(0, count);
+      const fill = mixDifficulty(
+        pool.filter((q) => !preferred.some((p) => p.id === q.id)),
+        count - preferred.length
+      );
+      return [...preferred, ...fill];
+    }
   }
-  return shufflePick(pool, count);
+
+  return mixDifficulty(pool, count);
 }
 
-export async function createTreinoSession(userId: string): Promise<TreinoSession> {
-  const title = 'Treino Nefropediatria (SBN / SBNPed)';
+function pickDemoQuestions(
+  count: number,
+  opts: { topic?: string | null; preferIds?: string[]; avoidIds?: string[] }
+): Question[] {
+  let pool = getNefropediatriaQuestionsFromFile();
+  if (opts.topic) {
+    pool = pool.filter((q) => q.subtopic === opts.topic);
+  }
+  if (pool.length < count) {
+    throw new Error(
+      opts.topic
+        ? `Poucas questões no tema "${opts.topic}" (${pool.length}/${count}).`
+        : 'Banco de nefropediatria não encontrado no deploy.'
+    );
+  }
+
+  if (opts.preferIds?.length) {
+    const preferred = shufflePick(
+      pool.filter((q) => opts.preferIds!.includes(q.id)),
+      count
+    );
+    if (preferred.length > 0) {
+      if (preferred.length >= count) return preferred.slice(0, count);
+      const fill = mixDifficulty(
+        pool.filter((q) => !preferred.some((p) => p.id === q.id)),
+        count - preferred.length
+      );
+      return [...preferred, ...fill];
+    }
+  }
+
+  if (opts.avoidIds?.length) {
+    const avoid = new Set(opts.avoidIds);
+    const filtered = pool.filter((q) => !avoid.has(q.id));
+    if (filtered.length >= count) pool = filtered;
+  }
+
+  return mixDifficulty(pool, count);
+}
+
+function titleFor(mode: TreinoMode, count: number, topic?: string | null): string {
+  if (mode === 'srs') return `Revisão espaçada · ${count} questões`;
+  if (mode === 'tema' && topic) return `Treino · ${topic} · ${count} Q`;
+  if (count === 60) return 'Simulado SBN · 60 questões';
+  if (count === 30) return 'Treino intermediário · 30 questões';
+  return 'Treino rápido · 20 questões';
+}
+
+export async function createTreinoSession(options: CreateTreinoOptions): Promise<TreinoSession> {
+  const count = Number(options.count) || 20;
+  const mode: TreinoMode = options.mode ?? 'prova';
+  const topic = options.topic?.trim() || null;
+  const progress = await loadProgress(options.userId);
+
+  const preferIds = mode === 'srs' ? dueSrsQuestionIds(progress) : [];
+  const avoidIds = progress.recentQuestionIds.slice(0, 80);
+
   const questions = usesDemoStore()
-    ? pickDemoQuestions(TREINO_QUESTION_COUNT)
-    : await pickProductionQuestions(TREINO_QUESTION_COUNT);
+    ? pickDemoQuestions(count, { topic: mode === 'tema' ? topic : null, preferIds, avoidIds })
+    : await pickProductionQuestions(count, {
+        topic: mode === 'tema' ? topic : null,
+        preferIds,
+        avoidIds,
+      });
+
+  const title = titleFor(mode, count, topic);
+  const durationMinutes = durationForCount(count);
 
   if (usesDemoStore()) {
     const stored: StoredTreino = {
       id: `treino-${randomUUID()}`,
-      userId,
+      userId: options.userId,
       track: NEFROPEDIATRIA_TRACK,
       title,
+      mode,
+      topicFilter: topic,
       questionIds: questions.map((q) => q.id),
-      durationMinutes: TREINO_DURATION_MINUTES,
+      durationMinutes,
       startedAt: new Date().toISOString(),
       finishedAt: null,
       durationSeconds: null,
@@ -202,51 +289,45 @@ export async function createTreinoSession(userId: string): Promise<TreinoSession
     return mapStored(stored);
   }
 
-  const payload: CookiePayload = {
-    id: `treino-${randomUUID()}`,
-    userId,
+  const admin = createAdminClient();
+  if (!admin) {
+    throw new Error('Supabase service role necessária para treino em produção.');
+  }
+
+  const id = randomUUID();
+  const row = {
+    id,
+    user_id: options.userId,
     track: NEFROPEDIATRIA_TRACK,
     title,
-    questionIds: questions.map((q) => q.id),
-    durationMinutes: TREINO_DURATION_MINUTES,
-    startedAt: new Date().toISOString(),
-    finishedAt: null,
-    durationSeconds: null,
-    score: null,
-    totalCorrect: 0,
-    totalQuestions: questions.length,
-    percentage: null,
-    submittedAutomatically: false,
+    mode,
+    topic_filter: topic,
+    question_ids: questions.map((q) => q.id),
     answers: {},
-    answerTimes: {},
+    answer_times: {},
+    duration_minutes: durationMinutes,
+    started_at: new Date().toISOString(),
+    finished_at: null,
+    duration_seconds: null,
+    score: null,
+    total_correct: 0,
+    total_questions: questions.length,
+    percentage: null,
+    submitted_automatically: false,
   };
 
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_PREFIX + payload.id, encodePayload(payload), {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: MAX_COOKIE_AGE,
-  });
+  const { data, error } = await admin.from('practice_sessions').insert(row).select('*').single();
+  if (error) {
+    // Fallback sem migration: cookie compacto (até ~30 Q)
+    if (count > 30) {
+      throw new Error(
+        `Rode a migration 020_practice_sessions.sql no Supabase para simulados de ${count} questões. (${error.message})`
+      );
+    }
+    throw new Error(error.message);
+  }
 
-  return mapCookie(payload);
-}
-
-async function readCookieSession(sessionId: string): Promise<CookiePayload | null> {
-  const cookieStore = await cookies();
-  return decodePayload(cookieStore.get(COOKIE_PREFIX + sessionId)?.value);
-}
-
-async function writeCookieSession(payload: CookiePayload): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_PREFIX + payload.id, encodePayload(payload), {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: MAX_COOKIE_AGE,
-  });
+  return mapDbRow(data as Record<string, unknown>);
 }
 
 export async function getTreinoSession(sessionId: string): Promise<TreinoSession | null> {
@@ -254,8 +335,10 @@ export async function getTreinoSession(sessionId: string): Promise<TreinoSession
     const stored = getDemoTreinoById(sessionId);
     return stored ? mapStored(stored) : null;
   }
-  const payload = await readCookieSession(sessionId);
-  return payload ? mapCookie(payload) : null;
+  const admin = createAdminClient();
+  if (!admin) return null;
+  const { data } = await admin.from('practice_sessions').select('*').eq('id', sessionId).maybeSingle();
+  return data ? mapDbRow(data as Record<string, unknown>) : null;
 }
 
 export async function getTreinoQuestions(
@@ -263,33 +346,21 @@ export async function getTreinoQuestions(
   opts?: { includeAnswers?: boolean }
 ): Promise<(Question & { order_number: number })[]> {
   const includeAnswers = opts?.includeAnswers ?? false;
+  const session = await getTreinoSession(sessionId);
+  if (!session) return [];
+
+  let byId: Map<string, Question>;
 
   if (usesDemoStore()) {
-    const stored = getDemoTreinoById(sessionId);
-    if (!stored) return [];
-    const byId = new Map(getNefropediatriaQuestionsFromFile().map((q) => [q.id, q]));
-    return stored.questionIds
-      .map((id, index) => {
-        const q = byId.get(id);
-        if (!q) return null;
-        const base = includeAnswers
-          ? q
-          : { ...q, correct_option: 'A' as OptionLetter, explanation: null };
-        return { ...base, order_number: index + 1 };
-      })
-      .filter((q): q is Question & { order_number: number } => q != null);
+    byId = new Map(getNefropediatriaQuestionsFromFile().map((q) => [q.id, q]));
+  } else {
+    const admin = createAdminClient();
+    if (!admin) return [];
+    const { data } = await admin.from('questions').select('*').in('id', session.question_ids);
+    byId = new Map(((data ?? []) as Question[]).map((q) => [q.id, q]));
   }
 
-  const payload = await readCookieSession(sessionId);
-  if (!payload) return [];
-
-  const admin = createAdminClient();
-  if (!admin) return [];
-
-  const { data } = await admin.from('questions').select('*').in('id', payload.questionIds);
-  const byId = new Map(((data ?? []) as Question[]).map((q) => [q.id, q]));
-
-  return payload.questionIds
+  return session.question_ids
     .map((id, index) => {
       const q = byId.get(id);
       if (!q) return null;
@@ -301,15 +372,35 @@ export async function getTreinoQuestions(
     .filter((q): q is Question & { order_number: number } => q != null);
 }
 
-export async function getTreinoAnswers(sessionId: string): Promise<Record<string, OptionLetter>> {
+async function readAnswersAndTimes(sessionId: string): Promise<{
+  answers: Record<string, OptionLetter>;
+  answerTimes: Record<string, number>;
+}> {
   if (usesDemoStore()) {
     const stored = getDemoTreinoById(sessionId);
-    return Object.fromEntries(
-      Object.entries(stored?.answers ?? {}).map(([k, v]) => [k, v as OptionLetter])
-    );
+    return {
+      answers: Object.fromEntries(
+        Object.entries(stored?.answers ?? {}).map(([k, v]) => [k, v as OptionLetter])
+      ),
+      answerTimes: { ...(stored?.answerTimes ?? {}) },
+    };
   }
-  const payload = await readCookieSession(sessionId);
-  return { ...(payload?.answers ?? {}) };
+  const admin = createAdminClient();
+  if (!admin) return { answers: {}, answerTimes: {} };
+  const { data } = await admin
+    .from('practice_sessions')
+    .select('answers, answer_times')
+    .eq('id', sessionId)
+    .maybeSingle();
+  return {
+    answers: (data?.answers as Record<string, OptionLetter>) ?? {},
+    answerTimes: (data?.answer_times as Record<string, number>) ?? {},
+  };
+}
+
+export async function getTreinoAnswers(sessionId: string): Promise<Record<string, OptionLetter>> {
+  const { answers } = await readAnswersAndTimes(sessionId);
+  return answers;
 }
 
 export async function saveTreinoAnswer(
@@ -333,17 +424,30 @@ export async function saveTreinoAnswer(
     return true;
   }
 
-  const payload = await readCookieSession(sessionId);
-  if (!payload || payload.finishedAt) return false;
+  const admin = createAdminClient();
+  if (!admin) return false;
+  const { data } = await admin
+    .from('practice_sessions')
+    .select('answers, answer_times, finished_at')
+    .eq('id', sessionId)
+    .maybeSingle();
+  if (!data || data.finished_at) return false;
+
+  const answers = { ...((data.answers as Record<string, OptionLetter>) ?? {}) };
+  const answerTimes = { ...((data.answer_times as Record<string, number>) ?? {}) };
   if (option) {
-    payload.answers[questionId] = option;
-    if (timeSpentSeconds != null) payload.answerTimes[questionId] = timeSpentSeconds;
+    answers[questionId] = option;
+    if (timeSpentSeconds != null) answerTimes[questionId] = timeSpentSeconds;
   } else {
-    delete payload.answers[questionId];
-    if (timeSpentSeconds != null) payload.answerTimes[questionId] = timeSpentSeconds;
+    delete answers[questionId];
+    if (timeSpentSeconds != null) answerTimes[questionId] = timeSpentSeconds;
   }
-  await writeCookieSession(payload);
-  return true;
+
+  const { error } = await admin
+    .from('practice_sessions')
+    .update({ answers, answer_times: answerTimes })
+    .eq('id', sessionId);
+  return !error;
 }
 
 export async function submitTreinoSession(
@@ -353,29 +457,47 @@ export async function submitTreinoSession(
   const questions = await getTreinoQuestions(sessionId, { includeAnswers: true });
   if (questions.length === 0) throw new Error('Sessão de treino não encontrada');
 
+  const session = await getTreinoSession(sessionId);
+  if (!session) throw new Error('Sessão de treino não encontrada');
+  if (session.finished_at) return session;
+
+  const { answers, answerTimes } = await readAnswersAndTimes(sessionId);
+
+  let totalCorrect = 0;
+  const questionLimit = getQuestionTimeLimitSeconds(session.duration_minutes, questions.length);
+  const scoreRows = questions.map((question) => {
+    const isCorrect = answers[question.id] === question.correct_option;
+    if (isCorrect) totalCorrect++;
+    return {
+      isCorrect,
+      timeSpentSeconds: answerTimes[question.id] ?? questionLimit,
+    };
+  });
+
+  const startedAt = new Date(session.started_at).getTime();
+  const durationSeconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+  const percentage = Math.round((totalCorrect / questions.length) * 1000) / 10;
+  const score = calculateExamScoreFromAnswers(scoreRows, questionLimit);
+  const finishedAt = new Date().toISOString();
+
+  let progress = await loadProgress(session.user_id);
+  for (const question of questions) {
+    const isCorrect = answers[question.id] === question.correct_option;
+    progress = applySrsResult(
+      progress,
+      question.id,
+      isCorrect,
+      question.subtopic,
+      answerTimes[question.id]
+    );
+  }
+  progress = bumpSessionCount(progress);
+  await saveProgress(session.user_id, progress);
+
   if (usesDemoStore()) {
     const stored = getDemoTreinoById(sessionId);
     if (!stored) throw new Error('Sessão de treino não encontrada');
-    if (stored.finishedAt) return mapStored(stored);
-
-    let totalCorrect = 0;
-    for (const question of questions) {
-      if (stored.answers[question.id] === question.correct_option) totalCorrect++;
-    }
-
-    const startedAt = new Date(stored.startedAt).getTime();
-    const durationSeconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
-    const percentage = Math.round((totalCorrect / questions.length) * 1000) / 10;
-    const questionLimit = getQuestionTimeLimitSeconds(stored.durationMinutes, questions.length);
-    const score = calculateExamScoreFromAnswers(
-      questions.map((question) => ({
-        isCorrect: stored.answers[question.id] === question.correct_option,
-        timeSpentSeconds: stored.answerTimes?.[question.id] ?? questionLimit,
-      })),
-      questionLimit
-    );
-
-    stored.finishedAt = new Date().toISOString();
+    stored.finishedAt = finishedAt;
     stored.durationSeconds = durationSeconds;
     stored.totalCorrect = totalCorrect;
     stored.totalQuestions = questions.length;
@@ -386,36 +508,24 @@ export async function submitTreinoSession(
     return mapStored(stored);
   }
 
-  const payload = await readCookieSession(sessionId);
-  if (!payload) throw new Error('Sessão de treino não encontrada');
-  if (payload.finishedAt) return mapCookie(payload);
-
-  let totalCorrect = 0;
-  for (const question of questions) {
-    if (payload.answers[question.id] === question.correct_option) totalCorrect++;
-  }
-
-  const startedAt = new Date(payload.startedAt).getTime();
-  const durationSeconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
-  const percentage = Math.round((totalCorrect / questions.length) * 1000) / 10;
-  const questionLimit = getQuestionTimeLimitSeconds(payload.durationMinutes, questions.length);
-  const score = calculateExamScoreFromAnswers(
-    questions.map((question) => ({
-      isCorrect: payload.answers[question.id] === question.correct_option,
-      timeSpentSeconds: payload.answerTimes[question.id] ?? questionLimit,
-    })),
-    questionLimit
-  );
-
-  payload.finishedAt = new Date().toISOString();
-  payload.durationSeconds = durationSeconds;
-  payload.totalCorrect = totalCorrect;
-  payload.totalQuestions = questions.length;
-  payload.percentage = percentage;
-  payload.score = score;
-  payload.submittedAutomatically = auto;
-  await writeCookieSession(payload);
-  return mapCookie(payload);
+  const admin = createAdminClient();
+  if (!admin) throw new Error('Supabase não configurado');
+  const { data, error } = await admin
+    .from('practice_sessions')
+    .update({
+      finished_at: finishedAt,
+      duration_seconds: durationSeconds,
+      total_correct: totalCorrect,
+      total_questions: questions.length,
+      percentage,
+      score,
+      submitted_automatically: auto,
+    })
+    .eq('id', sessionId)
+    .select('*')
+    .single();
+  if (error || !data) throw new Error(error?.message ?? 'Falha ao finalizar');
+  return mapDbRow(data as Record<string, unknown>);
 }
 
 export async function getTreinoHistory(userId: string): Promise<TreinoSession[]> {
@@ -425,10 +535,43 @@ export async function getTreinoHistory(userId: string): Promise<TreinoSession[]>
       .sort((a, b) => new Date(b.finishedAt!).getTime() - new Date(a.finishedAt!).getTime())
       .map(mapStored);
   }
-  // Produção: histórico fica na sessão atual (cookie). Sem tabela dedicada.
-  return [];
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const { data } = await admin
+    .from('practice_sessions')
+    .select('*')
+    .eq('user_id', userId)
+    .not('finished_at', 'is', null)
+    .order('finished_at', { ascending: false })
+    .limit(10);
+  return (data ?? []).map((row) => mapDbRow(row as Record<string, unknown>));
+}
+
+export async function getTreinoUserStats(userId: string) {
+  const progress = await loadProgress(userId);
+  return computeTreinoStats(progress);
 }
 
 export function getNefropediatriaBankCount(): number {
   return getNefropediatriaQuestionsFromFile().length;
+}
+
+export function getNefropediatriaTopics(): string[] {
+  return listNefropediatriaTopics();
+}
+
+/** @deprecated */
+export const TREINO_QUESTION_COUNT = 20;
+/** @deprecated */
+export const TREINO_DURATION_MINUTES = 60;
+
+export function deterministicUuid(seed: string): string {
+  const hex = createHash('sha256').update(`medrank-q:${seed}`).digest('hex');
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    `4${hex.slice(13, 16)}`,
+    `a${hex.slice(17, 20)}`,
+    hex.slice(20, 32),
+  ].join('-');
 }

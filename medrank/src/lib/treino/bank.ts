@@ -3,11 +3,26 @@ import { join } from 'path';
 import type { Question } from '@/types/database';
 
 export const NEFROPEDIATRIA_TRACK = 'nefropediatria';
-export const NEFROPEDIATRIA_TAGS = ['nefropediatria', 'estilo-SBN', 'estilo-SBNPed', 'treino-sbn'] as const;
-export const TREINO_QUESTION_COUNT = 20;
-export const TREINO_DURATION_MINUTES = 30;
+export const NEFROPEDIATRIA_TAGS = [
+  'nefropediatria',
+  'estilo-SBN',
+  'estilo-SBNPed',
+  'treino-sbn',
+  'titulo-nefropediatria',
+] as const;
+
+export const TREINO_SIZE_OPTIONS = [20, 30, 60] as const;
+export type TreinoSize = (typeof TREINO_SIZE_OPTIONS)[number];
+
+/** ~3 min/questão (prova teórica SBN = 60 Q em 3 h) */
+export function durationForCount(count: number): number {
+  return Math.max(30, count * 3);
+}
+
+export const SRS_INTERVALS_DAYS = [1, 7, 30, 90] as const;
 
 let cache: Question[] | null = null;
+let topicsCache: string[] | null = null;
 
 export function getNefropediatriaQuestionsFromFile(): Question[] {
   if (cache) return cache;
@@ -21,6 +36,16 @@ export function getNefropediatriaQuestionsFromFile(): Question[] {
   const raw = JSON.parse(readFileSync(path, 'utf-8')) as { questions?: Question[] } | Question[];
   cache = Array.isArray(raw) ? raw : (raw.questions ?? []);
   return cache;
+}
+
+export function listNefropediatriaTopics(): string[] {
+  if (topicsCache) return topicsCache;
+  const set = new Set<string>();
+  for (const q of getNefropediatriaQuestionsFromFile()) {
+    if (q.subtopic) set.add(q.subtopic);
+  }
+  topicsCache = [...set].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  return topicsCache;
 }
 
 export function shufflePick<T>(items: T[], count: number): T[] {

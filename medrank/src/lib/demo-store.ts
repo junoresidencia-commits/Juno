@@ -49,6 +49,7 @@ export interface DemoStore {
   questionExplanationOverrides?: Record<string, string>;
   simulados?: StoredSimulado[];
   treinos?: StoredTreino[];
+  treinoProgress?: Record<string, import('@/lib/treino/progress').TreinoProgressStore>;
   wrongQuestions?: Record<string, string[]>;
   studyGroups?: {
     id: string;
@@ -66,6 +67,8 @@ export interface StoredTreino {
   userId: string;
   track: string;
   title: string;
+  mode?: string;
+  topicFilter?: string | null;
   questionIds: string[];
   durationMinutes: number;
   startedAt: string;
@@ -445,6 +448,19 @@ export function saveDemoTreino(treino: StoredTreino): void {
     treinos.push(treino);
   }
   store.treinos = treinos;
+  writeDemoStore(store);
+}
+
+export function getDemoTreinoProgress(userId: string) {
+  return readDemoStore().treinoProgress?.[userId] ?? null;
+}
+
+export function saveDemoTreinoProgress(
+  userId: string,
+  data: import('@/lib/treino/progress').TreinoProgressStore
+): void {
+  const store = readDemoStore();
+  store.treinoProgress = { ...(store.treinoProgress ?? {}), [userId]: data };
   writeDemoStore(store);
 }
 

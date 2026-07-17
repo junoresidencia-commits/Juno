@@ -2,7 +2,12 @@ import Link from 'next/link';
 import { requireAuth } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getNefropediatriaBankCount, getTreinoHistory } from '@/lib/treino/runtime';
+import {
+  getNefropediatriaBankCount,
+  getNefropediatriaTopics,
+  getTreinoHistory,
+  getTreinoUserStats,
+} from '@/lib/treino/runtime';
 import { NefropediatriaLauncher } from '@/components/treino/NefropediatriaLauncher';
 import { formatPercent } from '@/lib/format';
 
@@ -16,6 +21,20 @@ async function getProductionBankCount(): Promise<number> {
   return count ?? 0;
 }
 
+async function getProductionTopics(): Promise<string[]> {
+  const admin = createAdminClient();
+  if (!admin) return [];
+  const { data } = await admin
+    .from('questions')
+    .select('subtopic')
+    .contains('tags', ['nefropediatria']);
+  const set = new Set<string>();
+  for (const row of data ?? []) {
+    if (row.subtopic) set.add(row.subtopic);
+  }
+  return [...set].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}
+
 export default async function NefropediatriaTreinoPage() {
   const { userId } = await requireAuth();
 
@@ -23,7 +42,9 @@ export default async function NefropediatriaTreinoPage() {
     ? getNefropediatriaBankCount()
     : await getProductionBankCount();
 
-  const history = usesDemoStore() ? (await getTreinoHistory(userId)).slice(0, 5) : [];
+  const topics = usesDemoStore() ? getNefropediatriaTopics() : await getProductionTopics();
+  const stats = await getTreinoUserStats(userId);
+  const history = (await getTreinoHistory(userId)).slice(0, 5);
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8">
@@ -32,37 +53,65 @@ export default async function NefropediatriaTreinoPage() {
       </Link>
 
       <header className="mt-4 mb-8">
-        <p className="text-sm font-medium uppercase tracking-wide text-teal-800">Treino especializado</p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">Nefropediatria</h1>
+        <p className="text-sm font-medium uppercase tracking-wide text-teal-800">
+          Certificado SBN/SBP
+        </p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
+          Nefrologia Pediátrica
+        </h1>
         <p className="mt-2 max-w-2xl text-slate-600">
-          Provas de treino no estilo cobrado pela SBN e pela Sociedade Brasileira de Nefropediatria.
-          Questões inéditas MedRank — não são cópia de provas oficiais.
+          Banco vivo de questões inéditas no estilo da prova de título — casos clínicos,
+          condutas e bibliografia (KDIGO, IPNA, SBN, SBP). Não copia provas oficiais.
         </p>
       </header>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Questões no banco</p>
-          <p className="text-3xl font-bold text-teal-800">{bankCount}</p>
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-xs text-slate-600">Banco</p>
+          <p className="text-2xl font-bold text-teal-800">{bankCount.toLocaleString('pt-BR')}</p>
         </div>
-        <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">Formato</p>
-          <p className="text-lg font-semibold text-slate-900">20 questões · 30 min</p>
-          <p className="mt-1 text-xs text-slate-500">Não conta no ranking diário</p>
+        <div className="rounded-2xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-xs text-slate-600">Acerto</p>
+          <p className="text-2xl font-bold text-slate-900">
+            {stats.accuracy != null ? formatPercent(stats.accuracy) : '—'}
+          </p>
+        </div>
+        <div className="rounded-2xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-xs text-slate-600">Tempo médio/Q</p>
+          <p className="text-2xl font-bold text-slate-900">
+            {stats.avgSeconds != null ? `${stats.avgSeconds}s` : '—'}
+          </p>
+        </div>
+        <div className="rounded-2xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-xs text-slate-600">Chance estimada*</p>
+          <p className="text-2xl font-bold text-teal-800">{stats.approvalChance}%</p>
         </div>
       </div>
+      <p className="mb-6 text-xs text-slate-500">
+        *Heurística educacional com base no seu desempenho — não é predição oficial de aprovação.
+      </p>
 
-      <section className="mb-8 rounded-2xl bg-teal-50 p-6 ring-1 ring-teal-100">
-        <h2 className="font-semibold text-teal-950">O que você treina</h2>
-        <ul className="mt-3 space-y-1.5 text-sm text-teal-900">
-          <li>Síndrome nefrótica e nefrítica pediátrica</li>
-          <li>ITU, RVU e CAKUT</li>
-          <li>SHU, ATR, distúrbios eletrolíticos</li>
-          <li>DRC pediátrica, diálise e hipertensão</li>
-        </ul>
-      </section>
+      {stats.worstTopics.length > 0 && (
+        <section className="mb-8 rounded-2xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <h2 className="font-semibold">Assuntos com mais erro</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {stats.worstTopics.map((t) => (
+              <li key={t.topic} className="flex justify-between gap-2">
+                <span>{t.topic}</span>
+                <span className="text-slate-600">
+                  {formatPercent(t.accuracy)} · {t.total} Q
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-      <NefropediatriaLauncher bankCount={bankCount} />
+      <NefropediatriaLauncher
+        bankCount={bankCount}
+        topics={topics}
+        dueReview={stats.dueReview}
+      />
 
       {history.length > 0 && (
         <section className="mt-10 rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
@@ -76,7 +125,8 @@ export default async function NefropediatriaTreinoPage() {
               >
                 <p className="text-sm font-medium">{s.title}</p>
                 <p className="text-xs text-slate-600">
-                  {s.total_correct}/{s.total_questions} · {formatPercent(s.percentage)} · {s.score} pts
+                  {s.total_correct}/{s.total_questions} · {formatPercent(s.percentage)} ·{' '}
+                  {s.score} pts
                 </p>
               </Link>
             ))}
