@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import type { Profile, UserRole } from '@/types/database';
 import { isDemoMode } from '@/lib/demo-mode';
-import { findDemoStudentByEmail } from '@/lib/demo-store';
+import { findDemoStudentByEmail, findDemoStudentById } from '@/lib/demo-store';
 
 const COOKIE_NAME = 'medrank_demo_session';
 
@@ -96,6 +96,11 @@ export function parseDemoSession(token: string | undefined): Profile | null {
 
     if (data.role === 'student' && data.active === false) return null;
 
+    const league_admin =
+      data.role === 'admin'
+        ? true
+        : !!findDemoStudentById(data.id)?.leagueAdmin;
+
     return {
       id: data.id,
       email: data.email,
@@ -103,6 +108,7 @@ export function parseDemoSession(token: string | undefined): Profile | null {
       role: data.role,
       active: data.active !== false,
       created_at: new Date().toISOString(),
+      league_admin,
     };
   } catch {
     return null;

@@ -23,6 +23,8 @@ export interface DemoStudent {
   active: boolean;
   approvedAt: string | null;
   createdAt: string;
+  /** Pode criar ligas (grupos de estudo). */
+  leagueAdmin?: boolean;
 }
 
 export interface DemoStore {
@@ -319,6 +321,20 @@ export function createDemoStudentByAdmin(
 export function findDemoStudentByEmail(email: string): DemoStudent | null {
   const store = readDemoStore();
   return store.students.find((s) => s.email === email.trim().toLowerCase()) ?? null;
+}
+
+export function findDemoStudentById(id: string): DemoStudent | null {
+  const store = readDemoStore();
+  return store.students.find((s) => s.id === id) ?? null;
+}
+
+export function setDemoLeagueAdmin(id: string, leagueAdmin: boolean): boolean {
+  const store = readDemoStore();
+  const student = store.students.find((s) => s.id === id);
+  if (!student) return false;
+  student.leagueAdmin = leagueAdmin;
+  writeDemoStore(store);
+  return true;
 }
 
 export function approveDemoStudent(id: string): boolean {

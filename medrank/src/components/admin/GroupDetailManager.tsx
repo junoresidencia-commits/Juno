@@ -211,7 +211,7 @@ export function GroupDetailManager({
                 <button
                   type="button"
                   disabled={loading}
-                  onClick={() => removeMember(m.user_id)}
+                  onClick={() => removeMember(m.user_id, m.name)}
                   className="text-sm text-red-700 hover:underline"
                 >
                   Remover

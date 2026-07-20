@@ -138,7 +138,27 @@ export async function DELETE(
   }
 
   const admin = createAdminClient() ?? auth.supabase;
+
+  // Limpa desafios do grupo antes (defensivo se FK antiga não cascatear)
+  await admin.from('weekly_challenges').delete().eq('group_id', id);
+
   const { error } = await admin.from('study_groups').delete().eq('id', id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    const { error: softError } = await admin
+      .from('study_groups')
+      .update({ active: false })
+      .eq('id', id);
+    if (softError) {
+      return NextResponse.json(
+        { error: error.message || softError.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json({
+      ok: true,
+      archived: true,
+      message: 'Grupo arquivado (não foi possível apagar por completo).',
+    });
+  }
   return NextResponse.json({ ok: true });
 }

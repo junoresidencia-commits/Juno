@@ -1,7 +1,9 @@
 import type { Exam } from '@/types/database';
-import { getExamWindowPhase } from '@/lib/exams/window';
-import { todayDateStringBrazil } from '@/lib/exams/window';
+import { getBrazilClock, getExamWindowPhase, todayDateStringBrazil } from '@/lib/exams/window';
 import { formatDateBR } from '@/lib/format';
+
+/** Após 22h (Brasília) do dia da prova, libera PDF sem comentários. */
+export const EXAM_PDF_RELEASE_HOUR = 22;
 
 /**
  * Ranking diário visível:
@@ -51,6 +53,27 @@ export function canStudentSeeExamGabarito(
 
 export function studentGabaritoBeforeWindowMessage(): string {
   return 'Finalize a disputa para ver o gabarito comentado.';
+}
+
+/**
+ * PDF da prova (só enunciados/alternativas, sem gabarito/comentários):
+ * - aluno precisa ter terminado a disputa
+ * - liberado a partir das 22h do dia da prova (horário de Brasília), ou em dias seguintes
+ */
+export function canStudentDownloadExamPdf(
+  exam: Pick<Exam, 'date_available'> | null,
+  hasFinishedAttempt: boolean,
+  now = new Date()
+): boolean {
+  if (!exam || !hasFinishedAttempt) return false;
+  const clock = getBrazilClock(now);
+  if (clock.date > exam.date_available) return true;
+  if (clock.date < exam.date_available) return false;
+  return clock.hour >= EXAM_PDF_RELEASE_HOUR;
+}
+
+export function studentExamPdfBeforeReleaseMessage(): string {
+  return `O PDF da prova (sem comentários) libera às ${EXAM_PDF_RELEASE_HOUR}h (horário de Brasília), depois que você terminar.`;
 }
 
 export function getTodayRankingDate(now = new Date()): string {

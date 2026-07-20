@@ -6,7 +6,15 @@ import { createClient } from '@/lib/supabase/server';
 import { StudentActions } from '@/components/admin/StudentActions';
 import { CreateStudentForm } from '@/components/admin/CreateStudentForm';
 
-function StudentStatus({ active, approvedAt }: { active: boolean; approvedAt: string | null }) {
+function StudentStatus({
+  active,
+  approvedAt,
+  leagueAdmin,
+}: {
+  active: boolean;
+  approvedAt: string | null;
+  leagueAdmin?: boolean;
+}) {
   if (!active && !approvedAt) {
     return (
       <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
@@ -16,8 +24,15 @@ function StudentStatus({ active, approvedAt }: { active: boolean; approvedAt: st
   }
   if (active) {
     return (
-      <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">
-        Ativo
+      <span className="inline-flex flex-wrap items-center gap-1.5">
+        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">
+          Ativo
+        </span>
+        {leagueAdmin ? (
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900">
+            Admin de liga
+          </span>
+        ) : null}
       </span>
     );
   }
@@ -42,6 +57,7 @@ export default async function AlunosPage({
     email: string;
     active: boolean;
     approved_at: string | null;
+    league_admin: boolean;
   }[] = [];
 
   if (isDemoMode()) {
@@ -51,15 +67,23 @@ export default async function AlunosPage({
       email: s.email,
       active: s.active,
       approved_at: s.approvedAt,
+      league_admin: !!s.leagueAdmin,
     }));
   } else {
     const supabase = await createClient();
     const { data } = await supabase
       .from('profiles')
-      .select('id, name, email, active, approved_at')
+      .select('id, name, email, active, approved_at, league_admin')
       .eq('role', 'student')
       .order('created_at', { ascending: false });
-    students = data ?? [];
+    students = (data ?? []).map((s) => ({
+      id: s.id,
+      name: s.name,
+      email: s.email,
+      active: s.active,
+      approved_at: s.approved_at,
+      league_admin: !!s.league_admin,
+    }));
   }
 
   const pending = students.filter((s) => !s.active && !s.approved_at);
@@ -94,7 +118,11 @@ export default async function AlunosPage({
                   <p className="text-sm text-slate-600">{s.email}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <StudentStatus active={s.active} approvedAt={s.approved_at} />
+                  <StudentStatus
+                    active={s.active}
+                    approvedAt={s.approved_at}
+                    leagueAdmin={s.league_admin}
+                  />
                   <StudentActions studentId={s.id} name={s.name} active={s.active} pending />
                 </div>
               </div>
@@ -105,6 +133,10 @@ export default async function AlunosPage({
 
       <section className="mt-8">
         <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Use <span className="font-medium">Tornar admin de liga</span> para autorizar um aluno a
+          criar ligas.
+        </p>
         <div className="mt-4 space-y-3">
           {others.length === 0 && pending.length === 0 ? (
             <p className="text-slate-600">Nenhum aluno ainda. Crie o primeiro login acima.</p>
@@ -116,12 +148,17 @@ export default async function AlunosPage({
                   <p className="text-sm text-slate-600">{s.email}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <StudentStatus active={s.active} approvedAt={s.approved_at} />
+                  <StudentStatus
+                    active={s.active}
+                    approvedAt={s.approved_at}
+                    leagueAdmin={s.league_admin}
+                  />
                   <StudentActions
                     studentId={s.id}
                     name={s.name}
                     active={s.active}
                     pending={!s.active && !s.approved_at}
+                    leagueAdmin={s.league_admin}
                   />
                 </div>
               </div>

@@ -21,6 +21,8 @@ export interface Profile {
   role: UserRole;
   active: boolean;
   created_at: string;
+  /** Aluno autorizado a criar ligas (grupos). Professores sempre podem. */
+  league_admin?: boolean;
 }
 
 export interface Question {
