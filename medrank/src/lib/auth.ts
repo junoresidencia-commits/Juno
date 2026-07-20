@@ -12,6 +12,7 @@ const GUEST_ADMIN: Profile = {
   role: 'admin',
   active: true,
   created_at: new Date().toISOString(),
+  league_admin: true,
 };
 
 const GUEST_STUDENT: Profile = {
@@ -21,6 +22,7 @@ const GUEST_STUDENT: Profile = {
   role: 'student',
   active: true,
   created_at: new Date().toISOString(),
+  league_admin: false,
 };
 
 export function getGuestProfile(role: UserRole = 'admin'): Profile {

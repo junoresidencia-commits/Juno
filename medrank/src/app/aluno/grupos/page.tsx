@@ -1,11 +1,13 @@
 import { requireAuth } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoGroupsForUser } from '@/lib/groups/demo';
+import { canCreateLeague } from '@/lib/groups/permissions';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { StudentGroupsPanel } from '@/components/aluno/StudentGroupsPanel';
 
 export default async function AlunoGruposPage() {
-  const { userId } = await requireAuth();
+  const { userId, profile } = await requireAuth();
 
   let groups: {
     id: string;
@@ -13,6 +15,8 @@ export default async function AlunoGruposPage() {
     description: string | null;
     created_by: string | null;
   }[] = [];
+
+  let leagueAdmin = canCreateLeague(profile);
 
   if (usesDemoStore()) {
     groups = getDemoGroupsForUser(userId).map((g) => ({
@@ -23,10 +27,23 @@ export default async function AlunoGruposPage() {
     }));
   } else {
     const supabase = await createClient();
-    const { data } = await supabase
-      .from('study_group_members')
-      .select('group_id, study_groups(id, name, description, active, created_by)')
-      .eq('user_id', userId);
+    const admin = createAdminClient();
+    const [{ data }, freshProfile] = await Promise.all([
+      supabase
+        .from('study_group_members')
+        .select('group_id, study_groups(id, name, description, active, created_by)')
+        .eq('user_id', userId),
+      admin
+        ? admin.from('profiles').select('league_admin, role').eq('id', userId).maybeSingle()
+        : Promise.resolve({ data: null }),
+    ]);
+
+    if (freshProfile.data) {
+      leagueAdmin = canCreateLeague({
+        role: (freshProfile.data.role as 'admin' | 'student') ?? profile.role,
+        league_admin: !!freshProfile.data.league_admin,
+      });
+    }
 
     groups = (data ?? [])
       .map((row) => {
@@ -57,13 +74,17 @@ export default async function AlunoGruposPage() {
 
   return (
     <div className="mx-auto w-full px-4 py-6 md:px-6">
-      <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Meus grupos</h1>
+      <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Minhas ligas</h1>
       <p className="mt-1 text-sm text-slate-600">
-        Crie um grupo, veja rankings e desafios exclusivos entre os membros.
+        Rankings e desafios exclusivos entre os membros de cada liga.
       </p>
 
       <div className="mt-6">
-        <StudentGroupsPanel userId={userId} initialGroups={groups} />
+        <StudentGroupsPanel
+          userId={userId}
+          initialGroups={groups}
+          canCreate={leagueAdmin}
+        />
       </div>
     </div>
   );

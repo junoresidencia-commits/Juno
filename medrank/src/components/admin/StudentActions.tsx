@@ -9,9 +9,16 @@ interface Props {
   name: string;
   active: boolean;
   pending: boolean;
+  leagueAdmin?: boolean;
 }
 
-export function StudentActions({ studentId, name, active, pending }: Props) {
+export function StudentActions({
+  studentId,
+  name,
+  active,
+  pending,
+  leagueAdmin = false,
+}: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -49,6 +56,23 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
     setLoading(null);
   }
 
+  async function toggleLeagueAdmin() {
+    if (
+      !confirm(
+        leagueAdmin
+          ? `Remover ${name} como administrador de liga? Ele não poderá mais criar ligas.`
+          : `Tornar ${name} administrador de liga?\n\nEle poderá criar ligas (grupos) e apagar as que criar.`
+      )
+    ) {
+      return;
+    }
+    setLoading('league');
+    await apiCall('PATCH', {
+      action: leagueAdmin ? 'revoke_league_admin' : 'make_league_admin',
+    });
+    setLoading(null);
+  }
+
   async function deleteStudent() {
     if (!confirm(`Excluir permanentemente ${name}?`)) return;
     setLoading('delete');
@@ -58,6 +82,7 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
 
   const approveHandlers = useMobileAction(approve);
   const blockHandlers = useMobileAction(toggleBlock);
+  const leagueHandlers = useMobileAction(toggleLeagueAdmin);
   const deleteHandlers = useMobileAction(deleteStudent);
 
   return (
@@ -80,6 +105,24 @@ export function StudentActions({ studentId, name, active, pending }: Props) {
           className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
         >
           {loading === 'block' ? '...' : active ? 'Bloquear' : 'Desbloquear'}
+        </button>
+      )}
+      {!pending && active && (
+        <button
+          type="button"
+          disabled={loading !== null}
+          {...leagueHandlers}
+          className={`exam-tap rounded-lg border px-4 py-2.5 text-sm font-medium disabled:opacity-50 ${
+            leagueAdmin
+              ? 'border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100'
+              : 'border-slate-300 hover:bg-slate-50'
+          }`}
+        >
+          {loading === 'league'
+            ? '...'
+            : leagueAdmin
+              ? 'Remover admin de liga'
+              : 'Tornar admin de liga'}
         </button>
       )}
       <button

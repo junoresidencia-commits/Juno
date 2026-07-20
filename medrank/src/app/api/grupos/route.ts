@@ -5,14 +5,25 @@ import {
   addDemoGroupMember,
   createDemoStudyGroup,
 } from '@/lib/groups/demo';
+import { canCreateLeague } from '@/lib/groups/permissions';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
-/** Aluno (ou admin) cria um grupo e entra como membro. */
+/** Administrador de liga (ou professor) cria uma liga e entra como membro. */
 export async function POST(request: Request) {
   const session = await getSessionProfile();
   if (!session) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  if (!canCreateLeague(session.profile)) {
+    return NextResponse.json(
+      {
+        error:
+          'Só administradores de liga podem criar ligas. Peça ao professor para te autorizar.',
+      },
+      { status: 403 }
+    );
   }
 
   const body = (await request.json().catch(() => ({}))) as {
@@ -21,7 +32,7 @@ export async function POST(request: Request) {
   };
   const name = body.name?.trim();
   if (!name) {
-    return NextResponse.json({ error: 'Nome do grupo é obrigatório' }, { status: 400 });
+    return NextResponse.json({ error: 'Nome da liga é obrigatório' }, { status: 400 });
   }
 
   if (usesDemoStore()) {
@@ -34,7 +45,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ group });
   }
 
+  // Revalida league_admin no banco (cookie/sessão pode estar desatualizada)
   const admin = createAdminClient() ?? (await createClient());
+  if (session.profile.role !== 'admin') {
+    const { data: fresh } = await admin
+      .from('profiles')
+      .select('league_admin')
+      .eq('id', session.userId)
+      .maybeSingle();
+    if (!fresh?.league_admin) {
+      return NextResponse.json(
+        {
+          error:
+            'Só administradores de liga podem criar ligas. Peça ao professor para te autorizar.',
+        },
+        { status: 403 }
+      );
+    }
+  }
+
   const { data: group, error } = await admin
     .from('study_groups')
     .insert({

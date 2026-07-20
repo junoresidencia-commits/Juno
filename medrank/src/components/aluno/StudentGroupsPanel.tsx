@@ -14,9 +14,11 @@ type GroupRow = {
 export function StudentGroupsPanel({
   userId,
   initialGroups,
+  canCreate,
 }: {
   userId: string;
   initialGroups: GroupRow[];
+  canCreate: boolean;
 }) {
   const router = useRouter();
   const [groups, setGroups] = useState(initialGroups);
@@ -37,7 +39,7 @@ export function StudentGroupsPanel({
     const data = await res.json().catch(() => ({}));
     setLoading(false);
     if (!res.ok) {
-      setError((data as { error?: string }).error ?? 'Erro ao criar grupo');
+      setError((data as { error?: string }).error ?? 'Erro ao criar liga');
       return;
     }
     const group = (data as { group: GroupRow }).group;
@@ -59,7 +61,7 @@ export function StudentGroupsPanel({
   async function handleDelete(group: GroupRow) {
     if (
       !confirm(
-        `Apagar o grupo "${group.name}"?\n\nIsso remove membros, rankings e desafios deste grupo.`
+        `Apagar a liga "${group.name}"?\n\nIsso remove membros, rankings e desafios desta liga.`
       )
     ) {
       return;
@@ -70,7 +72,7 @@ export function StudentGroupsPanel({
     const data = await res.json().catch(() => ({}));
     setLoading(false);
     if (!res.ok) {
-      setError((data as { error?: string }).error ?? 'Erro ao apagar grupo');
+      setError((data as { error?: string }).error ?? 'Erro ao apagar liga');
       return;
     }
     setGroups((prev) => prev.filter((g) => g.id !== group.id));
@@ -79,49 +81,61 @@ export function StudentGroupsPanel({
 
   return (
     <div className="space-y-6">
-      <form
-        onSubmit={handleCreate}
-        className="rounded-2xl bg-white p-5 ring-1 ring-slate-200"
-      >
-        <h2 className="font-semibold text-slate-900">Criar grupo</h2>
-        <p className="mt-1 text-sm text-slate-600">
-          Você vira o criador e pode apagar o grupo depois.
-        </p>
-        <div className="mt-4 space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Nome *</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder="Ex.: Liga de Nefrologia"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Descrição</label>
-            <input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder="Opcional"
-            />
-          </div>
-        </div>
-        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+      {canCreate ? (
+        <form
+          onSubmit={handleCreate}
+          className="rounded-2xl bg-white p-5 ring-1 ring-slate-200"
         >
-          {loading ? 'Criando…' : 'Criar grupo'}
-        </button>
-      </form>
+          <h2 className="font-semibold text-slate-900">Criar liga</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Você é administrador de liga: crie a liga e poderá apagá-la depois.
+          </p>
+          <div className="mt-4 space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-slate-800">Nome *</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Ex.: Liga de Nefrologia"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-800">Descrição</label>
+              <input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                placeholder="Opcional"
+              />
+            </div>
+          </div>
+          {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+          >
+            {loading ? 'Criando…' : 'Criar liga'}
+          </button>
+        </form>
+      ) : (
+        <div className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-700 ring-1 ring-slate-200">
+          <p className="font-medium text-slate-900">Criar liga</p>
+          <p className="mt-1">
+            Só administradores de liga podem criar. Peça ao professor para te autorizar em
+            Alunos → <span className="font-medium">Tornar admin de liga</span>.
+          </p>
+          {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+        </div>
+      )}
 
       <div className="space-y-3">
         {groups.length === 0 ? (
           <div className="rounded-2xl bg-white p-6 text-center text-slate-600 ring-1 ring-slate-200">
-            Você ainda não participa de nenhum grupo. Crie um acima ou peça para te adicionarem.
+            Você ainda não participa de nenhuma liga. Peça para te adicionarem
+            {canCreate ? ' ou crie uma acima' : ''}.
           </div>
         ) : (
           groups.map((g) => {
@@ -137,7 +151,7 @@ export function StudentGroupsPanel({
                     <p className="mt-1 text-sm text-slate-600">{g.description}</p>
                   ) : null}
                   <p className="mt-2 text-sm font-medium text-emerald-700">
-                    Ver ranking do grupo →
+                    Ver ranking da liga →
                     {isCreator ? ' · você criou' : ''}
                   </p>
                 </Link>
