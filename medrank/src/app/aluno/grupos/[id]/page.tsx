@@ -13,6 +13,7 @@ import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 import { CHALLENGE_TYPE_LABELS } from '@/lib/challenges';
+import { DeleteOwnGroupButton } from '@/components/aluno/DeleteOwnGroupButton';
 
 export default async function AlunoGrupoDetailPage({
   params,
@@ -36,13 +37,22 @@ export default async function AlunoGrupoDetailPage({
     const rankings = buildDemoGroupRankings(id, period);
     const mineRow = rankings.find((r) => r.user_id === userId);
 
+    const isCreator = group.created_by === userId;
+
     return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">
         <Link href="/aluno/grupos" className="text-sm text-emerald-700">
           ← Meus grupos
         </Link>
-        <h1 className="mt-3 text-2xl font-bold text-slate-900">{group.name}</h1>
-        {group.description ? <p className="text-slate-600">{group.description}</p> : null}
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">{group.name}</h1>
+            {group.description ? <p className="text-slate-600">{group.description}</p> : null}
+          </div>
+          {isCreator ? (
+            <DeleteOwnGroupButton groupId={id} groupName={group.name} />
+          ) : null}
+        </div>
         <RankingPeriodNav
           basePath={`/aluno/grupos/${id}`}
           current={period}
@@ -92,8 +102,10 @@ export default async function AlunoGrupoDetailPage({
     name: string;
     description: string | null;
     active: boolean;
+    created_by: string | null;
   };
   if (!group?.active) notFound();
+  const isCreator = group.created_by === userId;
 
   const today = todayDateStringBrazil();
   const bounds = getPeriodBounds(period, new Date(`${today}T12:00:00`));
@@ -122,8 +134,15 @@ export default async function AlunoGrupoDetailPage({
       <Link href="/aluno/grupos" className="text-sm text-emerald-700">
         ← Meus grupos
       </Link>
-      <h1 className="mt-3 text-2xl font-bold text-slate-900">{group.name}</h1>
-      {group.description ? <p className="text-slate-600">{group.description}</p> : null}
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">{group.name}</h1>
+          {group.description ? <p className="text-slate-600">{group.description}</p> : null}
+        </div>
+        {isCreator ? (
+          <DeleteOwnGroupButton groupId={id} groupName={group.name} />
+        ) : null}
+      </div>
 
       <RankingPeriodNav
         basePath={`/aluno/grupos/${id}`}

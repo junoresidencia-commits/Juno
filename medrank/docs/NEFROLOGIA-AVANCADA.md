@@ -20,6 +20,11 @@ Treinar o raciocínio do nefrologista (consultório, enfermaria, UTI, diálise) 
 - Ligas: Liga dos Nefrologistas · Plantão · R+ · Prova de Título · Hospital
 - SRS + confiança + ranking (mesmo motor do treino pediátrico)
 
-## Produção
-1. Migration `020_practice_sessions.sql` (inclui `liga`)
-2. Admin → Importar banco completo
+## Produção — o que falta para liberar
+O código do treino já está no app. Em produção, confirme:
+
+1. Rodar no Supabase o SQL da migration `020_practice_sessions.sql` (tabelas `practice_sessions` + `practice_progress`, coluna `liga`).
+2. Admin → Questões → **Importar banco completo** (carrega `nefrologia-avancada-questions.json` e o banco pediátrico).
+3. Deploy do `main` no Vercel (Root Directory = `medrank`).
+
+Sem o passo 1 ou 2, o treino pode falhar com “banco insuficiente” ou erro ao criar sessão.

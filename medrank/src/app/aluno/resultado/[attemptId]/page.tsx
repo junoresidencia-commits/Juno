@@ -7,7 +7,9 @@ import { formatRankingScoreExplanation, getExamMaxScore } from '@/lib/exams/scor
 import { buildResultInsights } from '@/lib/exams/result-analysis';
 import {
   canStudentSeeExamGabarito,
+  canStudentDownloadExamPdf,
   studentGabaritoBeforeWindowMessage,
+  studentExamPdfBeforeReleaseMessage,
 } from '@/lib/exams/ranking-visibility';
 import type { Question, OptionLetter } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
@@ -16,6 +18,7 @@ import { getDemoExams } from '@/lib/demo/content';
 import { getDemoRanking, getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { GabaritoReview, type GabaritoRow } from '@/components/exam/GabaritoReview';
 import { ResultInsightsPanel } from '@/components/exam/ResultInsightsPanel';
+import { ExamPdfDownloadButton } from '@/components/exam/ExamPdfDownloadButton';
 
 function ResultStats({
   totalCorrect,
@@ -89,6 +92,7 @@ export default async function ResultadoPage({
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
     const maxScore = getExamMaxScore(attempt.total_questions ?? exam?.total_questions ?? 20);
     const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
+    const showPdf = canStudentDownloadExamPdf(exam ?? null, true);
     const insights = buildResultInsights({
       rows: buildAnalysisRows(gabaritoRows),
       userScore: attempt.score ?? 0,
@@ -127,6 +131,11 @@ export default async function ResultadoPage({
             Disputa enviada automaticamente ao fim do tempo.
           </p>
         )}
+        <ExamPdfDownloadButton
+          examId={attempt.exam_id}
+          available={showPdf}
+          lockedMessage={studentExamPdfBeforeReleaseMessage()}
+        />
         {showGabarito ? (
           <GabaritoReview rows={gabaritoRows} />
         ) : (
@@ -156,6 +165,7 @@ export default async function ResultadoPage({
   };
 
   const showGabarito = canStudentSeeExamGabarito(exam, true);
+  const showPdf = canStudentDownloadExamPdf(exam, true);
 
   const { data: ranking } = await supabase
     .from('rankings')
@@ -245,6 +255,11 @@ export default async function ResultadoPage({
           Disputa enviada automaticamente ao fim do tempo.
         </p>
       )}
+      <ExamPdfDownloadButton
+        examId={attempt.exam_id}
+        available={showPdf}
+        lockedMessage={studentExamPdfBeforeReleaseMessage()}
+      />
       {showGabarito ? (
         <GabaritoReview rows={gabaritoRows} />
       ) : (
