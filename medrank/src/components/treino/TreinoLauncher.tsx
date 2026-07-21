@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TRACK_CONFIG, type TreinoTrack } from '@/lib/treino/bank';
+import { TRACK_CONFIG, type TreinoTrack } from '@/lib/treino/config';
 
 interface Props {
   track: TreinoTrack;

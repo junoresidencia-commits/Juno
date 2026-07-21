@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TREINO_SIZE_OPTIONS } from '@/lib/treino/bank';
+import { TREINO_SIZE_OPTIONS } from '@/lib/treino/config';
 
 interface Props {
   bankCount: number;

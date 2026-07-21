@@ -11,7 +11,7 @@ import {
 } from '@/lib/treino/runtime';
 import { TreinoLauncher } from '@/components/treino/TreinoLauncher';
 import { formatPercent } from '@/lib/format';
-import { TRACK_CONFIG } from '@/lib/treino/bank';
+import { TRACK_CONFIG } from '@/lib/treino/config';
 
 const TRACK = 'nefrologia-avancada' as const;
 
