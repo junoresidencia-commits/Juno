@@ -19,7 +19,7 @@ const ADV_MASTERS = [
     age: 68,
     vars: { cr: 2.4, ureia: 98, fena: 0.3 },
     statement:
-      '{{sexWord}} de {{age}} anos, {{weight}} kg, admitido com sepse de foco urinário e PAM 65 mmHg após reposição inicial de 30 mL/kg de cristaloide balanceado. Creatinina basal 1,0; atual {{cr}} mg/dL; ureia {{ureia}}; FENa {{fena}}%, urina concentrada, sem cilindros pigmentados; US sem hidronefrose. Qual a interpretação e a conduta prioritária?',
+      '{{sexWord}} de {{age}} anos, {{weight}} kg, admitido com sepse de foco urinário e PAM 65 mmHg após reposição inicial de 30 mL/kg de cristaloide balanceado. Creatinina basal 1,0; atual {{cr}} mg/dL; ureia {{ureia}}; FENa {{fena}}%, urina concentrada, sem cilindros pigmentados; US sem hidronefrose. Qual é a interpretação correta e a conduta prioritária?',
     options: {
       A: 'Necrose tubular aguda estabelecida — iniciar hemodiálise imediatamente apenas pela creatinina',
       B: 'LRA pré-renal por hipoperfusão: otimizar perfusão (fluidoterapia guiada por reavaliação clínica/POCUS/VExUS, noradrenalina se hipotensão persistente), tratar a sepse com antimicrobiano adequado, evitar nefrotóxicos e reavaliar TFG',
@@ -40,7 +40,7 @@ const ADV_MASTERS = [
     age: 62,
     vars: { cr: 3.2, fena: 3.0 },
     statement:
-      '{{sexWord}} de {{age}} internado por infarto complicado com choque cardiogênico, recebeu contraste iodado e aminoglicosídeo. Creatinina {{cr}}, FENa {{fena}}%, sedimento com cilindros granulosos pigmentados, U/P creatinina baixa. Sem obstrução. Qual o diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} internado por infarto complicado com choque cardiogênico, recebeu contraste iodado e aminoglicosídeo. Creatinina {{cr}}, FENa {{fena}}%, sedimento com cilindros granulosos pigmentados, U/P creatinina baixa. Sem obstrução. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'LRA pré-renal — apenas mais volume',
       B: 'Necrose tubular aguda (isquêmica somada a nefrotóxica): suspender aminoglicosídeo, otimizar hemodinâmica evitando congestão, evitar novo contraste, dose ajustada de fármacos, monitorizar AEIOU e considerar TSR se indicado',
@@ -61,7 +61,7 @@ const ADV_MASTERS = [
     age: 77,
     vars: { tfg: 28 },
     statement:
-      '{{sexWord}} de {{age}} com DRC (TFG {{tfg}}) precisa realizar angioTC para investigar embolia. Qual a melhor estratégia preventiva de LRA associada a contraste?',
+      '{{sexWord}} de {{age}} com DRC (TFG {{tfg}}) precisa realizar angioTC para investigar embolia. Qual é a melhor estratégia preventiva de LRA associada a contraste?',
     options: {
       A: 'Nenhuma medida específica',
       B: 'Hidratação com SF 0,9% (ou bicarbonato isotônico em casos selecionados) periprocedimento, menor volume possível de contraste iso/hipo-osmolar, suspender AINE e outros nefrotóxicos, revisar necessidade de metformina no dia',
@@ -82,7 +82,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: { cr: 2.6 },
     statement:
-      '{{sexWord}} de {{age}} em uso de omeprazol e amoxicilina/clavulanato há 3 semanas apresenta creatinina {{cr}}, exantema, febre baixa e eosinofilia periférica. Sedimento urinário com leucócitos e cilindros leucocitários; US sem obstrução. Qual conduta é a melhor?',
+      '{{sexWord}} de {{age}} em uso de omeprazol e amoxicilina/clavulanato há 3 semanas apresenta creatinina {{cr}}, exantema, febre baixa e eosinofilia periférica. Sedimento urinário com leucócitos e cilindros leucocitários; US sem obstrução. Qual é a melhor conduta?',
     options: {
       A: 'Manter medicamentos e observar',
       B: 'Suspender fármacos suspeitos (IBP, antibiótico), considerar corticoide (prednisona 0,5–1 mg/kg/dia com desmame por 4–8 semanas) se creatinina persistentemente elevada; biópsia renal quando dúvida diagnóstica ou falha em melhorar',
@@ -103,7 +103,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: { k: 7.2 },
     statement:
-      '{{sexWord}} de {{age}} com LRA anúrica, K {{k}} mEq/L refratário a medidas conservadoras, acidose (pH 7,05, HCO₃ 10) e edema agudo de pulmão em ventilação mecânica. Qual conduta?',
+      '{{sexWord}} de {{age}} com LRA anúrica, K {{k}} mEq/L refratário a medidas conservadoras, acidose (pH 7,05, HCO₃ 10) e edema agudo de pulmão em ventilação mecânica. Qual é a melhor conduta?',
     options: {
       A: 'Alta com resina oral',
       B: 'Iniciar terapia de substituição renal (HD intermitente, SLED ou CRRT conforme estabilidade); indicações AEIOU: Acidose, Eletrólitos, Intoxicação, Overload, Uremia sintomática',
@@ -124,7 +124,7 @@ const ADV_MASTERS = [
     age: 49,
     vars: { k: 6.6 },
     statement:
-      '{{sexWord}} de {{age}} em choque séptico sob noradrenalina alta, anúrico, K {{k}}, acidose. Qual a melhor modalidade e prescrição inicial?',
+      '{{sexWord}} de {{age}} em choque séptico sob noradrenalina alta, anúrico, K {{k}}, acidose. Qual é a melhor modalidade e a prescrição inicial de diálise?',
     options: {
       A: 'HD intermitente agressiva em paciente instável',
       B: 'CRRT (CVVHDF) com dose de efluente 20–25 mL/kg/h (prescrever 25–30 para atingir o alvo, contando pausas), controle de anticoagulação (regional com citrato de preferência), ajuste de fármacos e monitorização eletrolítica',
@@ -145,7 +145,7 @@ const ADV_MASTERS = [
     age: 35,
     vars: { ck: 85000, cr: 3.0, k: 6.0 },
     statement:
-      '{{sexWord}} de {{age}} após esmagamento em acidente, CK {{ck}} U/L, mioglobinúria, K {{k}}, creatinina {{cr}}. Qual a conduta inicial prioritária?',
+      '{{sexWord}} de {{age}} após esmagamento em acidente, CK {{ck}} U/L, mioglobinúria, K {{k}}, creatinina {{cr}}. Qual é a conduta inicial mais adequada?',
     options: {
       A: 'Restringir volume',
       B: 'Hidratação isotônica precoce e generosa para diurese ≥200–300 mL/h, monitorar e tratar hipercalemia e hipocalcemia (cuidado com Ca — pode reprecipitar), alcalinização em selecionados (evidência controversa), evitar AINE, indicar TSR se AEIOU',
@@ -166,7 +166,7 @@ const ADV_MASTERS = [
     age: 58,
     vars: { cr: 2.8 },
     statement:
-      '{{sexWord}} de {{age}} com cirrose Child C e ascite, creatinina sobe para {{cr}} mg/dL, urinálise sem cilindros, US sem obstrução; sem nefrotóxicos, sem choque; sem melhora após 48 h de albumina 1 g/kg/dia e retirada de diuréticos. Qual conduta?',
+      '{{sexWord}} de {{age}} com cirrose Child C e ascite, creatinina sobe para {{cr}} mg/dL, urinálise sem cilindros, US sem obstrução; sem nefrotóxicos, sem choque; sem melhora após 48 h de albumina 1 g/kg/dia e retirada de diuréticos. Qual é a melhor conduta?',
     options: {
       A: 'Diurético em dose máxima',
       B: 'Diagnóstico de HRS-AKI (novos critérios ICA): terlipressina + albumina (padrão-ouro) ou noradrenalina em UTI se terlipressina indisponível/contraindicada; listar para transplante hepático',
@@ -187,7 +187,7 @@ const ADV_MASTERS = [
     age: 74,
     vars: { fe: 30, cr: 2.1 },
     statement:
-      '{{sexWord}} de {{age}} com IC de FE reduzida (FE {{fe}}%), congestão pulmonar e edema periférico, creatinina {{cr}} após aumento de diurético de alça. Qual estratégia?',
+      '{{sexWord}} de {{age}} com IC de FE reduzida (FE {{fe}}%), congestão pulmonar e edema periférico, creatinina {{cr}} após aumento de diurético de alça. Qual é a melhor estratégia terapêutica?',
     options: {
       A: 'Suspender todo diurético',
       B: 'Manter descongestão adequada: aumentar dose ou associar diuréticos (bloqueio sequencial com tiazídico ou acetazolamida — ADVOR mostrou benefício), ultrafiltração isolada em selecionados, evitar nefrotóxicos, otimizar terapia da IC (β-bloqueador, IECA/BRA, SGLT2i, ARNI, MRA) — leve alta de creatinina durante descongestão pode ser aceitável',
@@ -208,7 +208,7 @@ const ADV_MASTERS = [
     age: 70,
     vars: { cr: 1.9 },
     statement:
-      '{{sexWord}} de {{age}} com HAS e osteoartrose usa losartana, hidroclorotiazida e ibuprofeno diário. Após episódio de gastroenterite, creatinina sobe para {{cr}} (basal 1,0). Qual a interpretação e conduta?',
+      '{{sexWord}} de {{age}} com HAS e osteoartrose usa losartana, hidroclorotiazida e ibuprofeno diário. Após episódio de gastroenterite, creatinina sobe para {{cr}} (basal 1,0). Qual é a interpretação correta e a melhor conduta?',
     options: {
       A: 'LRA por causa infecciosa apenas',
       B: 'LRA pré-renal/hemodinâmica pela "tríade" AINE + IECA/BRA + diurético em contexto de hipovolemia: suspender AINE, avaliar suspensão temporária de IECA/diurético, reidratar; reintroduzir IECA/BRA quando estável (é nefroprotetor a longo prazo)',
@@ -231,7 +231,7 @@ const ADV_MASTERS = [
     age: 62,
     vars: { tfg: 42, uacr: 480 },
     statement:
-      '{{sexWord}} de {{age}} com DM2, DRC (TFG {{tfg}} mL/min/1,73 m²), UACR {{uacr}} mg/g, PA 138/82 em uso de IECA dose máxima tolerada; K 4,6; HbA1c 8,0%. Qual adição terapêutica traz maior impacto renal/CV?',
+      '{{sexWord}} de {{age}} com DM2, DRC (TFG {{tfg}} mL/min/1,73 m²), UACR {{uacr}} mg/g, PA 138/82 em uso de IECA dose máxima tolerada; K 4,6; HbA1c 8,0%. Qual medicamento deve ser iniciado para maior impacto renal e cardiovascular?',
     options: {
       A: 'Suspender IECA porque TFG <45',
       B: 'Adicionar iSGLT2 (dapagliflozina/empagliflozina) — benefício robusto de DAPA-CKD, EMPA-KIDNEY e CREDENCE; considerar finerenona (bloqueador não esteroidal do MR) para redução adicional de albuminúria e desfechos CV/renais',
@@ -252,7 +252,7 @@ const ADV_MASTERS = [
     age: 58,
     vars: { tfg: 40, upcr: 1.2 },
     statement:
-      '{{sexWord}} de {{age}} com DRC não-diabética (TFG {{tfg}}, UPCR {{upcr}}), PA 132/80 em IECA dose plena. Qual a conduta baseada em evidência atual?',
+      '{{sexWord}} de {{age}} com DRC não-diabética (TFG {{tfg}}, UPCR {{upcr}}), PA 132/80 em IECA dose plena. Qual alternativa está de acordo com a diretriz mais atual?',
     options: {
       A: 'Suspender IECA',
       B: 'Adicionar iSGLT2 mesmo sem diabetes (DAPA-CKD e EMPA-KIDNEY mostraram benefício em DRC albuminúrica não-diabética), otimizar PA (alvo SBP <120 mmHg em muitos guidelines, guiado por medida padronizada), manter IECA',
@@ -273,7 +273,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: { tfg: 15 },
     statement:
-      '{{sexWord}} de {{age}} com DRC estágio 5 (TFG {{tfg}} mL/min/1,73 m²), PA e volemia adequadas, sem asterixe, pericardite, anorexia significativa ou distúrbios eletrolíticos refratários. Está em acompanhamento nefrológico regular. Qual a conduta mais apropriada neste momento?',
+      '{{sexWord}} de {{age}} com DRC estágio 5 (TFG {{tfg}} mL/min/1,73 m²), PA e volemia adequadas, sem asterixe, pericardite, anorexia significativa ou distúrbios eletrolíticos refratários. Está em acompanhamento nefrológico regular. Qual é a melhor conduta neste momento?',
     options: {
       A: 'Iniciar diálise imediatamente pela TFG isolada',
       B: 'Preparo antecipado: educação multidisciplinar sobre modalidades (HD/DP/Tx), planejamento de acesso (fístula com antecedência ≥3–6 meses), avaliação para Tx preemptivo, controle de PA/anemia/CKD-MBD/nutrição/vacinação; iniciar TSR guiado por sintomas + AEIOU, não somente por TFG',
@@ -294,7 +294,7 @@ const ADV_MASTERS = [
     age: 65,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} negro, obeso, com massa muscular reduzida, deseja estimar TFG. Qual conduta é mais adequada em 2024–2026?',
+      '{{sexWord}} de {{age}} negro, obeso, com massa muscular reduzida, deseja estimar TFG. Qual alternativa está de acordo com a diretriz mais atual?',
     options: {
       A: 'Usar Cockcroft-Gault sem ajustes',
       B: 'Usar equação CKD-EPI 2021 (sem coeficiente racial) baseada em creatinina; em casos com massa muscular reduzida ou discrepância clínica, dosar cistatina C e usar a equação CKD-EPI creatinina+cistatina, que aumenta acurácia',
@@ -315,7 +315,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: { hco3: 18 },
     statement:
-      '{{sexWord}} de {{age}} com DRC estágio 4, HCO₃ {{hco3}} mEq/L persistente em duas dosagens, ânion gap normal, sem hipernatremia. Sem sintomas de sobrecarga volêmica. Qual conduta em relação à acidose metabólica crônica?',
+      '{{sexWord}} de {{age}} com DRC estágio 4, HCO₃ {{hco3}} mEq/L persistente em duas dosagens, ânion gap normal, sem hipernatremia. Sem sintomas de sobrecarga volêmica. Qual é o tratamento mais indicado para a acidose metabólica crônica?',
     options: {
       A: 'Ignorar acidose',
       B: 'Corrigir com bicarbonato de sódio oral (0,5–1 mEq/kg/dia titulado) para HCO₃ alvo ≥22 mEq/L, com o objetivo de retardar progressão da DRC, preservar massa muscular e melhorar CKD-MBD',
@@ -338,7 +338,7 @@ const ADV_MASTERS = [
     age: 54,
     vars: { alb: 2.1, prot: 7.5 },
     statement:
-      '{{sexWord}} de {{age}} com edema, albumina {{alb}} g/dL, proteinúria {{prot}} g/24 h, FAN/ANCA negativos, anti-PLA2R sérico positivo em títulos altos, rastreio de neoplasia negativo, TFG preservada. Qual conduta?',
+      '{{sexWord}} de {{age}} com edema, albumina {{alb}} g/dL, proteinúria {{prot}} g/24 h, FAN/ANCA negativos, anti-PLA2R sérico positivo em títulos altos, rastreio de neoplasia negativo, TFG preservada. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar PLA2R e tratar como ITU',
       B: 'Nefropatia membranosa primária (PLA2R+): nefroproteção máxima (IECA/BRA, restrição salina, anticoagulação profilática se albumina <2,5 g/dL e risco alto), estratificar (KDIGO baixo/médio/alto risco) e iniciar imunossupressão em risco intermediário/alto (rituximabe é a primeira linha preferida hoje) — biópsia se atipia ou ausência de PLA2R',
@@ -359,7 +359,7 @@ const ADV_MASTERS = [
     age: 28,
     vars: { upcr: 4.0, cr: 1.6 },
     statement:
-      'Mulher de {{age}} com LES ativo, UPCR {{upcr}} g/g, hematúria dismórfica, hipocomplementemia, anti-dsDNA alto, creatinina {{cr}}. Biópsia: classe IV. Qual esquema de indução recomendado hoje?',
+      'Mulher de {{age}} com LES ativo, UPCR {{upcr}} g/g, hematúria dismórfica, hipocomplementemia, anti-dsDNA alto, creatinina {{cr}}. Biópsia: classe IV. Qual é o esquema de indução mais indicado segundo as diretrizes atuais?',
     options: {
       A: 'Somente hidroxicloroquina',
       B: 'Indução com corticoide (pulso metilprednisolona 250–1000 mg × 3 dias seguidos de prednisona baixa dose, priorizando redução mais rápida) + MMF 2–3 g/dia OU ciclofosfamida IV (regime NIH clássico ou Euro-lupus baixa dose); considerar acréscimo de belimumabe (BLISS-LN) ou voclosporina (AURORA) para maior remissão renal; HCQ para todos',
@@ -380,7 +380,7 @@ const ADV_MASTERS = [
     age: 31,
     vars: { alb: 2.0, prot: 6.5 },
     statement:
-      'Mulher de {{age}} com LES e SN (albumina {{alb}}, proteinúria {{prot}}); creatinina normal; biópsia mostra classe V pura (nefrite membranosa lúpica). Qual conduta?',
+      'Mulher de {{age}} com LES e SN (albumina {{alb}}, proteinúria {{prot}}); creatinina normal; biópsia mostra classe V pura (nefrite membranosa lúpica). Qual é a melhor conduta?',
     options: {
       A: 'Ignorar proteinúria',
       B: 'HCQ + nefroproteção (IECA/BRA), estatina se dislipidemia, considerar anticoagulação se albumina muito baixa; imunossupressão (MMF ± ICN ou rituximabe) se SN persistente apesar de otimização',
@@ -401,7 +401,7 @@ const ADV_MASTERS = [
     age: 67,
     vars: { cr: 4.2 },
     statement:
-      '{{sexWord}} de {{age}} com hemoptise, IRA (creatinina {{cr}}), sedimento com hematúria dismórfica e cilindros hemáticos, ANCA-MPO positivo. Qual conduta?',
+      '{{sexWord}} de {{age}} com hemoptise, IRA (creatinina {{cr}}), sedimento com hematúria dismórfica e cilindros hemáticos, ANCA-MPO positivo. Qual é a melhor conduta?',
     options: {
       A: 'Adiar tratamento',
       B: 'Emergência renal-pulmonar (síndrome pulmão-rim): pulso de metilprednisolona seguido de prednisona (esquema com redução rápida — PEXIVAS reduced-dose); indução com rituximabe (RITUXVAS/RAVE) OU ciclofosfamida; plasmaférese em casos selecionados (hemorragia alveolar difusa grave, creatinina muito alta com necessidade de diálise) — PEXIVAS mostrou que rotineiramente não reduz mortalidade/DRC terminal; profilaxia de PJP',
@@ -422,7 +422,7 @@ const ADV_MASTERS = [
     age: 34,
     vars: { cr: 5.5 },
     statement:
-      '{{sexWord}} de {{age}} com hemorragia alveolar, creatinina {{cr}} em 5 dias e anti-MBG positivo. Qual terapêutica clássica?',
+      '{{sexWord}} de {{age}} com hemorragia alveolar, creatinina {{cr}} em 5 dias e anti-MBG positivo. Qual é o tratamento clássico mais indicado?',
     options: {
       A: 'Observação',
       B: 'Plasmaférese diária/em dias alternados até anti-MBG negativar + ciclofosfamida + corticoide (pulso seguido de manutenção); Tx renal apenas com anti-MBG indetectável há ≥6 meses',
@@ -443,7 +443,7 @@ const ADV_MASTERS = [
     age: 29,
     vars: { upcr: 1.2 },
     statement:
-      '{{sexWord}} de {{age}} com biópsia confirmando nefropatia por IgA, UPCR {{upcr}} g/g apesar de IECA otimizado por 3 meses, TFG estável. Qual conduta?',
+      '{{sexWord}} de {{age}} com biópsia confirmando nefropatia por IgA, UPCR {{upcr}} g/g apesar de IECA otimizado por 3 meses, TFG estável. Qual é a melhor conduta?',
     options: {
       A: 'Ciclofosfamida em todo IgA',
       B: 'Estratificar risco (proteinúria persistente >0,75–1 g/dia, MEST-C na biópsia, TFG em declínio): otimizar RASi + SGLT2i + considerar terapias mais recentes — budesonida entérica (NEFIGARD/TARPEYON) para IgA de alto risco; sparsentan (bloqueador dual ET/A + AT1) em selecionados; corticoide sistêmico controverso (STOP-IgAN, TESTING); manter nefroproteção',
@@ -464,7 +464,7 @@ const ADV_MASTERS = [
     age: 32,
     vars: { prot: 6.0 },
     statement:
-      '{{sexWord}} de {{age}} com SN completa (proteinúria {{prot}} g/dia), biópsia com FSGS variante "tip" ou clássica; ausência de obesidade extrema, HIV, refluxo, medicações e doenças genéticas rastreadas negativas. Qual abordagem?',
+      '{{sexWord}} de {{age}} com SN completa (proteinúria {{prot}} g/dia), biópsia com FSGS variante "tip" ou clássica; ausência de obesidade extrema, HIV, refluxo, medicações e doenças genéticas rastreadas negativas. Qual é a melhor abordagem terapêutica?',
     options: {
       A: 'Somente dieta hiperproteica',
       B: 'FSGS primária: nefroproteção com IECA/BRA + iSGLT2 e imunossupressão com corticoide em dose plena (1 mg/kg/dia, máx 80 mg) por 4–16 semanas seguido de desmame; ICN em corticorresistência/dependência; rituximabe em selecionados; investigar genética se falha ou familiar',
@@ -485,7 +485,7 @@ const ADV_MASTERS = [
     age: 42,
     vars: { alb: 1.6, prot: 8.0 },
     statement:
-      '{{sexWord}} de {{age}} com SN aguda, albumina {{alb}}, proteinúria {{prot}} g/dia. Biópsia: doença de lesão mínima (podocitopatia com fusão de processos podocitários difusa). Qual esquema?',
+      '{{sexWord}} de {{age}} com SN aguda, albumina {{alb}}, proteinúria {{prot}} g/dia. Biópsia: doença de lesão mínima (podocitopatia com fusão de processos podocitários difusa). Qual é o esquema terapêutico mais indicado?',
     options: {
       A: 'Nefrectomia',
       B: 'Prednisona 1 mg/kg/dia (máx 80 mg) por 4–16 semanas com desmame lento; controle rápido de proteinúria é esperado em >80% dos casos; nefroproteção + anticoagulação profilática se albumina <2,5 g/dL com risco',
@@ -506,7 +506,7 @@ const ADV_MASTERS = [
     age: 45,
     vars: { c3: 30, c4: 20 },
     statement:
-      '{{sexWord}} de {{age}} com síndrome nefrótica/nefrítica persistente, C3 {{c3}} baixo por >6 meses, C4 {{c4}} normal; biópsia com depósitos exclusivos de C3 sem imunoglobulinas. Diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} com síndrome nefrótica/nefrítica persistente, C3 {{c3}} baixo por >6 meses, C4 {{c4}} normal; biópsia com depósitos exclusivos de C3 sem imunoglobulinas. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'GNPE',
       B: 'C3 glomerulopatia (GN por C3 ou doença de depósitos densos): investigar fator nefrítico C3, mutações no complemento, disproteinemia; nefroproteção; MMF em selecionados; ensaios com inibidores do complemento (iptacopan — APPEAR trial)',
@@ -527,7 +527,7 @@ const ADV_MASTERS = [
     age: 71,
     vars: { cr: 4.8, ca: 12.2 },
     statement:
-      '{{sexWord}} de {{age}} com anemia, dor óssea, hipercalcemia (Ca {{ca}}) e LRA (creatinina {{cr}}); gap protéico aumentado, imunofixação com pico monoclonal IgG kappa. Qual conduta renal?',
+      '{{sexWord}} de {{age}} com anemia, dor óssea, hipercalcemia (Ca {{ca}}) e LRA (creatinina {{cr}}); gap protéico aumentado, imunofixação com pico monoclonal IgG kappa. Qual é a melhor conduta nefrológica?',
     options: {
       A: 'Restrição hídrica',
       B: 'Nefropatia por cadeias leves (cast nephropathy): hidratação, corrigir hipercalcemia (SF + calcitonina + bisfosfonado ou denosumabe se DRC grave, cuidado), evitar nefrotóxicos e contraste, iniciar terapia do clone (bortezomibe + dexametasona) — HD com filtros de alto cut-off é opção em casos selecionados; considerar plasmaférese pouco efetiva isoladamente',
@@ -548,7 +548,7 @@ const ADV_MASTERS = [
     age: 65,
     vars: { prot: 6.5 },
     statement:
-      '{{sexWord}} de {{age}} com SN, macroglossia, síndrome do túnel do carpo bilateral, cardiomiopatia com padrão restritivo e proteinúria {{prot}}. Cadeia leve livre lambda elevada. Qual conduta?',
+      '{{sexWord}} de {{age}} com SN, macroglossia, síndrome do túnel do carpo bilateral, cardiomiopatia com padrão restritivo e proteinúria {{prot}}. Cadeia leve livre lambda elevada. Qual é a melhor conduta?',
     options: {
       A: 'Ciclofosfamida sozinha',
       B: 'Amiloidose AL: confirmar com biópsia (gordura ou órgão-alvo) com Vermelho Congo e tipagem por imunofluorescência/espectrometria; encaminhar à hematologia para terapia do clone (CyBorD ± daratumumabe — ANDROMEDA trial); nefroproteção e cuidados de suporte',
@@ -571,7 +571,7 @@ const ADV_MASTERS = [
     age: 52,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em CAPD há 3 anos chega com dor abdominal e efluente peritoneal turvo há 8 h. Conduta imediata?',
+      '{{sexWord}} de {{age}} em CAPD há 3 anos chega com dor abdominal e efluente peritoneal turvo há 8 h. Qual é a conduta imediata mais indicada?',
     options: {
       A: 'Esperar cultura por 5 dias sem ATB',
       B: 'Coletar efluente para contagem celular (leucócitos >100/µL com >50% PMN define peritonite), Gram e cultura em frasco de hemocultura; iniciar antibiótico intraperitoneal empírico cobrindo Gram+/Gram– (cefazolina + ceftazidima ou vancomicina + ceftazidima) por 14–21 dias; considerar remoção do cateter em falha, infecção fúngica, S. aureus grave ou refratária',
@@ -592,7 +592,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em DP há 5 anos apresenta congestão persistente, UF diminuindo em bolsas de longa permanência com icodextrina. Qual investigação?',
+      '{{sexWord}} de {{age}} em DP há 5 anos apresenta congestão persistente, UF diminuindo em bolsas de longa permanência com icodextrina. Qual exame deve ser solicitado a seguir?',
     options: {
       A: 'Aumentar apenas quelantes',
       B: 'Investigar falência da UF por PET (peritoneal equilibrium test) — pode mostrar padrão hiper-transportador (transporte rápido de soluto/edema); considerar peritonite prévia com peritônio esclerosante, hérnias/leaks, e reajustar prescrição (icodextrina, trocas mais curtas, adicionar HD); considerar peritonite encapsulante em quadros extremos',
@@ -613,7 +613,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: {},
     statement:
-      '{{sexWord}} pré-dialítico(a) com TFG em queda progressiva. Qual acesso vascular é preferível a longo prazo?',
+      '{{sexWord}} pré-dialítico(a) com TFG em queda progressiva. Qual é o acesso vascular preferível a longo prazo?',
     options: {
       A: 'Cateter tunelizado como destino',
       B: 'Fístula arteriovenosa nativa (radiocefálica se anatomia permitir; braquiocefálica ou braquiobasílica alternativas) planejada com maturação prévia; cateter tunelizado apenas como ponte',
@@ -634,7 +634,7 @@ const ADV_MASTERS = [
     age: 66,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em HD 3×/semana com Kt/V spKt/V 1,1 e sintomas urêmicos residuais. Qual conduta?',
+      '{{sexWord}} de {{age}} em HD 3×/semana com Kt/V spKt/V 1,1 e sintomas urêmicos residuais. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'Aumentar dose de diálise (Kt/V spKt/V alvo ≥1,4 por sessão em HD 3×/semana; ajustar tempo de sessão, fluxo de dialisado/sangue e superfície do dialisador); investigar recirculação de acesso, mau posicionamento de cateter, tempo real de tratamento; considerar HD mais frequente ou hemodiafiltração online (CONVINCE)',
@@ -655,7 +655,7 @@ const ADV_MASTERS = [
     age: 63,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em HD com cateter tunelizado apresenta febre e calafrios em sessão; hemoculturas positivas para S. aureus. Qual conduta?',
+      '{{sexWord}} de {{age}} em HD com cateter tunelizado apresenta febre e calafrios em sessão; hemoculturas positivas para S. aureus. Qual é a melhor conduta?',
     options: {
       A: 'Manter cateter e ATB oral apenas',
       B: 'Iniciar vancomicina + gentamicina (ajustada) empírica, adequar conforme cultura; para S. aureus, geralmente REMOVER o cateter (biofilme + risco de endocardite/spondilodiscite), fazer ecocardiograma, considerar duração prolongada de ATB (4–6 semanas); reintrodução do acesso planejada',
@@ -676,7 +676,7 @@ const ADV_MASTERS = [
     age: 61,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em UTI com LRA, instabilidade hemodinâmica moderada, hospital sem CRRT disponível. Qual estratégia?',
+      '{{sexWord}} de {{age}} em UTI com LRA, instabilidade hemodinâmica moderada, hospital sem CRRT disponível. Qual é a melhor estratégia terapêutica?',
     options: {
       A: 'HD intermitente clássica agressiva independentemente de instabilidade',
       B: 'SLED/PIRRT (sessão prolongada 6–12 h, fluxos menores) — melhor tolerância hemodinâmica que HD curta e desfechos equivalentes à CRRT em vários estudos, útil quando CRRT indisponível',
@@ -699,7 +699,7 @@ const ADV_MASTERS = [
     age: 72,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com HAS resistente, edema agudo de pulmão "flash" recorrente e piora da TFG após início de IECA; US Doppler sugere estenose aterosclerótica bilateral. Qual conduta?',
+      '{{sexWord}} de {{age}} com HAS resistente, edema agudo de pulmão "flash" recorrente e piora da TFG após início de IECA; US Doppler sugere estenose aterosclerótica bilateral. Qual é a melhor conduta?',
     options: {
       A: 'Nenhuma medida',
       B: 'Otimização clínica agressiva (múltiplos anti-hipertensivos, estatina, AAS), reservar revascularização (angioplastia com stent) apenas para casos selecionados — EAP flash recorrente, HAS incontrolável apesar de terapia máxima, perda progressiva de função renal — pois CORAL e ASTRAL mostraram que revascularização rotineira não supera clínica',
@@ -720,7 +720,7 @@ const ADV_MASTERS = [
     age: 36,
     vars: { k: 2.9 },
     statement:
-      '{{sexWord}} de {{age}} com HAS de início recente, K {{k}} espontaneamente baixo, alcalose leve, aldosterona plasmática elevada e renina plasmática suprimida (relação aldo/renina alta). Qual a hipótese e próximo passo?',
+      '{{sexWord}} de {{age}} com HAS de início recente, K {{k}} espontaneamente baixo, alcalose leve, aldosterona plasmática elevada e renina plasmática suprimida (relação aldo/renina alta). Qual é o diagnóstico mais provável e o próximo passo?',
     options: {
       A: 'Feocromocitoma',
       B: 'Hiperaldosteronismo primário: confirmar com teste de supressão (sobrecarga salina, captopril ou fludrocortisona), depois localizar (TC de adrenais e/ou cateterismo de veias adrenais em >35 anos ou lesão duvidosa); adrenalectomia se lateralizado ou espironolactona/eplerenona se bilateral',
@@ -741,7 +741,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com HAS em uso de 3 anti-hipertensivos (IECA, tiazídico e BCC) em doses adequadas, sem controle no consultório. Qual próximo passo?',
+      '{{sexWord}} de {{age}} com HAS em uso de 3 anti-hipertensivos (IECA, tiazídico e BCC) em doses adequadas, sem controle no consultório. Qual exame ou conduta deve ser solicitado a seguir?',
     options: {
       A: 'Adicionar 4º fármaco às cegas',
       B: 'Confirmar HAS resistente com MAPA (excluir "do jaleco" e não-adesão), avaliar causas secundárias (aldosteronismo, SAOS, doença renal, drogas — AINE, corticoide, simpaticomiméticos), reforçar aderência, reduzir sal e adicionar antagonista mineralocorticoide (espironolactona) — evidência PATHWAY-2 mostra ser o 4º fármaco mais eficaz',
@@ -783,7 +783,7 @@ const ADV_MASTERS = [
     age: 62,
     vars: { sbp: 220, dbp: 130 },
     statement:
-      '{{sexWord}} de {{age}} com PA {{sbp}}×{{dbp}}, cefaleia intensa, borramento visual, edema de papila e LRA aguda (creatinina 2,5, basal 1,0). Qual conduta?',
+      '{{sexWord}} de {{age}} com PA {{sbp}}×{{dbp}}, cefaleia intensa, borramento visual, edema de papila e LRA aguda (creatinina 2,5, basal 1,0). Qual é a melhor conduta?',
     options: {
       A: 'Redução rápida para PA normal em 30 minutos',
       B: 'Emergência hipertensiva (lesão de órgão-alvo): internar em UTI, reduzir PA em 20–25% na primeira hora, então gradualmente (fármacos parenterais — nitroprussiato, labetalol, nicardipina); investigar causas secundárias, monitorar TFG, retina, neurologia',
@@ -890,7 +890,7 @@ const ADV_MASTERS = [
     age: 66,
     vars: { na: 122 },
     statement:
-      '{{sexWord}} de {{age}} com Ca de pulmão, euvolêmico(a), Na {{na}}, osmolaridade sérica baixa, osmolaridade urinária inapropriadamente alta, sódio urinário >30, TSH e cortisol normais. Diagnóstico e tratamento?',
+      '{{sexWord}} de {{age}} com Ca de pulmão, euvolêmico(a), Na {{na}}, osmolaridade sérica baixa, osmolaridade urinária inapropriadamente alta, sódio urinário >30, TSH e cortisol normais. Qual é o diagnóstico mais provável e o tratamento mais indicado?',
     options: {
       A: 'Hipovolemia — infundir SF sem critério',
       B: 'SIADH paraneoplásico: tratar causa; restrição hídrica primária (500–1000 mL/dia); NaCl 3% se sintomas neurológicos graves (correção não superior a 8–10 mEq/L nas primeiras 24 h); tolvaptano (vaptanos) em selecionados; monitorar cuidadosamente para evitar desmielinização osmótica',
@@ -911,7 +911,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: { na: 156 },
     statement:
-      '{{sexWord}} de {{age}} em uso crônico de lítio apresenta poliúria, polidipsia, Na {{na}}, osmolaridade urinária baixa; após desmopressina, sem concentração urinária. Diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} em uso crônico de lítio apresenta poliúria, polidipsia, Na {{na}}, osmolaridade urinária baixa; após desmopressina, sem concentração urinária. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'DI central',
       B: 'DI nefrogênico induzido por lítio: reduzir/suspender lítio se possível em conjunto com psiquiatria, hidratação livre, dieta baixa em soluto, tiazídico + amilorida (reduz volume urinário paradoxalmente e antagoniza captação de lítio no tubo coletor); indometacina em selecionados',
@@ -932,7 +932,7 @@ const ADV_MASTERS = [
     age: 68,
     vars: { ca: 14 },
     statement:
-      '{{sexWord}} de {{age}} com Ca {{ca}} mg/dL, PTH suprimido, PTHrp alto, imagem pulmonar suspeita. Qual conduta?',
+      '{{sexWord}} de {{age}} com Ca {{ca}} mg/dL, PTH suprimido, PTHrp alto, imagem pulmonar suspeita. Qual é a melhor conduta?',
     options: {
       A: 'Restringir hidratação',
       B: 'Hipercalcemia da malignidade: hidratação vigorosa com SF 200–300 mL/h (ajuste conforme função cardíaca), bisfosfonado IV (zoledronato) ou denosumabe (preferido em DRC grave, cuidado com hipoCa rebound), calcitonina para efeito rápido, tratar neoplasia; diálise em refratárias ou DRC avançada',
@@ -953,7 +953,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: { mg: 1.0, k: 3.0 },
     statement:
-      '{{sexWord}} de {{age}} em uso crônico de omeprazol e furosemida apresenta hipoK {{k}} refratária a reposição, Mg {{mg}}. Qual conduta?',
+      '{{sexWord}} de {{age}} em uso crônico de omeprazol e furosemida apresenta hipoK {{k}} refratária a reposição, Mg {{mg}}. Qual é a melhor conduta?',
     options: {
       A: 'Aumentar KCl',
       B: 'Corrigir Mg primeiro (via oral se leve, IV em sintomático — reposição lenta), rever necessidade do IBP; sem Mg adequado, hipoK persiste (Mg controla ROMK)',
@@ -976,7 +976,7 @@ const ADV_MASTERS = [
     age: 38,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com cálculos recorrentes de oxalato de cálcio; investigação urinária de 24 h: hipocitratúria e volume urinário 1,2 L/dia, sem hipercalciúria, PTH normal. Qual conduta?',
+      '{{sexWord}} de {{age}} com cálculos recorrentes de oxalato de cálcio; investigação urinária de 24 h: hipocitratúria e volume urinário 1,2 L/dia, sem hipercalciúria, PTH normal. Qual é a melhor conduta?',
     options: {
       A: 'Restringir cálcio',
       B: 'Aumentar volume urinário para ≥2,5–3 L/dia (aumentar ingesta hídrica), citrato de potássio para corrigir hipocitratúria, manter cálcio dietético normal (restringir aumenta absorção de oxalato), reduzir sódio (<2,3 g/dia) e proteína animal',
@@ -997,7 +997,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} obeso com síndrome metabólica, cálculo de ácido úrico rádio-transparente; pH urinário 5,2. Qual conduta?',
+      '{{sexWord}} de {{age}} obeso com síndrome metabólica, cálculo de ácido úrico rádio-transparente; pH urinário 5,2. Qual é a melhor conduta?',
     options: {
       A: 'AINE',
       B: 'Alcalinização urinária com citrato de potássio (alvo pH urinário 6,5–7,0) para dissolver e prevenir; hidratação; considerar alopurinol se hiperuricemia/hiperuricosúria; controlar peso/DM/dislipidemia',
@@ -1018,7 +1018,7 @@ const ADV_MASTERS = [
     age: 57,
     vars: {},
     statement:
-      'Homem com febre, dor no flanco, urocultura positiva, TC com cálculo ureteral obstrutivo com hidronefrose. Qual conduta?',
+      'Homem com febre, dor no flanco, urocultura positiva, TC com cálculo ureteral obstrutivo com hidronefrose. Qual é a melhor conduta?',
     options: {
       A: 'ATB oral ambulatorial sem drenagem',
       B: 'Emergência urológica: ATB EV empírico de amplo espectro + desobstrução urgente (cateter duplo J ou nefrostomia percutânea), controle da sepse antes de qualquer litotripsia',
@@ -1064,7 +1064,7 @@ const ADV_MASTERS = [
     age: 45,
     vars: { cr0: 1.2, cr1: 2.3 },
     statement:
-      'Receptor de transplante renal há 6 meses, creatinina de {{cr0}} para {{cr1}}, febre baixa e leucopenia. Qual conduta?',
+      'Receptor de transplante renal há 6 meses, creatinina de {{cr0}} para {{cr1}}, febre baixa e leucopenia. Qual é a melhor conduta?',
     options: {
       A: 'Suspender toda imunossupressão',
       B: 'Dosar níveis dos imunossupressores, PCR quantitativa para CMV e BK, urinálise, US Doppler do enxerto, biópsia do enxerto quando rejeição é diferencial — biópsia é padrão-ouro para diferenciar rejeição celular (Banff), humoral (DSA + histologia), toxicidade por ICN e nefropatia por BK',
@@ -1085,7 +1085,7 @@ const ADV_MASTERS = [
     age: 40,
     vars: {},
     statement:
-      'Transplantada com creatinina em alta, DSA positivo, biópsia com Banff mostrando C4d+ e capilarite peritubular. Qual conduta?',
+      'Transplantada com creatinina em alta, DSA positivo, biópsia com Banff mostrando C4d+ e capilarite peritubular. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'Rejeição mediada por anticorpo (AMR): pulso de corticoide, plasmaférese + imunoglobulina EV, rituximabe (evidência variável), bortezomibe/eculizumabe em casos selecionados/refratários; otimizar imunossupressão de manutenção e monitorar DSA',
@@ -1106,7 +1106,7 @@ const ADV_MASTERS = [
     age: 50,
     vars: {},
     statement:
-      'Receptor de transplante renal há 4 meses com creatinina em elevação lenta (de 1,3 para 1,7 mg/dL), sem febre; BK viremia >10 000 cópias/mL em amostra confirmatória, urinálise com decoy cells positivas. Qual a conduta principal?',
+      'Receptor de transplante renal há 4 meses com creatinina em elevação lenta (de 1,3 para 1,7 mg/dL), sem febre; BK viremia >10 000 cópias/mL em amostra confirmatória, urinálise com decoy cells positivas. Qual é a melhor conduta?',
     options: {
       A: 'Aumentar imunossupressão',
       B: 'Reduzir imunossupressão em passos (MPA primeiro, depois inibidor de calcineurina, mantendo mínimo seguro); monitorar viremia e função do enxerto; biópsia se dúvida; agentes antivirais têm evidência limitada (leflunomida, cidofovir em desuso)',
@@ -1127,7 +1127,7 @@ const ADV_MASTERS = [
     age: 48,
     vars: {},
     statement:
-      'Receptor com tremor, cefaleia, HAS, hiperK, hipomagnesemia e creatinina em alta; nível de tacrolimus 18 ng/mL (alvo 5–8). Conduta?',
+      'Receptor com tremor, cefaleia, HAS, hiperK, hipomagnesemia e creatinina em alta; nível de tacrolimus 18 ng/mL (alvo 5–8). Qual é a melhor conduta?',
     options: {
       A: 'Aumentar dose',
       B: 'Reduzir dose de tacrolimus, investigar interação medicamentosa (azólicos, macrolídeos, diltiazem, suco de toranja), reajustar em alvo e reavaliar função renal e clínica; biópsia se creatinina não recuperar',
@@ -1148,7 +1148,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: {},
     statement:
-      'Receptor D+/R– há 3 meses (fim da profilaxia) com febre, leucopenia, elevação de transaminases e creatinina; PCR CMV alto. Conduta?',
+      'Receptor D+/R– há 3 meses (fim da profilaxia) com febre, leucopenia, elevação de transaminases e creatinina; PCR CMV alto. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'CMV doença: iniciar valganciclovir/ganciclovir EV em dose ajustada por função renal, reduzir imunossupressão selecionada (dose de MMF), monitorar PCR até negativação, considerar letermovir/maribavir em falência/resistência (UL97/UL54 mutações)',
@@ -1169,7 +1169,7 @@ const ADV_MASTERS = [
     age: 32,
     vars: {},
     statement:
-      'Recém-transplantado por FSGS primária apresenta proteinúria maciça 48 h após transplante. Qual conduta?',
+      'Recém-transplantado por FSGS primária apresenta proteinúria maciça 48 h após transplante. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'Recorrência de FSGS: plasmaférese diária/em dias alternados + otimização de imunossupressão + rituximabe em selecionados; buscar remissão para preservar o enxerto',
@@ -1190,7 +1190,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: {},
     statement:
-      'Transplantado há 6 meses em uso de tacrolimus e prednisona apresenta hiperglicemia persistente (HbA1c 7,5%). Qual conduta?',
+      'Transplantado há 6 meses em uso de tacrolimus e prednisona apresenta hiperglicemia persistente (HbA1c 7,5%). Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'NODAT (diabetes pós-transplante): individualizar imunossupressão (reduzir/switch tacrolimus para ciclosporina, reduzir corticoide se possível), iniciar tratamento anti-hiperglicemiante (metformina se TFG permitir, iSGLT2 em selecionados com atenção à imunossupressão, insulina se descompensado); modificações de estilo de vida',
@@ -1255,7 +1255,7 @@ const ADV_MASTERS = [
     age: 65,
     vars: { cr: 2.3 },
     statement:
-      '{{sexWord}} de {{age}} em uso de pembrolizumabe há 3 meses apresenta LRA (creatinina {{cr}}), sedimento com leucócitos, eosinofilia leve. Sem infecção ativa. Qual conduta?',
+      '{{sexWord}} de {{age}} em uso de pembrolizumabe há 3 meses apresenta LRA (creatinina {{cr}}), sedimento com leucócitos, eosinofilia leve. Sem infecção ativa. Qual é a melhor conduta?',
     options: {
       A: 'Manter fármaco',
       B: 'Nefrite intersticial aguda relacionada a ICI (irAE renal): considerar biópsia se dúvida, suspender o ICI, iniciar prednisona 0,5–1 mg/kg/dia com desmame de semanas; reintrodução do ICI em casos selecionados com controle da toxicidade',
@@ -1276,7 +1276,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: { k: 6.5, p: 8.5, ua: 15 },
     statement:
-      '{{sexWord}} de {{age}} com linfoma iniciando QT apresenta K {{k}}, P {{p}}, ácido úrico {{ua}}, LDH em rampa e LRA. Qual conduta?',
+      '{{sexWord}} de {{age}} com linfoma iniciando QT apresenta K {{k}}, P {{p}}, ácido úrico {{ua}}, LDH em rampa e LRA. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'Síndrome de lise tumoral: hidratação vigorosa isotônica (3 L/m²/dia), rasburicase (em risco alto — reduz ácido úrico rapidamente; contraindicada em G6PD), NÃO alcalinizar rotineiramente (piora precipitação de fosfato de cálcio); TSR precoce (CRRT) se hiperK refratária, hiperP grave ou sobrecarga',
@@ -1299,7 +1299,7 @@ const ADV_MASTERS = [
     age: 30,
     vars: { sbp: 160, dbp: 110 },
     statement:
-      'Gestante de 30 semanas com PA {{sbp}}×{{dbp}}, proteinúria 3+, cefaleia intensa e reflexos vivos. Qual conduta?',
+      'Gestante de 30 semanas com PA {{sbp}}×{{dbp}}, proteinúria 3+, cefaleia intensa e reflexos vivos. Qual é a melhor conduta?',
     options: {
       A: 'Alta ambulatorial',
       B: 'Pré-eclâmpsia grave: internar, controle pressórico com anti-hipertensivos seguros na gravidez (labetalol, hidralazina, nifedipina), sulfato de magnésio para profilaxia/tratamento de eclâmpsia, avaliar bem-estar fetal e programar interrupção da gestação conforme idade gestacional e critérios de gravidade',
@@ -1341,7 +1341,7 @@ const ADV_MASTERS = [
     age: 68,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com IC-FER e DRC 3 apresenta discreta elevação de creatinina (30% do basal) e K 5,2 após início de IECA. Qual conduta?',
+      '{{sexWord}} de {{age}} com IC-FER e DRC 3 apresenta discreta elevação de creatinina (30% do basal) e K 5,2 após início de IECA. Qual é a melhor conduta?',
     options: {
       A: 'Suspender IECA',
       B: 'Elevação de creatinina ≤30% e K ≤5,5 mEq/L é ACEITÁVEL após início de IECA/BRA e não é motivo para suspensão — persistir com nefroproteção CV/renal; se K persistir alto, revisar dieta, considerar patiromer/ZS-9 e adicionar iSGLT2',
@@ -1362,7 +1362,7 @@ const ADV_MASTERS = [
     age: 63,
     vars: {},
     statement:
-      'Paciente com metástases ósseas em uso repetido de zoledronato apresenta LRA subaguda com sedimento urinário blando; biópsia mostra GESF colapsante. Conduta?',
+      'Paciente com metástases ósseas em uso repetido de zoledronato apresenta LRA subaguda com sedimento urinário blando; biópsia mostra GESF colapsante. Qual é a melhor conduta?',
     options: {
       A: 'Manter bisfosfonato',
       B: 'Suspender zoledronato; nefroproteção com IECA/BRA, controle de PA; considerar mudança para denosumabe (com cautela de hipoCa em DRC); monitorar TFG e proteinúria',
@@ -1385,7 +1385,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: { c3: 45, prot: 3.5 },
     statement:
-      '{{sexWord}} de {{age}} com HCV crônico apresenta síndrome nefrítica/nefrótica mista, C3 {{c3}}, C4 muito baixo, crioglobulinas positivas, artralgias e púrpura. Diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} com HCV crônico apresenta síndrome nefrítica/nefrótica mista, C3 {{c3}}, C4 muito baixo, crioglobulinas positivas, artralgias e púrpura. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'GNPE',
       B: 'GN membranoproliferativa por crioglobulinemia associada à HCV: terapia antiviral direta (DAA — sofosbuvir/velpatasvir) para HCV é pilar; imunossupressão (rituximabe) em manifestações extra-hepáticas graves e vasculite; plasmaférese em casos com hiperviscosidade/vasculite grave',
@@ -1406,7 +1406,7 @@ const ADV_MASTERS = [
     age: 42,
     vars: { upcr: 4.0 },
     statement:
-      '{{sexWord}} de {{age}} com HIV mal tratado, CD4 baixo, proteinúria UPCR {{upcr}} e biópsia com GESF colapsante clássica. Conduta?',
+      '{{sexWord}} de {{age}} com HIV mal tratado, CD4 baixo, proteinúria UPCR {{upcr}} e biópsia com GESF colapsante clássica. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar HIV',
       B: 'Otimizar TARV com supressão viral, IECA/BRA para nefroproteção, corticoide em casos selecionados (baixa evidência), tratar comorbidades; vigilância de progressão',
@@ -1427,7 +1427,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em uso de lítio há 20 anos apresenta poliúria/polidipsia, DRC lentamente progressiva com rins pequenos multicísticos à US e proteinúria discreta. Conduta?',
+      '{{sexWord}} de {{age}} em uso de lítio há 20 anos apresenta poliúria/polidipsia, DRC lentamente progressiva com rins pequenos multicísticos à US e proteinúria discreta. Qual é a melhor conduta?',
     options: {
       A: 'Manter lítio sem monitorar',
       B: 'Nefropatia crônica por lítio: em conjunto com psiquiatria, avaliar substituição (valproato, lamotrigina, quetiapina) — o lítio pode ser mantido em benefício psiquiátrico dominante com nível mais baixo e monitorização; controle da poliúria com dieta, amilorida/tiazídico; nefroproteção geral, evitar desidratação/AINE',
@@ -1448,7 +1448,7 @@ const ADV_MASTERS = [
     age: 66,
     vars: { tfg: 45, uacr: 100 },
     statement:
-      '{{sexWord}} de {{age}} com HAS de longa data, TFG {{tfg}}, UACR {{uacr}}, sedimento urinário blando, sem outra causa. Diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} com HAS de longa data, TFG {{tfg}}, UACR {{uacr}}, sedimento urinário blando, sem outra causa. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'Nefrite intersticial imediata',
       B: 'Nefroangiosclerose hipertensiva (nefroesclerose): controle rigoroso de PA (KDIGO <120), nefroproteção com IECA/BRA em albuminúria, iSGLT2 em DRC albuminúrica, controle metabólico e CV',
@@ -1469,7 +1469,7 @@ const ADV_MASTERS = [
     age: 47,
     vars: { sbp: 210, cr: 3.5 },
     statement:
-      '{{sexWord}} de {{age}} com esclerodermia, PA {{sbp}}, LRA (creatinina {{cr}}), anemia hemolítica microangiopática. Qual conduta?',
+      '{{sexWord}} de {{age}} com esclerodermia, PA {{sbp}}, LRA (creatinina {{cr}}), anemia hemolítica microangiopática. Qual é a melhor conduta?',
     options: {
       A: 'Suspender IECA',
       B: 'Crise renal esclerodérmica: IECA (captopril titulado agressivamente para controle da PA, MESMO com creatinina subindo) — é salvamento em síndrome com prognóstico historicamente ruim',
@@ -1490,7 +1490,7 @@ const ADV_MASTERS = [
     age: 35,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com púrpura palpável, artralgia, dor abdominal, sedimento com hematúria dismórfica e proteinúria. Qual conduta?',
+      '{{sexWord}} de {{age}} com púrpura palpável, artralgia, dor abdominal, sedimento com hematúria dismórfica e proteinúria. Qual é a melhor conduta?',
     options: {
       A: 'ATB apenas',
       B: 'Vasculite IgA (Henoch-Schönlein no adulto — muitas vezes mais grave que em criança): nefroproteção com IECA/BRA, controle de PA; imunossupressão (corticoide ± ciclofosfamida/MMF) em nefrite moderada/grave (proteinúria maciça, queda de TFG); biópsia guia terapia',
@@ -1534,7 +1534,7 @@ const ADV_MASTERS = [
     age: 60,
     vars: { tfg: 25 },
     statement:
-      '{{sexWord}} com DRC (TFG {{tfg}}) e sepse por Gram- multirresistente em UTI recebe meropenem. Qual conduta?',
+      '{{sexWord}} com DRC (TFG {{tfg}}) e sepse por Gram- multirresistente em UTI recebe meropenem. Qual é a melhor conduta?',
     options: {
       A: 'Manter dose padrão',
       B: 'Ajustar dose ao TFG (dose menor ou intervalo maior conforme referência); em CRRT, doses geralmente MAIORES que em HD (efluente alto); monitorar níveis quando disponível; considerar infusão prolongada/contínua para maximizar T>MIC',
@@ -1578,7 +1578,7 @@ const ADV_MASTERS = [
     age: 59,
     vars: { p: 7.2, pth: 780 },
     statement:
-      '{{sexWord}} de {{age}} em HD 3×/semana com fósforo {{p}} mg/dL e PTH {{pth}} pg/mL, sem calcifilaxia. Qual a melhor estratégia?',
+      '{{sexWord}} de {{age}} em HD 3×/semana com fósforo {{p}} mg/dL e PTH {{pth}} pg/mL, sem calcifilaxia. Qual é a melhor estratégia terapêutica?',
     options: {
       A: 'Liberar refrigerantes/processados',
       B: 'Restringir P dietético (>800 mg/dia para <1000), quelantes tomados com refeições (não-cálcicos como sevelamer ou lantânio em risco de calcificação vascular), vitamina D ativa e/ou calcimimético (cinacalcete/etelcalcetide) conforme PTH, ajustar cálcio do dialisado; paratireoidectomia se refratário',
@@ -1599,7 +1599,7 @@ const ADV_MASTERS = [
     age: 65,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} em HD com lesões cutâneas necróticas dolorosas em coxas e abdome, produto Ca×P elevado, uso crônico de varfarina. Qual conduta?',
+      '{{sexWord}} de {{age}} em HD com lesões cutâneas necróticas dolorosas em coxas e abdome, produto Ca×P elevado, uso crônico de varfarina. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'Calcifilaxia (arteriolopatia calcificante urêmica): multidisciplinar — tiossulfato de sódio IV, otimizar CKD-MBD (baixo Ca, quelantes não-cálcicos, cinacalcete), substituir varfarina por outro anticoagulante quando possível (a varfarina inibe proteínas dependentes de vitamina K envolvidas na proteção contra calcificação), cuidado com feridas, analgesia adequada e paratireoidectomia em selecionados',
@@ -1620,7 +1620,7 @@ const ADV_MASTERS = [
     age: 64,
     vars: { hb: 8.7, ferritina: 300, tsat: 18 },
     statement:
-      '{{sexWord}} de {{age}} em HD, Hb {{hb}}, ferritina {{ferritina}}, TSAT {{tsat}}%. Qual conduta?',
+      '{{sexWord}} de {{age}} em HD, Hb {{hb}}, ferritina {{ferritina}}, TSAT {{tsat}}%. Qual é a melhor conduta?',
     options: {
       A: 'Transfusão semanal indefinida',
       B: 'Otimizar ferro (TSAT alvo ≥20–30% e ferritina 200–500 em HD conforme KDIGO), preferencialmente ferro EV em HD; iniciar/ajustar ESA com alvo Hb 10–11,5 g/dL (evitar >13 pelo risco CV — CHOIR/TREAT); avaliar deficiências (folato, B12), inflamação, causas de perda',
@@ -1664,7 +1664,7 @@ const ADV_MASTERS = [
     age: 72,
     vars: { tfg: 30 },
     statement:
-      '{{sexWord}} de {{age}} com FA e DRC 3b (TFG {{tfg}}), sem AVC prévio, sem alto sangramento; considerando anticoagulação. Qual conduta?',
+      '{{sexWord}} de {{age}} com FA e DRC 3b (TFG {{tfg}}), sem AVC prévio, sem alto sangramento; considerando anticoagulação. Qual é a melhor conduta?',
     options: {
       A: 'Varfarina em todos',
       B: 'DOACs são preferidos em DRC 3b (apixabana ou edoxabana com ajuste — melhor perfil sangramento/eficácia); dose ajustada e monitor de função renal; varfarina em DRC muito avançada/HD ainda debatida (crescente uso cauteloso de apixabana em HD após ARISTOTLE + estudos observacionais)',
@@ -1727,7 +1727,7 @@ const ADV_MASTERS = [
     age: 58,
     vars: {},
     statement:
-      'Paciente com alto risco de sangramento (recém pós-operatório) precisa dialisar. Qual estratégia?',
+      'Paciente com alto risco de sangramento (recém pós-operatório) precisa dialisar. Qual é a melhor estratégia terapêutica?',
     options: {
       A: 'Heparina em dose plena',
       B: 'HD sem anticoagulação (lavagens salinas periódicas de circuito) ou anticoagulação regional com citrato (preferido); ajustar tempo e fluxo para evitar coagulação; monitorar cálcio ionizado se citrato',
@@ -1748,7 +1748,7 @@ const ADV_MASTERS = [
     age: 55,
     vars: { uacr: 320, tfg: 62 },
     statement:
-      '{{sexWord}} de {{age}} com DM2 há 12 anos, UACR {{uacr}}, TFG {{tfg}}, PA 130/78 em IECA. Qual próximo passo?',
+      '{{sexWord}} de {{age}} com DM2 há 12 anos, UACR {{uacr}}, TFG {{tfg}}, PA 130/78 em IECA. Qual exame ou conduta deve ser solicitado a seguir?',
     options: {
       A: 'Suspender IECA',
       B: 'Manter IECA + adicionar iSGLT2 (empa/dapa) e considerar finerenona (bloqueador MR não esteroidal) para reduzir progressão e MACE em DRC diabética albuminúrica; controle glicêmico com foco em GLP-1 análogo se elegível; controle lipídico com estatina; controle de PA <130/80 (ou <120 em SBP padronizada)',
@@ -1769,7 +1769,7 @@ const ADV_MASTERS = [
     age: 69,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com DRC 5 não-dialítica apresenta asterixe, confusão, atrito pericárdico e sobrecarga de volume. Conduta?',
+      '{{sexWord}} de {{age}} com DRC 5 não-dialítica apresenta asterixe, confusão, atrito pericárdico e sobrecarga de volume. Qual é a melhor conduta?',
     options: {
       A: 'Alta ambulatorial',
       B: 'Iniciar terapia de substituição renal por uremia sintomática (encefalopatia, pericardite urêmica), sobrecarga refratária e/ou distúrbios ácido-base/eletrolíticos não tratáveis clinicamente',
@@ -1853,7 +1853,7 @@ const ADV_MASTERS = [
     age: 40,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com angioqueratomas, dor neuropática nas extremidades, hipohidrose, proteinúria, cornea verticillata; história familiar de "problema no rim/coração" precoce. Diagnóstico?',
+      '{{sexWord}} de {{age}} com angioqueratomas, dor neuropática nas extremidades, hipohidrose, proteinúria, cornea verticillata; história familiar de "problema no rim/coração" precoce. Qual é o diagnóstico mais provável?',
     options: {
       A: 'Alport',
       B: 'Doença de Fabry (deficiência de α-galactosidase A, ligada ao X): dosar atividade da α-Gal A (homens) e genética (mulheres heterozigotas podem ser sintomáticas); terapia de reposição enzimática (agalsidase) ou chaperona (migalastate em mutações amenáveis); nefroproteção com IECA/BRA',
@@ -1895,7 +1895,7 @@ const ADV_MASTERS = [
     age: 33,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com anemia hemolítica microangiopática + plaquetopenia + alteração neurológica flutuante, sem diarreia. ADAMTS13 <10%. Diagnóstico e conduta?',
+      '{{sexWord}} de {{age}} com anemia hemolítica microangiopática + plaquetopenia + alteração neurológica flutuante, sem diarreia. ADAMTS13 <10%. Qual é o diagnóstico mais provável e a melhor conduta?',
     options: {
       A: 'STEC-HUS típico',
       B: 'PTT (Púrpura Trombocitopênica Trombótica) adquirida (auto-anticorpo anti-ADAMTS13): plasmaférese urgente diariamente até resolução, corticoide + rituximabe; caplacizumabe (anti-vWF nanobody) acelera resposta (HERCULES trial); evitar transfusão de plaquetas exceto sangramento grave',
@@ -1916,7 +1916,7 @@ const ADV_MASTERS = [
     age: 40,
     vars: {},
     statement:
-      '{{sexWord}} de {{age}} com MAHA + plaquetopenia + LRA sem diarreia, ADAMTS13 normal. Qual conduta?',
+      '{{sexWord}} de {{age}} com MAHA + plaquetopenia + LRA sem diarreia, ADAMTS13 normal. Qual é a melhor conduta?',
     options: {
       A: 'Ignorar',
       B: 'SHU atípica adulta: dosar complemento, painel de mutações (CFH, CFI, MCP, C3, DGKE), tratar com eculizumabe/ravulizumabe (bloqueio de C5) precocemente; vacinar contra meningococo antes ou concomitante com profilaxia antibiótica; avaliar Tx renal com risco de recorrência conforme genética',

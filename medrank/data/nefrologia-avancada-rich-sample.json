@@ -5,7 +5,7 @@
   "questions": [
     {
       "id": "nefroadv-x-000001",
-      "statement": "Homem de 69 anos, 71 kg, admitido com sepse de foco urinário e PAM 65 mmHg após reposição inicial de 30 mL/kg de cristaloide balanceado. Creatinina basal 1,0; atual 2.5 mg/dL; ureia 100; FENa 0.3%, urina concentrada, sem cilindros pigmentados; US sem hidronefrose. Qual a interpretação e a conduta prioritária?",
+      "statement": "Homem de 69 anos, 71 kg, admitido com sepse de foco urinário e PAM 65 mmHg após reposição inicial de 30 mL/kg de cristaloide balanceado. Creatinina basal 1,0; atual 2.5 mg/dL; ureia 100; FENa 0.3%, urina concentrada, sem cilindros pigmentados; US sem hidronefrose. Qual é a interpretação correta e a conduta prioritária?",
       "option_a": "Necrose tubular aguda estabelecida — iniciar hemodiálise imediatamente apenas pela creatinina",
       "option_b": "LRA pré-renal por hipoperfusão: otimizar perfusão (fluidoterapia guiada por reavaliação clínica/POCUS/VExUS, noradrenalina se hipotensão persistente), tratar a sepse com antimicrobiano adequado, evitar nefrotóxicos e reavaliar TFG",
       "option_c": "Nefrite intersticial alérgica como primeira hipótese",
@@ -35,7 +35,7 @@
     },
     {
       "id": "nefroadv-x-000013",
-      "statement": "Homem de 68 anos internado por infarto complicado com choque cardiogênico, recebeu contraste iodado e aminoglicosídeo. Creatinina 3.2, FENa 2.9%, sedimento com cilindros granulosos pigmentados, U/P creatinina baixa. Sem obstrução. Qual o diagnóstico e conduta?",
+      "statement": "Homem de 68 anos internado por infarto complicado com choque cardiogênico, recebeu contraste iodado e aminoglicosídeo. Creatinina 3.2, FENa 2.9%, sedimento com cilindros granulosos pigmentados, U/P creatinina baixa. Sem obstrução. Qual é o diagnóstico mais provável e a melhor conduta?",
       "option_a": "LRA pré-renal — apenas mais volume",
       "option_b": "Necrose tubular aguda (isquêmica somada a nefrotóxica): suspender aminoglicosídeo, otimizar hemodinâmica evitando congestão, evitar novo contraste, dose ajustada de fármacos, monitorizar AEIOU e considerar TSR se indicado",
       "option_c": "Estenose de artéria renal bilateral aguda",
@@ -65,7 +65,7 @@
     },
     {
       "id": "nefroadv-x-000025",
-      "statement": "Homem de 82 anos com DRC (TFG 26.8) precisa realizar angioTC para investigar embolia. Qual a melhor estratégia preventiva de LRA associada a contraste?",
+      "statement": "Homem de 82 anos com DRC (TFG 26.8) precisa realizar angioTC para investigar embolia. Qual é a melhor estratégia preventiva de LRA associada a contraste?",
       "option_a": "Nenhuma medida específica",
       "option_b": "Hidratação com SF 0,9% (ou bicarbonato isotônico em casos selecionados) periprocedimento, menor volume possível de contraste iso/hipo-osmolar, suspender AINE e outros nefrotóxicos, revisar necessidade de metformina no dia",
       "option_c": "AINE + diurético em altas doses",
@@ -95,7 +95,7 @@
     },
     {
       "id": "nefroadv-x-000037",
-      "statement": "Homem de 50 anos em uso de omeprazol e amoxicilina/clavulanato há 3 semanas apresenta creatinina 2.7, exantema, febre baixa e eosinofilia periférica. Sedimento urinário com leucócitos e cilindros leucocitários; US sem obstrução. Qual conduta é a melhor?",
+      "statement": "Homem de 50 anos em uso de omeprazol e amoxicilina/clavulanato há 3 semanas apresenta creatinina 2.7, exantema, febre baixa e eosinofilia periférica. Sedimento urinário com leucócitos e cilindros leucocitários; US sem obstrução. Qual é a melhor conduta?",
       "option_a": "Manter medicamentos e observar",
       "option_b": "Suspender fármacos suspeitos (IBP, antibiótico), considerar corticoide (prednisona 0,5–1 mg/kg/dia com desmame por 4–8 semanas) se creatinina persistentemente elevada; biópsia renal quando dúvida diagnóstica ou falha em melhorar",
       "option_c": "Diálise imediata pela creatinina isolada",
@@ -125,7 +125,7 @@
     },
     {
       "id": "nefroadv-x-000049",
-      "statement": "Homem de 50 anos com LRA anúrica, K 7.2 mEq/L refratário a medidas conservadoras, acidose (pH 7,05, HCO₃ 10) e edema agudo de pulmão em ventilação mecânica. Qual conduta?",
+      "statement": "Homem de 50 anos com LRA anúrica, K 7.2 mEq/L refratário a medidas conservadoras, acidose (pH 7,05, HCO₃ 10) e edema agudo de pulmão em ventilação mecânica. Qual é a melhor conduta?",
       "option_a": "Alta com resina oral",
       "option_b": "Iniciar terapia de substituição renal (HD intermitente, SLED ou CRRT conforme estabilidade); indicações AEIOU: Acidose, Eletrólitos, Intoxicação, Overload, Uremia sintomática",
       "option_c": "Dieta rica em potássio",
@@ -155,7 +155,7 @@
     },
     {
       "id": "nefroadv-x-000061",
-      "statement": "Homem de 50 anos em choque séptico sob noradrenalina alta, anúrico, K 6.6, acidose. Qual a melhor modalidade e prescrição inicial?",
+      "statement": "Homem de 50 anos em choque séptico sob noradrenalina alta, anúrico, K 6.6, acidose. Qual é a melhor modalidade e a prescrição inicial de diálise?",
       "option_a": "HD intermitente agressiva em paciente instável",
       "option_b": "CRRT (CVVHDF) com dose de efluente 20–25 mL/kg/h (prescrever 25–30 para atingir o alvo, contando pausas), controle de anticoagulação (regional com citrato de preferência), ajuste de fármacos e monitorização eletrolítica",
       "option_c": "Nenhuma terapia renal apesar do AEIOU",
@@ -185,7 +185,7 @@
     },
     {
       "id": "nefroadv-x-000073",
-      "statement": "Homem de 37 anos após esmagamento em acidente, CK 85000 U/L, mioglobinúria, K 6, creatinina 2.9. Qual a conduta inicial prioritária?",
+      "statement": "Homem de 37 anos após esmagamento em acidente, CK 85000 U/L, mioglobinúria, K 6, creatinina 2.9. Qual é a conduta inicial mais adequada?",
       "option_a": "Restringir volume",
       "option_b": "Hidratação isotônica precoce e generosa para diurese ≥200–300 mL/h, monitorar e tratar hipercalemia e hipocalcemia (cuidado com Ca — pode reprecipitar), alcalinização em selecionados (evidência controversa), evitar AINE, indicar TSR se AEIOU",
       "option_c": "AINE em altas doses",
@@ -215,7 +215,7 @@
     },
     {
       "id": "nefroadv-x-000085",
-      "statement": "Homem de 57 anos com cirrose Child C e ascite, creatinina sobe para 2.9 mg/dL, urinálise sem cilindros, US sem obstrução; sem nefrotóxicos, sem choque; sem melhora após 48 h de albumina 1 g/kg/dia e retirada de diuréticos. Qual conduta?",
+      "statement": "Homem de 57 anos com cirrose Child C e ascite, creatinina sobe para 2.9 mg/dL, urinálise sem cilindros, US sem obstrução; sem nefrotóxicos, sem choque; sem melhora após 48 h de albumina 1 g/kg/dia e retirada de diuréticos. Qual é a melhor conduta?",
       "option_a": "Diurético em dose máxima",
       "option_b": "Diagnóstico de HRS-AKI (novos critérios ICA): terlipressina + albumina (padrão-ouro) ou noradrenalina em UTI se terlipressina indisponível/contraindicada; listar para transplante hepático",
       "option_c": "AINE liberado",
@@ -245,7 +245,7 @@
     },
     {
       "id": "nefroadv-x-000097",
-      "statement": "Homem de 75 anos com IC de FE reduzida (FE 29.5%), congestão pulmonar e edema periférico, creatinina 2 após aumento de diurético de alça. Qual estratégia?",
+      "statement": "Homem de 75 anos com IC de FE reduzida (FE 29.5%), congestão pulmonar e edema periférico, creatinina 2 após aumento de diurético de alça. Qual é a melhor estratégia terapêutica?",
       "option_a": "Suspender todo diurético",
       "option_b": "Manter descongestão adequada: aumentar dose ou associar diuréticos (bloqueio sequencial com tiazídico ou acetazolamida — ADVOR mostrou benefício), ultrafiltração isolada em selecionados, evitar nefrotóxicos, otimizar terapia da IC (β-bloqueador, IECA/BRA, SGLT2i, ARNI, MRA) — leve alta de creatinina durante descongestão pode ser aceitável",
       "option_c": "IECA em choque cardiogênico refratário sem estabilizar",
@@ -275,7 +275,7 @@
     },
     {
       "id": "nefroadv-x-000109",
-      "statement": "Homem de 65 anos com HAS e osteoartrose usa losartana, hidroclorotiazida e ibuprofeno diário. Após episódio de gastroenterite, creatinina sobe para 1.9 (basal 1,0). Qual a interpretação e conduta?",
+      "statement": "Homem de 65 anos com HAS e osteoartrose usa losartana, hidroclorotiazida e ibuprofeno diário. Após episódio de gastroenterite, creatinina sobe para 1.9 (basal 1,0). Qual é a interpretação correta e a melhor conduta?",
       "option_a": "LRA por causa infecciosa apenas",
       "option_b": "LRA pré-renal/hemodinâmica pela \"tríade\" AINE + IECA/BRA + diurético em contexto de hipovolemia: suspender AINE, avaliar suspensão temporária de IECA/diurético, reidratar; reintroduzir IECA/BRA quando estável (é nefroprotetor a longo prazo)",
       "option_c": "Necrose cortical bilateral",
@@ -305,7 +305,7 @@
     },
     {
       "id": "nefroadv-x-000121",
-      "statement": "Homem de 58 anos com DM2, DRC (TFG 41.7 mL/min/1,73 m²), UACR 495.8 mg/g, PA 138/82 em uso de IECA dose máxima tolerada; K 4,6; HbA1c 8,0%. Qual adição terapêutica traz maior impacto renal/CV?",
+      "statement": "Homem de 58 anos com DM2, DRC (TFG 41.7 mL/min/1,73 m²), UACR 495.8 mg/g, PA 138/82 em uso de IECA dose máxima tolerada; K 4,6; HbA1c 8,0%. Qual medicamento deve ser iniciado para maior impacto renal e cardiovascular?",
       "option_a": "Suspender IECA porque TFG <45",
       "option_b": "Adicionar iSGLT2 (dapagliflozina/empagliflozina) — benefício robusto de DAPA-CKD, EMPA-KIDNEY e CREDENCE; considerar finerenona (bloqueador não esteroidal do MR) para redução adicional de albuminúria e desfechos CV/renais",
       "option_c": "AINE diário para \"proteger o rim\"",
@@ -335,7 +335,7 @@
     },
     {
       "id": "nefroadv-x-000133",
-      "statement": "Homem de 53 anos com DRC não-diabética (TFG 38.2, UPCR 1.3), PA 132/80 em IECA dose plena. Qual a conduta baseada em evidência atual?",
+      "statement": "Homem de 53 anos com DRC não-diabética (TFG 38.2, UPCR 1.3), PA 132/80 em IECA dose plena. Qual alternativa está de acordo com a diretriz mais atual?",
       "option_a": "Suspender IECA",
       "option_b": "Adicionar iSGLT2 mesmo sem diabetes (DAPA-CKD e EMPA-KIDNEY mostraram benefício em DRC albuminúrica não-diabética), otimizar PA (alvo SBP <120 mmHg em muitos guidelines, guiado por medida padronizada), manter IECA",
       "option_c": "AINE",
@@ -365,7 +365,7 @@
     },
     {
       "id": "nefroadv-x-000145",
-      "statement": "Homem de 57 anos com DRC estágio 5 (TFG 14.7 mL/min/1,73 m²), PA e volemia adequadas, sem asterixe, pericardite, anorexia significativa ou distúrbios eletrolíticos refratários. Está em acompanhamento nefrológico regular. Qual a conduta mais apropriada neste momento?",
+      "statement": "Homem de 57 anos com DRC estágio 5 (TFG 14.7 mL/min/1,73 m²), PA e volemia adequadas, sem asterixe, pericardite, anorexia significativa ou distúrbios eletrolíticos refratários. Está em acompanhamento nefrológico regular. Qual é a melhor conduta neste momento?",
       "option_a": "Iniciar diálise imediatamente pela TFG isolada",
       "option_b": "Preparo antecipado: educação multidisciplinar sobre modalidades (HD/DP/Tx), planejamento de acesso (fístula com antecedência ≥3–6 meses), avaliação para Tx preemptivo, controle de PA/anemia/CKD-MBD/nutrição/vacinação; iniciar TSR guiado por sintomas + AEIOU, não somente por TFG",
       "option_c": "Suspender consultas nefrológicas",
@@ -395,7 +395,7 @@
     },
     {
       "id": "nefroadv-x-000157",
-      "statement": "Homem de 64 anos negro, obeso, com massa muscular reduzida, deseja estimar TFG. Qual conduta é mais adequada em 2024–2026?",
+      "statement": "Homem de 64 anos negro, obeso, com massa muscular reduzida, deseja estimar TFG. Qual alternativa está de acordo com a diretriz mais atual?",
       "option_a": "Usar Cockcroft-Gault sem ajustes",
       "option_b": "Usar equação CKD-EPI 2021 (sem coeficiente racial) baseada em creatinina; em casos com massa muscular reduzida ou discrepância clínica, dosar cistatina C e usar a equação CKD-EPI creatinina+cistatina, que aumenta acurácia",
       "option_c": "Depuração de creatinina 24 h em todos",
@@ -425,7 +425,7 @@
     },
     {
       "id": "nefroadv-x-000169",
-      "statement": "Homem de 56 anos com DRC estágio 4, HCO₃ 18 mEq/L persistente em duas dosagens, ânion gap normal, sem hipernatremia. Sem sintomas de sobrecarga volêmica. Qual conduta em relação à acidose metabólica crônica?",
+      "statement": "Homem de 56 anos com DRC estágio 4, HCO₃ 18 mEq/L persistente em duas dosagens, ânion gap normal, sem hipernatremia. Sem sintomas de sobrecarga volêmica. Qual é o tratamento mais indicado para a acidose metabólica crônica?",
       "option_a": "Ignorar acidose",
       "option_b": "Corrigir com bicarbonato de sódio oral (0,5–1 mEq/kg/dia titulado) para HCO₃ alvo ≥22 mEq/L, com o objetivo de retardar progressão da DRC, preservar massa muscular e melhorar CKD-MBD",
       "option_c": "Cloreto de amônio",
@@ -455,7 +455,7 @@
     },
     {
       "id": "nefroadv-x-000181",
-      "statement": "Homem de 57 anos com edema, albumina 2 g/dL, proteinúria 7.6 g/24 h, FAN/ANCA negativos, anti-PLA2R sérico positivo em títulos altos, rastreio de neoplasia negativo, TFG preservada. Qual conduta?",
+      "statement": "Homem de 57 anos com edema, albumina 2 g/dL, proteinúria 7.6 g/24 h, FAN/ANCA negativos, anti-PLA2R sérico positivo em títulos altos, rastreio de neoplasia negativo, TFG preservada. Qual é a melhor conduta?",
       "option_a": "Ignorar PLA2R e tratar como ITU",
       "option_b": "Nefropatia membranosa primária (PLA2R+): nefroproteção máxima (IECA/BRA, restrição salina, anticoagulação profilática se albumina <2,5 g/dL e risco alto), estratificar (KDIGO baixo/médio/alto risco) e iniciar imunossupressão em risco intermediário/alto (rituximabe é a primeira linha preferida hoje) — biópsia se atipia ou ausência de PLA2R",
       "option_c": "Nefrectomia diagnóstica",
@@ -485,7 +485,7 @@
     },
     {
       "id": "nefroadv-x-000193",
-      "statement": "Mulher de 28 anos com LES ativo, UPCR 4.1 g/g, hematúria dismórfica, hipocomplementemia, anti-dsDNA alto, creatinina 1.5. Biópsia: classe IV. Qual esquema de indução recomendado hoje?",
+      "statement": "Mulher de 28 anos com LES ativo, UPCR 4.1 g/g, hematúria dismórfica, hipocomplementemia, anti-dsDNA alto, creatinina 1.5. Biópsia: classe IV. Qual é o esquema de indução mais indicado segundo as diretrizes atuais?",
       "option_a": "Somente hidroxicloroquina",
       "option_b": "Indução com corticoide (pulso metilprednisolona 250–1000 mg × 3 dias seguidos de prednisona baixa dose, priorizando redução mais rápida) + MMF 2–3 g/dia OU ciclofosfamida IV (regime NIH clássico ou Euro-lupus baixa dose); considerar acréscimo de belimumabe (BLISS-LN) ou voclosporina (AURORA) para maior remissão renal; HCQ para todos",
       "option_c": "Nefrectomia",
@@ -515,7 +515,7 @@
     },
     {
       "id": "nefroadv-x-000205",
-      "statement": "Mulher de 30 anos com LES e SN (albumina 2, proteinúria 6.3); creatinina normal; biópsia mostra classe V pura (nefrite membranosa lúpica). Qual conduta?",
+      "statement": "Mulher de 30 anos com LES e SN (albumina 2, proteinúria 6.3); creatinina normal; biópsia mostra classe V pura (nefrite membranosa lúpica). Qual é a melhor conduta?",
       "option_a": "Ignorar proteinúria",
       "option_b": "HCQ + nefroproteção (IECA/BRA), estatina se dislipidemia, considerar anticoagulação se albumina muito baixa; imunossupressão (MMF ± ICN ou rituximabe) se SN persistente apesar de otimização",
       "option_c": "Diálise imediata",
@@ -545,7 +545,7 @@
     },
     {
       "id": "nefroadv-x-000217",
-      "statement": "Homem de 64 anos com hemoptise, IRA (creatinina 4.1), sedimento com hematúria dismórfica e cilindros hemáticos, ANCA-MPO positivo. Qual conduta?",
+      "statement": "Homem de 64 anos com hemoptise, IRA (creatinina 4.1), sedimento com hematúria dismórfica e cilindros hemáticos, ANCA-MPO positivo. Qual é a melhor conduta?",
       "option_a": "Adiar tratamento",
       "option_b": "Emergência renal-pulmonar (síndrome pulmão-rim): pulso de metilprednisolona seguido de prednisona (esquema com redução rápida — PEXIVAS reduced-dose); indução com rituximabe (RITUXVAS/RAVE) OU ciclofosfamida; plasmaférese em casos selecionados (hemorragia alveolar difusa grave, creatinina muito alta com necessidade de diálise) — PEXIVAS mostrou que rotineiramente não reduz mortalidade/DRC terminal; profilaxia de PJP",
       "option_c": "Antibiótico apenas",
@@ -575,7 +575,7 @@
     },
     {
       "id": "nefroadv-x-000229",
-      "statement": "Homem de 34 anos com hemorragia alveolar, creatinina 5.7 em 5 dias e anti-MBG positivo. Qual terapêutica clássica?",
+      "statement": "Homem de 34 anos com hemorragia alveolar, creatinina 5.7 em 5 dias e anti-MBG positivo. Qual é o tratamento clássico mais indicado?",
       "option_a": "Observação",
       "option_b": "Plasmaférese diária/em dias alternados até anti-MBG negativar + ciclofosfamida + corticoide (pulso seguido de manutenção); Tx renal apenas com anti-MBG indetectável há ≥6 meses",
       "option_c": "iSGLT2 isolado",
