@@ -44,3 +44,5 @@ CREATE POLICY "Users manage own practice_progress" ON public.practice_progress
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.practice_sessions TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.practice_progress TO authenticated;
+GRANT ALL ON public.practice_sessions TO service_role;
+GRANT ALL ON public.practice_progress TO service_role;
