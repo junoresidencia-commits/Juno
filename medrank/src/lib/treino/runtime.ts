@@ -157,6 +157,22 @@ async function pickProductionQuestions(
 
   let pool = (data ?? []) as Question[];
 
+  // Descarta templates ruins de bancos antigos (se ainda existirem no DB)
+  const badStem = [
+    /em avaliação de .+ — foco:/i,
+    /Labs e contexto compatíveis/i,
+    /Conduta alinhada a guidelines/i,
+    /Tipo de cobrança/i,
+    /\(i % \d+/,
+  ];
+  pool = pool.filter((q) => {
+    const blob = `${q.statement}\n${q.option_a}\n${q.option_b}`;
+    return !badStem.some((re) => re.test(blob));
+  });
+  // Preferir banco expert quando disponível
+  const expert = pool.filter((q) => q.tags?.includes('banco-expert'));
+  if (expert.length >= count) pool = expert;
+
   const bias = leagueTopicBias(opts.liga);
   if (bias?.length && !opts.topic) {
     const boosted = pool.filter((q) =>
