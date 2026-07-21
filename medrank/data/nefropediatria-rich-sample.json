@@ -13,15 +13,15 @@
       "tipo": "Caso clínico",
       "idade": "13 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 13 anos (40 kg, 152 cm), PA 112×59 mmHg, em avaliação de anatomia — foco: Córtex e medula. Tipo de cobrança: Caso clínico. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 13 anos (40 kg, 152 cm), PA 112×59 mmHg, após trauma abdominal leve, tem hematúria microscópica. US mostra contusão cortical no polo superior esquerdo; Doppler preserva fluxo segmentar e creatinina 0.8 mg/dL. Considerando córtex, medula e vascularização renal, qual interpretação orienta a conduta?",
       "alternativas": {
-        "A": "Terapia empírica sem suporte fisiopatológico",
-        "B": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "C": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "D": "Observação sem seguimento diante de risco claro"
+        "A": "Indicar nefrectomia pelo achado anatômico isolado",
+        "B": "Relacionar o achado de imagem ao segmento cortical/medular acometido e acompanhar função renal",
+        "C": "Solicitar cistoscopia como primeiro exame",
+        "D": "Tratar como pielonefrite sem piúria ou febre"
       },
       "gabarito": "B",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Questões de anatomia cobram correlação entre nefron, córtex/medula, vascularização e repercussão clínica, não memorização isolada.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "KDIGO Clinical Practice Guidelines",
         "Emma F et al. Pediatric Nephrology. 8th ed. Springer, 2022",
@@ -37,15 +37,15 @@
       "tipo": "Diagnóstico",
       "idade": "16 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 16 anos (50 kg, 170 cm), PA 129×52 mmHg, em avaliação de embriologia — foco: Metanefro. Tipo de cobrança: Diagnóstico. Qual a melhor conduta/diagnóstico?",
+      "questao": "RN de 16 anos, pré-natal com rim direito multicístico e ureter dilatado. Ao nascer, diurese 2 mL/kg/h, creatinina 1.0 mg/dL e US confirma alteração compatível com defeito de metanefro. Qual próximo passo?",
       "alternativas": {
-        "A": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "B": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "C": "Observação sem seguimento diante de risco claro",
-        "D": "Terapia empírica sem suporte fisiopatológico"
+        "A": "Reconhecer defeito broto ureteral/metanefro e programar US seriada com avaliação urológica",
+        "B": "Aguardar até a adolescência sem imagem",
+        "C": "Iniciar corticoide para malformação congênita",
+        "D": "Fazer biópsia renal neonatal de rotina"
       },
       "gabarito": "A",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "CAKUT decorre de interação broto ureteral-metanefro; a conduta inicial é estratificar anatomia, obstrução e função.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "IPNA clinical practice recommendations",
         "Rees L et al. Paediatric Nephrology. 3rd ed. OUP, 2019",
@@ -61,15 +61,15 @@
       "tipo": "Conduta",
       "idade": "16 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 16 anos (49 kg, 175 cm), PA 89×79 mmHg, em avaliação de fisiologia renal — foco: TFG. Tipo de cobrança: Conduta. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menina de 16 anos (49 kg, 175 cm), PA 89×79 mmHg, poliúria após correção de desidratação. Osmolaridade sérica 294 mOsm/kg, urina 162 mOsm/kg e creatinina 1.0 mg/dL. O preceptor quer avaliar tfg renal. Qual interpretação é mais adequada?",
       "alternativas": {
-        "A": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "B": "Observação sem seguimento diante de risco claro",
-        "C": "Terapia empírica sem suporte fisiopatológico",
-        "D": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico"
+        "A": "Usar creatinina isolada sem considerar idade",
+        "B": "Concluir diabetes insipidus sem osmolaridades",
+        "C": "Prescrever restrição hídrica sem avaliar volume",
+        "D": "Interpretar TFG, osmolaridade urinária e resposta tubular conforme idade e estado volêmico"
       },
       "gabarito": "D",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Fisiologia renal pediátrica exige integrar filtração, concentração urinária e acidificação com maturidade renal.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Pediatric Nephrology (IPNA journal)",
         "Schaefer F, Greenbaum LA. Pediatric Kidney Disease. 3rd ed. Springer, 2023",
@@ -85,15 +85,15 @@
       "tipo": "Tratamento",
       "idade": "15 dias",
       "sexo": "Masculino",
-      "questao": "Menino de 15 dias (7 kg, 63 cm), PA 125×61 mmHg, em avaliação de desenvolvimento renal — foco: RN. Tipo de cobrança: Tratamento. Qual a melhor conduta/diagnóstico?",
+      "questao": "Prematuro de 15 dias, 1,4 kg ao nascer, em UTI neonatal, apresenta Na 135 mEq/L, diurese 2 mL/kg/h e creatinina 0.4 mg/dL em queda. Frente à maturação tubular/RN, qual conduta é correta?",
       "alternativas": {
-        "A": "Observação sem seguimento diante de risco claro",
-        "B": "Terapia empírica sem suporte fisiopatológico",
-        "C": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "D": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)"
+        "A": "Aumentar diurético por toda natriurese neonatal",
+        "B": "Ignorar peso diário e balanço hídrico",
+        "C": "Ajustar interpretação de creatinina, sódio e diurese à prematuridade/maturação tubular",
+        "D": "Usar metas de adulto no prematuro"
       },
       "gabarito": "C",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Prematuros e RN têm TFG baixa e túbulos imaturos; decisões devem seguir idade gestacional, diurese e evolução.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Emma F et al. Pediatric Nephrology. 8th ed. Springer, 2022",
         "Jornal Brasileiro de Nefrologia — revisões (últimos 5 anos)",
@@ -109,15 +109,15 @@
       "tipo": "Dose medicamentosa",
       "idade": "9 anos",
       "sexo": "Masculino",
-      "questao": "Criança de 9 anos (35 kg) com gastroenterite há 3 dias, taquicardia, oligúria, creatinina 1.4 mg/dL, FENa 0.5% e urina concentrada. Conduta inicial?",
+      "questao": "Menino de 9 anos (35 kg, 136 cm), PA 92×69 mmHg, gastroenterite há 3 dias, mucosas secas, enchimento capilar 4 s e diurese 0,4 mL/kg/h. Creatinina 1.6 mg/dL, ureia 59 mg/dL, FENa 0.6%. Qual conduta inicial?",
       "alternativas": {
-        "A": "Corticosteroide de rotina",
-        "B": "Reposição volêmica cuidadosa e monitorização (IRA pré-renal)",
-        "C": "Diálise imediata só pela creatinina sem critérios AEIOU",
-        "D": "Restrição hídrica absoluta na pré-renal"
+        "A": "Corticosteroide de rotina sem suspeita inflamatória",
+        "B": "Reposição volêmica cuidadosa e monitorização, reservando diálise para critérios AEIOU",
+        "C": "Diálise imediata só pela creatinina",
+        "D": "Restrição hídrica absoluta na IRA pré-renal"
       },
       "gabarito": "B",
-      "explicacao": "Pré-renal: restaurar volume; diálise segue indicações clínicas.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "IRA pré-renal pediátrica pede restauração de perfusão; diálise segue hipercalemia, acidose, intoxicação, overload ou uremia.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Rees L et al. Paediatric Nephrology. 3rd ed. OUP, 2019",
         "Jornal de Pediatria (SBP) — artigos educacionais",
@@ -133,15 +133,15 @@
       "tipo": "Interpretação laboratorial",
       "idade": "4 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 4 anos (20 kg, 116 cm), PA 85×65 mmHg, em avaliação de drc — foco: Estadiamento. Tipo de cobrança: Interpretação laboratorial. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 4 anos (20 kg, 116 cm), PA 85×65 mmHg, história de CAKUT, TFG estimada 23 mL/min/1,73m², Hb 9.2 g/dL, PTH 165 pg/mL e bicarbonato 15 mEq/L. Qual plano para estadiamento?",
       "alternativas": {
-        "A": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "B": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "C": "Observação sem seguimento diante de risco claro",
-        "D": "Terapia empírica sem suporte fisiopatológico"
+        "A": "Estadiar por TFG/albuminúria e tratar anemia, CKD-MBD, acidose, nutrição e crescimento",
+        "B": "Aguardar sintomas urêmicos para acompanhar",
+        "C": "Suspender eritropoetina apesar de anemia sintomática",
+        "D": "Ignorar baixa estatura e acidose crônica"
       },
       "gabarito": "A",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "DRC pediátrica afeta crescimento, osso, anemia e nutrição; o manejo é longitudinal e multidisciplinar.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Schaefer F, Greenbaum LA. Pediatric Kidney Disease. 3rd ed. Springer, 2023",
         "Tratado de Pediatria SBP, 5ª ed.",
@@ -157,15 +157,15 @@
       "tipo": "Gasometria",
       "idade": "14 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 14 anos com pH 7.24, HCO₃ 14, Cl 116, ânion gap 14. Interpretação e conduta prioritária?",
+      "questao": "Menina de 14 anos (45 kg, 161 cm), PA 112×77 mmHg, edema ausente, urina 1 com proteína 2+ em exame escolar. Relação proteína/creatinina ao acaso 0.9 mg/mg e primeira urina da manhã 0,9 mg/mg. Qual a melhor abordagem para ortostática?",
       "alternativas": {
-        "A": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "B": "Observação sem seguimento diante de risco claro",
-        "C": "Terapia empírica sem suporte fisiopatológico",
-        "D": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico"
+        "A": "Biopsiar toda proteinúria isolada no primeiro dia",
+        "B": "Tratar com antibiótico sem leucocitúria",
+        "C": "Ignorar proteinúria nefrótica persistente",
+        "D": "Quantificar relação proteína/creatinina em primeira urina e diferenciar ortostática de persistente"
       },
       "gabarito": "D",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "A primeira urina da manhã diferencia proteinúria ortostática; persistência ou faixa nefrótica muda investigação.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Jornal Brasileiro de Nefrologia — revisões (últimos 5 anos)",
         "UpToDate — Nefrologia Pediátrica",
@@ -181,15 +181,15 @@
       "tipo": "Eletrólitos",
       "idade": "4 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 4 anos (20 kg, 115 cm), PA 110×57 mmHg, em avaliação de hematúria — foco: Glomerular. Tipo de cobrança: Eletrólitos. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menina de 4 anos (20 kg, 115 cm), PA 110×57 mmHg, urina cor de coca-cola após IVAS, hemácias dismórficas 70%, cilindros hemáticos e relação proteína/creatinina 1.0 mg/mg. C3 92 mg/dL. Qual interpretação para glomerular?",
       "alternativas": {
-        "A": "Observação sem seguimento diante de risco claro",
-        "B": "Terapia empírica sem suporte fisiopatológico",
-        "C": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "D": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)"
+        "A": "Descartar doença glomerular se a creatinina inicial é normal",
+        "B": "Fazer tomografia em toda micro-hematúria isolada",
+        "C": "Confirmar origem glomerular por dismorfismo/cilindros e associar complemento, proteinúria e PA",
+        "D": "Prescrever quinolona sem sintomas urinários"
       },
       "gabarito": "C",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Hematúria glomerular costuma vir com cilindros, dismorfismo, proteinúria ou hipertensão; a investigação muda conforme risco.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Jornal de Pediatria (SBP) — artigos educacionais",
         "KDIGO Clinical Practice Guidelines",
@@ -205,7 +205,7 @@
       "tipo": "ECG hidroeletrolítico",
       "idade": "5 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 5 anos é levado(a) ao ambulatório por edema palpebral há 3 dias. Evoluiu com edema de membros inferiores. PA: 99×68 mmHg. Peso 23 kg (habitual 21 kg), altura 118 cm.\n\nExames:\n• Albumina: 2.0 g/dL\n• Colesterol: 384 mg/dL\n• Creatinina: 0.5 mg/dL\n• Urina 1: proteína 3+; hemácias 2–5/campo\n• Relação proteína/creatinina urinária: 6.7 mg/mg.\n\nQual a melhor conduta inicial?",
+      "questao": "Menino de 5 anos (23 kg, 118 cm), PA 99×68 mmHg, edema palpebral há 3 dias e ganho de 2 kg. Albumina 2.0 g/dL, colesterol 321 mg/dL, creatinina 0.7 mg/dL, urina proteína 4+ e relação proteína/creatinina 10.2 mg/mg. Qual a melhor conduta inicial?",
       "alternativas": {
         "A": "Micofenolato",
         "B": "Prednisona VO em dose plena",
@@ -229,15 +229,15 @@
       "tipo": "Ultrassonografia",
       "idade": "6 anos",
       "sexo": "Feminino",
-      "questao": "Lactente de 6 anos com dilatação pielocalicial pós ITU. US pós-natal mostra hidronefrose grau 2. Conduta inicial?",
+      "questao": "Menina de 6 anos (26 kg, 118 cm), PA 94×51 mmHg, edema, oligúria e sedimento com cilindros hemáticos. Creatinina 2.4 mg/dL, C3 54 mg/dL e proteinúria 2.8 mg/mg. Diante de aguda, qual decisão é mais adequada?",
       "alternativas": {
-        "A": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "B": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "C": "Observação sem seguimento diante de risco claro",
-        "D": "Terapia empírica sem suporte fisiopatológico"
+        "A": "Investigar complemento, função renal e sedimento ativo; internar se hipertensão, oligúria ou crescentes suspeitos",
+        "B": "Apenas hidratar e liberar com creatinina subindo",
+        "C": "Anticoagular por hematúria macroscópica isolada",
+        "D": "Evitar biópsia mesmo com RPGN"
       },
       "gabarito": "A",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "GN pediátrica é estratificada por rapidez, complemento, função renal, PA e sedimento urinário.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "UpToDate — Nefrologia Pediátrica",
         "Pediatric Nephrology (IPNA journal)",
@@ -253,15 +253,15 @@
       "tipo": "Biópsia renal",
       "idade": "12 anos",
       "sexo": "Feminino",
-      "questao": "Criança de 12 anos com SN corticorresistente. Qual indicação/interpretação mais adequada?",
+      "questao": "Menina de 12 anos (42 kg, 146 cm), PA 116×55 mmHg, hematúria macroscópica 24 horas após faringite, C3 normal, creatinina 0.7 mg/dL e proteinúria persistente 0.9 mg/mg após 3 meses. Qual conduta para Conduta?",
       "alternativas": {
-        "A": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "B": "Observação sem seguimento diante de risco claro",
-        "C": "Terapia empírica sem suporte fisiopatológico",
-        "D": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico"
+        "A": "Tratar todo episódio com antibiótico prolongado",
+        "B": "Indicar tonsilectomia como rotina universal",
+        "C": "Ignorar proteinúria após hematúria sincrônica",
+        "D": "Controlar PA/proteinúria com IECA/BRA e considerar biópsia/estratificação se proteinúria persistente"
       },
       "gabarito": "D",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "IgA costuma causar hematúria sincrônica a IVAS; prognóstico depende de proteinúria, TFG, PA e achados de biópsia.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "KDIGO Clinical Practice Guidelines",
         "Emma F et al. Pediatric Nephrology. 8th ed. Springer, 2022",
@@ -277,15 +277,15 @@
       "tipo": "Guideline",
       "idade": "9 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 9 anos com hematúria macroscópica, edema e PA 92×75 mmHg. História de faringite há 4 semanas. C3 46 mg/dL (baixo), creatinina 0.9 mg/dL. Conduta mais adequada?",
+      "questao": "Menina de 9 anos (36 kg, 134 cm), PA 92×75 mmHg, hematúria, edema e cefaleia. Teve impetigo há 4 semanas; C3 46 mg/dL, ASLO elevado e creatinina 1.2 mg/dL. Qual manejo inicial?",
       "alternativas": {
-        "A": "Nefrectomia bilateral",
-        "B": "Alta sem controle de volume/PA",
-        "C": "Suporte (restrição hidrossalina, controle pressórico) e acompanhamento da GNPE",
+        "A": "Alta sem controle de volume e PA",
+        "B": "Biópsia imediata se C3 baixo na fase inicial típica",
+        "C": "Suporte com restrição hidrossalina, controle pressórico e seguimento de C3/creatinina",
         "D": "Imunossupressão pesada de rotina na GNPE típica"
       },
       "gabarito": "C",
-      "explicacao": "GNPE típica: suporte e vigilância; imunossupressão não é rotina.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "GNPE típica tem latência após infecção, C3 baixo e melhora com suporte; biópsia fica para evolução atípica.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "IPNA clinical practice recommendations",
         "Rees L et al. Paediatric Nephrology. 3rd ed. OUP, 2019",
@@ -301,15 +301,15 @@
       "tipo": "Revisão de artigo",
       "idade": "4 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 4 anos (22 kg, 111 cm), PA 107×58 mmHg, em avaliação de nefrite lúpica — foco: Indução. Tipo de cobrança: Revisão de artigo. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 4 anos (22 kg, 111 cm), PA 107×58 mmHg, LES juvenil com proteinúria 3.4 g/g, hematúria dismórfica, C3 baixo e anti-dsDNA alto. Biópsia sugere classe IV. Qual estratégia para indução?",
       "alternativas": {
-        "A": "Terapia empírica sem suporte fisiopatológico",
-        "B": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "C": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "D": "Observação sem seguimento diante de risco claro"
+        "A": "Evitar biópsia apesar de proteinúria e cilindros",
+        "B": "Induzir nefrite proliferativa com corticoide mais micofenolato ou ciclofosfamida e planejar manutenção",
+        "C": "Tratar classe III/IV apenas com hidroxicloroquina",
+        "D": "Suspender imunossupressão ao normalizar proteinúria em 1 semana"
       },
       "gabarito": "B",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Classe histológica orienta indução e manutenção; nefrite proliferativa exige imunossupressão estruturada.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Pediatric Nephrology (IPNA journal)",
         "Schaefer F, Greenbaum LA. Pediatric Kidney Disease. 3rd ed. Springer, 2023",
@@ -325,15 +325,15 @@
       "tipo": "Caso clínico",
       "idade": "2 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 2 anos (17 kg, 96 cm), PA 121×67 mmHg, em avaliação de shu — foco: Atípica. Tipo de cobrança: Caso clínico. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 2 anos (17 kg, 96 cm), PA 121×67 mmHg, diarreia sanguinolenta há 5 dias, palidez e oligúria. Hb 7.3 g/dL, plaquetas 45013/mm³, DHL elevada, esquizócitos e creatinina 1.5 mg/dL. Qual conduta?",
       "alternativas": {
-        "A": "Suporte (volume/diálise se indicado); evitar ATB rotineiro na diarreia típica D+",
-        "B": "Plasmaférese de rotina em toda SHU D+",
-        "C": "Nefrectomia imediata",
-        "D": "Corticoide como cura isolada"
+        "A": "Suporte intensivo com controle hídrico, transfusão se indicada e diálise conforme necessidade",
+        "B": "Antibiótico e loperamida de rotina na fase diarréica",
+        "C": "Plasmaférese em toda SHU D+ típica",
+        "D": "Corticoide isolado como tratamento definitivo"
       },
       "gabarito": "A",
-      "explicacao": "SHU D+: suporte; antibiótico na fase diarréica pode piorar.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "SHU típica pós-diarréia é manejada com suporte; atípica exige investigação de complemento e terapia específica.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Emma F et al. Pediatric Nephrology. 8th ed. Springer, 2022",
         "Jornal Brasileiro de Nefrologia — revisões (últimos 5 anos)",
@@ -349,15 +349,15 @@
       "tipo": "Diagnóstico",
       "idade": "7 anos",
       "sexo": "Feminino",
-      "questao": "Menina de 7 anos (28 kg, 132 cm), PA 109×60 mmHg, em avaliação de púrpura de henoch-schönlein — foco: Nefrite. Tipo de cobrança: Diagnóstico. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menina de 7 anos (28 kg, 132 cm), PA 109×60 mmHg, púrpura palpável em pernas, dor abdominal e artralgia. Urina com hemácias dismórficas, relação proteína/creatinina 1.1 mg/mg e creatinina 0.7 mg/dL. Qual seguimento renal?",
       "alternativas": {
-        "A": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "B": "Observação sem seguimento diante de risco claro",
-        "C": "Terapia empírica sem suporte fisiopatológico",
-        "D": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico"
+        "A": "Dar alta sem seguimento renal após púrpura",
+        "B": "Usar antibiótico para toda hematúria pós-vasculite",
+        "C": "Indicar nefrectomia por proteinúria",
+        "D": "Monitorar urina/PA seriadas e tratar nefrite conforme proteinúria, TFG e biópsia"
       },
       "gabarito": "D",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Vasculite IgA pode ter nefrite tardia; seguimento de PA e urina é parte central da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Rees L et al. Paediatric Nephrology. 3rd ed. OUP, 2019",
         "Jornal de Pediatria (SBP) — artigos educacionais",
@@ -373,15 +373,15 @@
       "tipo": "Conduta",
       "idade": "10 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 10 anos (36 kg, 140 cm), PA 89×70 mmHg, em avaliação de hipertensão — foco: Percentis. Tipo de cobrança: Conduta. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 10 anos (36 kg, 140 cm), PA 89×70 mmHg, cefaleia recorrente e PA acima do percentil 95 em três consultas. Urina 1 com proteína 1+, creatinina 1.0 mg/dL e US renal com assimetria de 1,8 cm. Qual abordagem para Percentis?",
       "alternativas": {
-        "A": "Iniciar 4 fármacos sem confirmar",
-        "B": "Proibir exercício em todo hipertenso controlado",
-        "C": "Confirmar medidas/percentis (MAPA se preciso) e investigar causa secundária quando indicado",
-        "D": "Ignorar PA elevada"
+        "A": "Ignorar PA elevada repetida",
+        "B": "Iniciar quatro fármacos sem confirmar medida",
+        "C": "Confirmar percentis por idade/sexo/altura, pesquisar causa secundária e tratar lesão de órgão-alvo",
+        "D": "Aplicar ponto de corte adulto em lactente"
       },
       "gabarito": "C",
-      "explicacao": "HAS pediátrica: confirmar e estratificar antes da polifarmácia.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "HAS pediátrica é definida por percentis; causas renais e renovasculares são frequentes e devem ser buscadas.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Schaefer F, Greenbaum LA. Pediatric Kidney Disease. 3rd ed. Springer, 2023",
         "Tratado de Pediatria SBP, 5ª ed.",
@@ -397,15 +397,15 @@
       "tipo": "Tratamento",
       "idade": "7 anos",
       "sexo": "Masculino",
-      "questao": "Lactente de 7 anos, sexo masculino, febril sem foco aparente. Urocultura com E. coli >10⁵ UFC/mL. Peso 31 kg. Após o primeiro episódio febril, qual o próximo passo diagnóstico frequente?",
+      "questao": "Lactente de 7 anos, 31 kg, febre 39 °C sem foco, EAS com nitrito positivo e leucócitos >100/campo. Urocultura colhida por cateter cresce E. coli >10⁵ UFC/mL; creatinina 0.8 mg/dL. Após estabilização, qual próximo passo?",
       "alternativas": {
-        "A": "Nefrectomia profilática",
-        "B": "Ultrassonografia das vias urinárias após ITU febril conforme protocolo",
+        "A": "Aguardar urocultura sem tratar lactente tóxico",
+        "B": "Tratar ITU febril com antibiótico adequado e solicitar ultrassonografia de vias urinárias conforme protocolo",
         "C": "Nunca solicitar imagem após ITU febril",
         "D": "Cistoscopia de rotina em todo lactente"
       },
       "gabarito": "B",
-      "explicacao": "ITU febril no lactente: US é frequentemente o primeiro exame de imagem.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "ITU febril em lactente exige cultura, antibiótico oportuno e investigação anatômica inicial com US.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Jornal Brasileiro de Nefrologia — revisões (últimos 5 anos)",
         "UpToDate — Nefrologia Pediátrica",
@@ -421,15 +421,15 @@
       "tipo": "Dose medicamentosa",
       "idade": "11 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 11 anos (36 kg, 150 cm), PA 106×77 mmHg, em avaliação de refluxo vesicoureteral — foco: Conservador. Tipo de cobrança: Dose medicamentosa. Qual a melhor conduta/diagnóstico?",
+      "questao": "Menino de 11 anos (36 kg, 150 cm), PA 106×77 mmHg, segunda pielonefrite febril em 8 meses. US mostra cicatriz polar e uretrocistografia evidencia refluxo grau 3 à direita. Qual conduta para conservador?",
       "alternativas": {
-        "A": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "B": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "C": "Observação sem seguimento diante de risco claro",
-        "D": "Terapia empírica sem suporte fisiopatológico"
+        "A": "Estratificar grau, ITU recorrente e cicatriz renal para definir observação, profilaxia ou cirurgia",
+        "B": "Corrigir cirurgicamente todo refluxo grau I",
+        "C": "Suspender seguimento após uma urocultura negativa",
+        "D": "Tratar refluxo com corticoide"
       },
       "gabarito": "A",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "RVU é manejado por risco: grau, recorrência, disfunção miccional e dano renal orientam profilaxia/cirurgia.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Jornal de Pediatria (SBP) — artigos educacionais",
         "KDIGO Clinical Practice Guidelines",
@@ -445,15 +445,15 @@
       "tipo": "Interpretação laboratorial",
       "idade": "2 anos",
       "sexo": "Masculino",
-      "questao": "Lactente de 2 anos com dilatação pielocalicial antenatal. US pós-natal mostra hidronefrose grau 2. Conduta inicial?",
+      "questao": "Lactente de 2 anos, hidronefrose antenatal. US no 7º dia: APD 16 mm, cálices dilatados, parênquima preservado e creatinina 0.6 mg/dL. Qual seguimento para antenatal?",
       "alternativas": {
-        "A": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)",
-        "B": "Observação sem seguimento diante de risco claro",
-        "C": "Terapia empírica sem suporte fisiopatológico",
-        "D": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico"
+        "A": "Operar no primeiro dia de vida toda hidronefrose antenatal",
+        "B": "Ignorar ureter dilatado e parênquima fino",
+        "C": "Usar diurético para reduzir dilatação pielocalicial",
+        "D": "Repetir US pós-natal no tempo adequado e investigar obstrução se dilatação moderada/grave persiste"
       },
       "gabarito": "D",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "Hidronefrose antenatal pede confirmação pós-natal e estratificação por APD, cálices, ureter e parênquima.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "Tratado de Pediatria SBP, 5ª ed.",
         "IPNA clinical practice recommendations",
@@ -469,15 +469,15 @@
       "tipo": "Gasometria",
       "idade": "7 anos",
       "sexo": "Masculino",
-      "questao": "Menino de 7 anos com pH 7.13, HCO₃ 11, Cl 119, ânion gap 25. Interpretação e conduta prioritária?",
+      "questao": "RN de 7 anos, jato urinário fraco e US com rim esquerdo pequeno, megaureter e bexiga trabeculada. Creatinina 0.6 mg/dL e diurese preservada. Qual avaliação inicial para CAKUT?",
       "alternativas": {
-        "A": "Observação sem seguimento diante de risco claro",
-        "B": "Terapia empírica sem suporte fisiopatológico",
-        "C": "Conduta alinhada a guidelines (KDIGO/IPNA/SBN) para o cenário clínico",
-        "D": "Intervenção agressiva sem indicação (cirurgia/diálise imediata)"
+        "A": "Aguardar DRC para investigar CAKUT",
+        "B": "Usar antibiótico crônico sem indicação de risco",
+        "C": "Avaliar CAKUT com US, função renal e encaminhamento urológico se obstrução ou rim único",
+        "D": "Fazer biópsia para diagnosticar megaureter"
       },
       "gabarito": "C",
-      "explicacao": "Raciocínio clínico pediátrico nefrológico: integrar história, exame, labs e guidelines antes da conduta.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
+      "explicacao": "CAKUT é causa importante de DRC pediátrica; anatomia e função guiam seguimento.\n\nQuestão inédita MedRank (banco vivo) — não é cópia de prova oficial SBN/SBP.",
       "referencias": [
         "UpToDate — Nefrologia Pediátrica",
         "Pediatric Nephrology (IPNA journal)",

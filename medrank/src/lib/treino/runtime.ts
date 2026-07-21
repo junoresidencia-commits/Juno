@@ -107,6 +107,15 @@ function mapDbRow(row: Record<string, unknown>): TreinoSession {
   };
 }
 
+const BAD_TRAINING_TEMPLATE_PATTERNS = [
+  /em avaliação de .+ — foco:/i,
+  /Labs e contexto compatíveis/i,
+];
+
+function hasBadTrainingTemplate(question: Question): boolean {
+  return BAD_TRAINING_TEMPLATE_PATTERNS.some((pattern) => pattern.test(question.statement ?? ''));
+}
+
 async function loadProgress(userId: string): Promise<TreinoProgressStore> {
   if (usesDemoStore()) {
     return getDemoTreinoProgress(userId) ?? emptyTreinoProgress();
@@ -156,6 +165,14 @@ async function pickProductionQuestions(
   if (error) throw new Error(error.message);
 
   let pool = (data ?? []) as Question[];
+  const fetchedCount = pool.length;
+  pool = pool.filter((question) => !hasBadTrainingTemplate(question));
+
+  if (pool.length < count) {
+    throw new Error(
+      `Banco de treino "${tag}" contém templates antigos ou questões insuficientes após filtro (${pool.length}/${count}; ${fetchedCount - pool.length} removidas). Reimporte o banco atualizado antes de iniciar o treino.`
+    );
+  }
 
   const bias = leagueTopicBias(opts.liga);
   if (bias?.length && !opts.topic) {
