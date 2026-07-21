@@ -165,9 +165,9 @@ export function GroupDetailManager({
           type="button"
           disabled={loading}
           onClick={deleteGroup}
-          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-50"
+          className="w-full rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-50 sm:w-auto"
         >
-          Apagar grupo
+          {loading ? 'Apagando…' : 'Apagar este grupo'}
         </button>
       </header>
 

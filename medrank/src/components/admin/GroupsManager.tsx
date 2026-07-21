@@ -17,20 +17,23 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
   const [groups, setGroups] = useState(initialGroups);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    setCreating(true);
     setError('');
+    setMessage('');
     const res = await fetch('/api/admin/groups', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, description }),
     });
     const data = await res.json();
-    setLoading(false);
+    setCreating(false);
     if (!res.ok) {
       setError(data.error ?? 'Erro ao criar grupo');
       return;
@@ -49,26 +52,30 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
     router.refresh();
   }
 
-  async function handleDelete(group: GroupRow, e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
+  async function handleDelete(group: GroupRow) {
     if (
       !confirm(
-        `Apagar o grupo "${group.name}"?\n\nIsso remove membros, rankings e desafios deste grupo.`
+        `Apagar o grupo "${group.name}"?\n\nIsso remove membros, rankings e desafios deste grupo. Não tem volta.`
       )
     ) {
       return;
     }
-    setLoading(true);
+    setLoadingId(group.id);
     setError('');
+    setMessage('');
     const res = await fetch(`/api/admin/groups/${group.id}`, { method: 'DELETE' });
     const data = await res.json().catch(() => ({}));
-    setLoading(false);
+    setLoadingId(null);
     if (!res.ok) {
       setError((data as { error?: string }).error ?? 'Erro ao apagar grupo');
       return;
     }
     setGroups((prev) => prev.filter((g) => g.id !== group.id));
+    setMessage(
+      (data as { archived?: boolean }).archived
+        ? `Grupo "${group.name}" arquivado.`
+        : `Grupo "${group.name}" apagado.`
+    );
     router.refresh();
   }
 
@@ -104,45 +111,58 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
           </div>
         </div>
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+        {message ? <p className="mt-3 text-sm text-emerald-700">{message}</p> : null}
         <button
           type="submit"
-          disabled={loading}
+          disabled={creating || loadingId !== null}
           className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
         >
-          {loading ? 'Criando…' : 'Criar grupo'}
+          {creating ? 'Criando…' : 'Criar grupo'}
         </button>
       </form>
 
       <div className="space-y-3">
+        <h2 className="text-sm font-semibold text-slate-800">Grupos existentes</h2>
         {groups.length === 0 ? (
           <p className="text-sm text-slate-600">Nenhum grupo ainda.</p>
         ) : (
           groups.map((g) => (
             <div
               key={g.id}
-              className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-4 ring-1 ring-slate-200"
+              className="rounded-xl bg-white p-4 ring-1 ring-slate-200"
             >
-              <Link href={`/admin/grupos/${g.id}`} className="min-w-0 flex-1 hover:opacity-90">
-                <p className="font-semibold text-slate-900">{g.name}</p>
-                {g.description ? (
-                  <p className="text-sm text-slate-600">{g.description}</p>
-                ) : null}
-                <p className="mt-1 text-sm text-slate-600">
-                  {g.member_count} {g.member_count === 1 ? 'membro' : 'membros'}
-                  {' · '}
-                  <span className={g.active ? 'text-emerald-700' : 'text-slate-400'}>
-                    {g.active ? 'Ativo' : 'Inativo'}
-                  </span>
-                </p>
-              </Link>
-              <button
-                type="button"
-                disabled={loading}
-                onClick={(e) => handleDelete(g, e)}
-                className="shrink-0 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
-              >
-                Excluir
-              </button>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-slate-900">{g.name}</p>
+                  {g.description ? (
+                    <p className="text-sm text-slate-600">{g.description}</p>
+                  ) : null}
+                  <p className="mt-1 text-sm text-slate-600">
+                    {g.member_count} {g.member_count === 1 ? 'membro' : 'membros'}
+                    {' · '}
+                    <span className={g.active ? 'text-emerald-700' : 'text-slate-400'}>
+                      {g.active ? 'Ativo' : 'Inativo'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <Link
+                  href={`/admin/grupos/${g.id}`}
+                  className="rounded-lg border border-slate-300 px-3 py-2.5 text-center text-sm font-medium text-slate-800 hover:bg-slate-50"
+                >
+                  Abrir
+                </Link>
+                <button
+                  type="button"
+                  disabled={loadingId !== null}
+                  onClick={() => handleDelete(g)}
+                  className="rounded-lg border border-red-300 bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-50"
+                >
+                  {loadingId === g.id ? 'Apagando…' : 'Excluir'}
+                </button>
+              </div>
             </div>
           ))
         )}

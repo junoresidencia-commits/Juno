@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { requireAuth } from '@/lib/auth';
 import { getTrackBankCount } from '@/lib/treino/runtime';
-import { TRACK_CONFIG } from '@/lib/treino/bank';
+import { TRACK_CONFIG } from '@/lib/treino/config';
 
 export default async function TreinoHubPage() {
   await requireAuth();
