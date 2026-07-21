@@ -171,16 +171,28 @@ export function AlunoHomeSimple({
         </div>
       </section>
 
-      <section className="mt-6 rounded-2xl bg-teal-50 p-5 ring-1 ring-teal-100 md:max-w-xl">
-        <h2 className="font-semibold text-teal-950">Treinos de Nefrologia</h2>
-        <p className="mt-1 text-sm text-teal-900">
-          Banco vivo: Nefrologia Avançada (adulto) e Nefropediatria — estilo título SBN.
-        </p>
+      <section className="mt-6 space-y-3 md:max-w-xl">
+        <div>
+          <h2 className="font-semibold text-slate-900">Treinos</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Gere um simulado agora. As questões vêm do banco da especialidade.
+          </p>
+        </div>
         <Link
-          href="/aluno/treino"
-          className="mt-3 inline-block text-sm font-semibold text-teal-800 underline-offset-2 hover:underline"
+          href="/aluno/treino/nefrologia"
+          className="block rounded-2xl bg-teal-700 px-5 py-4 text-white shadow-sm hover:bg-teal-800"
         >
-          Abrir treinos →
+          <p className="text-sm font-medium text-teal-100">Adulto · Título SBN</p>
+          <p className="text-lg font-bold">Nefrologia</p>
+          <p className="mt-1 text-sm text-teal-100">Clínica Médica aplicada ao rim · gerar prova</p>
+        </Link>
+        <Link
+          href="/aluno/treino/nefropediatria"
+          className="block rounded-2xl bg-white px-5 py-4 text-slate-900 shadow-sm ring-1 ring-teal-200 hover:ring-teal-400"
+        >
+          <p className="text-sm font-medium text-teal-800">Pediátrica · SBN/SBP</p>
+          <p className="text-lg font-bold">Nefrologia Pediátrica</p>
+          <p className="mt-1 text-sm text-slate-600">Casos pediátricos · gerar prova</p>
         </Link>
       </section>
 
