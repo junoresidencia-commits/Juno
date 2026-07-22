@@ -6,10 +6,13 @@ import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoExams } from '@/lib/demo/content';
 import { getTodaysExam, todayDateString, formatExamWindowShort } from '@/lib/exams/release';
 import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
+import { EnsureDailyExamsButton } from '@/components/admin/EnsureDailyExamsButton';
+import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function ProvasPage() {
   await requireRole('admin');
   const today = todayDateString();
+  const todayTrack = shortTrackLabel(trackForDate(today));
 
   if (usesDemoStore()) {
     const exams = getDemoExams().slice().reverse();
@@ -22,7 +25,7 @@ export default async function ProvasPage() {
             <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
             <h1 className="mt-2 text-2xl font-bold text-slate-900">Provas</h1>
             <p className="mt-1 text-sm text-slate-600">
-              Uma prova por dia, publicada automaticamente · {formatExamWindowShort()} (horário de Brasília)
+              Disputa diária automática · alterna Nefrologia / Nefropediatria · {formatExamWindowShort()}
             </p>
           </div>
           <Link
@@ -32,6 +35,16 @@ export default async function ProvasPage() {
             Nova prova
           </Link>
         </div>
+
+        <section className="mb-6 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+          <h2 className="font-semibold text-slate-900">Geração automática</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Hoje seria: <strong>{todayTrack}</strong>. O cron cria às 6h (BRT); você também pode gerar agora.
+          </p>
+          <div className="mt-3">
+            <EnsureDailyExamsButton />
+          </div>
+        </section>
 
         {todayExam && (
           <section className="mb-8 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-200">
@@ -94,6 +107,9 @@ export default async function ProvasPage() {
         <div>
           <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
           <h1 className="mt-2 text-2xl font-bold text-slate-900">Provas</h1>
+          <p className="mt-1 text-sm text-slate-600">
+            Disputa diária automática · alterna Nefrologia / Nefropediatria · {formatExamWindowShort()}
+          </p>
         </div>
         <Link
           href="/admin/provas/nova"
@@ -102,6 +118,16 @@ export default async function ProvasPage() {
           Nova prova
         </Link>
       </div>
+
+      <section className="mb-6 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+        <h2 className="font-semibold text-slate-900">Geração automática</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Hoje: <strong>{todayTrack}</strong>. Cron às 6h (BRT) ou gere agora.
+        </p>
+        <div className="mt-3">
+          <EnsureDailyExamsButton />
+        </div>
+      </section>
 
       {todayExam && (
         <section className="mb-8 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-200">
@@ -113,7 +139,7 @@ export default async function ProvasPage() {
 
       <div className="space-y-3">
         {(exams ?? []).length === 0 ? (
-          <p className="text-slate-600">Nenhuma prova criada.</p>
+          <p className="text-slate-600">Nenhuma prova criada — use os botões acima.</p>
         ) : (
           exams!.map((e) => (
             <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">

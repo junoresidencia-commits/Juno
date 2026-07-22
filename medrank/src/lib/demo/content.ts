@@ -12,9 +12,11 @@ import { calculateRankingScore } from '@/lib/utils';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart } from '@/lib/periods';
 import { getQuestionBank, getExamReadyQuestionBank } from '@/lib/question-bank/pool';
 import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
-import { getDailyExamTitle, normalizeQuestionForDispute } from '@/lib/question-bank/presentation';
+import { normalizeQuestionForDispute } from '@/lib/question-bank/presentation';
 import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import { titleForDailyTrack, trackForDate } from '@/lib/exams/daily-schedule';
+import { getTrackQuestionsFromFile } from '@/lib/treino/bank';
 
 const LETTERS: OptionLetter[] = ['A', 'B', 'C', 'D', 'E'];
 const SOURCES = ['ENARE', 'USP', 'SUS-SP', 'Unicamp', 'AMRIGS'] as const;
@@ -131,9 +133,10 @@ export function getDemoExams(): Exam[] {
   for (let day = 0; day < 150; day++) {
     const date = shiftDays(start, day);
     const dateStr = dateString(date);
+    const track = trackForDate(dateStr);
     exams.push({
       id: `demo-exam-${day + 1}`,
-      title: getDailyExamTitle(day + 1),
+      title: titleForDailyTrack(track, dateStr),
       date_available: dateStr,
       ...defaultExamReleaseFields(dateStr),
       duration_minutes: 30,
@@ -153,7 +156,9 @@ export function getDemoExamQuestions(examId: string): (Question & { order_number
   const exam = getDemoExams().find((item) => item.id === examId);
   if (!exam) return [];
 
-  const pool = getExamReadyQuestionBank();
+  const track = trackForDate(exam.date_available);
+  const trackPool = getTrackQuestionsFromFile(track);
+  const pool = trackPool.length >= exam.total_questions ? trackPool : getExamReadyQuestionBank();
   const examNumber = Number(examId.replace('demo-exam-', '')) || 1;
   const picked = pickDailyExamQuestions(pool, exam.total_questions, examNumber * 9973);
 

@@ -27,6 +27,8 @@ interface Props {
   rankingDate: string;
   finishedToday?: number;
   streakDays?: number;
+  /** Especialidade da disputa de hoje (Nefrologia ou Nefropediatria). */
+  trackLabel?: string;
 }
 
 export function AlunoHomeSimple({
@@ -45,9 +47,11 @@ export function AlunoHomeSimple({
   rankingDate,
   finishedToday = 0,
   streakDays = 0,
+  trackLabel,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
+  const specialty = trackLabel ?? 'Nefrologia';
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
@@ -75,6 +79,9 @@ export function AlunoHomeSimple({
       <section className="mt-4 flex flex-1 flex-col md:max-w-xl">
         {todayExam ? (
           <>
+            <p className="mb-3 text-center text-sm font-medium text-teal-800">
+              Hoje: <span className="font-bold">{specialty}</span>
+            </p>
             {canContinue && (
               <Link
                 href={examHref}
@@ -118,7 +125,9 @@ export function AlunoHomeSimple({
             {windowPhase === 'before' && (
               <div className="rounded-2xl bg-blue-50 px-6 py-8 text-center ring-1 ring-blue-100">
                 <p className="text-lg font-semibold text-blue-900">Disputa abre às 7h</p>
-                <p className="mt-2 text-sm text-blue-700">Volte mais tarde para a disputa de hoje.</p>
+                <p className="mt-2 text-sm text-blue-700">
+                  Hoje é {specialty}. Volte mais tarde para disputar.
+                </p>
               </div>
             )}
             {missedToday && (
@@ -133,7 +142,7 @@ export function AlunoHomeSimple({
             </p>
             {canStart && (
               <p className="mt-2 text-center text-xs text-slate-500">
-                Uma chance por dia · 20 questões mistas · máx. 2.000 pts
+                Uma chance por dia · {specialty} · máx. 2.000 pts
               </p>
             )}
             {canContinue && (
@@ -144,7 +153,10 @@ export function AlunoHomeSimple({
           </>
         ) : (
           <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
-            <p className="text-slate-600">Nenhuma disputa para hoje.</p>
+            <p className="text-slate-600">Gerando disputa de hoje ({specialty})…</p>
+            <p className="mt-2 text-sm text-slate-500">
+              Se persistir, peça ao professor para importar o banco e gerar a disputa.
+            </p>
           </div>
         )}
       </section>
