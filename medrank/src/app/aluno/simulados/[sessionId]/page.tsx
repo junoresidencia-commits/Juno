@@ -44,6 +44,7 @@ export default async function SimuladoSessionPage({
         resultPath={`/aluno/simulados/resultado/${sessionId}`}
         apiBase="/api/simulados"
         finishLabel="Finalizar simulado"
+        antiFraud={false}
       />
     </div>
   );

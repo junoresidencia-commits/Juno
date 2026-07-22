@@ -86,20 +86,42 @@ export default async function AlunoDashboard() {
   let { data: attempt } = todayExam
     ? await supabase
         .from('attempts')
-        .select('id, finished_at, submitted_automatically')
+        .select('id, finished_at, submitted_automatically, forfeited')
         .eq('exam_id', todayExam.id)
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
 
-  if (attempt && !attempt.finished_at && windowPhase === 'after') {
+  // Saiu da prova / aba abandonada → forfeit (antifraude)
+  if (attempt && !attempt.finished_at && windowPhase === 'open') {
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const admin = createAdminClient();
+    await (admin ?? supabase).rpc('forfeit_attempt', {
+      p_attempt_id: attempt.id,
+      p_violation_type: 'abandoned_session',
+      p_question_id: null,
+      p_elapsed_seconds: null,
+      p_ip: null,
+      p_device: null,
+      p_browser: null,
+      p_os: null,
+      p_user_agent: null,
+      p_metadata: { source: 'aluno_home' },
+    });
+    const { data: refreshed } = await supabase
+      .from('attempts')
+      .select('id, finished_at, submitted_automatically, forfeited')
+      .eq('id', attempt.id)
+      .single();
+    attempt = refreshed;
+  } else if (attempt && !attempt.finished_at && windowPhase === 'after') {
     await supabase.rpc('submit_attempt', {
       p_attempt_id: attempt.id,
       p_auto: true,
     });
     const { data: refreshed } = await supabase
       .from('attempts')
-      .select('id, finished_at, submitted_automatically')
+      .select('id, finished_at, submitted_automatically, forfeited')
       .eq('id', attempt.id)
       .single();
     attempt = refreshed;
@@ -134,10 +156,10 @@ export default async function AlunoDashboard() {
     }
   }
 
-  const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
+  const canContinue = false; // antifraude: não há retomada
   const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-  const completed = Boolean(todayExam && attempt?.finished_at);
-  const forfeitedToday = false;
+  const completed = Boolean(todayExam && attempt?.finished_at && !attempt?.forfeited);
+  const forfeitedToday = Boolean(todayExam && attempt?.forfeited);
   const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
 
   return (

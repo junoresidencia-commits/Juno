@@ -37,6 +37,7 @@ export function DisputeOnboarding() {
             <li>• <strong className="text-white">Liga de Nefrologia</strong> — disputa Nefrologia ↔ Nefropediatria</li>
             <li>• <strong className="text-white">Outras ligas</strong> — disputa geral de residência</li>
             <li>• <strong className="text-white">Máx. 2.000 pts</strong> — quem faz ganha; quem não faz, fica sem pontos</li>
+            <li>• <strong className="text-white">Antifraude</strong> — sair da tela / trocar aba encerra a prova (0 pts)</li>
             <li>• <strong className="text-white">Janela 7h–23h59</strong> (horário de Brasília)</li>
           </ul>
         </div>

@@ -114,13 +114,41 @@ export function getDemoAttemptAnswers(attemptId: string): AttemptAnswer[] {
   });
 }
 
-export function forfeitDemoAttempt(attemptId: string) {
+export function forfeitDemoAttempt(
+  attemptId: string,
+  details?: {
+    violationType?: string;
+    questionId?: string | null;
+    elapsedSeconds?: number | null;
+    ip?: string | null;
+    device?: string | null;
+    browser?: string | null;
+    os?: string | null;
+    userAgent?: string | null;
+    metadata?: Record<string, unknown>;
+  }
+) {
   const attempt = (getDemoAttempts() ?? []).find((item) => item.id === attemptId);
   if (!attempt) throw new Error('Tentativa não encontrada');
-  if (attempt.finishedAt) return mapStoredAttempt(attempt);
+  if (attempt.finishedAt) {
+    return { ...mapStoredAttempt(attempt), already_finished: true };
+  }
+
+  const startedAt = new Date(attempt.startedAt).getTime();
+  const elapsed =
+    details?.elapsedSeconds != null
+      ? Math.max(0, details.elapsedSeconds)
+      : Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+
   attempt.forfeited = true;
+  attempt.finishedAt = new Date().toISOString();
+  attempt.durationSeconds = elapsed;
+  attempt.totalCorrect = 0;
+  attempt.percentage = 0;
+  attempt.score = 0;
+  attempt.submittedAutomatically = true;
   saveDemoAttempt(attempt);
-  return submitDemoAttempt(attemptId, true);
+  return { ...mapStoredAttempt(attempt), forfeited: true };
 }
 
 export function forfeitAbandonedDemoAttempt(examId: string, userId: string): Attempt | null {
