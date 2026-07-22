@@ -12,6 +12,8 @@ import {
 } from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import { ensureDailyNephrologyExam } from '@/lib/exams/daily-nephrology';
+import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function AlunoDashboard() {
   const session = await requireAuth();
@@ -22,6 +24,7 @@ export default async function AlunoDashboard() {
     const { userId } = session;
     const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
       getDemoDashboardData(userId);
+    const trackLabel = shortTrackLabel(trackForDate(todayDateStringBrazil()));
 
     const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
@@ -46,6 +49,7 @@ export default async function AlunoDashboard() {
         rankingDate={rankingDate}
         finishedToday={finishedToday}
         streakDays={streakDays}
+        trackLabel={trackLabel}
       />
     );
   }
@@ -54,13 +58,26 @@ export default async function AlunoDashboard() {
   const userId = session.userId;
   const profile = session.profile;
   const today = todayDateStringBrazil();
+  const trackLabel = shortTrackLabel(trackForDate(today));
 
-  const { data: todayExam } = await supabase
+  // Lazy ensure: se o cron ainda não rodou, cria a disputa ao abrir o app
+  let { data: todayExam } = await supabase
     .from('exams')
     .select('*')
     .eq('date_available', today)
     .eq('status', 'published')
     .maybeSingle();
+
+  if (!todayExam) {
+    await ensureDailyNephrologyExam(today);
+    const refreshed = await supabase
+      .from('exams')
+      .select('*')
+      .eq('date_available', today)
+      .eq('status', 'published')
+      .maybeSingle();
+    todayExam = refreshed.data;
+  }
 
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
 
@@ -121,6 +138,7 @@ export default async function AlunoDashboard() {
       showRanking={showRanking}
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}
+      trackLabel={trackLabel}
     />
   );
 }
