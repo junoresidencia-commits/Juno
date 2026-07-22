@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { formatDateBR } from '@/lib/format';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoExams } from '@/lib/demo/content';
-import { getTodaysExam, todayDateString, formatExamWindowShort } from '@/lib/exams/release';
+import { todayDateString, formatExamWindowShort } from '@/lib/exams/release';
 import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { EnsureDailyExamsButton } from '@/components/admin/EnsureDailyExamsButton';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
@@ -99,7 +99,9 @@ export default async function ProvasPage() {
     .select('*')
     .order('date_available', { ascending: false });
 
-  const todayExam = getTodaysExam(exams ?? []);
+  const todayExams = (exams ?? []).filter((e) => e.date_available === today);
+  const todayGeneral = todayExams.find((e) => (e as { audience?: string }).audience !== 'nephrology');
+  const todayNefro = todayExams.find((e) => (e as { audience?: string }).audience === 'nephrology');
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -108,7 +110,7 @@ export default async function ProvasPage() {
           <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
           <h1 className="mt-2 text-2xl font-bold text-slate-900">Provas</h1>
           <p className="mt-1 text-sm text-slate-600">
-            Disputa diária automática · alterna Nefrologia / Nefropediatria · {formatExamWindowShort()}
+            Duas disputas por dia: geral (outras ligas) + Liga de Nefrologia · {formatExamWindowShort()}
           </p>
         </div>
         <Link
@@ -122,18 +124,28 @@ export default async function ProvasPage() {
       <section className="mb-6 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
         <h2 className="font-semibold text-slate-900">Geração automática</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Hoje: <strong>{todayTrack}</strong>. Cron às 6h (BRT) ou gere agora.
+          Liga de Nefrologia hoje: <strong>{todayTrack}</strong>. Outras ligas: disputa geral.
         </p>
         <div className="mt-3">
           <EnsureDailyExamsButton />
         </div>
       </section>
 
-      {todayExam && (
-        <section className="mb-8 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-200">
-          <h2 className="text-lg font-semibold text-emerald-900">Prova de hoje</h2>
-          <p className="mt-1 font-medium">{todayExam.title}</p>
-          <p className="mt-2 text-sm text-emerald-800">{formatDateBR(todayExam.date_available)}</p>
+      {(todayGeneral || todayNefro) && (
+        <section className="mb-8 space-y-3 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-200">
+          <h2 className="text-lg font-semibold text-emerald-900">Provas de hoje</h2>
+          {todayNefro && (
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-teal-800">Liga de Nefrologia</p>
+              <p className="font-medium">{todayNefro.title}</p>
+            </div>
+          )}
+          {todayGeneral && (
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Disputa geral</p>
+              <p className="font-medium">{todayGeneral.title}</p>
+            </div>
+          )}
         </section>
       )}
 
@@ -147,6 +159,8 @@ export default async function ProvasPage() {
                 <p className="font-medium">{e.title}</p>
                 <p className="text-sm text-slate-600">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
+                  {' · '}
+                  {(e as { audience?: string }).audience === 'nephrology' ? 'Liga Nefrologia' : 'Geral'}
                 </p>
               </div>
               <span className={`rounded-full px-3 py-1 text-xs font-medium ${

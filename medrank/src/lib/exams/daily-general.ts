@@ -4,57 +4,34 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { usesDemoStore } from '@/lib/demo-data';
 import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
 import { mixDifficulty } from '@/lib/treino/progress';
-import { TRACK_CONFIG } from '@/lib/treino/config';
 import {
   addCalendarDaysBrazil,
   DAILY_EXAM_DURATION_MINUTES,
   DAILY_EXAM_HORIZON_DAYS,
   DAILY_EXAM_QUESTION_COUNT,
-  titleForDailyTrack,
-  trackForDate,
-  type DailyExamTrack,
 } from '@/lib/exams/daily-schedule';
 
-export {
-  shortTrackLabel,
-  titleForDailyTrack,
-  trackForDate,
-  DAILY_EXAM_DURATION_MINUTES,
-  DAILY_EXAM_HORIZON_DAYS,
-  DAILY_EXAM_QUESTION_COUNT,
-  type DailyExamTrack,
-} from '@/lib/exams/daily-schedule';
-
-export interface EnsureDailyExamResult {
+export interface EnsureGeneralExamResult {
   date: string;
-  track: DailyExamTrack;
-  audience: 'nephrology';
+  audience: 'general';
   created: boolean;
   exam: Pick<Exam, 'id' | 'title' | 'date_available' | 'total_questions' | 'duration_minutes' | 'status'> | null;
   error?: string;
 }
 
-function filterExpertPool(pool: Question[], count: number): Question[] {
-  const badStem = [
-    /em avaliação de .+ — foco:/i,
-    /Labs e contexto compatíveis/i,
-    /Conduta alinhada a guidelines/i,
-    /Tipo de cobrança/i,
-    /\(i % \d+/,
-    /\banos anos\b/i,
-    /\{\{[a-z0-9_]+\}\}/i,
-  ];
-  let filtered = pool.filter((q) => {
-    const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}`;
-    return !badStem.some((re) => re.test(blob));
-  });
-  const expert = filtered.filter((q) => q.tags?.includes('banco-expert'));
-  if (expert.length >= count) filtered = expert;
-  return filtered;
+function titleForGeneral(dateStr: string): string {
+  const [, m, d] = dateStr.split('-');
+  return `Disputa do dia · Residência · ${d}/${m}`;
 }
 
-async function recentQuestionIds(
+function isNephrologyTagged(q: Question): boolean {
+  const tags = q.tags ?? [];
+  return tags.includes('nefrologia-avancada') || tags.includes('nefropediatria') || tags.includes('banco-expert');
+}
+
+async function recentGeneralQuestionIds(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   beforeDate: string,
   lookbackDays = 45
@@ -64,7 +41,7 @@ async function recentQuestionIds(
     .from('exams')
     .select('id')
     .eq('exam_kind', 'daily')
-    .eq('audience', 'nephrology')
+    .eq('audience', 'general')
     .gte('date_available', from)
     .lt('date_available', beforeDate);
 
@@ -79,48 +56,46 @@ async function recentQuestionIds(
   return (eqs ?? []).map((row) => String(row.question_id));
 }
 
-async function pickTrackQuestions(
+async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
-  track: DailyExamTrack,
   count: number,
   dateStr: string
 ): Promise<Question[]> {
-  const tag = TRACK_CONFIG[track].tag;
-  const { data, error } = await admin.from('questions').select('*').contains('tags', [tag]);
+  const { data, error } = await admin.from('questions').select('*');
   if (error) throw new Error(error.message);
 
-  let pool = filterExpertPool((data ?? []) as Question[], count);
-  const avoid = new Set(await recentQuestionIds(admin, dateStr));
+  let pool = (data ?? []) as Question[];
+  const nonNefro = pool.filter((q) => !isNephrologyTagged(q));
+  if (nonNefro.length >= count) pool = nonNefro;
+
+  const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
   if (fresh.length >= count) pool = fresh;
 
   if (pool.length < count) {
     throw new Error(
-      `Questões insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
+      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
     );
   }
 
+  const seed = Number(dateStr.replace(/-/g, '')) || 1;
+  const picked = pickDailyExamQuestions(pool, count, seed);
+  if (picked.length >= count) return picked.slice(0, count);
   return mixDifficulty(pool, count);
 }
 
-/**
- * Garante prova diária competitiva para a data (Nefrologia ↔ Nefropediatria).
- * Idempotente: se já existir prova published/draft na data, retorna ela.
- */
-export async function ensureDailyNephrologyExam(
+/** Disputa diária geral (outras ligas / quem não está na Liga de Nefrologia). */
+export async function ensureDailyGeneralExam(
   dateStr = todayDateStringBrazil()
-): Promise<EnsureDailyExamResult> {
-  const track = trackForDate(dateStr);
-
+): Promise<EnsureGeneralExamResult> {
   if (usesDemoStore()) {
     return {
       date: dateStr,
-      track,
-      audience: 'nephrology',
+      audience: 'general',
       created: false,
       exam: {
-        id: `demo-exam-nefro-${dateStr}`,
-        title: titleForDailyTrack(track, dateStr),
+        id: `demo-exam-general-${dateStr}`,
+        title: titleForGeneral(dateStr),
         date_available: dateStr,
         total_questions: DAILY_EXAM_QUESTION_COUNT,
         duration_minutes: DAILY_EXAM_DURATION_MINUTES,
@@ -133,8 +108,7 @@ export async function ensureDailyNephrologyExam(
   if (!admin) {
     return {
       date: dateStr,
-      track,
-      audience: 'nephrology',
+      audience: 'general',
       created: false,
       exam: null,
       error: 'SUPABASE_SERVICE_ROLE_KEY necessária para gerar a disputa diária.',
@@ -145,21 +119,20 @@ export async function ensureDailyNephrologyExam(
     .from('exams')
     .select('id, title, date_available, total_questions, duration_minutes, status')
     .eq('date_available', dateStr)
-    .eq('audience', 'nephrology')
+    .eq('audience', 'general')
     .maybeSingle();
 
   if (existing) {
-    return { date: dateStr, track, audience: 'nephrology', created: false, exam: existing };
+    return { date: dateStr, audience: 'general', created: false, exam: existing };
   }
 
   let selected: Question[];
   try {
-    selected = await pickTrackQuestions(admin, track, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    selected = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr);
   } catch (err) {
     return {
       date: dateStr,
-      track,
-      audience: 'nephrology',
+      audience: 'general',
       created: false,
       exam: null,
       error: err instanceof Error ? err.message : 'Falha ao sortear questões',
@@ -167,12 +140,10 @@ export async function ensureDailyNephrologyExam(
   }
 
   const release = defaultExamReleaseFields(dateStr);
-  const title = titleForDailyTrack(track, dateStr);
-
   const { data: exam, error: examError } = await admin
     .from('exams')
     .insert({
-      title,
+      title: titleForGeneral(dateStr),
       date_available: dateStr,
       duration_minutes: DAILY_EXAM_DURATION_MINUTES,
       total_questions: DAILY_EXAM_QUESTION_COUNT,
@@ -181,7 +152,7 @@ export async function ensureDailyNephrologyExam(
       selection_mode: 'auto',
       status: 'published',
       exam_kind: 'daily',
-      audience: 'nephrology',
+      audience: 'general',
       date_closes: release.date_closes,
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
@@ -193,17 +164,16 @@ export async function ensureDailyNephrologyExam(
     .single();
 
   if (examError) {
-    // Corrida: outra requisição criou no mesmo instante
     if (examError.code === '23505' || /duplicate|unique/i.test(examError.message)) {
       const { data: raced } = await admin
         .from('exams')
         .select('id, title, date_available, total_questions, duration_minutes, status')
         .eq('date_available', dateStr)
-        .eq('audience', 'nephrology')
+        .eq('audience', 'general')
         .maybeSingle();
-      return { date: dateStr, track, audience: 'nephrology', created: false, exam: raced };
+      return { date: dateStr, audience: 'general', created: false, exam: raced };
     }
-    return { date: dateStr, track, audience: 'nephrology', created: false, exam: null, error: examError.message };
+    return { date: dateStr, audience: 'general', created: false, exam: null, error: examError.message };
   }
 
   const examQuestions = selected.map((q, i) => ({
@@ -215,22 +185,20 @@ export async function ensureDailyNephrologyExam(
   const { error: eqError } = await admin.from('exam_questions').insert(examQuestions);
   if (eqError) {
     await admin.from('exams').delete().eq('id', exam.id);
-    return { date: dateStr, track, audience: 'nephrology', created: false, exam: null, error: eqError.message };
+    return { date: dateStr, audience: 'general', created: false, exam: null, error: eqError.message };
   }
 
-  return { date: dateStr, track, audience: 'nephrology', created: true, exam };
+  return { date: dateStr, audience: 'general', created: true, exam };
 }
 
-/** Garante hoje + próximos N-1 dias. */
-export async function ensureDailyNephrologyHorizon(
+export async function ensureDailyGeneralHorizon(
   days = DAILY_EXAM_HORIZON_DAYS,
   fromDate = todayDateStringBrazil()
-): Promise<EnsureDailyExamResult[]> {
-  const results: EnsureDailyExamResult[] = [];
+): Promise<EnsureGeneralExamResult[]> {
+  const results: EnsureGeneralExamResult[] = [];
   const n = Math.max(1, Math.min(31, days));
   for (let i = 0; i < n; i++) {
-    const date = addCalendarDaysBrazil(fromDate, i);
-    results.push(await ensureDailyNephrologyExam(date));
+    results.push(await ensureDailyGeneralExam(addCalendarDaysBrazil(fromDate, i)));
   }
   return results;
 }

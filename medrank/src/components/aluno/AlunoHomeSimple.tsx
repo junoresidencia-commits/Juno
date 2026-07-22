@@ -27,8 +27,10 @@ interface Props {
   rankingDate: string;
   finishedToday?: number;
   streakDays?: number;
-  /** Especialidade da disputa de hoje (Nefrologia ou Nefropediatria). */
+  /** Especialidade da disputa de hoje (Nefrologia, Nefropediatria ou Residência). */
   trackLabel?: string;
+  /** Nome da liga (ex.: Liga de Nefrologia) quando a disputa é exclusiva. */
+  leagueLabel?: string;
 }
 
 export function AlunoHomeSimple({
@@ -48,10 +50,11 @@ export function AlunoHomeSimple({
   finishedToday = 0,
   streakDays = 0,
   trackLabel,
+  leagueLabel,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
-  const specialty = trackLabel ?? 'Nefrologia';
+  const specialty = trackLabel ?? 'Disputa do dia';
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
@@ -80,7 +83,17 @@ export function AlunoHomeSimple({
         {todayExam ? (
           <>
             <p className="mb-3 text-center text-sm font-medium text-teal-800">
-              Hoje: <span className="font-bold">{specialty}</span>
+              {leagueLabel ? (
+                <>
+                  <span className="font-bold">{leagueLabel}</span>
+                  {' · '}
+                  Hoje: <span className="font-bold">{specialty}</span>
+                </>
+              ) : (
+                <>
+                  Hoje: <span className="font-bold">{specialty}</span>
+                </>
+              )}
             </p>
             {canContinue && (
               <Link

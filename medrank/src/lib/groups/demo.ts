@@ -21,6 +21,7 @@ export function listDemoStudyGroups(): (StudyGroup & { member_count: number })[]
     active: g.active,
     created_by: g.created_by,
     created_at: g.created_at,
+    exam_audience: g.exam_audience ?? 'general',
     member_count: g.members.length,
   }));
 }
@@ -33,8 +34,12 @@ export function createDemoStudyGroup(input: {
   name: string;
   description?: string | null;
   createdBy?: string | null;
+  examAudience?: 'general' | 'nephrology';
 }): StudyGroup {
   const store = ensureGroups();
+  const examAudience =
+    input.examAudience ??
+    (input.name.toLowerCase().includes('nefrologia') ? 'nephrology' : 'general');
   const group: StoredGroup = {
     id: `demo-group-${randomUUID()}`,
     name: input.name.trim(),
@@ -43,6 +48,7 @@ export function createDemoStudyGroup(input: {
     created_by: input.createdBy ?? null,
     created_at: new Date().toISOString(),
     members: [],
+    exam_audience: examAudience,
   };
   store.studyGroups.push(group);
   writeDemoStore(store);

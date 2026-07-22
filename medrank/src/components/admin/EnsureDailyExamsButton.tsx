@@ -23,22 +23,27 @@ export function EnsureDailyExamsButton() {
         return;
       }
       if (todayOnly) {
+        const createdCount =
+          (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
         setMessage(
-          data.created
-            ? `Criada: ${data.exam?.title ?? data.date}`
-            : data.exam
-              ? `Já existia: ${data.exam.title}`
-              : data.error || 'Não foi possível criar a prova de hoje'
+          createdCount > 0
+            ? `Criadas ${createdCount} disputa(s) de hoje (geral + Liga de Nefrologia)`
+            : data.general?.exam || data.nephrology?.exam
+              ? 'Já existiam: disputa geral + Liga de Nefrologia'
+              : 'Não foi possível criar as provas de hoje'
         );
-        if (data.error) setError(data.error);
+        const err = data.general?.error || data.nephrology?.error;
+        if (err) setError(err);
       } else {
         setMessage(
           `Geradas ${data.created} novas · verificadas ${data.checked} (próximos 14 dias)`
         );
         const firstError = (data.results ?? []).find(
-          (r: { error?: string }) => r.error
+          (r: { general?: { error?: string }; nephrology?: { error?: string } }) =>
+            r.general?.error || r.nephrology?.error
         );
-        if (firstError?.error) setError(firstError.error);
+        const err = firstError?.general?.error || firstError?.nephrology?.error;
+        if (err) setError(err);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro de rede');
@@ -68,7 +73,8 @@ export function EnsureDailyExamsButton() {
         </button>
       </div>
       <p className="text-xs text-slate-600">
-        Alterna automaticamente: um dia Nefrologia, outro Nefropediatria. Quem faz ganha
+        Gera as duas disputas do dia: <strong>geral</strong> (outras ligas) e{' '}
+        <strong>Liga de Nefrologia</strong> (Nefrologia ↔ Nefropediatria). Quem faz ganha
         pontos; quem não faz fica sem pontos no dia.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}

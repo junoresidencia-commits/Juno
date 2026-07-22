@@ -65,6 +65,9 @@ export interface Exam {
   ranking_release: 'after_all_done' | 'after_window' | 'immediate' | 'next_day';
   status: ExamStatus;
   selection_mode?: SelectionMode;
+  /** general = outras ligas; nephrology = Liga de Nefrologia */
+  audience?: 'general' | 'nephrology';
+  exam_kind?: 'daily' | 'simulado';
   created_at: string;
 }
 
@@ -163,6 +166,8 @@ export interface StudyGroup {
   active: boolean;
   created_by: string | null;
   created_at: string;
+  /** Qual disputa diária a liga usa */
+  exam_audience?: 'general' | 'nephrology';
 }
 
 export interface StudyGroupMember {

@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import {
-  DAILY_EXAM_HORIZON_DAYS,
-  ensureDailyNephrologyHorizon,
-} from '@/lib/exams/daily-nephrology';
+import { DAILY_EXAM_HORIZON_DAYS } from '@/lib/exams/daily-schedule';
+import { ensureBothDailyHorizons } from '@/lib/exams/ensure-daily';
 
 /**
- * Vercel Cron: gera a disputa diária (Nefrologia ↔ Nefropediatria).
- * Auth: Authorization Bearer CRON_SECRET (Vercel injeta automaticamente)
- * ou header x-cron-secret.
+ * Vercel Cron: gera disputa geral + disputa da Liga de Nefrologia.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -26,21 +22,33 @@ export async function GET(request: Request) {
     );
   }
 
-  const results = await ensureDailyNephrologyHorizon(DAILY_EXAM_HORIZON_DAYS);
-  const created = results.filter((r) => r.created).length;
-  const errors = results.filter((r) => r.error);
+  const results = await ensureBothDailyHorizons(DAILY_EXAM_HORIZON_DAYS);
+  const created =
+    results.filter((r) => r.general.created).length +
+    results.filter((r) => r.nephrology.created).length;
+  const errors = results.flatMap((r) =>
+    [r.general.error, r.nephrology.error].filter(Boolean)
+  );
 
   return NextResponse.json({
     ok: errors.length === 0,
     created,
-    checked: results.length,
+    checked: results.length * 2,
     results: results.map((r) => ({
       date: r.date,
-      track: r.track,
-      created: r.created,
-      examId: r.exam?.id ?? null,
-      title: r.exam?.title ?? null,
-      error: r.error ?? null,
+      general: {
+        created: r.general.created,
+        examId: r.general.exam?.id ?? null,
+        title: r.general.exam?.title ?? null,
+        error: r.general.error ?? null,
+      },
+      nephrology: {
+        track: r.nephrology.track,
+        created: r.nephrology.created,
+        examId: r.nephrology.exam?.id ?? null,
+        title: r.nephrology.exam?.title ?? null,
+        error: r.nephrology.error ?? null,
+      },
     })),
   });
 }

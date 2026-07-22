@@ -10,6 +10,7 @@ type GroupRow = {
   description: string | null;
   active: boolean;
   member_count: number;
+  exam_audience?: 'general' | 'nephrology';
 };
 
 export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) {
@@ -87,7 +88,8 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
       >
         <h2 className="font-semibold">Novo grupo</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Ex.: Liga Acadêmica de Nefrologia, Turma ENARE 2027, R1 Clínica Médica…
+          Grupos com &quot;Nefrologia&quot; no nome usam a disputa Nefrologia ↔ Nefropediatria.
+          Os demais usam a disputa geral diária.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -142,6 +144,12 @@ export function GroupsManager({ initialGroups }: { initialGroups: GroupRow[] }) 
                     {' · '}
                     <span className={g.active ? 'text-emerald-700' : 'text-slate-400'}>
                       {g.active ? 'Ativo' : 'Inativo'}
+                    </span>
+                    {' · '}
+                    <span className="text-teal-800">
+                      {g.exam_audience === 'nephrology'
+                        ? 'Disputa Nefrologia'
+                        : 'Disputa geral'}
                     </span>
                   </p>
                 </div>

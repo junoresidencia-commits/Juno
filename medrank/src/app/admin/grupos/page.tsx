@@ -15,6 +15,7 @@ export default async function AdminGruposPage() {
     description: string | null;
     active: boolean;
     member_count: number;
+    exam_audience?: 'general' | 'nephrology';
   }[] = [];
 
   if (usesDemoStore()) {
@@ -23,7 +24,7 @@ export default async function AdminGruposPage() {
     const supabase = createAdminClient() ?? (await createClient());
     const { data } = await supabase
       .from('study_groups')
-      .select('id, name, description, active, created_at, study_group_members(count)')
+      .select('id, name, description, active, created_at, exam_audience, study_group_members(count)')
       .order('created_at', { ascending: false });
 
     groups = (data ?? []).map((g) => {
@@ -33,6 +34,7 @@ export default async function AdminGruposPage() {
         name: g.name,
         description: g.description,
         active: g.active,
+        exam_audience: ((g as { exam_audience?: string }).exam_audience as 'general' | 'nephrology') ?? 'general',
         member_count: Array.isArray(countRaw) ? Number(countRaw[0]?.count ?? 0) : 0,
       };
     });

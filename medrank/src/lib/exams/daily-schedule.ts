@@ -32,3 +32,8 @@ export function addCalendarDaysBrazil(dateStr: string, days: number): string {
   const d = String(date.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
 }
+
+export const DAILY_EXAM_QUESTION_COUNT = 20;
+export const DAILY_EXAM_DURATION_MINUTES = 30;
+/** Quantos dias futuros o cron pré-gera (hoje incluso). */
+export const DAILY_EXAM_HORIZON_DAYS = 14;
