@@ -87,10 +87,14 @@ export default async function RankingAlunoPage({
 
   const supabase = await createClient();
   const today = todayDateStringBrazil();
+  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  const ctx = await resolveUserExamAudience(userId);
+
   const { data: todayExam } = await supabase
     .from('exams')
-    .select('id, date_available')
+    .select('id, date_available, audience')
     .eq('date_available', today)
+    .eq('audience', ctx.audience)
     .eq('status', 'published')
     .maybeSingle();
 
@@ -110,25 +114,51 @@ export default async function RankingAlunoPage({
     ? { start: getTodayRankingDate(), end: getTodayRankingDate() }
     : getPeriodBounds(period);
 
-  const { data: rankings } = canSeeDaily
-    ? await supabase
+  let rankings = null;
+  if (canSeeDaily) {
+    if (period === 'daily' && ctx.audience === 'nephrology' && ctx.leagueId) {
+      const { data } = await supabase
+        .from('study_group_rankings')
+        .select('user_id, position, total_score, profiles(name)')
+        .eq('group_id', ctx.leagueId)
+        .eq('period_type', 'daily')
+        .eq('period_start', bounds.start)
+        .order('position', { ascending: true });
+      rankings = data;
+    } else {
+      const { data } = await supabase
         .from('rankings')
         .select('user_id, position, total_score, profiles(name)')
         .eq('period_type', period)
         .eq('period_start', bounds.start)
-        .order('position', { ascending: true })
-        .limit(15)
-    : { data: null };
+        .order('position', { ascending: true });
+      rankings = data;
+    }
+  }
 
-  const { data: myRanking } = canSeeDaily
-    ? await supabase
+  let myRanking = null;
+  if (canSeeDaily) {
+    if (period === 'daily' && ctx.audience === 'nephrology' && ctx.leagueId) {
+      const { data } = await supabase
+        .from('study_group_rankings')
+        .select('position, total_score')
+        .eq('group_id', ctx.leagueId)
+        .eq('user_id', userId)
+        .eq('period_type', 'daily')
+        .eq('period_start', bounds.start)
+        .maybeSingle();
+      myRanking = data;
+    } else {
+      const { data } = await supabase
         .from('rankings')
         .select('position, total_score')
         .eq('user_id', userId)
         .eq('period_type', period)
         .eq('period_start', bounds.start)
-        .maybeSingle()
-    : { data: null };
+        .maybeSingle();
+      myRanking = data;
+    }
+  }
 
   return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">

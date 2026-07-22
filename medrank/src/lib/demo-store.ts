@@ -61,6 +61,7 @@ export interface DemoStore {
     created_by: string | null;
     created_at: string;
     members: string[];
+    exam_audience?: 'general' | 'nephrology';
   }[];
 }
 

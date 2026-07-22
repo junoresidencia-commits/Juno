@@ -18,7 +18,7 @@ export async function GET() {
   const admin = createAdminClient() ?? auth.supabase;
   const { data: groups, error } = await admin
     .from('study_groups')
-    .select('id, name, description, active, created_by, created_at, study_group_members(count)')
+    .select('id, name, description, active, created_by, created_at, exam_audience, study_group_members(count)')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -35,6 +35,7 @@ export async function GET() {
       active: g.active,
       created_by: g.created_by,
       created_at: g.created_at,
+      exam_audience: (g as { exam_audience?: string }).exam_audience ?? 'general',
       member_count,
     };
   });
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
     name?: string;
     description?: string | null;
+    exam_audience?: 'general' | 'nephrology';
   };
 
   const name = body.name?.trim();
@@ -56,11 +58,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Nome do grupo é obrigatório' }, { status: 400 });
   }
 
+  const examAudience =
+    body.exam_audience === 'nephrology' || name.toLowerCase().includes('nefrologia')
+      ? 'nephrology'
+      : 'general';
+
   if (usesDemoStore() || auth.demo) {
     const group = createDemoStudyGroup({
       name,
       description: body.description ?? null,
       createdBy: 'demo-admin',
+      examAudience,
     });
     return NextResponse.json({ group });
   }
@@ -75,6 +83,7 @@ export async function POST(request: Request) {
       description: body.description?.trim() || null,
       created_by: userData.user?.id ?? null,
       active: true,
+      exam_audience: examAudience,
     })
     .select()
     .single();

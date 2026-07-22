@@ -70,6 +70,22 @@ export async function POST(
     return NextResponse.json({ error: 'Prova não disponível' }, { status: 404 });
   }
 
+  // Só pode iniciar a disputa da própria trilha (geral vs Liga de Nefrologia)
+  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  const ctx = await resolveUserExamAudience(user.id);
+  const examAudience = (exam as { audience?: string }).audience ?? 'general';
+  if (examAudience !== ctx.audience) {
+    return NextResponse.json(
+      {
+        error:
+          examAudience === 'nephrology'
+            ? 'Esta disputa é exclusiva da Liga de Nefrologia.'
+            : 'Esta é a disputa geral — sua liga tem outra prova hoje.',
+      },
+      { status: 403 }
+    );
+  }
+
   const { data: existing } = await supabase
     .from('attempts')
     .select('*')

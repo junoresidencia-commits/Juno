@@ -12,19 +12,30 @@ import {
 } from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
-import { ensureDailyNephrologyExam } from '@/lib/exams/daily-nephrology';
+import { ensureBothDailyExams } from '@/lib/exams/ensure-daily';
+import { audienceLabel, resolveUserExamAudience } from '@/lib/exams/audience';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function AlunoDashboard() {
   const session = await requireAuth();
   if (!session.profile.active) redirect('/login?blocked=1');
 
+  const today = todayDateStringBrazil();
+  const ctx = await resolveUserExamAudience(session.userId);
+  const trackLabel =
+    ctx.audience === 'nephrology'
+      ? shortTrackLabel(trackForDate(today))
+      : 'Residência (disputa geral)';
+  const leagueLabel =
+    ctx.audience === 'nephrology'
+      ? ctx.leagueName ?? audienceLabel('nephrology')
+      : null;
+
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
     const { userId } = session;
     const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
       getDemoDashboardData(userId);
-    const trackLabel = shortTrackLabel(trackForDate(todayDateStringBrazil()));
 
     const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
@@ -50,6 +61,7 @@ export default async function AlunoDashboard() {
         finishedToday={finishedToday}
         streakDays={streakDays}
         trackLabel={trackLabel}
+        leagueLabel={leagueLabel ?? undefined}
       />
     );
   }
@@ -57,27 +69,17 @@ export default async function AlunoDashboard() {
   const supabase = await createClient();
   const userId = session.userId;
   const profile = session.profile;
-  const today = todayDateStringBrazil();
-  const trackLabel = shortTrackLabel(trackForDate(today));
 
-  // Lazy ensure: se o cron ainda não rodou, cria a disputa ao abrir o app
-  let { data: todayExam } = await supabase
+  // Garante as duas disputas do dia; o aluno só vê a da sua liga
+  await ensureBothDailyExams(today);
+
+  const { data: todayExam } = await supabase
     .from('exams')
     .select('*')
     .eq('date_available', today)
+    .eq('audience', ctx.audience)
     .eq('status', 'published')
     .maybeSingle();
-
-  if (!todayExam) {
-    await ensureDailyNephrologyExam(today);
-    const refreshed = await supabase
-      .from('exams')
-      .select('*')
-      .eq('date_available', today)
-      .eq('status', 'published')
-      .maybeSingle();
-    todayExam = refreshed.data;
-  }
 
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
 
@@ -107,15 +109,30 @@ export default async function AlunoDashboard() {
   const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
   const rankingDate = getTodayRankingDate();
 
-  const { data: todayRankings } = showRanking
-    ? await supabase
+  // Ranking da Liga de Nefrologia vs ranking global (disputa geral)
+  let todayRankings = null;
+  if (showRanking) {
+    if (ctx.audience === 'nephrology' && ctx.leagueId) {
+      const { data } = await supabase
+        .from('study_group_rankings')
+        .select('id, position, total_score, user_id, profiles(name)')
+        .eq('group_id', ctx.leagueId)
+        .eq('period_type', 'daily')
+        .eq('period_start', rankingDate)
+        .order('position', { ascending: true })
+        .limit(15);
+      todayRankings = data;
+    } else {
+      const { data } = await supabase
         .from('rankings')
         .select('id, position, total_score, user_id, profiles(name)')
         .eq('period_type', 'daily')
         .eq('period_start', rankingDate)
         .order('position', { ascending: true })
-        .limit(15)
-    : { data: null };
+        .limit(15);
+      todayRankings = data;
+    }
+  }
 
   const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
   const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
@@ -139,6 +156,7 @@ export default async function AlunoDashboard() {
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}
       trackLabel={trackLabel}
+      leagueLabel={leagueLabel ?? undefined}
     />
   );
 }
