@@ -26,9 +26,20 @@ function titleForGeneral(dateStr: string): string {
   return `Disputa do dia · Residência · ${d}/${m}`;
 }
 
+/** Só trilha da Liga de Nefrologia — não confundir com banco-expert de residência geral. */
 function isNephrologyTagged(q: Question): boolean {
   const tags = q.tags ?? [];
-  return tags.includes('nefrologia-avancada') || tags.includes('nefropediatria') || tags.includes('banco-expert');
+  return (
+    tags.includes('nefrologia-avancada') ||
+    tags.includes('nefropediatria') ||
+    tags.includes('titulo-nefrologia') ||
+    tags.includes('estilo-SBNPed')
+  );
+}
+
+function isResidenciaExpert(q: Question): boolean {
+  const tags = q.tags ?? [];
+  return tags.includes('banco-expert') && tags.includes('residencia-expert') && !isNephrologyTagged(q);
 }
 
 async function recentGeneralQuestionIds(
@@ -64,9 +75,11 @@ async function pickGeneralQuestions(
   const { data, error } = await admin.from('questions').select('*');
   if (error) throw new Error(error.message);
 
-  let pool = (data ?? []) as Question[];
-  const nonNefro = pool.filter((q) => !isNephrologyTagged(q));
-  if (nonNefro.length >= count) pool = nonNefro;
+  let pool = ((data ?? []) as Question[]).filter((q) => !isNephrologyTagged(q));
+
+  // Preferir banco expert de residência (CM/Ped/Cirurgia/GO/…) quando houver volume
+  const expert = pool.filter(isResidenciaExpert);
+  if (expert.length >= count) pool = expert;
 
   const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
