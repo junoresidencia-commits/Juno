@@ -30,6 +30,20 @@ export interface Profile {
   enabled_tracks?: string[];
 }
 
+export type BankStatus =
+  | 'draft'
+  | 'pending_review'
+  | 'approved'
+  | 'rejected'
+  | 'disabled'
+  | 'annulled';
+
+export type QuestionOrigin =
+  | 'official'
+  | 'original_based_on_exam'
+  | 'original'
+  | 'guideline';
+
 export interface Question {
   id: string;
   statement: string;
@@ -50,6 +64,19 @@ export interface Question {
   image_url: string | null;
   bibliography: string | null;
   created_at: string;
+  /** Aprovação no banco permanente — só approved entra na disputa diária. */
+  bank_status?: BankStatus | null;
+  question_origin?: QuestionOrigin | null;
+  institution?: string | null;
+  exam_name?: string | null;
+  source_url?: string | null;
+  official_answer?: string | null;
+  reproduction_allowed?: boolean | null;
+  statement_fingerprint?: string | null;
+  reviewed_at?: string | null;
+  reviewed_by?: string | null;
+  import_batch_id?: string | null;
+  appears_in_exams?: string[] | null;
 }
 
 export interface Exam {

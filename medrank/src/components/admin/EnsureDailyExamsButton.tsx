@@ -7,10 +7,17 @@ export function EnsureDailyExamsButton() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function run(force: boolean) {
-    if (force) {
+  async function run(force: boolean, mode: 'bank' | 'ai') {
+    if (mode === 'ai') {
       const ok = window.confirm(
-        'Forçar regenerar apaga as disputas de HOJE (e tentativas) e cria de novo com revisão IA.\n\nUse se qualidade=pending, 0 questões ou prova ruim. Continuar?'
+        'IA PAGA — estimativa ~US$ 0,50 a US$ 5 por regeneração completa.\n\n' +
+          'Só funciona se "Permitir IA paga" estiver ATIVADA em Admin → Provas.\n\n' +
+          'Recomendado: use Gerar do banco (grátis). Continuar com IA?'
+      );
+      if (!ok) return;
+    } else if (force) {
+      const ok = window.confirm(
+        'Forçar regenerar (BANCO) apaga as disputas de HOJE e monta de novo só com o banco local — sem custo OpenAI. Continuar?'
       );
       if (!ok) return;
     }
@@ -22,7 +29,7 @@ export function EnsureDailyExamsButton() {
       const res = await fetch('/api/admin/exams/ensure-daily', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ today: true, force }),
+        body: JSON.stringify({ today: true, force, mode }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -31,28 +38,17 @@ export function EnsureDailyExamsButton() {
       }
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
-      const progressBits = [data.general, data.nephrology]
-        .filter(Boolean)
-        .map((r: { progress?: { approved?: number; rejected?: number; target?: number; poolSize?: number }; exam?: { title?: string } }) => {
-          const p = r.progress;
-          if (!p) return null;
-          return `aprovadas ${p.approved ?? '?'}/${p.target ?? 20} · reprovadas ${p.rejected ?? 0} · pool ${p.poolSize ?? '?'}`;
-        })
-        .filter(Boolean);
-      if (force) {
+      const modeLabel = data.mode === 'ai' ? 'IA' : 'banco local';
+      if (createdCount > 0) {
         setMessage(
-          createdCount > 0
-            ? `Disputa(s) regenerada(s) com IA (${createdCount}). ${progressBits.join(' | ')} Atualize a página.`
-            : 'Regeneração pedida, mas nada foi criado — veja o erro.'
+          `Disputa(s) gerada(s) via ${modeLabel} (${createdCount}). Atualize a pagina.`
+        );
+      } else if (data.general?.exam || data.nephrology?.exam) {
+        setMessage(
+          'Ja existiam as disputas de hoje — use Forcar regenerar (banco) se estiverem ruins.'
         );
       } else {
-        setMessage(
-          createdCount > 0
-            ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}). ${progressBits.join(' | ')}`
-            : data.general?.exam || data.nephrology?.exam
-              ? 'Já existiam as disputas de hoje — use “Forçar regenerar” se estiverem ruins.'
-              : 'Não foi possível criar as provas de hoje'
-        );
+        setMessage('Nao foi possivel criar as provas de hoje');
       }
       const err = data.general?.error || data.nephrology?.error || data.error;
       if (err) setError(err);
@@ -69,24 +65,35 @@ export function EnsureDailyExamsButton() {
         <button
           type="button"
           disabled={loading}
-          onClick={() => void run(false)}
+          onClick={() => void run(false, 'bank')}
           className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
         >
-          {loading ? 'Gerando e revisando…' : 'Gerar disputa de hoje'}
+          {loading ? 'Gerando…' : 'Gerar do banco (gratis)'}
         </button>
         <button
           type="button"
           disabled={loading}
-          onClick={() => void run(true)}
+          onClick={() => void run(true, 'bank')}
           className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-60"
         >
-          Forçar regenerar
+          Forçar regenerar (banco)
+        </button>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => void run(true, 'ai')}
+          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+        >
+          Regenerar com IA (pago)
         </button>
       </div>
       <p className="text-xs text-slate-600">
-        Só hoje. Pipeline OpenAI: gerar → revisar → trocar → publicar com 20/20. Se já existe e
-        está ruim (0 Q / pending), use <strong>Forçar regenerar</strong>. Sem{' '}
-        <code className="rounded bg-slate-100 px-1">OPENAI_API_KEY</code> não publica.
+        <strong>Recomendado:</strong> Gerar do banco — sorteia questões já aprovadas (provas
+        públicas + banco MedRank), sem gastar OpenAI. Fluxo: Importar prova → Revisar → Gerar.
+      </p>
+      <p className="text-xs text-slate-500">
+        Provas da internet: só importe material com direito de uso (fontes oficiais públicas). Não
+        copie prova comercial sem autorização. Ver docs/BANCO-PROVAS-PUBLICAS.md.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {error && <p className="text-sm text-red-700">{error}</p>}

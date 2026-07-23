@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { ensureBothDailyExams } from '@/lib/exams/ensure-daily';
+import { ensureBothDailyExams, resolveDailyMode } from '@/lib/exams/ensure-daily';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
 /** Só a disputa de hoje — 1×/dia via cron. */
 export const maxDuration = 300;
 
 /**
- * Vercel Cron: gera e revisa com IA apenas a disputa de HOJE
- * (geral + Liga de Nefrologia). Se já existir, não reprocessa.
+ * Vercel Cron: gera a disputa de HOJE (geral + Nefro).
+ * Padrao: modo banco (sem OpenAI). MEDRANK_DAILY_MODE=ai para pipeline pago.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -21,30 +21,31 @@ export async function GET(request: Request) {
     }
   } else if (process.env.NODE_ENV === 'production' && process.env.DEMO_MODE !== 'true') {
     return NextResponse.json(
-      { error: 'CRON_SECRET não configurado na Vercel.' },
+      { error: 'CRON_SECRET nao configurado na Vercel.' },
       { status: 503 }
     );
   }
 
-  if (!process.env.OPENAI_API_KEY?.trim()) {
+  const mode = resolveDailyMode();
+  if (mode === 'ai' && !process.env.OPENAI_API_KEY?.trim()) {
     return NextResponse.json(
       {
         error:
-          'OPENAI_API_KEY obrigatória no cron: sem ela a disputa não passa pela revisão clínica e não publica.',
+          'MEDRANK_DAILY_MODE=ai exige OPENAI_API_KEY. Remova a var ou use mode bank (padrao).',
       },
       { status: 503 }
     );
   }
 
   const date = todayDateStringBrazil();
-  const result = await ensureBothDailyExams(date);
+  const result = await ensureBothDailyExams(date, { mode });
   const errors = [result.general.error, result.nephrology.error].filter(Boolean);
   const created =
     (result.general.created ? 1 : 0) + (result.nephrology.created ? 1 : 0);
 
   return NextResponse.json({
     ok: errors.length === 0,
-    mode: 'today_only',
+    mode: result.mode,
     date,
     created,
     checked: 2,

@@ -8,8 +8,13 @@ import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
 import { mixDifficulty } from '@/lib/treino/progress';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
+  filterApprovedBank,
+  sortByBankPriority,
+} from '@/lib/question-bank/provenance';
+import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
+  buildBankOnlyExamSet,
 } from '@/lib/exams/quality-gate';
 import {
   addCalendarDaysBrazil,
@@ -123,7 +128,8 @@ async function fetchAllQuestionsPaged(
 async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   count: number,
-  dateStr: string
+  dateStr: string,
+  mode: 'ai' | 'bank' = 'bank'
 ) {
   // Busca por tag + paginação completa (evita teto ~1000 do PostgREST).
   let pool = (await fetchQuestionsByTag(admin, 'residencia-expert')).filter(
@@ -149,11 +155,17 @@ async function pickGeneralQuestions(
     pool = [...byId.values()];
   }
 
+  // Só questões aprovadas (importações ficam em pending_review até conferência)
+  pool = filterApprovedBank(pool);
+
   const sound = pool.filter((q) => isStructurallySound(q));
   if (sound.length >= count) pool = sound;
 
   const prefer = pool.filter(isResidenciaExpert);
   if (prefer.length >= count) pool = prefer;
+
+  // Prioridade: oficiais > baseadas em prova > originais > diretrizes
+  pool = sortByBankPriority(pool);
 
   const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
@@ -161,22 +173,28 @@ async function pickGeneralQuestions(
 
   if (pool.length < count) {
     throw new Error(
-      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo de novo (após o fix de qualidade).`
+      `Questoes insuficientes para disputa geral (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
     );
   }
 
   const seed = Number(dateStr.replace(/-/g, '')) || 1;
-  return buildAiApprovedExamSet(pool, count, (candidates, n) => {
-    const picked = pickDailyExamQuestions(candidates, n, seed);
+  const pick = (candidates: Question[], n: number) => {
+    const prioritized = sortByBankPriority(candidates);
+    const picked = pickDailyExamQuestions(prioritized, n, seed);
     if (picked.length >= n) return picked.slice(0, n);
-    return mixDifficulty(candidates, n);
-  });
+    return mixDifficulty(prioritized, n);
+  };
+
+  if (mode === 'ai') {
+    return buildAiApprovedExamSet(pool, count, pick);
+  }
+  return buildBankOnlyExamSet(pool, count, pick);
 }
 
 /** Disputa diária geral (outras ligas / quem não está na Liga de Nefrologia). */
 export async function ensureDailyGeneralExam(
   dateStr = todayDateStringBrazil(),
-  opts?: { force?: boolean }
+  opts?: { force?: boolean; mode?: 'ai' | 'bank' }
 ): Promise<EnsureGeneralExamResult> {
   if (usesDemoStore()) {
     return {
@@ -235,8 +253,9 @@ export async function ensureDailyGeneralExam(
 
   let selected: Question[] = [];
   let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
+  const mode = opts?.mode ?? 'bank';
   try {
-    builtMeta = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    builtMeta = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr, mode);
     selected = builtMeta.questions;
   } catch (err) {
     return {

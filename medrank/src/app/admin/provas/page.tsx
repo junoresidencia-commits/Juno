@@ -9,6 +9,7 @@ import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { EnsureDailyExamsButton } from '@/components/admin/EnsureDailyExamsButton';
 import { ExamQualityAdminCard } from '@/components/admin/ExamQualityAdminCard';
 import { DayHealthPanel } from '@/components/admin/DayHealthPanel';
+import { AiPaidSettingsCard } from '@/components/admin/AiPaidSettingsCard';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function ProvasPage() {
@@ -141,11 +142,14 @@ export default async function ProvasPage() {
         <h2 className="font-semibold text-slate-900">Geração automática</h2>
         <p className="mt-1 text-sm text-slate-600">
           Liga de Nefrologia hoje: <strong>{todayTrack}</strong>. Outras ligas: disputa geral.
+          Montagem a partir do banco aprovado — sem OpenAI por padrão.
         </p>
         <div className="mt-3">
           <EnsureDailyExamsButton />
         </div>
       </section>
+
+      <AiPaidSettingsCard />
 
       <DayHealthPanel />
 

@@ -19,7 +19,7 @@ export async function DayHealthPanel() {
             {report.openaiConfigured ? (
               <span className="font-semibold text-emerald-800">ok</span>
             ) : (
-              <span className="font-semibold text-red-700">faltando</span>
+              <span className="font-semibold text-slate-700">opcional (modo banco)</span>
             )}
             {' · '}
             {report.exams.length} disputa(s)

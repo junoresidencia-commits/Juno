@@ -14,12 +14,16 @@ Especificação completa do produto (USP/ENARE/título, importação de provas r
 
 **Ops após merge:** Importar banco completo → Forçar regenerar.
 
-## Fase 2 — Banco oficial + inéditas
+## Fase 2 — Banco oficial + inéditas (estrutura neste PR)
 
-- Metadados: `type` official | original_based_on_exam | original
-- Status: draft → pending_review → approved → rejected/disabled/annulled
-- Importação admin: PDF/texto/planilha/JSON → sempre `pending_review`
-- Proporção configurável: 40% reais / 40% inéditas padrão prova / 20% avançadas
+- [x] Metadados: `question_origin` official | original_based_on_exam | original | guideline
+- [x] Status: draft → pending_review → approved → rejected/disabled/annulled
+- [x] Importação admin: texto/JSON/CSV → sempre `pending_review` (CSV com opt-in auto_approve)
+- [x] Montagem diária prioriza oficiais aprovadas; modo padrão = banco (sem OpenAI)
+- [x] Toggle IA paga desligado + confirmação de custo
+- [ ] Proporção configurável: 40% reais / 40% inéditas padrão prova / 20% avançadas
+- [ ] Extração automática de PDF/Word/imagens
+- [ ] Importação em massa das fontes públicas (fase posterior; só material permitido)
 - Nunca apresentar inédita como oficial
 
 ## Fase 3 — Admin completo

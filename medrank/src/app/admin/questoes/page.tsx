@@ -50,6 +50,18 @@ export default async function QuestoesPage() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
+            href="/admin/importar/prova"
+            className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+          >
+            Importar prova
+          </Link>
+          <Link
+            href="/admin/questoes/revisao"
+            className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+          >
+            Revisão de importação
+          </Link>
+          <Link
             href="/admin/questoes/comentarios"
             className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
           >
