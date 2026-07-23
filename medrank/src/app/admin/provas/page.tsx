@@ -71,21 +71,29 @@ export default async function ProvasPage() {
 
         <div className="space-y-3">
           {exams.slice(0, 20).map((e) => (
-            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-              <div>
+            <div key={e.id} className="flex items-center justify-between gap-3 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <div className="min-w-0">
                 <p className="font-medium">{e.title}</p>
                 <p className="text-sm text-slate-600">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
                   {e.selection_mode === 'manual' ? ' · manual' : ''}
                 </p>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                e.date_available === today ? 'bg-emerald-100 text-emerald-800' :
-                e.status === 'closed' ? 'bg-slate-100 text-slate-600' :
-                'bg-blue-100 text-blue-800'
-              }`}>
-                {e.date_available === today ? 'Hoje' : e.status === 'closed' ? 'Encerrada' : 'Publicada'}
-              </span>
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/admin/provas/${e.id}/remediar`}
+                  className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+                >
+                  Remediação
+                </Link>
+                <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  e.date_available === today ? 'bg-emerald-100 text-emerald-800' :
+                  e.status === 'closed' ? 'bg-slate-100 text-slate-600' :
+                  'bg-blue-100 text-blue-800'
+                }`}>
+                  {e.date_available === today ? 'Hoje' : e.status === 'closed' ? 'Encerrada' : 'Publicada'}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -154,8 +162,8 @@ export default async function ProvasPage() {
           <p className="text-slate-600">Nenhuma prova criada — use os botões acima.</p>
         ) : (
           exams!.map((e) => (
-            <div key={e.id} className="flex items-center justify-between rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-              <div>
+            <div key={e.id} className="flex items-center justify-between gap-3 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <div className="min-w-0">
                 <p className="font-medium">{e.title}</p>
                 <p className="text-sm text-slate-600">
                   {formatDateBR(e.date_available)} · {e.total_questions} questões · {e.duration_minutes} min
@@ -163,11 +171,19 @@ export default async function ProvasPage() {
                   {(e as { audience?: string }).audience === 'nephrology' ? 'Liga Nefrologia' : 'Geral'}
                 </p>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                e.date_available === today ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'
-              }`}>
-                {e.date_available === today ? 'Hoje' : 'Publicada'}
-              </span>
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/admin/provas/${e.id}/remediar`}
+                  className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+                >
+                  Remediação
+                </Link>
+                <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  e.date_available === today ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'
+                }`}>
+                  {e.date_available === today ? 'Hoje' : 'Publicada'}
+                </span>
+              </div>
             </div>
           ))
         )}

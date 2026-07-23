@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { StudentNotificationsBell } from '@/components/aluno/StudentNotificationsBell';
 
 const NAV = [
   { href: '/aluno', label: 'Início', exact: true },
@@ -57,6 +58,7 @@ export function AlunoShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+          <StudentNotificationsBell />
           <form action="/api/auth/logout" method="post" className="shrink-0">
             <button
               type="submit"
