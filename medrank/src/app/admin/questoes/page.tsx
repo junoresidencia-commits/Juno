@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
-import { DIFFICULTY_LABELS } from '@/lib/format';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoQuestions } from '@/lib/demo/content';
 import { SeedQuestionBankButton } from '@/components/admin/SeedQuestionBankButton';
@@ -15,8 +14,6 @@ export default async function QuestoesPage() {
         id: string;
         statement: string;
         source: string | null;
-        topic: string | null;
-        difficulty: string | null;
         year: number | null;
       }[]
     | null = null;
@@ -32,7 +29,7 @@ export default async function QuestoesPage() {
     const [{ data }, countRes] = await Promise.all([
       client
         .from('questions')
-        .select('id, statement, source, topic, difficulty, year')
+        .select('id, statement, source, year')
         .order('created_at', { ascending: false })
         .limit(100),
       client.from('questions').select('*', { count: 'exact', head: true }),
@@ -90,16 +87,7 @@ export default async function QuestoesPage() {
           <div key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
             <p className="line-clamp-2 text-sm text-slate-900">{q.statement}</p>
             <p className="mt-2 text-xs text-slate-500">
-              {[
-                q.source,
-                q.year,
-                q.topic,
-                q.difficulty
-                  ? DIFFICULTY_LABELS[q.difficulty as keyof typeof DIFFICULTY_LABELS] ?? q.difficulty
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
+              {[q.source, q.year].filter(Boolean).join(' · ')}
             </p>
           </div>
         ))}

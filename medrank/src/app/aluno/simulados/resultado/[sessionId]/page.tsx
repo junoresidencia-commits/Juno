@@ -102,7 +102,7 @@ function QuestionReview({
   return (
     <div className={`rounded-xl p-5 ring-1 ${isCorrect ? 'bg-emerald-50 ring-emerald-200' : 'bg-red-50 ring-red-200'}`}>
       <p className="text-xs font-medium text-slate-600">
-        Questão {index} · {question.topic}{question.subtopic ? ` · ${question.subtopic}` : ''}
+        Questão {index}
       </p>
       <p className="mt-2 whitespace-pre-wrap text-sm">{question.statement}</p>
       <div className="mt-3 space-y-1 text-sm">
@@ -126,9 +126,6 @@ function QuestionReview({
         <strong>Comentário:</strong>
         <span className="mt-1 block whitespace-pre-wrap">{formatQuestionExplanation(question)}</span>
       </p>
-      {question.difficulty && (
-        <p className="mt-2 text-xs text-slate-600">{question.difficulty}</p>
-      )}
     </div>
   );
 }
