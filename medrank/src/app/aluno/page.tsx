@@ -179,6 +179,8 @@ export default async function AlunoDashboard() {
       rankingDate={rankingDate}
       trackLabel={trackLabel}
       leagueLabel={leagueLabel ?? undefined}
+      qualityStatus={(todayExam as { quality_status?: string } | null)?.quality_status ?? null}
+      qualitySummary={(todayExam as { quality_summary?: string } | null)?.quality_summary ?? null}
     />
   );
 }

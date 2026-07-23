@@ -79,6 +79,23 @@ export default async function ProvaPage({
 
   if (!exam || !canStartExam(exam)) redirect('/aluno');
 
+  const qualityStatus = (exam as { quality_status?: string }).quality_status ?? null;
+  const qualitySummary = (exam as { quality_summary?: string }).quality_summary ?? null;
+  if (qualityStatus === 'blocked') {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="text-xl font-bold text-red-900">Disputa em revisão</h1>
+        <p className="mt-3 text-sm text-red-800">
+          {qualitySummary ||
+            'A revisão automática encontrou problema nas questões. O professor foi avisado e liberará a prova em breve.'}
+        </p>
+        <a href="/aluno" className="mt-6 inline-block text-sm font-semibold text-emerald-700 hover:underline">
+          ← Voltar ao início
+        </a>
+      </div>
+    );
+  }
+
   let { data: attempt } = await supabase
     .from('attempts')
     .select('*')
@@ -142,6 +159,19 @@ export default async function ProvaPage({
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
         {formatExamWindowLabel()}. Antifraude ativo · 30 min · até 1 min 30 s por questão.
       </div>
+      {(qualityStatus === 'warning' || qualityStatus === 'approved_override') && (
+        <div
+          className={`border-b px-4 py-2 text-center text-sm ${
+            qualityStatus === 'warning'
+              ? 'border-amber-300 bg-amber-50 text-amber-950'
+              : 'border-sky-200 bg-sky-50 text-sky-950'
+          }`}
+        >
+          {qualityStatus === 'warning'
+            ? qualitySummary || 'Aviso da revisão automática: alertas menores nesta prova.'
+            : 'Prova liberada pelo professor após revisão.'}
+        </div>
+      )}
       <ExamRunner
         attemptId={attempt.id}
         examId={examId}
