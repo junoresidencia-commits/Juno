@@ -161,6 +161,10 @@ function assertQuality(qs) {
     if (!['A', 'B', 'C', 'D', 'E'].includes(q.correct_option)) throw new Error(`gabarito ${q.id}`);
     if ((q.explanation || '').length < 100) throw new Error(`explicação curta ${q.id}`);
     if (!q.tags.includes('residencia-expert')) throw new Error(`tag residencia-expert ausente ${q.id}`);
+    const lens = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e].map((t) => String(t || '').length);
+    const mx = Math.max(...lens);
+    const mn = Math.min(...lens);
+    if (mn < 45 || mx > mn * 2.5) throw new Error(`opções desbalanceadas ${q.id}: ${lens.join(',')}`);
   }
 }
 

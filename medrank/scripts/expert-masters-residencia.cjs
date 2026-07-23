@@ -1,6 +1,6 @@
 /**
- * Masters EXPERT — Residência (disputa geral).
- * Especialidades: CM, Pediatria, Cirurgia, GO, Preventiva/MFC, Cardiologia.
+ * Masters EXPERT — Residência (opções equilibradas).
+ * Gerado/polido por polish-expert-options.cjs — distratores equilibrados.
  */
 const RES_MASTERS = [
   {
@@ -15,13 +15,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com pneumonia, PA 85/50, lactato {{lactato}}, confusão. Qual prioridade na 1ª hora?",
     options: {
-      A: "Aguardar hemocultura negativa por 48 h antes de qualquer antibiótico",
-      B: "Coletar culturas, antibiótico IV precoce, reposição volêmica com cristaloide e reavaliar perfusão (bundle de sepse)",
-      C: "Apenas antitérmico oral e alta",
-      D: "Contraste iodado imediato sem volume",
-      E: "Corticoides em megadose antes de volume em todo caso"
+      A: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com.",
+      B: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica",
+      C: "Coletar culturas, antibiótico IV precoce, reposição volêmica com cristaloide e reavaliar perfusão (bundle de sepse)",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Sepse/choque séptico: antibiótico precoce + volume + culturas. Atraso de ATB aumenta mortalidade. Pearl: hora 1 salva — não espere a cultura.",
     bibliography: "SSC Surviving Sepsis 2021"
   },
@@ -37,13 +37,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com febre, rigidez de nuca e petéquias. Qual conduta imediata?",
     options: {
-      A: "Aguardar punção lombar e cultura antes de qualquer antibiótico em todos os cenários",
-      B: "Estabilizar, ATB empírico imediato (e corticoide se indicado) — não atrasar ATB se PL demorar; isolar gotículas conforme protocolo",
-      C: "Apenas oseltamivir",
-      D: "TC de crânio em todo paciente antes de qualquer medida, mesmo sem sinais focais e com atraso de horas",
-      E: "Observação ambulatorial"
+      A: "Estabilizar, ATB empírico imediato (e corticoide se indicado) — não atrasar ATB se PL demorar; isolar gotículas conforme protocolo",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "TC de crânio em todo paciente antes de qualquer medida, mesmo sem sinais focais e com atraso de horas. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Meningite meningocócica/bacteriana: ATB não espera PL se houver atraso. Pearl: petéquia + nuca = ATB já. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "IDSA bacterial meningitis"
   },
@@ -59,13 +59,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com asma, FR 34, Sat 88% AA, fala entrecortada. Conduta inicial?",
     options: {
-      A: "Apenas sedação e IOT imediata sem broncodilatador",
-      B: "O2, beta-agonista nebulizado + ipratrópio, corticoide sistêmico precoce; considerar MgSO4 IV se grave; IOT se falência",
-      C: "Antibiótico de amplo espectro de rotina em toda crise",
-      D: "Betabloqueador para taquicardia",
-      E: "Alta com corticoide inalatório apenas"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "O2, beta-agonista nebulizado + ipratrópio, corticoide sistêmico precoce; considerar MgSO4 IV se grave; IOT se falência",
+      D: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico Esta abordagem atrasa a terapia com melhor.",
+      E: "Iniciar betabloqueador não seletivo para controle da taquicardia da crise, sem broncodilatação Esta abordagem atrasa a terapia com melhor."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Exacerbação grave: broncodilatador + corticoide sistêmico são pilares. Pearl: corticoide cedo reduz internação.",
     bibliography: "GINA; BTS/SIGN asthma"
   },
@@ -81,11 +81,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com DPOC, aumento de dispneia/escarro purulento, pH 7,28, pCO2 68. Conduta?",
     options: {
-      A: "O2 a 100% sem alvo, indiferente à hipercapnia",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
       B: "Broncodilatadores, corticoide sistêmico, ATB se indicação, O2 com alvo Sat 88–92% e VNI se acidose hipercápnica",
-      C: "Apenas teofilina IV",
-      D: "Diurético de alça como primeira linha isolada",
-      E: "Negar VNI em acidose respiratória aguda da DPOC"
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      D: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
     correct: "B",
     explanation: "GOLD: VNI na acidose hipercápnica; O2 titulado. Pearl: Sat 100% pode piorar o DPOC. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -103,13 +103,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com DM1, glicemia {{glic}}, pH 7,12, cetonas altas, K 3,2. Sequência correta?",
     options: {
-      A: "Insulina IV antes de qualquer reposição de K com K já baixo",
-      B: "Volume com SF, repor K agressivamente (evitar insulina se K muito baixo), depois insulina IV e transição quando fechar gap/cetose",
-      C: "Apenas bicarbonato em todo pH <7,3",
-      D: "Hipoglicemiante oral na CAD",
-      E: "Restrição hídrica"
+      A: "Volume com SF, repor K agressivamente (evitar insulina se K muito baixo), depois insulina IV e transição quando fechar gap/cetose",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
-    correct: "B",
+    correct: "A",
     explanation: "CAD: volume → K → insulina. Insulina com K baixo precipita arritmia. Pearl: K 3,2 — reponha antes de bombear insulina.",
     bibliography: "ADA hyperglycemic crises"
   },
@@ -125,13 +125,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com DM2, glicemia 900, osmolaridade alta, sem cetose significativa, desidratação grave. Conduta?",
     options: {
-      A: "Insulina em bolus altos sem volume",
-      B: "Reposição volêmica cuidadosa (principal), insulina em doses menores que na CAD, vigiar Na corrigido e trombose",
-      C: "Bicarbonato de rotina",
-      D: "Apenas dieta",
-      E: "Diuréticos de alça como primeira medida"
+      A: "Reposição volêmica cuidadosa (principal), insulina em doses menores que na CAD, vigiar Na corrigido e trombose",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
-    correct: "B",
+    correct: "A",
     explanation: "HHS: volume é o protagonista; insulina após estabilizar. Pearl: HHS mata por desidratação/trombose, não por cetona.",
     bibliography: "ADA HHS"
   },
@@ -147,13 +147,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} cirrótico com hematêmese, PA 90/60. Conduta inicial? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Colonoscopia imediata sem estabilizar",
-      B: "ABC, volume/hemoderivados criteriosos, vasoconstritor (terlipressina/octreotide), ATB profilático e endoscopia precoce",
-      C: "AINE para dor abdominal",
-      D: "Betabloqueador na fase de choque ativo como única medida",
-      E: "Alta domiciliar"
+      A: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "ABC, volume/hemoderivados criteriosos, vasoconstritor (terlipressina/octreotide), ATB profilático e endoscopia precoce"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Varizes: vasoativo + ATB + endoscopia. Pearl: cirrótico que sangra — ATB reduz mortalidade. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "Baveno; AASLD portal hypertension"
   },
@@ -169,13 +169,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor em cinturão, lipase 8×, TC sem necrose infectada. Conduta?",
     options: {
-      A: "Antibiótico profilático de rotina em toda pancreatite",
-      B: "Jejum relativo/suporte, hidratação, analgesia, realimentação precoce se tolerar; ATB só se infecção; CPRE se colangite/obstrução",
-      C: "Cirurgia imediata em toda pancreatite edematosa",
-      D: "Contraste oral obrigatório no dia 1",
-      E: "Octreotide cura pancreatite leve"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Jejum relativo/suporte, hidratação, analgesia, realimentação precoce se tolerar; ATB só se infecção; CPRE se colangite/obstrução",
+      D: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor.",
+      E: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Pancreatite: suporte + ATB seletivo. Pearl: ATB profilático não é rotina. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACG pancreatitis guidelines"
   },
@@ -191,13 +191,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com TEP confirmado, PA estável, troponina elevada e VD dilatado no eco. Classificação e conduta?",
     options: {
-      A: "TEP de baixo risco — alta sem anticoagulação",
-      B: "TEP de risco intermediário: anticoagular; trombólise sistêmica reservada a choque/deterioração",
-      C: "Trombólise em todos os TEP com troponina+",
-      D: "Apenas AAS — inadequado para o quadro",
-      E: "Filtro de VECI de rotina em todo TEP"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "TEP de risco intermediário: anticoagular; trombólise sistêmica reservada a choque/deterioração"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Intermediário: anticoagula; lise se instabilizar. Pearl: troponina+ ≠ lise automática. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC PE guidelines"
   },
@@ -213,13 +213,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com Hb {{hb}}, VCM baixo, ferritina baixa, sem sangramento óbvio. Conduta?",
     options: {
-      A: "Transfusão de rotina com Hb 10",
-      B: "Repor ferro e investigar causa (GI/genital); transfusão só se instável/sintomas graves",
-      C: "Apenas vitamina B12",
-      D: "Eritropoetina sem ferro",
-      E: "Ignorar ferritina"
+      A: "Repor ferro e investigar causa (GI/genital); transfusão só se instável/sintomas graves",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Ferropriva: trate ferro + causa. Pearl: mulher em idade fértil — pergunte menstruação e pense GI se atípico. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "British guidelines iron deficiency"
   },
@@ -235,13 +235,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com podagra, ácido úrico alto. Ataque agudo — tratamento? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Iniciar alopurinol no pico da crise como monoterapia sem anti-inflamatório",
-      B: "Anti-inflamatório (AINE/colchicina/corticoide) no ataque; hipouricemiante crônico após, com cobertura",
-      C: "Antibiótico IV de amplo espectro sem artrocentese se dúvida de séptica",
-      D: "Imobilização isolada por 3 meses",
-      E: "Alopurinol IV de urgência"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Iniciar alopurinol no pico da crise como monoterapia sem anti-inflamatório. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Anti-inflamatório (AINE/colchicina/corticoide) no ataque; hipouricemiante crônico após, com cobertura",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Ataque: anti-inflamatório; não comece alopurinol sozinho no pico. Pearl: sepse articular primeiro se dúvida. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACR gout"
   },
@@ -257,11 +257,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com AR recém-diagnosticada, atividade moderada. Primeira linha?",
     options: {
-      A: "Apenas AINE crônico sem DMARD",
+      A: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático",
       B: "Metotrexato (salvo contraindicação) + medidas sintomáticas; escalar se não atingir alvo",
-      C: "Corticoide pleno contínuo por anos como único tratamento",
-      D: "Antibiótico para “infecção oculta”",
-      E: "Cirurgia de synovectomia imediata"
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a.",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
+      E: "Suspender todos os antidiabéticos e iniciar apenas dieta, sem alternativa farmacológica para o controle glicêmico"
     },
     correct: "B",
     explanation: "Treat-to-target: MTX é âncora. Pearl: AINE não modifica doença. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -279,13 +279,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com déficit focal há 1h20, TC sem sangue, NIHSS 12. Conduta?",
     options: {
-      A: "AAS 300 mg e observar 24 h sem avaliar janela",
-      B: "Avaliar critérios de trombólise IV (alteplase/tenecteplase) e trombectomia se oclusão grande vaso",
-      C: "Heparina plena de rotina em todo AVC",
-      D: "Hipotensão induzida deliberada",
-      E: "Punção lombar antes da TC"
+      A: "Avaliar critérios de trombólise IV (alteplase/tenecteplase) e trombectomia se oclusão grande vaso",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Janela: trombólise/trombectomia mudam desfecho. Pearl: tempo é cérebro — protocolo stroke. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AHA/ASA stroke"
   },
@@ -301,13 +301,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} em convulsão há 10 min. Sequência? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Esperar 40 min sem benzodiazepínico",
-      B: "ABC, benzodiazepínico IV/IM precoce, depois ASE (fenitoína/fosfenitoína/valproato/levetiracetam) se persistir",
-      C: "Apenas glicose sem benzodiaze­pínico em euglicemia",
-      D: "Bloqueador neuromuscular sem sedação/anticonvulsivante",
-      E: "Alta após 1 crise parcial simples"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "ABC, benzodiazepínico IV/IM precoce, depois ASE (fenitoína/fosfenitoína/valproato/levetiracetam) se persistir",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Status: benzo primeiro. Pearl: minutos importam — não “só observa”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AES status epilepticus"
   },
@@ -323,13 +323,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} desidratado, Cr sobe, FENa baixa, US sem dilatação. Conduta?",
     options: {
-      A: "Diurético de alça antes de volume",
-      B: "Reposição volêmica, tratar causa, evitar nefrotóxicos; diálise se indicações clássicas",
-      C: "IECA na hipovolemia",
-      D: "Contraste para “proteger”",
-      E: "Biópsia imediata obrigatória"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade.",
+      D: "Reposição volêmica, tratar causa, evitar nefrotóxicos; diálise se indicações clássicas",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Pré-renal: volume. Pearl: FENa baixa + sede = reidrate. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "KDIGO AKI"
   },
@@ -345,13 +345,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com K {{k}}, QRS alargado. Primeira medida? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas resina e esperar",
-      B: "Gluconato de cálcio IV para estabilizar membrana, depois shift e remoção de K",
-      C: "Insulina sem glicose em hipoglicêmico",
-      D: "SF hipertônico como única terapia",
-      E: "Alta ambulatorial"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Gluconato de cálcio IV para estabilizar membrana, depois shift e remoção de K",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico."
     },
-    correct: "B",
+    correct: "D",
     explanation: "ECG alterado: cálcio IV primeiro. Pearl: membrana → shift → remove. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "Emergency electrolyte protocols"
   },
@@ -367,13 +367,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor torácica tipica, ECG com supra de ST. Conduta imediata além de reperfusão?",
     options: {
-      A: "Aguardar enzimas por 12 h sem AAS",
-      B: "AAS mastigável imediato, anticoagulação conforme protocolo e reperfusão urgente (ICP/primária ou trombólise se sem ICP)",
-      C: "Nifedipina sublingual de rotina",
-      D: "Antibiótico — inadequado para o quadro",
-      E: "Teste ergométrico na porta da emergência"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "AAS mastigável imediato, anticoagulação conforme protocolo e reperfusão urgente (ICP/primária ou trombólise se sem ICP)"
     },
-    correct: "B",
+    correct: "E",
     explanation: "IAMCST: AAS + reperfusão. Pearl: não espere troponina para AAS e ativar sala. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC/AHA ACS"
   },
@@ -389,13 +389,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com IC, ortopneia, crepitações, PA 150/90. Conduta inicial?",
     options: {
-      A: "Soro a 2 L em 1 h",
-      B: "Diurético IV, O2/VNI se preciso, vasodilatador se PA permitir; investigar gatilho",
-      C: "Betabloqueador IV em choque frio",
-      D: "Digoxina como único tratamento de congestão",
-      E: "AINE para dor"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir.",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade.",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência.",
+      E: "Diurético IV, O2/VNI se preciso, vasodilatador se PA permitir; investigar gatilho"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Congestão: diurético ± VNI. Pearl: choque frio ≠ vasodilatador livre. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC HF"
   },
@@ -411,13 +411,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com Basedow, febre, taquicardia, alteração mental. Conduta?",
     options: {
-      A: "Apenas observação",
-      B: "UTI, betabloqueador, tionamida, iodo após tionamida, corticoide; tratar gatilho",
-      C: "Radioiodo imediato na tempestade",
-      D: "Cirurgia de urgência sem preparo",
-      E: "Amiodarona empírica em todos"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
+      D: "UTI, betabloqueador, tionamida, iodo após tionamida, corticoide; tratar gatilho",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Tempestade tireotóxica: bloqueio adrenérgico + síntese + liberação. Pearl: iodo depois da tionamida. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATA thyrotoxicosis"
   },
@@ -433,11 +433,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com tosse >3 sem, sudorese, cavernas no ápice, BAAR+. Conduta?",
     options: {
-      A: "Apenas fluoroquinolona isolada",
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se.",
       B: "RIPE (esquema básico) sob estratégia DOTS/TDO, isolamento respiratório inicial",
-      C: "Corticoide isolado",
-      D: "Cirurgia de lobectomia imediata",
-      E: "Observação sem tratamento"
+      C: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana",
+      D: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico."
     },
     correct: "B",
     explanation: "TB: RIPE e tratamento supervisionado. Pearl: BAAR+ = isolar e tratar. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -455,13 +455,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com HIV novo, CD4 180, assintomático. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Esperar CD4 <50 para iniciar TARV",
-      B: "Iniciar TARV o mais breve possível + profilaxia de PCP (CD4 <200) e aconselhamento",
-      C: "Apenas vacina viva de rotina sem TARV",
-      D: "Antibiótico contínuo substitui TARV",
-      E: "Negar qualquer profilaxia"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
+      C: "Iniciar TARV o mais breve possível + profilaxia de PCP (CD4 <200) e aconselhamento",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou.",
+      E: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou."
     },
-    correct: "B",
+    correct: "C",
     explanation: "TARV para todos; PCP se CD4 <200. Pearl: não espere o CD4 despencar. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "DHHS/MS HIV"
   },
@@ -477,13 +477,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com úlcera péptica e teste positivo para H. pylori. Conduta?",
     options: {
-      A: "Apenas IBP sem erradicação",
-      B: "Terapia de erradicação (ex. IBP + antibióticos conforme protocolo local) e confirmação de cura em selecionados",
-      C: "Gastrectomia de rotina",
-      D: "Corticoide — inadequado para o quadro",
-      E: "Dieta líquida eterna"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Terapia de erradicação (ex. IBP + antibióticos conforme protocolo local) e confirmação de cura em selecionados"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Úlcera + H. pylori = erradicar. Pearl: IBP sozinho não basta. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACG H. pylori"
   },
@@ -499,13 +499,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com pneumonia e derrame loculado, pH do líquido 7,0, LDH alta. Conduta?",
     options: {
-      A: "Apenas ATB oral ambulatorial sem drenar",
-      B: "Drenagem (tórax) + ATB; considerar fibrinolítico/cirurgia se loculado/empieza",
-      C: "Diurético como tratamento do empiema",
-      D: "Negar qualquer punção",
-      E: "Radioterapia"
+      A: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      C: "Drenagem (tórax) + ATB; considerar fibrinolítico/cirurgia se loculado/empieza",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade.",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Parapneumônico complicado/empiema drena. Pearl: pH baixo no derrame = dreno. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "BTS pleural disease"
   },
@@ -521,13 +521,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com MAHA, plaquetopenia, confusão, ADAMTS13 <10%. Conduta?",
     options: {
-      A: "Apenas plaquetas transfusão livre",
-      B: "Plasmaférese urgente + imunossupressão (corticoide ± rituximabe); caplacizumab em protocolos",
-      C: "Esplenectomia de primeira linha sem PLEX",
-      D: "Eculizumab como padrão PTT",
-      E: "Observação — inadequado para o quadro"
+      A: "Iniciar betabloqueador não seletivo para controle da taquicardia da crise, sem broncodilatação",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      D: "Plasmaférese urgente + imunossupressão (corticoide ± rituximabe); caplacizumab em protocolos",
+      E: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico"
     },
-    correct: "B",
+    correct: "D",
     explanation: "PTT: PLEX imediato. Pearl: não espere ADAMTS13 para começar se alta suspeita. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ISTH TTP"
   },
@@ -543,13 +543,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com LES, proteinúria, hematúria dismórfica, C3 baixo. Próximo passo?",
     options: {
-      A: "Apenas HCQ sem investigar rim",
-      B: "Quantificar proteinúria, função renal e biópsia para classificar/induzir terapia",
-      C: "Antibiótico prolongado",
-      D: "Nefrectomia — inadequado para o quadro",
-      E: "Suspender HCQ"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício.",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
+      E: "Quantificar proteinúria, função renal e biópsia para classificar/induzir terapia"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Suspeita de LN → biópsia guia. Pearl: sedimento ativo no LES = rim na mesa. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "KDIGO LN; EULAR"
   },
@@ -565,13 +565,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com “pior cefaleia da vida” súbita, rigidez de nuca. Conduta?",
     options: {
-      A: "Apenas dipirona e alta",
-      B: "TC imediata (± PL se TC normal) para HSA; estabilização neurocrítica",
-      C: "Triptano intramuscular",
-      D: "Radiografia de seios da face isolada",
-      E: "Observação 72 h sem imagem"
+      A: "TC imediata (± PL se TC normal) para HSA; estabilização neurocrítica. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor.",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Thunderclap = HSA até prova em contrário. Pearl: a pior dor da vida não é sinusite. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AHA SAH"
   },
@@ -587,13 +587,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com hipotireoidismo, hipotermia, sonolência, Na baixo. Conduta?",
     options: {
-      A: "Apenas água livre",
-      B: "UTI, T4 IV (± T3 em protocolos), corticoide se risco de insuficiência adrenal, suporte",
-      C: "Radioiodo — inadequado para o quadro",
-      D: "Cirurgia tireoidiana urgente",
-      E: "Betabloqueador alto"
+      A: "UTI, T4 IV (± T3 em protocolos), corticoide se risco de insuficiência adrenal, suporte",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Coma mixedematoso: hormônio IV + suporte. Pearl: pense adrenal junto. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATA hypothyroidism"
   },
@@ -609,13 +609,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com placa eritematosa dolorosa bem delimitada em membro, febre. Conduta?",
     options: {
-      A: "Antifúngico tópico isolado",
-      B: "Antibiótico cobrindo estreptococo/staph conforme gravidade; elevar membro e reavaliar",
-      C: "Cirurgia de amputação imediata",
-      D: "Apenas gelo sem ATB",
-      E: "Corticoide tópico como monoterapia"
+      A: "Antibiótico cobrindo estreptococo/staph conforme gravidade; elevar membro e reavaliar",
+      B: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no.",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Erisipela/celulite: ATB anti-gram+. Pearl: limite nítido + febre = estreptococo até prova. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "IDSA SSTI"
   },
@@ -631,13 +631,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com asma persistente, uso frequente de SABA. Base do tratamento de manutenção?",
     options: {
-      A: "Só SABA SOS para sempre",
-      B: "Corticoide inalatório (± LABA) conforme GINA; educar técnica e adesão; plano de crise",
-      C: "Antibiótico mensal",
-      D: "Corticoide oral contínuo como primeira linha",
-      E: "Betabloqueador inalatório"
+      A: "Corticoide inalatório (± LABA) conforme GINA; educar técnica e adesão; plano de crise",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção.",
+      D: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável",
+      E: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Manutenção = CSI. Pearl: SABA demais = asma mal controlada. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "GINA"
   },
@@ -653,11 +653,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor em FID, febre, TC com abscesso diverticular de 4 cm. Conduta?",
     options: {
-      A: "Apenas dieta e observação sem ATB/drenagem",
-      B: "ATB + drenagem percutânea se acessível; cirurgia se peritonite/falha",
-      C: "Colonoscopia na fase aguda de abscesso",
-      D: "Quimioterapia",
-      E: "Antiespasmódico isolado"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "ATB + drenagem percutânea se acessível; cirurgia se peritonite/falha. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "B",
     explanation: "Abscesso: ATB ± drenagem. Pearl: não colonoscopa no abscesso agudo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -675,13 +675,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com TVP de MMII proximal sem câncer. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas meia elástica sem anticoagulante",
-      B: "Anticoagulação (DOAC ou AVK/HBPM conforme contexto) por pelo menos 3 meses; investigar provocação",
-      C: "Trombólise sistêmica em toda TVP panturrilha",
-      D: "AAS como equivalente em TVP proximal",
-      E: "Filtro de VECI de rotina"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      D: "Anticoagulação (DOAC ou AVK/HBPM conforme contexto) por pelo menos 3 meses; investigar provocação",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
-    correct: "B",
+    correct: "D",
     explanation: "TVP proximal: anticoagula ≥3 meses. Pearl: meia não substitui anticoagulante. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ASH/ESC VTE"
   },
@@ -697,13 +697,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com miastenia, dispneia e fraqueza bulbar. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Aumentar só piridostigmina sem avaliar via aérea",
-      B: "Avaliar capacidade vital/via aérea, UTI, IgIV ou plasmaférese; corticoide com cuidado; evitar fármacos agravantes",
-      C: "Aminoglicosídeo liberado",
-      D: "Betabloqueador para tremor",
-      E: "Alta com SABA"
+      A: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Avaliar capacidade vital/via aérea, UTI, IgIV ou plasmaférese; corticoide com cuidado; evitar fármacos agravantes",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo Esta abordagem atrasa a terapia com."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Crise miastênica = via aérea + imunoterapia. Pearl: CV caindo = UTI. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "International MG guidance"
   },
@@ -719,11 +719,11 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com febre, PPL, leucocitúria. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas cranberry",
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
       B: "ATB empírico adequado à gravidade (oral se estável / IV se tóxico), urocultura e reavaliação",
-      C: "Corticoide — inadequado para o quadro",
-      D: "Nefrectomia — inadequado para o quadro",
-      E: "Observação sem ATB"
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica"
     },
     correct: "B",
     explanation: "Pielonefrite: ATB + cultura. Pearl: febre + PPL não é cistite simples. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -741,13 +741,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} diabético inconsciente, HGT 38. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Insulina adicional",
-      B: "Glicose IV (ou glucagon se sem acesso) e reavaliar causa/doses de hipoglicemiantes",
-      C: "Apenas água — inadequado para o quadro",
-      D: "Metformina extra",
-      E: "Jejuar 12 h — inadequado para o quadro"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou.",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência.",
+      E: "Glicose IV (ou glucagon se sem acesso) e reavaliar causa/doses de hipoglicemiantes"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Hipoglicemia grave: glicose/glucagon. Pearl: inconsciente ≠ suco oral. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ADA standards"
   },
@@ -763,13 +763,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com FA há >48 h, estável, CHA₂DS₂-VASc alto. Conduta sobre cardioversão?",
     options: {
-      A: "Cardioversão elétrica imediata sem anticoagular/ecoTE",
-      B: "Controlar frequência, anticoagular; cardioversão eletiva após anticoagulação adequada ou ecoTE sem trombo",
-      C: "Apenas digoxina sem anticoagulação em alto risco",
-      D: "AAS substitui anticoagulante no alto risco",
-      E: "Ablação obrigatória no primeiro episódio em todos"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "Controlar frequência, anticoagular; cardioversão eletiva após anticoagulação adequada ou ecoTE sem trombo"
     },
-    correct: "B",
+    correct: "E",
     explanation: "FA >48 h: trombo é risco — anticoagule/ecoTE. Pearl: não “choque” sem proteger cérebro. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC AF"
   },
@@ -785,13 +785,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com sibilância, coriza, Sat 91%. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Corticoide sistêmico e broncodilatador de rotina em todos",
-      B: "Suporte: O2 se hipoxemia, hidratação, aspiração nasal; evitar terapias inúteis de rotina",
-      C: "Antibiótico empírico amplo sem foco bacteriano",
-      D: "RX obrigatório em todo caso leve",
-      E: "IOT imediata sem tentativa de suporte"
+      A: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      D: "Suporte: O2 se hipoxemia, hidratação, aspiração nasal; evitar terapias inúteis de rotina",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Bronquiolite: suporte. Pearl: sibilância no lactente ≠ asma com CSI sistêmico. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP bronchiolitis"
   },
@@ -807,13 +807,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com tosse metálica, estridor em repouso leve. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas antibiótico",
-      B: "Corticoide (dexametasona) ± adrenalina nebulizada se estridor em repouso; oxigênio se preciso",
-      C: "Broncoscopia imediata em todo crupe leve",
-      D: "Aspirina — inadequado para o quadro",
-      E: "Alta sem corticoide em estridor de repouso"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      C: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "Corticoide (dexametasona) ± adrenalina nebulizada se estridor em repouso; oxigênio se preciso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Crupe: dexametasona ± adrenalina. Pearl: estridor em repouso = trate e observe. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP/CPS croup"
   },
@@ -829,13 +829,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com otalgia, timpano abaulado, febre. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Antibiótico em todo caso sem critérios, sempre",
-      B: "Analgesia; ATB imediato em <6 meses/grave ou observação vigilante selecionada ≥6 meses conforme diretriz",
-      C: "Corticoide ótico isolado",
-      D: "Miringotomia em toda OMA",
-      E: "Antihistamínico como cura"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      B: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável",
+      C: "Analgesia; ATB imediato em <6 meses/grave ou observação vigilante selecionada ≥6 meses conforme diretriz",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
-    correct: "B",
+    correct: "C",
     explanation: "OMA: dor primeiro; ATB conforme idade/gravidade. Pearl: abaulamento + dor = OMA, não “otite externa”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP AOM"
   },
@@ -851,13 +851,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com febre, taquipneia, tiragem. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas xarope",
-      B: "Oxigênio se preciso, ATB empírico (amoxicilina na maioria ambulatorial), sinais de gravidade para internar",
-      C: "Corticoide inalatório como monoterapia",
-      D: "TC de tórax em toda pneumonia leve",
-      E: "Oseltamivir em toda pneumonia bacteriana típica"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      C: "Oxigênio se preciso, ATB empírico (amoxicilina na maioria ambulatorial), sinais de gravidade para internar",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável"
     },
-    correct: "B",
+    correct: "C",
     explanation: "PAC pediátrica: amoxicilina é rainha ambulatorial. Pearl: taquipneia manda mais que ausculta. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "WHO/SBP pneumonia"
   },
@@ -873,13 +873,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com GECA, olhos fundos, turgor diminuído. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Antibiótico empírico em toda diarreia viral",
-      B: "Trousseau/soro de reidratação oral se possível; IV se grave; zinco em contextos; evitar antimotilidade",
-      C: "Loperamida liberada em lactentes",
-      D: "Jejum prolongado obrigatório",
-      E: "Corticoide — inadequado para o quadro"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      C: "Trousseau/soro de reidratação oral se possível; IV se grave; zinco em contextos; evitar antimotilidade",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Desidratação: TRO/IV. Pearl: antimotilidade não é para lactente. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "WHO diarrhea; SBP"
   },
@@ -895,13 +895,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com CAD, K 3,0. Risco da insulina precoce? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nenhum — inadequado para o quadro",
-      B: "Piora da hipocalemia e arritmia — repor K e seguir protocolo pediátrico de CAD (volume cuidadoso, evitar queda rápida de glicose/Na)",
-      C: "Bicarbonato de rotina em todo pH",
-      D: "Insulina subcutânea ambulatorial na CAD grave",
-      E: "AINE — inadequado para o quadro"
+      A: "Piora da hipocalemia e arritmia — repor K e seguir protocolo pediátrico de CAD (volume cuidadoso, evitar queda rápida de glicose/Na)",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de suporte adequado Esta abordagem atrasa a terapia com melhor evidência.",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
-    correct: "B",
+    correct: "A",
     explanation: "CAD ped: cuidado com K e edema cerebral. Pearl: K baixo — não comece insulina ainda. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ISPAD DKA"
   },
@@ -917,13 +917,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com crise tônico-clônica <5 min no pico febril, exame normal depois. Conduta?",
     options: {
-      A: "EEG e anticonvulsivante crônico de rotina em toda crise febril simples",
-      B: "Orientação, investigar foco febril, sem anticonvulsivante crônico na crise febril simples típica",
-      C: "Punção lombar obrigatória em todo >6 meses bem",
-      D: "TC imediata em toda crise febril simples",
-      E: "Antibiótico sem foco"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      B: "EEG e anticonvulsivante crônico de rotina em toda crise febril simples. estratégia que não aborda o mecanismo.",
+      C: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Orientação, investigar foco febril, sem anticonvulsivante crônico na crise febril simples típica"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Crise febril simples: tranquilize e trate a febre/foco. Pearl: não medicalize o simples. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP febrile seizures"
   },
@@ -939,13 +939,13 @@ const RES_MASTERS = [
     },
     statement: "RN de {{age}} com bilirrubina em zona de fototerapia. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Alta sem controle",
-      B: "Fototerapia conforme nomograma, garantir ingestão, investigar hemólise/incompatibilidade se precoce/grave",
-      C: "Exchange sem critérios",
-      D: "Suspender aleitamento definitivamente em toda icterícia",
-      E: "Antibiótico empírico isolado"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "Fototerapia conforme nomograma, garantir ingestão, investigar hemólise/incompatibilidade se precoce/grave"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Icterícia: nomograma + fototerapia. Pearl: precoce/grave = pense hemólise. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP hyperbilirubinemia"
   },
@@ -961,11 +961,11 @@ const RES_MASTERS = [
     },
     statement: "Lactente de {{age}} febril sem foco, urina alterada. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Tratar com base só em saco coletor sem confirmação",
-      B: "Coleta fiável (cateter/punção), ATB, e imagem conforme risco (US ± outros)",
-      C: "Corticoide — inadequado para o quadro",
-      D: "Negar ATB em ITU febril",
-      E: "RX de tórax substitui urocultura"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      B: "Coleta fiável (cateter/punção), ATB, e imagem conforme risco (US ± outros). conduta preferencial neste contexto",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico.",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar."
     },
     correct: "B",
     explanation: "ITU febril: amostra boa + ATB. Pearl: saco coletor mente. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -983,13 +983,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com vacinas atrasadas, saudável. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Recomeçar todo o calendário do zero sempre",
-      B: "Usar esquema de recuperação (catch-up) sem reiniciar doses válidas já aplicadas",
-      C: "Aplicar todas as vacinas vivas no mesmo dia em imunodeprimido grave",
-      D: "Negar vacinas inativadas",
-      E: "Só vacinar após os 5 anos"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      B: "Aplicar todas as vacinas vivas no mesmo dia em imunodeprimido grave. estratégia que não aborda o mecanismo.",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
+      D: "Usar esquema de recuperação (catch-up) sem reiniciar doses válidas já aplicadas",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Catch-up: não zere o cartão. Pearl: dose válida conta. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "SBP/PNI"
   },
@@ -1005,13 +1005,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com sopro suave 1–2/6, vibratório, sem sintomas, crescimento normal. Conduta?",
     options: {
-      A: "Cateterismo imediato",
-      B: "Sopro inocente provável — exame clínico cuidadoso; eco se sinais de alarme (sintomas, sopro diastólico/alto grau, cianose, falha ponderal)",
-      C: "Digoxina empírica",
-      D: "ATB profilático vitalício",
-      E: "RX seriado mensal obrigatório"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      B: "Aplicar o mesmo protocolo de adulto sem ajuste de dose/peso e sem considerar particularidades pediátricas Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      D: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de suporte adequado Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Sopro inocente provável — exame clínico cuidadoso; eco se sinais de alarme (sintomas, sopro diastólico/alto grau, cianose, falha ponderal)"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Inocente é comum; alarme manda ao eco. Pearl: diastólico nunca é “inocente”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AHA pediatric murmur"
   },
@@ -1027,13 +1027,13 @@ const RES_MASTERS = [
     },
     statement: "Menina de {{age}} com telarca progressiva e idade óssea avançada. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas observação sem avaliação",
-      B: "Avaliar puberdade central vs periférica (LH/GnRH, imagem se indicada) e considerar análogo de GnRH se central progressiva",
-      C: "Estrogênio exógeno para “acelerar”",
-      D: "Tireoidectomia empírica",
-      E: "Corticoide de rotina"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      C: "Avaliar puberdade central vs periférica (LH/GnRH, imagem se indicada) e considerar análogo de GnRH se central progressiva",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Aplicar o mesmo protocolo de adulto sem ajuste de dose/peso e sem considerar particularidades pediátricas"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Puberdade precoce: classifique e trate central quando progressiva. Pearl: idade óssea conta. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESPE puberty"
   },
@@ -1049,13 +1049,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com crise de asma, Sat 90%. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Antibiótico de rotina",
-      B: "SABA ± ipratrópio, O2, corticoide sistêmico precoce; reavaliar resposta",
-      C: "Betabloqueador",
-      D: "Sedação sem via aérea planejada",
-      E: "Apenas hidratação"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      B: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para.",
+      D: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao.",
+      E: "SABA ± ipratrópio, O2, corticoide sistêmico precoce; reavaliar resposta. conduta preferencial neste contexto"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Crise: SABA + corticoide. Pearl: resposta em 1 h define destino. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "GINA children"
   },
@@ -1071,11 +1071,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com febre, tosse, coriza, conjuntivite e exantema cefalocaudal. Conduta?",
     options: {
-      A: "Apenas antialérgico",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
       B: "Isolamento, notificação, vitamina A conforme protocolo, suporte e vacinação de contatos elegíveis",
-      C: "Aspirina livre",
-      D: "Corticoide tópico como cura",
-      E: "Alta sem notificar"
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial.",
+      D: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "B",
     explanation: "Sarampo: isolamento + notificação + vitamina A. Pearl: 3C + exantema = pense sarampo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1093,13 +1093,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com choro intermitente, fezes em geleia de morango e massa palpável. Conduta?",
     options: {
-      A: "Apenas antiespasmódico oral",
-      B: "Estabilizar e enema/redução radiológica ou cirurgia conforme disponibilidade/gravidade",
-      C: "ATB isolado sem imagem",
-      D: "Alta com soro caseiro",
-      E: "Colonoscopia ambulatorial em 30 dias"
+      A: "Aplicar o mesmo protocolo de adulto sem ajuste de dose/peso e sem considerar particularidades pediátricas",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção.",
+      D: "Estabilizar e enema/redução radiológica ou cirurgia conforme disponibilidade/gravidade",
+      E: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de suporte adequado"
     },
-    correct: "B",
+    correct: "D",
     explanation: "Invaginação: emergência — reduzir. Pearl: geleia de morango = urgência. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "pediatric surgery texts"
   },
@@ -1115,13 +1115,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com púrpura palpável em MMII, artralgia e dor abdominal. Conduta?",
     options: {
-      A: "Heparina plena de rotina",
-      B: "Suporte; monitorar urina/PA; corticoide pode ajudar dor abdominal grave; biópsia renal se nefrite significativa",
-      C: "Amputação — inadequado para o quadro",
-      D: "Negar qualquer seguimento urinário",
-      E: "ATB por 6 meses"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      D: "Aplicar o mesmo protocolo de adulto sem ajuste de dose/peso e sem considerar particularidades pediátricas",
+      E: "Suporte; monitorar urina/PA; corticoide pode ajudar dor abdominal grave; biópsia renal se nefrite significativa"
     },
-    correct: "B",
+    correct: "E",
     explanation: "HSP: suporte + olho no rim. Pearl: púrpura em MMII = urina no retorno. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "SHARE IgA vasculitis"
   },
@@ -1137,11 +1137,11 @@ const RES_MASTERS = [
     },
     statement: "RN de {{age}} com taquipneia, má perfusão, fator de risco intraparto. Conduta?",
     options: {
-      A: "Esperar 72 h sem culturas",
-      B: "Culturas + ATB empírico precoce (ampicilina+gentamicina típico) e suporte",
-      C: "Apenas antitérmico",
-      D: "Corticoide isolado",
-      E: "Alta em 6 h — inadequado para o quadro"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      B: "Culturas + ATB empírico precoce (ampicilina+gentamicina típico) e suporte. conduta preferencial neste contexto",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a.",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se."
     },
     correct: "B",
     explanation: "Sepse neonatal: ATB cedo. Pearl: RN “não parece bem” + risco = trate. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1159,13 +1159,13 @@ const RES_MASTERS = [
     },
     statement: "Lactente de {{age}} em aleitamento exclusivo, ganho ponderal bom, bilirrubina moderada tardia. Conduta?",
     options: {
-      A: "Suspender peito definitivamente",
-      B: "Manter aleitamento, acompanhar bilirrubina/peso; fototerapia se critérios; investigar se atípico",
-      C: "Fórmula obrigatória em toda icterícia",
-      D: "ATB — inadequado para o quadro",
-      E: "Cirurgia de vias biliares empírica"
+      A: "Manter aleitamento, acompanhar bilirrubina/peso; fototerapia se critérios; investigar se atípico",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Icterícia do leite: raramente exige desmame. Pearl: peso subindo = peito continua. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "AAP breastfeeding/jaundice"
   },
@@ -1181,13 +1181,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com edema, albúmina baixa, proteinúria nefrótica, C3 normal. Conduta inicial típica?",
     options: {
-      A: "Biópsia imediata em todo pré-escolar típico antes de corticoide",
-      B: "Corticoide oral em esquema padronizado se quadro típico; biópsia se atípico",
-      C: "Ciclofosfamida de primeira linha",
-      D: "Diálise preventiva",
-      E: "ATB prolongado sem corticoide"
+      A: "Corticoide oral em esquema padronizado se quadro típico; biópsia se atípico. conduta preferencial neste contexto",
+      B: "Aplicar o mesmo protocolo de adulto sem ajuste de dose/peso e sem considerar.",
+      C: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      E: "Biópsia imediata em todo pré-escolar típico antes de corticoide. estratégia que não aborda o mecanismo."
     },
-    correct: "B",
+    correct: "A",
     explanation: "SN típica 1–12 anos: corticoide empírico. Pearl: atípico → biopsie. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "IPNA SSNS"
   },
@@ -1203,13 +1203,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com urticária, broncoespasmo e hipotensão após alimento. Conduta?",
     options: {
-      A: "Apenas anti-histamínico oral",
-      B: "Adrenalina IM imediata na face anterolateral da coxa, O2, volume; reavaliação e observação",
-      C: "Corticoide IM como primeira droga",
-      D: "Betabloqueador",
-      E: "Esperar 30 min para confirmar"
+      A: "Adrenalina IM imediata na face anterolateral da coxa, O2, volume; reavaliação e observação",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      E: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de suporte adequado"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Anafilaxia: adrenalina IM primeiro. Pearl: anti-histamínico não salva via aérea. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "WAO anaphylaxis"
   },
@@ -1225,13 +1225,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} politraumatizado, Glasgow 7, sangramento facial. Prioridade?",
     options: {
-      A: "RX de membros antes de via aérea",
-      B: "Via aérea com proteção cervical (IOT) e ventilação — ABC do trauma",
-      C: "Sutura de feridas superficiais primeiro",
-      D: "Analgesia isolada sem via aérea",
-      E: "TC completa antes de oxigenar"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Via aérea com proteção cervical (IOT) e ventilação — ABC do trauma. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "ATLS: A vem primeiro. Pearl: Glasgow ≤8 — intube. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATLS"
   },
@@ -1247,13 +1247,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com trauma abdominal, PA 80/40, pele fria. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Soro hipotônico livre sem controle de hemorragia",
-      B: "Controle de hemorragia, reposição sangue/produto (1:1:1) e cirurgia/angioembolização conforme foco",
-      C: "Apenas vasopressor sem volume/sangue",
-      D: "AINE — inadequado para o quadro",
-      E: "Alta — inadequado para o quadro"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Controle de hemorragia, reposição sangue/produto (1:1:1) e cirurgia/angioembolização conforme foco"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Choque hemorrágico: pare o sangramento + sangue. Pearl: pressórico sem sangue não é trauma care. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATLS; damage control"
   },
@@ -1269,13 +1269,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor migratória para FID, febre baixa, Blumberg+. Conduta?",
     options: {
-      A: "Apenas antiespasmódico ambulatorial",
-      B: "Cirurgia (apendicectomia) após avaliação/imagem se dúvida; ATB perioperatório",
-      C: "Colonoscopia urgente",
-      D: "Quimioterapia",
-      E: "Observação por 2 semanas sem reavaliar"
+      A: "Cirurgia (apendicectomia) após avaliação/imagem se dúvida; ATB perioperatório",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Apendicite: operar. Pearl: migração + FID = apêndice até prova. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "WSES appendicitis"
   },
@@ -1291,13 +1291,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor em HD, Murphy+, US com vesícula espessada e cálculo. Conduta?",
     options: {
-      A: "Apenas dieta sem ATB/cirurgia",
-      B: "ATB + colecistectomia precoce (mesma internação) se apto",
-      C: "CPRE de rotina sem coledocolitíase",
-      D: "Quimioterapia",
-      E: "Observação ambulatorial com AINE isolado"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "ATB + colecistectomia precoce (mesma internação) se apto. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "D",
     explanation: "Colecistite: ATB + cirurgia precoce. Pearl: não “esquenta” semanas sem plano. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "Tokyo guidelines"
   },
@@ -1313,13 +1313,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com vômitos fecoides, distensão, níveis hidroaéreos, hérnia encarcerada. Conduta?",
     options: {
-      A: "Laxativo forçado ambulatorial",
-      B: "Reanimação, SNG, e cirurgia urgente pela hérnia encarcerada/estrangulamento",
-      C: "Colonoscopia como única medida",
-      D: "ATB isolado sem descomprimir",
-      E: "Alta com dieta rica em fibras"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se.",
+      D: "Reanimação, SNG, e cirurgia urgente pela hérnia encarcerada/estrangulamento. conduta preferencial neste contexto",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Encarcerada = cirurgia. Pearl: fecoides + hérnia = sala. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACS obstruction"
   },
@@ -1335,13 +1335,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} trauma torácico, desvio de traqueia, jugulares, hipotensão. Conduta imediata?",
     options: {
-      A: "TC antes de qualquer alívio",
-      B: "Descompressão imediata (agulha/toracostomia) sem atrasar por imagem",
-      C: "Apenas O2 nasal",
-      D: "Diurético — inadequado para o quadro",
-      E: "Broncoscopia ambulatorial"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Descompressão imediata (agulha/toracostomia) sem atrasar por imagem. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Hipertensivo: descomprimir já. Pearl: não leve para TC o que vai morrer na porta. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATLS"
   },
@@ -1357,11 +1357,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com ferimento penante em precórdio, hipotensão, jugulares, bulhas abafadas. Conduta?",
     options: {
-      A: "Alta com analgésico",
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas.",
       B: "Janela pericárdica/toracotomia de reanimação conforme cenário — aliviar tamponamento",
-      C: "Diurético de alça",
-      D: "Apenas volume sem considerar drenagem",
-      E: "Eletrocardiograma só e observação"
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade.",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que."
     },
     correct: "B",
     explanation: "Beck + trauma = tamponamento. Pearl: tríade de Beck no precórdio = sala/janela. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1379,13 +1379,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com nódulo tireoidiano 2,5 cm, US suspeito. Próximo passo?",
     options: {
-      A: "Tireoidectomia total imediata sem PAAF",
-      B: "TSH + PAAF guiada por US conforme risco (TIRADS/Bethesda)",
-      C: "Apenas iodo sem diagnóstico",
-      D: "Antibiótico — inadequado para o quadro",
-      E: "Ignorar nódulos >2 cm"
+      A: "TSH + PAAF guiada por US conforme risco (TIRADS/Bethesda). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Nódulo: PAAF estratifica. Pearl: não opere sem citologia (salvo exceções). Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATA thyroid nodules"
   },
@@ -1401,11 +1401,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor súbita em membro, palidez, sem pulso, parestesia. Conduta?",
     options: {
-      A: "Apenas AAS e retorno em 7 dias",
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial.",
       B: "Heparina, avaliação vascular urgente — trombembolectomia/trombólise/cirurgia conforme viabilidade",
-      C: "Elevação do membro e gelo apenas",
-      D: "Amputação imediata sem tentativa de revascularizar em membro ainda viável",
-      E: "Diurético — inadequado para o quadro"
+      C: "Amputação imediata sem tentativa de revascularizar em membro ainda viável. estratégia que não aborda o mecanismo.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "B",
     explanation: "Isquemia aguda: tempo é membro. Pearl: 6 P — chame vascular. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1423,11 +1423,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor desproporcional, crepitação, toxemia após trauma leve. Conduta?",
     options: {
-      A: "Apenas ATB oral ambulatorial",
-      B: "Cirurgia radical imediata + ATB amplo + suporte de UTI",
-      C: "Corticoide — inadequado para o quadro",
-      D: "Observação 48 h sem desbridar",
-      E: "Antifúngico isolado"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Cirurgia radical imediata + ATB amplo + suporte de UTI. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
     correct: "B",
     explanation: "Necrosante: cirurgião na primeira hora. Pearl: dor >> sinais cutâneos = fascíte. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1445,13 +1445,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com abaulamento inguinal redutível, sem dor. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Urgência cirúrgica absoluta em toda hérnia redutível",
-      B: "Correção eletiva (preferencial) — risco de encarceramento justifica planejar cirurgia",
-      C: "ATB contínuo",
-      D: "Faixa como cura definitiva em todos",
-      E: "Negar qualquer tratamento"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade.",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a.",
+      E: "Correção eletiva (preferencial) — risco de encarceramento justifica planejar cirurgia"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Redutível: eletiva. Pearl: encarcerada muda o jogo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "hernias guidelines"
   },
@@ -1467,13 +1467,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com queimadura 30% SC, adultos. Conduta volêmica? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Restrição hídrica",
-      B: "Reposição por Parkland/abordagens modernas, monitorar débito urinário, cuidar via aérea se queimadura inalatória",
-      C: "Apenas coloidal na 1ª hora obrigatória em todos os protocolos clássicos",
-      D: "Corticoide sistêmico de rotina",
-      E: "Alta domiciliar"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Reposição por Parkland/abordagens modernas, monitorar débito urinário, cuidar via aérea se queimadura inalatória",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
-    correct: "B",
+    correct: "D",
     explanation: "Queimadura grande: volume + via aérea. Pearl: face/inalação = pense IOT cedo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ABA burn care"
   },
@@ -1489,11 +1489,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor súbita em abdômen, defesa, ar sob diafragma. Conduta?",
     options: {
-      A: "Alta com IBP oral",
-      B: "Reanimação, ATB, e cirurgia (ou abordagem selecionada) para perfuração",
-      C: "Colonoscopia imediata",
-      D: "Apenas antiácido",
-      E: "Observação sem imagem"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor. abordagem inadequada para o cenário.",
+      B: "Reanimação, ATB, e cirurgia (ou abordagem selecionada) para perfuração. conduta preferencial neste contexto",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar.",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução,.",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para."
     },
     correct: "B",
     explanation: "Perfuração: ar livre + peritonite = opera. Pearl: RX em pé salva diagnóstico. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1511,13 +1511,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor perianal intensa, flutuação. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas ATB sem drenagem",
-      B: "Drenagem cirúrgica + ATB se celulite/imunossupressão; procurar fístula depois",
-      C: "Corticoide tópico",
-      D: "Quimioterapia",
-      E: "Observação 30 dias"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade.",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
+      D: "Drenagem cirúrgica + ATB se celulite/imunossupressão; procurar fístula depois",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Abscesso: drena. Pearl: ATB sem dreno falha. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ASCRS abscess/fistula"
   },
@@ -1533,13 +1533,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com trauma, intervalo lúcido, depois coma, anisocoria. Conduta?",
     options: {
-      A: "Alta após intervalo lúcido",
-      B: "TC e descompressão neurocirúrgica urgente (hematoma epidural típico)",
-      C: "Apenas paracetamol",
-      D: "Punção lombar imediata",
-      E: "Anticoagulação"
+      A: "TC e descompressão neurocirúrgica urgente (hematoma epidural típico). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      B: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Epidural: intervalo lúcido clássico — opera. Pearl: lúcido → coma = sala de neuro. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "Brain Trauma Foundation"
   },
@@ -1555,13 +1555,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor lombar/abdominal, hipotensão, massa pulsátil. Conduta?",
     options: {
-      A: "Colonoscopia",
-      B: "Reanimação permissiva e reparo urgente (EVAR/cirurgia aberta) — não atrasar por exames longos",
-      C: "Diurético — inadequado para o quadro",
-      D: "Alta com AAS",
-      E: "Biópsia da massa"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      D: "Reanimação permissiva e reparo urgente (EVAR/cirurgia aberta) — não atrasar por exames longos",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
-    correct: "B",
+    correct: "D",
     explanation: "AAA roto: sala/endovascular. Pearl: tríade clássica — não demore na TC se instável. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "SVS AAA"
   },
@@ -1577,13 +1577,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor desproporcional, FA, lactato alto. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas antiespasmódico",
-      B: "Suspeita alta → TC angiografia, anticoagulação/cirurgia/revascularização urgente",
-      C: "Preparação de cólon eletiva em 2 semanas",
-      D: "Dieta rica em fibras",
-      E: "Observação — inadequado para o quadro"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      C: "Suspeita alta → TC angiografia, anticoagulação/cirurgia/revascularização urgente",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Dor >> exame = mesentérica. Pearl: FA + dor = angioTC. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACG mesenteric ischemia"
   },
@@ -1599,13 +1599,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com PAAF Bethesda VI (papilífero). Conduta geral? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas observação sem cirurgia em todos",
-      B: "Cirurgia tireoidiana (lobectomia/total conforme risco/tamanho) ± esvaziamento; TSH/iodo conforme staging",
-      C: "Quimioterapia neoadjuvante padrão em todo microcarcinoma",
-      D: "ATB — inadequado para o quadro",
-      E: "Radioiodo sem histologia"
+      A: "Cirurgia tireoidiana (lobectomia/total conforme risco/tamanho) ± esvaziamento; TSH/iodo conforme staging",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Bethesda VI: opera. Pearl: citologia maligna ≠ só “seguir”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ATA thyroid cancer"
   },
@@ -1621,13 +1621,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} estável após trauma abdominal, FAST positivo leve. Conduta?",
     options: {
-      A: "Laparotomia obrigatória em todo FAST+",
-      B: "Se estável: TC para estratificar; manejo não-operatório selecionado de sólidos; opera se instável/peritonite",
-      C: "Alta imediata sem imagem",
-      D: "Colonoscopia",
-      E: "Apenas observação sem monitorização"
+      A: "Se estável: TC para estratificar; manejo não-operatório selecionado de sólidos; opera se instável/peritonite",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Estável ≠ necessariamente opera. Pearl: instável + FAST+ = sala. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "EAST blunt trauma"
   },
@@ -1643,13 +1643,13 @@ const RES_MASTERS = [
     },
     statement: "Paciente de {{age}} vai a colecistectomia limpa-contaminada. Profilaxia? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "ATB por 7 dias pós-op de rotina em cirurgia limpa",
-      B: "Dose única pré-incisão (ex. cefazolina) e não prolongar sem indicação",
-      C: "Sem qualquer ATB em limpa-contaminada",
-      D: "Vancomicina de rotina em todos",
-      E: "Antifúngico profilático universal"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor.",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Dose única pré-incisão (ex. cefazolina) e não prolongar sem indicação. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Profilaxia: timing > duração. Pearl: 7 dias “por precaução” vira resistência. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ASHP surgical prophylaxis"
   },
@@ -1665,13 +1665,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante de {{age}} anos, 34 semanas, PA 170/110, cefaleia, proteinúria. Conduta?",
     options: {
-      A: "Alta com repouso só",
-      B: "MgSO4 para prevenção de eclâmpsia, controle de PA, e resolução da gestação após estabilizar",
-      C: "IECA oral liberado",
-      D: "Diurético de rotina em todo edema gestacional",
-      E: "Aguardar 40 semanas obrigatoriamente"
+      A: "Manter conduta expectante ambulatorial apesar de critérios de gravidade materno-fetal já estabelecidos",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "MgSO4 para prevenção de eclâmpsia, controle de PA, e resolução da gestação após estabilizar"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Pré-eclâmpsia grave: MgSO4 + PA + parto. Pearl: o parto é a cura. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG hypertensive disorders"
   },
@@ -1687,13 +1687,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante com convulsão e HAS. Conduta imediata? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Fenitoína como primeira linha isolada sem MgSO4",
-      B: "Via aérea, MgSO4 IV, controle de PA, e plano de parto",
-      C: "Aspirina aguda como anticonvulsivante",
-      D: "Tomografia antes de qualquer MgSO4 em toda convulsão obstétrica",
-      E: "Alta — inadequado para o quadro"
+      A: "Manter conduta expectante ambulatorial apesar de critérios de gravidade materno-fetal já estabelecidos Esta abordagem atrasa a terapia com melhor.",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Via aérea, MgSO4 IV, controle de PA, e plano de parto. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Eclâmpsia: MgSO4 é o rei. Pearl: convulsão na gestante hipertensa = Mg. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG"
   },
@@ -1709,11 +1709,11 @@ const RES_MASTERS = [
     },
     statement: "Pós-parto com sangramento >1 L, útero atônico. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas observação",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
       B: "Compressão, ocitocina, esvaziar bexiga, uterotônicos adicionais, balão/cirurgia se refratário — protocolo HPP",
-      C: "AINE — inadequado para o quadro",
-      D: "Anticoagulação",
-      E: "Negar volume/sangue"
+      C: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "B",
     explanation: "HPP atônica: ocitocina + degraus do protocolo. Pearl: 4 T — atonia é a mais comum. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1731,13 +1731,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante 30 semanas com contrações e colo modificado. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Parto imediato sem corticoide",
-      B: "Corticoide antenatal, tocolítico selecionado para janela, MgSO4 neuroproteção se <32 sem, ATB se RPM/GBS",
-      C: "IECA — inadequado para o quadro",
-      D: "Repouso absoluto sem corticoide nunca",
-      E: "Cesárea sem indicação"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      C: "Corticoide antenatal, tocolítico selecionado para janela, MgSO4 neuroproteção se <32 sem, ATB se RPM/GBS",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese.",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Prematuridade: corticoide salva pulmão. Pearl: 24h de corticoide valem ouro. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG preterm labor"
   },
@@ -1753,13 +1753,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante 33 semanas com perda de líquido claro, sem trabalho de parto. Conduta?",
     options: {
-      A: "Toque digital repetido frequente",
-      B: "Confirmar RPM, corticoide, ATB de latência, vigilância infecção/bem-estar fetal; definir timing do parto",
-      C: "Parto imediato sem corticoide em 33 sem sempre",
-      D: "Antifúngico isolado",
-      E: "Alta sem orientação"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Manter conduta expectante ambulatorial apesar de critérios de gravidade materno-fetal já estabelecidos",
+      D: "Confirmar RPM, corticoide, ATB de latência, vigilância infecção/bem-estar fetal; definir timing do parto",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "D",
     explanation: "PPROM: corticoide + ATB + vigilância. Pearl: menos toque = menos infecção. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG PROM"
   },
@@ -1775,11 +1775,11 @@ const RES_MASTERS = [
     },
     statement: "Gestante com TOTG alterado. Conduta inicial? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Insulina imediata em toda GDM sem dieta",
+      A: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura",
       B: "Dieta/educação, monitorar glicemias; insulina/metformina se não atingir alvos",
-      C: "Jejuar dias alternados",
-      D: "Suspender pré-natal",
-      E: "Apenas parto cesáreo eletivo sem controle glicêmico"
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se."
     },
     correct: "B",
     explanation: "GDM: estilo de vida primeiro. Pearl: alvo glicêmico protege ombro/feto. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1797,11 +1797,11 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com atraso menstrual, dor, βhCG+ e US sem saco intrauterine, massa anexial. Conduta?",
     options: {
-      A: "IUI — inadequado para o quadro",
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
       B: "Estabilizar; metotrexato se critérios ou cirurgia se instável/contraindicação — ectópica",
-      C: "Misoprostol ambulatorial sem diagnóstico",
-      D: "DIU de cobre imediato",
-      E: "Observação sem βhCG seriado"
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou."
     },
     correct: "B",
     explanation: "Ectópica: MTX ou cirurgia. Pearl: βhCG+ sem saco = ectópica até prova. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1819,13 +1819,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com sangramento intenso, Hb 7,5, estável. Conduta inicial?",
     options: {
-      A: "Histerectomia imediata em todas",
-      B: "Estabilizar, ferro/transfusão se preciso, hormônio/antifibrinolítico conforme causa; investigar (PALM-COEIN)",
-      C: "Apenas chá de canela",
-      D: "ATB isolado sem avaliação",
-      E: "Negar qualquer tratamento"
+      A: "Manter conduta expectante ambulatorial apesar de critérios de gravidade materno-fetal já estabelecidos",
+      B: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura Esta abordagem atrasa a terapia com.",
+      C: "Estabilizar, ferro/transfusão se preciso, hormônio/antifibrinolítico conforme causa; investigar (PALM-COEIN)",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "C",
     explanation: "AUB: estabilize + classifique PALM-COEIN. Pearl: Hb 7,5 sintomática merece ação. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "FIGO PALM-COEIN; ACOG AUB"
   },
@@ -1841,11 +1841,11 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com oligomenorreia, hirsutismo, ovários micropoliquísticos. Conduta?",
     options: {
-      A: "Ooforectomia bilateral",
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
       B: "Estilo de vida, rastrear metabólico; ACOC/progestágeno para ciclo; metformina/indução ovulatória conforme desejo gestacional",
-      C: "Corticoide crônico de rotina",
-      D: "Antibiótico — inadequado para o quadro",
-      E: "Ignorar risco metabólico"
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Trocar metformina por sulfonilureia de alta dose sem ajustar à função renal nem risco de hipoglicemia Esta abordagem atrasa a terapia com melhor."
     },
     correct: "B",
     explanation: "SOP: metabólico + ciclo + fertilidade. Pearl: não opere ovário por SOP típica. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1863,13 +1863,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com mioma, menorragia, desejo reprodutivo. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Histerectomia como única opção",
-      B: "Tratamento clínico (hormonal/antifibrinolítico) e opções preservadoras (miomectomia/outros) conforme desejo",
-      C: "Quimioterapia padrão",
-      D: "Observação sem tratar anemia",
-      E: "Radioterapia de rotina"
+      A: "Tratamento clínico (hormonal/antifibrinolítico) e opções preservadoras (miomectomia/outros) conforme desejo",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura Esta abordagem atrasa a terapia com.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Mioma: alinha sintoma e fertilidade. Pearl: desejo de filho → preserve útero. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG fibroids"
   },
@@ -1885,13 +1885,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante GBS+ em trabalho de parto. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nenhuma profilaxia",
-      B: "ATB intraparto (penicilina típica) para prevenir sepse neonatal precoce",
-      C: "Vacina de GBS no momento do parto como substituto",
-      D: "Corticoide — inadequado para o quadro",
-      E: "Cesárea obrigatória só por GBS+"
+      A: "ATB intraparto (penicilina típica) para prevenir sepse neonatal precoce. conduta preferencial neste contexto",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento.",
+      C: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor. abordagem inadequada para o cenário.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco."
     },
-    correct: "B",
+    correct: "A",
     explanation: "GBS+: penicilina no trabalho de parto. Pearl: protege o RN. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "CDC/ACOG GBS"
   },
@@ -1907,13 +1907,13 @@ const RES_MASTERS = [
     },
     statement: "Cesárea eletiva. Profilaxia antibiótica? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "ATB só após clampeamento do cordão em todos os protocolos atuais",
-      B: "ATB IV antes da incisão (ex. cefazolina) reduz infecção de sítio",
-      C: "Sem ATB em cesárea",
-      D: "ATB oral por 14 dias de rotina",
-      E: "Vancomicina universal"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      C: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "ATB IV antes da incisão (ex. cefazolina) reduz infecção de sítio. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Profilaxia antes da incisão. Pearl: timing na cesárea importa. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG antibiotic prophylaxis"
   },
@@ -1929,13 +1929,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com dor pélvica, febre, corrimento, dor à mobilização cervical. Conduta?",
     options: {
-      A: "Apenas antifúngico",
-      B: "ATB cobrindo gonococo/clamídia/anaeróbios; internar se critérios de gravidade; tratar parceiro",
-      C: "Histerectomia imediata",
-      D: "Observação sem ATB",
-      E: "Corticoide — inadequado para o quadro"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada.",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar.",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      E: "ATB cobrindo gonococo/clamídia/anaeróbios; internar se critérios de gravidade; tratar parceiro"
     },
-    correct: "B",
+    correct: "E",
     explanation: "DIP: ATB amplo + parceiro. Pearl: dor à mobilização = pense DIP. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "CDC STI"
   },
@@ -1951,11 +1951,11 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com rastreio citológico. Qual princípio atual? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Colposcopia anual em toda mulher desde os 15 anos",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade.",
       B: "Citologia/HPV conforme faixa etária e protocolo local; colposcopia se alterado",
-      C: "Histerectomia profilática universal",
-      D: "Negar rastreio após início da vida sexual",
-      E: "Apenas exame especular sem citologia"
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      D: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia."
     },
     correct: "B",
     explanation: "Rastreio organizado salva. Pearl: não colposcopa a população toda. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -1973,13 +1973,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante 32 semanas com sangramento indolor, US com placenta prévia. Conduta?",
     options: {
-      A: "Toque digital vaginal para “confirmar”",
-      B: "Evitar toques, estabilizar, corticoide se risco de parto, cesárea planejada conforme idade gestacional/quadro",
-      C: "Parto vaginal induzido de rotina",
-      D: "ATB isolado — inadequado para o quadro",
-      E: "Exercício físico intenso"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      C: "Manter conduta expectante ambulatorial apesar de critérios de gravidade materno-fetal já estabelecidos",
+      D: "Evitar toques, estabilizar, corticoide se risco de parto, cesárea planejada conforme idade gestacional/quadro",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
-    correct: "B",
+    correct: "D",
     explanation: "Prévia: sem toque + cesárea. Pearl: sangramento indolor = US antes do dedo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG placenta previa"
   },
@@ -1995,13 +1995,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante 36 semanas com dor uterina contínua, sangramento, hipertonia, sofrimento fetal. Conduta?",
     options: {
-      A: "Conduta expectante ambulatorial",
-      B: "Reanimação materna e cesárea/parto urgente — descolamento prematuro",
-      C: "Apenas AAS — inadequado para o quadro",
-      D: "Tocolítico agressivo sem avaliar feto",
-      E: "Alta — inadequado para o quadro"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      E: "Reanimação materna e cesárea/parto urgente — descolamento prematuro. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
-    correct: "B",
+    correct: "E",
     explanation: "DPP: dor + hipertonia + sofrimento = extrair. Pearl: nem sempre sangra muito para fora. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG abruption"
   },
@@ -2017,13 +2017,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com dismenorreia intensa, dispareunia, US sem cisto grande. Conduta inicial?",
     options: {
-      A: "Histerectomia imediata",
-      B: "AINE + hormônio (ACOC/progestágeno); laparoscopia se refratária/desejo diagnóstico-terapêutico",
-      C: "Quimioterapia",
-      D: "ATB por 6 meses",
-      E: "Negar tratamento da dor"
+      A: "AINE + hormônio (ACOC/progestágeno); laparoscopia se refratária/desejo diagnóstico-terapêutico",
+      B: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar.",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Endometriose: clínico primeiro. Pearl: dismenorreia incapacitante merece hormônio. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESHRE endometriosis"
   },
@@ -2039,13 +2039,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante Rh negativo, pai Rh positivo, Coombs indireto negativo. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nenhuma profilaxia",
-      B: "Imunoglobulina anti-D em situações de risco e no puerpério se RN Rh+; seguimento de anticorpos",
-      C: "Transfusão intraparto de rotina",
-      D: "Cesárea obrigatória",
-      E: "Vacina de sarampo como substituto"
+      A: "Imunoglobulina anti-D em situações de risco e no puerpério se RN Rh+; seguimento de anticorpos",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Anti-D previne isoimunização. Pearl: Coombs negativo ainda precisa de profilaxia. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG Rh"
   },
@@ -2061,13 +2061,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} com dor anexial súbita, náuseas, Doppler alterado. Conduta?",
     options: {
-      A: "Apenas analgésico oral 7 dias",
-      B: "Cirurgia urgente (laparoscopia) — destorção ± ooforoplastia; preservar ovário se viável",
-      C: "ATB isolado — inadequado para o quadro",
-      D: "Quimioterapia",
-      E: "Observação ambulatorial"
+      A: "Cirurgia urgente (laparoscopia) — destorção ± ooforoplastia; preservar ovário se viável",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
+      C: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Torção: emergência cirúrgica. Pearl: dor súbita anexial = Doppler e sala. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG adnexal torsion"
   },
@@ -2083,13 +2083,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} planeja gestar. Orientação essencial? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Suspender ácido fólico",
-      B: "Ácido fólico pré-concepcional (dose padrão ou alta se risco) para prevenir defeitos do tubo neural",
-      C: "Vitamina A megadose",
-      D: "IECA liberado na concepção",
-      E: "Vacina viva de rubéola na semana da concepção sem sorologia"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      C: "Ácido fólico pré-concepcional (dose padrão ou alta se risco) para prevenir defeitos do tubo neural",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Fólico antes de engravidar. Pearl: começa antes do teste positivo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ACOG/CDC folic acid"
   },
@@ -2105,11 +2105,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} assintomático na UBS. Sobre HAS, conduta de rastreio? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nunca medir PA em assintomáticos",
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
       B: "Medir PA periodicamente; confirmar com medidas repetidas/MAPA/MRPA se elevado; tratar conforme risco",
-      C: "Iniciar 3 anti-hipertensivos na primeira medida 130×80",
-      D: "RX de tórax anual substitui medida de PA",
-      E: "Só tratar se houver AVC prévio"
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      E: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV"
     },
     correct: "B",
     explanation: "Rastreio de HAS é básico na APS. Pearl: uma medida não fecha diagnóstico. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2127,11 +2127,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com IMC 32, sedentente de DM. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nunca rastrear",
-      B: "Rastrear com glicemia/HbA1c/TOTG conforme protocolo; educar estilo de vida",
-      C: "Insulina imediata sem diagnóstico",
-      D: "Apenas exame de urina",
-      E: "Jejum de 3 dias antes do teste"
+      A: "Trocar metformina por sulfonilureia de alta dose sem ajustar à função renal nem risco.",
+      B: "Rastrear com glicemia/HbA1c/TOTG conforme protocolo; educar estilo de vida. conduta preferencial neste contexto",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de."
     },
     correct: "B",
     explanation: "Obeso/risco: rastreie DM. Pearl: prevenção começa na glicemia. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2149,13 +2149,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com DRC, pergunta vacinas. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Vacinas inativadas são contraindicadas em DRC",
-      B: "Indicar influenza anual e demais do calendário do adulto/risco (incluindo COVID conforme PNI), além de pneumococo se elegível",
-      C: "Apenas vacinas vivas",
-      D: "Negar qualquer vacina",
-      E: "Vacinar só após diálise obrigatoriamente"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com melhor.",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      D: "Indicar influenza anual e demais do calendário do adulto/risco (incluindo COVID conforme PNI), além de pneumococo se elegível",
+      E: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Grupo de risco vacina mais, não menos. Pearl: DRC = calendário reforçado. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "PNI; CDC adults"
   },
@@ -2171,13 +2171,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} quer parar de fumar. Abordagem com melhor evidência? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas “força de vontade” sem suporte",
-      B: "Aconselhamento breve + farmacoterapia (vareniclina/bupropiona/TRS) se sem contraindicação",
-      C: "Antibiótico — inadequado para o quadro",
-      D: "Corticoide inalatório como anticraving",
-      E: "Eletroconvulsoterapia de rotina"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou.",
+      E: "Aconselhamento breve + farmacoterapia (vareniclina/bupropiona/TRS) se sem contraindicação"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Cessação: fale + medique. Pearl: perguntar todo contato. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "USPSTF tobacco"
   },
@@ -2193,13 +2193,13 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} assintomática. Rastreio de mama (princípio)? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "RM anual desde os 20 em todas",
-      B: "Mamografia conforme faixa/protocolo local (em geral 50–69 a cada 2 anos no SUS); individualizar risco alto",
-      C: "Mastectomia profilática universal",
-      D: "Negar mamografia após os 50",
-      E: "Apenas autoexame substitui mamografia populacional"
+      A: "Mamografia conforme faixa/protocolo local (em geral 50–69 a cada 2 anos no SUS); individualizar risco alto",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Rastreio organizado > autoexame isolado. Pearl: saiba o protocolo do seu sistema. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "INCA; USPSTF breast"
   },
@@ -2215,13 +2215,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com queda recorrente. Conduta na APS? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Contenção mecânica de rotina",
-      B: "Avaliar causas (visão, medicações, força, ambiente), vitamina D/osteoporose se indicado, fisioterapia e ajuste de fármacos",
-      C: "Aumentar benzodiazepínico para “relaxar”",
-      D: "Negar qualquer intervenção",
-      E: "Antibiótico — inadequado para o quadro"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Avaliar causas (visão, medicações, força, ambiente), vitamina D/osteoporose se indicado, fisioterapia e ajuste de fármacos",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Queda é síndrome geriátrica. Pearl: revise os remédios que dão tontura. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "CDC STEADI; SBCGG"
   },
@@ -2237,13 +2237,13 @@ const RES_MASTERS = [
     },
     statement: "Médico da UBS diagnostica tuberculose pulmonar bacilífera. Obrigação? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Sigilo absoluto sem notificar vigilância",
-      B: "Notificação compulsória e início de tratamento/TDO conforme protocolo",
-      C: "Esperar 6 meses para notificar",
-      D: "Notificar só se houver óbito",
-      E: "Tratar sem registrar no sistema"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor.",
+      C: "Notificação compulsória e início de tratamento/TDO conforme protocolo. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio"
     },
-    correct: "B",
+    correct: "C",
     explanation: "TB é compulsória. Pearl: notificar é parte do tratamento comunitário. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "MS vigilância"
   },
@@ -2259,13 +2259,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com anedonia e humor deprimido >2 semanas. Conduta inicial APS?",
     options: {
-      A: "Internação psiquiátrica compulsória em todo caso",
-      B: "Rastrear risco de suicídio, oferecer psicoterapia/apoio e antidepressivo se moderada/grave, com seguimento",
-      C: "Benzodiazepínico isolado prolongado como primeira linha",
-      D: "Negar qualquer avaliação",
-      E: "Antibiótico — inadequado para o quadro"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Rastrear risco de suicídio, oferecer psicoterapia/apoio e antidepressivo se moderada/grave, com seguimento",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Depressão na APS: risco + tratamento. Pearl: pergunte sobre suicídio. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "NICE depression; MS"
   },
@@ -2281,13 +2281,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} sexualmente ativo na UBS. Oferta adequada? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nunca oferecer teste de HIV/sífilis",
-      B: "Oferta de testagem, preservativos, vacinas (HPV/hep B) e tratamento de ISTs conforme protocolo",
-      C: "Só testar se houver úlcera",
-      D: "ATB “por precaução” sem diagnóstico semanal",
-      E: "Negar PrEP a elegíveis sem avaliar"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
+      D: "Oferta de testagem, preservativos, vacinas (HPV/hep B) e tratamento de ISTs conforme protocolo",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica"
     },
-    correct: "B",
+    correct: "D",
     explanation: "APS é porta de IST/HIV. Pearl: ofereça o teste — não espere o pedido. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "CDC/MS IST"
   },
@@ -2303,13 +2303,13 @@ const RES_MASTERS = [
     },
     statement: "Gestante de baixo risco na UBS. Elementos essenciais? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas US sem consultas",
-      B: "Consultas seriadas, vacinas, suplementos (férico/fólico), rastreios (sífilis/HIV/hepatite) e sinais de alarme",
-      C: "IECA se PA limítrofe",
-      D: "Radiografia de pelve mensal",
-      E: "Dieta cetogênica obrigatória"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Consultas seriadas, vacinas, suplementos (férico/fólico), rastreios (sífilis/HIV/hepatite) e sinais de alarme"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Pré-natal básico salva. Pearl: sífilis/HIV em toda gestante. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "MS pré-natal"
   },
@@ -2325,13 +2325,13 @@ const RES_MASTERS = [
     },
     statement: "Lactente de {{age}} na UBS. O que não pode faltar? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas receitar xarope",
-      B: "Curva de crescimento, aleitamento/alimentação, vacinas, desenvolvimento e orientação de sinais de alarme",
-      C: "ATB mensal profilático",
-      D: "Suco açucarado desde o nascimento",
-      E: "Negar vacinas"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Curva de crescimento, aleitamento/alimentação, vacinas, desenvolvimento e orientação de sinais de alarme",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Puericultura: crescer + vacinar + desenvolver. Pearl: a curva fala. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "SBP/MS"
   },
@@ -2347,11 +2347,11 @@ const RES_MASTERS = [
     },
     statement: "Mulher de {{age}} relata violência doméstica e pede sigilo. Postura? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Ignorar e não registrar nada",
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
       B: "Acolher, avaliar risco imediato, orientar redes de proteção; quebrar sigilo se risco iminente conforme ética/lei, com segurança da paciente",
-      C: "Confrontar o agressor na sala de espera",
-      D: "Negar atendimento",
-      E: "Publicar o caso em rede social"
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
     },
     correct: "B",
     explanation: "Violência: acolher + proteger. Pearl: segurança dela > burocracia. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2369,13 +2369,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com febre, dor retroocular, prova do laço+, plaquetas em queda. Conduta?",
     options: {
-      A: "AAS para a dor",
-      B: "Hidratação conforme grupo, evitar AINE/AAS, sinais de alarme, notificação",
-      C: "Corticoide de rotina",
-      D: "Alta sem orientação de alarme",
-      E: "ATB empírico amplo"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico.",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se.",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      E: "Hidratação conforme grupo, evitar AINE/AAS, sinais de alarme, notificação. conduta preferencial neste contexto"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Dengue: hidratar e evitar AAS. Pearl: prova do laço+ = classifique o grupo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "MS dengue"
   },
@@ -2391,13 +2391,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor em punho relacionada ao trabalho repetitivo. Conduta APS?",
     options: {
-      A: "Apenas atestado eterno sem avaliação",
-      B: "Avaliar, tratar dor, adaptar trabalho/ergonomia, afastar se preciso e articular com saúde do trabalhador",
-      C: "Cirurgia imediata em todos",
-      D: "Negar nexo — inadequado para o quadro",
-      E: "Benzodiazepínico crônico isolado"
+      A: "Avaliar, tratar dor, adaptar trabalho/ergonomia, afastar se preciso e articular com saúde do trabalhador",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
-    correct: "B",
+    correct: "A",
     explanation: "DORT: trate e mude a exposição. Pearl: remédio sem ergonomia falha. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "MS saúde trabalhador"
   },
@@ -2413,11 +2413,11 @@ const RES_MASTERS = [
     },
     statement: "Paciente solicita exame “completo anual” sem indicação. Postura? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Pedir todos os exames possíveis sempre",
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
       B: "Praticar prevenção quaternária: evitar excesso diagnóstico/terapêutico, discutir riscos/benefícios e indicar só o útil",
-      C: "Recusar qualquer diálogo",
-      D: "Prescrever antibiótico para “limpar o sangue”",
-      E: "Encaminhar a 5 especialistas sem critério"
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      D: "Indicar exame invasivo de rotina em quadro típico autolimitado, adiando o tratamento de suporte adequado",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
     correct: "B",
     explanation: "Menos pode ser mais. Pearl: exame sem indicação também adoece. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2435,13 +2435,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com supra de ST há 40 min. Conduta ideal? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Internar para teste ergométrico em 5 dias",
-      B: "ICP primária em centro capaz o mais rápido possível; trombólise se ICP não disponível na janela",
-      C: "Apenas nitrato sem reperfusão",
-      D: "Antibiótico — inadequado para o quadro",
-      E: "Cardioversão eletiva"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia.",
+      E: "ICP primária em centro capaz o mais rápido possível; trombólise se ICP não disponível na janela"
     },
-    correct: "B",
+    correct: "E",
     explanation: "IAMCST = reperfusão. Pearl: minutos = músculo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC/AHA STEMI"
   },
@@ -2457,13 +2457,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com troponina+, ECG sem supra, GRACE alto. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Alta com AAS só",
-      B: "Anti-isquêmico/antitrombótico e estratégia invasiva precoce conforme risco",
-      C: "Trombólise de rotina no SSST",
-      D: "Teste ergométrico na dor ativa",
-      E: "Suspender estatina"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial,.",
+      E: "Anti-isquêmico/antitrombótico e estratégia invasiva precoce conforme risco. conduta preferencial neste contexto"
     },
-    correct: "B",
+    correct: "E",
     explanation: "SSST de alto risco: cateter cedo. Pearl: GRACE alto não vai para casa. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC NSTE-ACS"
   },
@@ -2479,13 +2479,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com ICFER estável. Base medicamentosa moderna? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas digoxina e diurético",
-      B: "IECA/ARNI + betabloqueador + Antagonista mineralocorticoide + SGLT2, titulados",
-      C: "AINE crônico",
-      D: "Bloqueador de canal de cálcio não dihidropiridínico como base da ICFER",
-      E: "Suspender tudo se creatinina subir 5%"
+      A: "IECA/ARNI + betabloqueador + Antagonista mineralocorticoide + SGLT2, titulados",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
+      C: "Trocar metformina por sulfonilureia de alta dose sem ajustar à função renal nem risco de hipoglicemia",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      E: "Bloqueador de canal de cálcio não dihidropiridínico como base da ICFER. estratégia que não aborda o."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Quádrupla salvadora na ICFER. Pearl: diurético trata congestão; a quádrupla trata mortalidade. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC/AHA HF"
   },
@@ -2501,11 +2501,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com TV e hipotensão. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas betabloqueador oral",
-      B: "Cardioversão elétrica sincronizada imediata (ACL S)",
-      C: "Adenosina como primeira linha em TV com pulso e choque",
-      D: "Observação — inadequado para o quadro",
-      E: "Digoxina IV de rotina"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      B: "Cardioversão elétrica sincronizada imediata (ACL S). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
     correct: "B",
     explanation: "Instável = choque. Pearl: droga não substitui cardioversão no choque. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2523,11 +2523,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com FC 32, tontura, PA baixa. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Verapamil IV",
-      B: "Atropina, suporte, e marcapasso transcutâneo/transvenoso se refratário",
-      C: "Betabloqueador",
-      D: "Adenosina — inadequado para o quadro",
-      E: "Alta — inadequado para o quadro"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a.",
+      B: "Atropina, suporte, e marcapasso transcutâneo/transvenoso se refratário. conduta preferencial neste contexto",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar."
     },
     correct: "B",
     explanation: "Bradi sintomática: atropina → MP. Pearl: FC 32 com baixo débito não espera laudo. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2545,11 +2545,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com EA grave, síncope de esforço. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Exercício intenso liberado",
-      B: "Avaliar troca valvar/TAVI — sintoma + EA grave = intervenção",
-      C: "Apenas diurético eterno sem avaliar válvula",
-      D: "Digoxina cura EA",
-      E: "Betabloqueador alto em baixo débito sem avaliação"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      B: "Avaliar troca valvar/TAVI — sintoma + EA grave = intervenção. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "B",
     explanation: "EA sintomática opera/TAVI. Pearl: síncope de esforço na EA = alto risco. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2567,13 +2567,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com febre, sopro novo, vegetação no eco. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "ATB oral empírico sem hemoculturas",
-      B: "Hemoculturas + ATB IV dirigido/empírico e avaliar indicação cirúrgica (IC, abscesso, germes difíceis)",
-      C: "Apenas AAS — inadequado para o quadro",
-      D: "Alta após 48 h sempre",
-      E: "Corticoide — inadequado para o quadro"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Hemoculturas + ATB IV dirigido/empírico e avaliar indicação cirúrgica (IC, abscesso, germes difíceis)",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Endocardite: culturas + ATB IV ± cirurgia. Pearl: sopro novo + febre = eco. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC IE; AHA IE"
   },
@@ -2589,13 +2589,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com IAM prévio. Conduta lipídica? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Sem estatina se LDL “parece bom” clinicamente sem meta",
-      B: "Estatina de alta intensidade (± ezetimiba/PCSK9 se preciso) com metas agressivas de LDL",
-      C: "Apenas dieta sem fármaco após IAM",
-      D: "Antibioticoprofilaxia lipídica",
-      E: "Suspender estatina por CK normal assintomático preventivamente"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de.",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou.",
+      C: "Estatina de alta intensidade (± ezetimiba/PCSK9 se preciso) com metas agressivas de LDL",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade.",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Pós-IAM: estatina forte. Pearl: prevenção secundária não é opcional. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC prevention; AHA cholesterol"
   },
@@ -2611,13 +2611,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com PA 220/130 e edema agudo de pulmão. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Nifedipina sublingual de rotina e queda abrupta para 90×60",
-      B: "Redução controlada com agente IV (ex. nitrato/nitroprussiato conforme cenário) + tratar o dano de órgão",
-      C: "Alta com Losartana",
-      D: "Diurético intramuscular só",
-      E: "Sedação profunda sem tratar PA/pulmonar"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese.",
+      B: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo",
+      C: "Redução controlada com agente IV (ex. nitrato/nitroprussiato conforme cenário) + tratar o dano de órgão",
+      D: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Emergência: dano de órgão + queda controlada. Pearl: sublingual “quebra-PA” é história. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC/AHA hypertension"
   },
@@ -2633,13 +2633,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com EAP, FR 36, Sat 84%. Conduta respiratória? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas cateter nasal 1 L sem reavaliar",
-      B: "VNI (CPAP/BiPAP) precoce + tratamento da congestão, IOT se falência",
-      C: "Betabloqueador IV imediato em congestão grave com broncoespasmo",
-      D: "Sedação sem suporte",
-      E: "Negar VNI — inadequado para o quadro"
+      A: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "VNI (CPAP/BiPAP) precoce + tratamento da congestão, IOT se falência. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
     },
-    correct: "B",
+    correct: "D",
     explanation: "EAP: VNI reduz IOT. Pearl: FR 36 = máscara de VNI, não “espera”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC HF acute"
   },
@@ -2655,11 +2655,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com FA, CHA₂DS₂-VASc 4, sem contraindicação. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas AAS — inadequado para o quadro",
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
       B: "Anticoagulação oral (DOAC preferencial na maioria) com ajuste à função renal",
-      C: "Clopidogrel isolado equivalente",
-      D: "Sem tromboprofilaxia",
-      E: "Heparina oral domiciliar"
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem."
     },
     correct: "B",
     explanation: "Score alto = anticoagula. Pearl: AAS não é “anticoagulação da pobre”. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
@@ -2677,13 +2677,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com síncope durante exercício, sopro de EA. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Alta como síncope vasovagal típica",
-      B: "Internação/avaliação cardiológica urgente — síncope de esforço é alarme",
-      C: "Apenas eletroacupuntura",
-      D: "Hidratação e fim",
-      E: "Benzodiazepínico crônico"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor. abordagem inadequada para o cenário.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco.",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento.",
+      D: "Internação/avaliação cardiológica urgente — síncope de esforço é alarme. conduta preferencial neste contexto",
+      E: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Esforço + sopro = cardíaca até prova. Pearl: síncope de esforço não vai para casa. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC syncope"
   },
@@ -2699,13 +2699,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} pós-viral com dor torácica, troponina+, coronárias limpas. Conduta?",
     options: {
-      A: "Alta para maratona no dia seguinte",
-      B: "Repouso, tratar IC/arritmia, RNM/seguimento; evitar exercício até liberação",
-      C: "Trombólise — inadequado para o quadro",
-      D: "ATB para vírus sempre",
-      E: "AINE livre em IC aguda por miocardite sem critério"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na.",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico.",
+      E: "Repouso, tratar IC/arritmia, RNM/seguimento; evitar exercício até liberação. conduta preferencial neste contexto"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Miocardite: repouso e suporte. Pearl: coronária normal + troponina ≠ alta para academia. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC myocarditis"
   },
@@ -2721,13 +2721,13 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com dor pleurítica que melhora sentado, supra difuso, troponina normal. Conduta?",
     options: {
-      A: "Heparina plena de rotina",
-      B: "AINE + colchicina (salvo contraindicação); investigar derrame/miopericardite",
-      C: "Antibiótico empírico amplo sem causa",
-      D: "Cirurgia imediata",
-      E: "Betabloqueador como anti-inflamatório principal"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem.",
+      C: "AINE + colchicina (salvo contraindicação); investigar derrame/miopericardite",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Pericardite: AINE+colchicina. Pearl: sentar alivia — clássico. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",
     bibliography: "ESC pericardial"
   },
@@ -2743,11 +2743,11 @@ const RES_MASTERS = [
     },
     statement: "{{sexWord}} de {{age}} com IAM e choque cardiogênico. Conduta? Escolha a melhor conduta segundo evidência.",
     options: {
-      A: "Apenas fluidos agressivos sem avaliação de congestão",
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
       B: "Revascularização urgente + suporte hemodinâmico (aminas/dispositivo conforme centro) em UTI",
-      C: "Alta — inadequado para o quadro",
-      D: "Diurético como único tratamento do choque frio",
-      E: "AINE — inadequado para o quadro"
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "B",
     explanation: "Choque cardiogênico pós-IAM: revasc + suporte. Pearl: cateter e UTI, não enfermaria. Distratores atrasam terapia ou ignoram o mecanismo principal. Pearl: vinheta + diretriz de residência.",

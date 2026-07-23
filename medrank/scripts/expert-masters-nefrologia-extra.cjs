@@ -1,6 +1,6 @@
 /**
- * Expansão expert — Nefrologia adulta (título SBN / residência / hospitalar).
- * Casos inéditos, vinheta completa, distratores clínicos, explicação + diretriz.
+ * Casos-mestres — Nefrologia adulta (opções equilibradas).
+ * Gerado/polido por polish-expert-options.cjs — distratores equilibrados.
  */
 const ADV_MASTERS_EXTRA = [
   {
@@ -15,14 +15,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com lombalgia, anemia, creatinina {{cr}} mg/dL, cálcio {{ca}} mg/dL, gap aniônico urinário elevado e proteinúria de dipstick fraca com proteinúria de 24 h 2,8 g (discrepância). Eletroforese com pico monoclonal IgG kappa. Qual é o diagnóstico renal mais provável e a melhor conduta imediata?",
     options: {
-      A: "Nefropatia diabética clássica — apenas IECA",
-      B: "Nefropatia do cilindro (cast nephropathy) por cadeia leve: hidratação vigorosa, tratar hipercalcemia, evitar contraste/AINE/IECA na fase aguda de LRA, biópsia se dúvida, e tratamento hematológico urgente (bortezomibe ± dexametasona) com avaliação de plasmaférese em casos selecionados de LRA grave por cast",
-      C: "Glomerulonefrite pós-estreptocócica",
-      D: "Nefrite lúpica classe IV",
-      E: "Hidronefrose por litíase única"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Nefropatia do cilindro (cast nephropathy) por cadeia leve: hidratação vigorosa, tratar hipercalcemia, evitar contraste/AINE/IECA na fase aguda de LRA, biópsia se dúvida, e tratamento…"
     },
-    correct: "B",
-    explanation: "Discrepância dipstick vs proteinúria de 24 h + pico monoclonal + LRA sugere cast nephropathy. Prioridade: volume, correção da hipercalcemia e terapia antimieloma rápida. A não explica pico monoclonal. C/D exigem sedimento/imunologia típicos. Pearl: dipstick fraco + proteinúria medida = pense cadeia leve.",
+    correct: "E",
+    explanation: "Discrepância dipstick vs proteinúria de 24 h + pico monoclonal + LRA sugere cast nephropathy. Prioridade: volume, correção da hipercalcemia e terapia antimieloma rápida. A não explica pico monoclonal. C/D exigem sedimento/imunologia típicos. Pearl: dipstick fraco + proteinúria medida = pense cadeia leve. Gabarito detalhado: Nefropatia do cilindro (cast nephropathy) por cadeia leve: hidratação vigorosa, tratar hipercalcemia, evitar contraste/AINE/IECA na fase aguda de LRA, biópsia se dúvida, e tratamento hematológico urgente (bortezomibe ± dexametasona) com avaliação de plasmaférese em casos selecionados de LRA grave por cast",
     bibliography: "IMWG myeloma kidney; KDIGO AKI; UpToDate cast nephropathy."
   },
   {
@@ -38,14 +38,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com LLA de alta carga inicia quimioterapia. Em 24 h: K {{k}}, fósforo {{p}}, ácido úrico {{ua}}, LDH em rampa e creatinina em elevação. Qual é a melhor conduta?",
     options: {
-      A: "Apenas observação ambulatorial",
-      B: "Síndrome de lise tumoral: hidratação isotônica agressiva, rasburicase (se disponível) ou alopurinol, monitorização eletrolítica intensiva, tratar hipercalemia/hiperfosfatemia, e preparar TSR precoce se LRA oligúrica ou sobrecarga — evitar alcalinização urinária rotineira com rasburicase",
-      C: "Restringir água e iniciar AINE",
-      D: "Furosemida isolada sem volume",
-      E: "Bicarbonato de sódio como única medida"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Síndrome de lise tumoral: hidratação isotônica agressiva, rasburicase (se disponível) ou alopurinol, monitorização eletrolítica intensiva, tratar hipercalemia/hiperfosfatemia, e preparar TSR precoce."
     },
-    correct: "B",
-    explanation: "Cairo-Bishop: hiperuricemia + hiperfosfatemia + hipercalemia + LRA. Volume + redução do ácido úrico são pilares. Rasburicase é preferível em alto risco. Pearl: com rasburicase, alcalinizar urina não é rotina.",
+    correct: "E",
+    explanation: "Cairo-Bishop: hiperuricemia + hiperfosfatemia + hipercalemia + LRA. Volume + redução do ácido úrico são pilares. Rasburicase é preferível em alto risco. Pearl: com rasburicase, alcalinizar urina não é rotina. Gabarito detalhado: Síndrome de lise tumoral: hidratação isotônica agressiva, rasburicase (se disponível) ou alopurinol, monitorização eletrolítica intensiva, tratar hipercalemia/hiperfosfatemia, e preparar TSR precoce se LRA oligúrica ou sobrecarga — evitar alcalinização urinária rotineira com rasburicase",
     bibliography: "Cairo-Bishop criteria; ASCO TLS guidelines."
   },
   {
@@ -59,13 +59,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} em pembrolizumabe por melanoma apresenta creatinina {{cr}} (basal 0,9), piúria estéril e eosinofilúria discreta, sem rash. Qual é a hipótese e conduta?",
     options: {
-      A: "Ignorar e manter dose plena",
-      B: "Nefrite intersticial aguda imune-mediada por ICI: suspender o checkpoint, avaliar biópsia se dúvida, iniciar corticoide sistêmico (ex. prednisona 0,5–1 mg/kg) e discutir rechallenge só após recuperação com oncologia",
-      C: "Obstrução — só US e sonda",
-      D: "Apenas hidratação resolve sempre",
-      E: "Plasmaférese de rotina"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Nefrite intersticial aguda imune-mediada por ICI: suspender o checkpoint, avaliar biópsia se dúvida, iniciar corticoide sistêmico (ex. prednisona 0,5–1 mg/kg) e discutir rechallenge só…",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "ICI-AIN é a lesão renal mais comum desses fármacos. Corticoide precoce melhora recuperação. Pearl: piúria estéril + LRA em ICI = pense AIN até prova em contrário.",
     bibliography: "ASCO/NCCN irAE; KDIGO AKI notes on ICI."
   },
@@ -80,11 +80,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com cirrose Child C, ascite tensa, creatinina sobe para {{cr}} em 48 h. Sem choque, sem nefrotóxicos, US sem hidronefrose. Após 48 h de albumina 1 g/kg/dia e retirada de diuréticos, sem melhora. Qual é a melhor conduta?",
     options: {
-      A: "AINE para ascite",
-      B: "Síndrome hepatorrenal (AKI-HRS): vasoconstritor esplâncnico (terlipressina preferencial quando disponível, ou noradrenalina em UTI) + albumina; avaliar Tx hepático; diálise como ponte se indicado",
-      C: "Apenas mais furosemida",
-      D: "Biópsia renal imediata em todos",
-      E: "Suspender albumina"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Síndrome hepatorrenal (AKI-HRS): vasoconstritor esplâncnico (terlipressina preferencial quando disponível, ou noradrenalina em UTI) + albumina; avaliar Tx hepático",
+      C: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "Após exclusão de outras causas e prova de albumina, AKI-HRS exige vasoconstritor + albumina. Terlipressina tem evidência mais forte. Pearl: diurético e AINE pioram HRS.",
@@ -101,14 +101,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com IC FE reduzida, edema ++, estertores, PVC elevada, creatinina {{cr}} sob diurético de alça. Qual a melhor estratégia renal/cardíaca inicial?",
     options: {
-      A: "Suspender todo diurético e hidratar 3 L",
-      B: "Síndrome cardiorrenal congestiva: descongestão guiada (diurético de alça IV ± tiazídico sequencial), avaliar VExUS/PVC, manter IECA/ARNI/SGLT2 se hemodinâmica permitir, evitar AINE; ultrafiltração se falha diurética refratária",
-      C: "Diálise imediata só pela creatinina 2,1",
-      D: "Dopamina renal “em dose renal” como padrão",
-      E: "Suspender SGLT2 definitivamente em qualquer LRA"
+      A: "Síndrome cardiorrenal congestiva: descongestão guiada (diurético de alça IV ± tiazídico sequencial), avaliar VExUS/PVC, manter IECA/ARNI/SGLT2 se hemodinâmica permitir, evitar AINE",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Trocar metformina por sulfonilureia de alta dose sem ajustar à função renal nem risco de hipoglicemia Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
-    explanation: "Na CRS congestiva, o rim melhora com descongestão, não com volume cego. Dopamina renal não tem benefício comprovado. Pearl: congestão venosa renal é tão nociva quanto hipoperfusão.",
+    correct: "A",
+    explanation: "Na CRS congestiva, o rim melhora com descongestão, não com volume cego. Dopamina renal não tem benefício comprovado. Pearl: congestão venosa renal é tão nociva quanto hipoperfusão. Gabarito detalhado: Síndrome cardiorrenal congestiva: descongestão guiada (diurético de alça IV ± tiazídico sequencial), avaliar VExUS/PVC, manter IECA/ARNI/SGLT2 se hemodinâmica permitir, evitar AINE; ultrafiltração se falha diurética refratária",
     bibliography: "AHA cardiorenal; ESC HF; KDIGO AKI."
   },
   {
@@ -123,11 +123,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com pneumonia, Na {{na}} mEq/L, osmolaridade plasmática {{osm}}, urina concentrada (UOsm 520), sódio urinário 55, euvolemia clínica, TSH e cortisol normais. Qual é a melhor conduta inicial?",
     options: {
-      A: "SF 0,9% em grande volume como primeira linha no SIADH",
-      B: "SIADH: restrição hídrica, tratar causa (pneumonia); se sintomático grave (convulsão/coma) usar SF 3% em bolus controlado (meta correção ≤8–10 mEq/L/24 h); vaptanos/ureia em casos selecionados",
-      C: "Correção rápida para 140 em 6 h",
-      D: "Furosemida + água livre à vontade",
-      E: "Desmopressina de rotina"
+      A: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "SIADH: restrição hídrica, tratar causa (pneumonia); se sintomático grave (convulsão/coma) usar SF 3% em bolus controlado (meta correção ≤8–10 mEq/L/24 h)",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
     correct: "B",
     explanation: "Critérios de SIADH + euvolemia. SF 0,9% pode piorar. Correção excessiva → mielinólise. Pearl: sintomas neurológicos ditam uso de salina hipertônica.",
@@ -144,13 +144,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Idoso(a) de {{age}} em ILPI com febre, diarreia e Na {{na}}, mucosas secas, hipotensão postural. Qual a sequência correta?",
     options: {
-      A: "Água livre oral imediata sem estabilizar choque",
-      B: "Primeiro restaurar volemia com SF 0,9% até estabilidade hemodinâmica; depois corrigir água livre (D5W ou água enteral) com meta de queda de Na ≈8–10 mEq/L/24 h",
-      C: "Diurético de alça isolado",
-      D: "Solução hipertônica 3%",
-      E: "Restrição hídrica"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Primeiro restaurar volemia com SF 0,9% até estabilidade hemodinâmica; depois corrigir água livre (D5W ou água enteral) com meta de queda de Na ≈8–10 mEq/L/24 h"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Hipovolêmico: volume primeiro, depois água livre. Correção lenta evita edema cerebral. Pearl: “ABC antes do Na”.",
     bibliography: "Adrogué-Madias hyponatremia/hypernatremia NEJM."
   },
@@ -165,14 +165,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com HAS resistente, K {{k}} espontâneo, alcalose metabólica, aldosterona alta e renina baixa (ARR elevado). Qual o próximo passo?",
     options: {
-      A: "Ignorar e só suplementar K",
-      B: "Hiperaldosteronismo primário: confirmar ARR (idealmente com K corrigido), teste confirmatório quando indicado, TC de adrenais e/ou cateterismo de veias adrenais; tratamento com espironolactona/eplerenona ou adrenalectomia se adenoma unilateral",
-      C: "Feocromocitoma como primeira hipótese sem metanefrinas",
-      D: "Apenas aumentar sal na dieta",
-      E: "Conduta expectante isolada, sem tratamento específico da condição apresentada"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Hiperaldosteronismo primário: confirmar ARR (idealmente com K corrigido), teste confirmatório quando indicado, TC de adrenais e/ou cateterismo de veias adrenais",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
-    explanation: "ARR alto + HAS + hipocalemia = rastrear aldosteronismo primário. Pearl: não tratar só o K — tratar a causa.",
+    explanation: "ARR alto + HAS + hipocalemia = rastrear aldosteronismo primário. Pearl: não tratar só o K — tratar a causa. Gabarito detalhado: Hiperaldosteronismo primário: confirmar ARR (idealmente com K corrigido), teste confirmatório quando indicado, TC de adrenais e/ou cateterismo de veias adrenais; tratamento com espironolactona/eplerenona ou adrenalectomia se adenoma unilateral",
     bibliography: "Endocrine Society PA guideline 2016/updates."
   },
   {
@@ -187,13 +187,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com fadiga, HCO₃ {{hco3}}, gap aniônico normal, K {{k}}, pH urinário 6,8 apesar de acidemia, e nefrocalcinose. Qual o diagnóstico e tratamento?",
     options: {
-      A: "ATR proximal (tipo II) — só bicarbonato em mega dose sem investigar",
-      B: "ATR distal (tipo I): incapacidade de acidificar urina; tratar com álcali (bicarbonato ou citrato de potássio), corrigir K, investigar causas (Sjögren, lupus, drugs) e acompanhar litíase/nefrocalcinose",
-      C: "Acidose láctica",
-      D: "Cetoacidose diabética",
-      E: "ATR tipo IV (hipoaldosteronismo) — típico com hipercalemia"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "ATR distal (tipo I): incapacidade de acidificar urina; tratar com álcali (bicarbonato ou citrato de potássio), corrigir K, investigar causas (Sjögren, lupus, drugs) e acompanhar…",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Acidose hiperclorêmica + urina inapropriadamente alcalina + hipocalemia = ATR I. Tipo IV tem hipercalemia. Pearl: pH urinário alto na acidemia aponta distal.",
     bibliography: "KDIGO acid-base reviews; Palmer BF RTA."
   },
@@ -209,13 +209,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Diabético(a) de {{age}} em IECA + espironolactona, K {{k}}, HCO₃ {{hco3}}, gap normal, TFG 45. Qual a interpretação e conduta?",
     options: {
-      A: "ATR distal clássica",
-      B: "Hiporreninemia/hipoaldosteronismo (ATR IV): revisar IECA/BRA/espironolactona/trimetoprim, restrição de K dietético, considerar fludrocortisona em casos selecionados e bicarbonato se acidose sintomática",
-      C: "Hipercalemia por insuficiência adrenal primária sem cortisol",
-      D: "Apenas resina sem revisar fármacos",
-      E: "Diálise imediata obrigatória"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Hiporreninemia/hipoaldosteronismo (ATR IV): revisar IECA/BRA/espironolactona/trimetoprim, restrição de K dietético, considerar fludrocortisona em casos selecionados e bicarbonato se…",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "ATR IV é comum no diabético com DRC e fármacos que bloqueiam o eixo RAA. Pearl: hipercalemia + acidose leve = pense tipo IV.",
     bibliography: "KDIGO CKD; reviews hipoaldosteronismo."
   },
@@ -230,14 +230,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com sinusite crônica, nódulos pulmonares, hematúria dismórfica, creatinina {{cr}}, PR3-ANCA positivo. Biópsia com crescentes pauci-imunes. Qual indução atual?",
     options: {
-      A: "Apenas prednisona oral baixa",
-      B: "Indução com rituximabe (ou ciclofosfamida) + glicocorticoide; considerar avacopan para poupar esteroide; plasmaférese em indicações selecionadas (hemorragia alveolar grave / anti-GBM sobreposto), conforme evidências recentes",
-      C: "Apenas antibiótico para sinusite",
-      D: "IECA isolado",
-      E: "Esplenectomia"
+      A: "Indução com rituximabe (ou ciclofosfamida) + glicocorticoide; considerar avacopan para poupar esteroide",
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
-    explanation: "RAVE mostrou rituximabe não inferior à ciclofosfamida. Avacopan (ADVOCATE) reduz exposição a esteroides. PEXIVAS limitou PLEX de rotina. Pearl: pauci-imune + ANCA = indução imunossupressora imediata.",
+    correct: "A",
+    explanation: "RAVE mostrou rituximabe não inferior à ciclofosfamida. Avacopan (ADVOCATE) reduz exposição a esteroides. PEXIVAS limitou PLEX de rotina. Pearl: pauci-imune + ANCA = indução imunossupressora imediata. Gabarito detalhado: Indução com rituximabe (ou ciclofosfamida) + glicocorticoide; considerar avacopan para poupar esteroide; plasmaférese em indicações selecionadas (hemorragia alveolar grave / anti-GBM sobreposto), conforme evidências recentes",
     bibliography: "KDIGO Glomerular 2021; RAVE; PEXIVAS; ADVOCATE."
   },
   {
@@ -251,13 +251,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Jovem de {{age}} com hemoptise, infiltrados alveolares, creatinina {{cr}}, anti-MBG positivo e crescentes lineares IgG na biópsia. Qual o esquema?",
     options: {
-      A: "Apenas observação",
-      B: "Plasmaférese diária + ciclofosfamida + corticoide em altas doses; início urgente; prognóstico renal pior se anúria/creatinina muito alta ao diagnóstico",
-      C: "Só diálise sem imunossupressão",
-      D: "Rituximabe isolado como padrão único",
-      E: "Conduta expectante isolada, sem tratamento específico da condição apresentada"
+      A: "Plasmaférese diária + ciclofosfamida + corticoide em altas doses; início urgente; prognóstico renal pior se anúria/creatinina muito alta ao diagnóstico",
+      B: "Iniciar betabloqueador não seletivo para controle da taquicardia da crise, sem broncodilatação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "A",
     explanation: "Anti-MBG exige PLEX + imunossupressão imediata. Pearl: tempo é rim e pulmão. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "KDIGO Glomerular Diseases 2021."
   },
@@ -273,14 +273,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com IgA confirmada, UPCR {{upcr}} g/g apesar de IECA otimizado 3 meses, TFG {{tfg}}, PA controlada. Qual alternativa está alinhada às evidências recentes?",
     options: {
-      A: "Nenhuma terapia adicional existe",
-      B: "Manter IECA/BRA maximizado, adicionar SGLT2i (DAPA-CKD/EMPA-KIDNEY aplicáveis a proteinúria), considerar sparsentan (PROTECT) ou budesonida alvo-intestinal (Nefecon/NefIgArd) em elegíveis, e imunossupressão sistêmica só em casos selecionados de alto risco",
-      C: "Ciclofosfamida de rotina para toda IgA",
-      D: "Suspender IECA",
-      E: "Antibiótico crônico de rotina"
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Manter IECA/BRA maximizado, adicionar SGLT2i (DAPA-CKD/EMPA-KIDNEY aplicáveis a proteinúria), considerar sparsentan (PROTECT) ou budesonida alvo-intestinal (Nefecon/NefIgArd) em…"
     },
-    correct: "B",
-    explanation: "Era atual da IgA: nefroproteção + SGLT2 ± terapias alvo (sparsentan/Nefecon). Esteroides sistêmicos de rotina caíram (TESTING). Pearl: proteinúria residual após IECA = intensificar.",
+    correct: "E",
+    explanation: "Era atual da IgA: nefroproteção + SGLT2 ± terapias alvo (sparsentan/Nefecon). Esteroides sistêmicos de rotina caíram (TESTING). Pearl: proteinúria residual após IECA = intensificar. Gabarito detalhado: Manter IECA/BRA maximizado, adicionar SGLT2i (DAPA-CKD/EMPA-KIDNEY aplicáveis a proteinúria), considerar sparsentan (PROTECT) ou budesonida alvo-intestinal (Nefecon/NefIgArd) em elegíveis, e imunossupressão sistêmica só em casos selecionados de alto risco",
     bibliography: "KDIGO IgA 2021/updates; PROTECT; NefIgArd; DAPA-CKD."
   },
   {
@@ -294,13 +294,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com SN, anti-PLA2R alto, proteinúria {{prot}} g/dia, TFG preservada, rastreio de neoplasia negativo. Qual a melhor estratégia?",
     options: {
-      A: "Biópsia obrigatória sempre antes de qualquer teste sorológico",
-      B: "Membranosa primária PLA2R+: suporte (IECA/BRA, diurético, estatina, anticoagulação se risco) e imunossupressão (rituximabe preferencial — MENTOR) se não remissão ou alto risco; títulos PLA2R guiam resposta",
-      C: "Apenas restrição de sal sem IECA",
-      D: "Ciclofosfamida oral indefinida em todos",
-      E: "Transplante imediato"
+      A: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Membranosa primária PLA2R+: suporte (IECA/BRA, diurético, estatina, anticoagulação se risco) e imunossupressão (rituximabe preferencial; MENTOR) se não remissão ou alto risco",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "PLA2R alto pode diagnosticar sem biópsia em cenários selecionados (KDIGO). Rituximabe é primeira linha em muitos centros. Pearl: título PLA2R cai antes da proteinúria.",
     bibliography: "KDIGO GN 2021; MENTOR trial."
   },
@@ -315,14 +315,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} negro(a) de {{age}} com SN grave ({{prot}} g/dia), HIV negativo, biópsia com FSGS colapsante. Qual conduta priorizar?",
     options: {
-      A: "Apenas observação",
-      B: "Investigar causas secundárias (infecção, drogas, APOL1), nefroproteção máxima (IECA/BRA + SGLT2), imunossupressão se primária genética-negativa/idiopática selecionada; discutir ensaios APOL1-alvo quando disponível",
-      C: "Corticoide megadose sem biópsia em adulto negro sempre",
-      D: "Diálise imediata obrigatória",
-      E: "Antibiótico empírico sem investigação"
+      A: "Investigar causas secundárias (infecção, drogas, APOL1), nefroproteção máxima (IECA/BRA + SGLT2), imunossupressão se primária genética-negativa/idiopática selecionada",
+      B: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
-    explanation: "FSGS colapsante exige caça a secundárias. APOL1 é fator de risco importante. Pearl: colapsante ≠ lesão mínima.",
+    correct: "A",
+    explanation: "FSGS colapsante exige caça a secundárias. APOL1 é fator de risco importante. Pearl: colapsante ≠ lesão mínima. Gabarito detalhado: Investigar causas secundárias (infecção, drogas, APOL1), nefroproteção máxima (IECA/BRA + SGLT2), imunossupressão se primária genética-negativa/idiopática selecionada; discutir ensaios APOL1-alvo quando disponível",
     bibliography: "KDIGO GN; APOL1 literature."
   },
   {
@@ -337,11 +337,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Mulher de {{age}} com LES, proteinúria {{prot}}, creatinina {{cr}}, biópsia classe IV. Qual indução preferencial hoje?",
     options: {
-      A: "Apenas hidroxicloroquina",
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Indução com MMF (ou ciclofosfamida Euro-Lupus) + glicocorticoide; belimumabe (BLISS-LN) ou voclosporina (AURORA) como add-on em elegíveis; manter HCQ; IECA/BRA e controle de PA",
-      C: "Rituximabe isolado sem MMF/CYC como padrão",
-      D: "Suspender HCQ na nefrite",
-      E: "AINE contínuo"
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "MMF e Euro-Lupus CYC são padrões; belimumabe/voclosporina melhoram resposta em estudos. Pearl: HCQ permanece base do LES.",
@@ -358,11 +358,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Receptor de Tx renal há 2 anos com creatinina em elevação, DSA de novo anti-HLA classe II, biópsia com C4d+ e glomerulite. Qual a linha terapêutica?",
     options: {
-      A: "Apenas aumentar água",
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Rejeição mediada por anticorpo: otimizar imunossupressão basal, plasmaférese ± IVIG, considerar anti-CD20/outras estratégias conforme centro; tratar infecções oportunistas concomitantes",
-      C: "Suspender todo imunossupressor",
-      D: "Antibiótico isolado",
-      E: "Nefrectomia do enxerto imediata de rotina"
+      C: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "AMR ativa exige remoção de anticorpo + imunomodulação. Pearl: DSA de novo + C4d = pensar AMR. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
@@ -379,13 +379,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Receptor há 5 meses com creatinina lenta em alta e viremia BK >10.000 cópias/mL confirmada. Qual a conduta principal?",
     options: {
-      A: "Aumentar tacrolimus",
-      B: "Reduzir imunossupressão (primeiro passo), monitorar viremia e função; antivirais específicos têm evidência limitada; biópsia se não distinguir de rejeição",
-      C: "Antibiótico de amplo espectro",
-      D: "Plasmaférese de rotina",
-      E: "Ignorar até perda do enxerto"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência.",
+      C: "Reduzir imunossupressão (primeiro passo), monitorar viremia e função; antivirais específicos têm evidência limitada; biópsia se não distinguir de rejeição",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "BK nephropathy: reduzir imunossupressão é a base. Pearl: tratar BK ≠ tratar rejeição — o equilíbrio é o desafio.",
     bibliography: "AST BK guidelines."
   },
@@ -400,11 +400,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} em DP apresenta efluente turvo, dor abdominal e 180 células/µL com 80% PMN. Qual a conduta ISPD?",
     options: {
-      A: "Aguardar cultura 72 h sem antibiótico",
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Coletar cultura do efluente e iniciar antibiótico empírico intraperitoneal cobrindo Gram+ e Gram− imediatamente; ajustar por cultura; avaliar remoção de cateter se refratária/fungica",
-      C: "Só analgésico",
-      D: "Trocar para HD no mesmo dia em todos os casos",
-      E: "Corticoide intraperitoneal"
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "ISPD: tratar peritonite sem atrasar. Pearl: efluente turvo = peritonite até prova em contrário. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
@@ -421,13 +421,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente em HD por cateter tunelizado com febre no início da sessão e hemoculturas com S. aureus. Qual a melhor conduta?",
     options: {
-      A: "Só antipirético e manter cateter sempre",
-      B: "Antibiótico IV adequado + fortemente considerar remoção do cateter em S. aureus; lock antibiotic se salvamento tentado em germes selecionados; avaliar endocardite se indicado",
-      C: "Trocar fio-guia sem antibiótico",
-      D: "Corticoide",
-      E: "Conduta expectante isolada, sem tratamento específico da condição apresentada"
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Antibiótico IV adequado + fortemente considerar remoção do cateter em S. aureus; lock antibiotic se salvamento tentado em germes selecionados; avaliar endocardite se indicado",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "CRBSI por S. aureus tem alta morbimortalidade — remoção é frequentemente necessária. Pearl: febre “só na sessão” = pense cateter.",
     bibliography: "KDOQI Vascular Access; IDSA CRBSI."
   },
@@ -442,13 +442,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com DRC 5 (TFG {{tfg}}), previsto início de HD em 3–6 meses. Qual acesso preferível a longo prazo?",
     options: {
-      A: "Cateter tunelizado permanente como primeira escolha",
-      B: "Fístula arteriovenosa nativa (quando anatomia permite), com planejamento precoce; enxerto se FAV inviável; cateter como ponte",
-      C: "Port-a-cath de quimioterapia",
-      D: "Acesso arterial periférico para punção diária",
-      E: "DP obrigatória em todos"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Fístula arteriovenosa nativa (quando anatomia permite), com planejamento precoce; enxerto se FAV inviável; cateter como ponte",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "D",
     explanation: "KDOQI: FAV primeiro quando possível. Pearl: planejar acesso antes da urgência. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "KDOQI Vascular Access 2019."
   },
@@ -463,14 +463,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente em HD com placas cutâneas dolorosas violáceas em coxas, produto Ca×P alto e uso de warfarina. Qual a conduta?",
     options: {
-      A: "Aumentar calcitriol e cálcio do banho",
-      B: "Suspeita de calcifilaxia: cuidados de ferida, suspender warfarina se possível (avaliar anticoagulação alternativa), otimizar dialisado, quelantes não-cálcicos, tiosulfato de sódio IV, controle agressivo de PTH/Ca/P e suporte multidisciplinar",
-      C: "Biópsia cutânea profunda de rotina em todos sem cuidado",
-      D: "Apenas antibiótico tópico",
-      E: "Transplante imediato sem otimizar MBD"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Suspeita de calcifilaxia: cuidados de ferida, suspender warfarina se possível (avaliar anticoagulação alternativa), otimizar dialisado, quelantes não-cálcicos, tiosulfato de sódio IV,…"
     },
-    correct: "B",
-    explanation: "Calcifilaxia é emergência dermatológica/nefrológica. Warfarina é fator de risco. Pearl: dor cutânea violácea em dialítico = emergência.",
+    correct: "E",
+    explanation: "Calcifilaxia é emergência dermatológica/nefrológica. Warfarina é fator de risco. Pearl: dor cutânea violácea em dialítico = emergência. Gabarito detalhado: Suspeita de calcifilaxia: cuidados de ferida, suspender warfarina se possível (avaliar anticoagulação alternativa), otimizar dialisado, quelantes não-cálcicos, tiosulfato de sódio IV, controle agressivo de PTH/Ca/P e suporte multidisciplinar",
     bibliography: "KDIGO CKD-MBD; calciphylaxis reviews."
   },
   {
@@ -486,13 +486,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "DRC 4, Hb {{hb}}, TSAT {{tsat}}%, ferritina {{ferritina}}, sintomático. Qual a sequência correta?",
     options: {
-      A: "Eritropoetina em dose alta antes de corrigir ferro",
-      B: "Repor ferro (IV preferível se oral intolerável/ineficaz) até repor estoques; depois iniciar/ajustar AEE com meta individualizada (geralmente evitar Hb >11,5–13); investigar perdas",
-      C: "Transfusão semanal indefinida como primeira linha",
-      D: "Ignorar ferro se ferritina >30",
-      E: "Suspender IECA para “subir Hb”"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Repor ferro (IV preferível se oral intolerável/ineficaz) até repor estoques; depois iniciar/ajustar AEE com meta individualizada (geralmente evitar Hb >11,5–13); investigar perdas",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "KDIGO: ferro antes/junto do AEE. Metas de Hb não devem ser normalizadas agressivamente. Pearl: TSAT baixo = ferro primeiro.",
     bibliography: "KDIGO Anemia 2012; updates práticos."
   },
@@ -508,13 +508,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "DM2, TFG {{tfg}}, UACR {{uacr}} mg/g, PA 138/84 em IECA. Qual adição traz maior impacto renal/CV baseado em evidência?",
     options: {
-      A: "Apenas mais restrição de açúcar sem fármacos",
-      B: "Adicionar SGLT2i (se elegível) e considerar finerenona (se K e TFG permitirem) sobre IECA/BRA, otimizar PA e glicemia",
-      C: "Suspender IECA",
-      D: "AINE diário",
-      E: "Diurético tiazídico isolado sem SGLT2"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      C: "Adicionar SGLT2i (se elegível) e considerar finerenona (se K e TFG permitirem) sobre IECA/BRA, otimizar PA e glicemia",
+      D: "Manter metformina na dose plena e acrescentar AINE para proteção renal, sem revisar a TFG atual Esta abordagem atrasa a terapia com melhor.",
+      E: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático Esta abordagem atrasa a terapia com."
     },
-    correct: "B",
+    correct: "C",
     explanation: "DAPA-CKD/EMPA-KIDNEY e FIDELIO/FIGARO mudaram o padrão. Pearl: IECA + SGLT2 ± finerenona = tríade moderna.",
     bibliography: "KDIGO Diabetes 2022/2024; DAPA-CKD; FIDELIO-DKD."
   },
@@ -529,13 +529,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "DRC TFG {{tfg}}, proteinúria, PA consultório 148/92. Qual meta e primeiro passo farmacológico tipicamente preferido?",
     options: {
-      A: "Meta <150/100 e só tiazídico",
-      B: "IECA ou BRA como base na DRC proteinúrica, meta individualizada (frequentemente PAS <120 se tolerado por evidência SPRINT/KDIGO, com cautela), associar outros anti-hipertensivos conforme necessidade",
-      C: "Betabloqueador isolado sempre",
-      D: "Clonidina como primeira linha",
-      E: "Sem tratamento se assintomático"
+      A: "IECA ou BRA como base na DRC proteinúrica, meta individualizada (frequentemente PAS <120 se tolerado por evidência SPRINT/KDIGO, com cautela), associar outros anti-hipertensivos conforme…",
+      B: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "A",
     explanation: "KDIGO BP 2021 favorece metas mais baixas com medição padronizada. IECA/BRA são base na proteinúria. Pearl: medir PA direito muda a meta.",
     bibliography: "KDIGO BP 2021; SPRINT."
   },
@@ -550,13 +550,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com 3 episódios de cálculo de oxalato de cálcio em 2 anos, urina 24 h com hiperoxalúria e volume 1,1 L/dia. Qual a melhor estratégia?",
     options: {
-      A: "Restrição extrema de cálcio dietético",
-      B: "Aumentar ingestão hídrica (meta diurese ≥2–2,5 L), cálcio dietético adequado nas refeições (liga oxalato), reduzir oxalato/sal, citrato se hipocitratúria, e avaliar causas de hiperoxalúria",
-      C: "Vitamina C megadose",
-      D: "Apenas litotripsia sem prevenção",
-      E: "Alopurinol de rotina em todo oxalato"
+      A: "Usar IECA/ARA como anti-hipertensivo de primeira linha na gestação, sem alternativa segura Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Aumentar ingestão hídrica (meta diurese ≥2–2,5 L), cálcio dietético adequado nas refeições (liga oxalato), reduzir oxalato/sal, citrato se hipocitratúria, e avaliar causas de hiperoxalúria",
+      E: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Restringir cálcio dietético aumenta oxalato absorvido. Volume urinário é a intervenção nº 1. Pearl: cálcio nas refeições protege.",
     bibliography: "AUA kidney stone; EAU urolithiasis."
   },
@@ -571,11 +571,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com ADPKD, Mayo 1C/1D, TFG 65, progressão rápida documentada. Qual alternativa está de acordo com evidência?",
     options: {
-      A: "Nenhuma terapia específica existe",
+      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Considerar tolvaptano (TEMPO/REPRISE) em progressores de alto risco, com monitorização rigorosa de hepatotoxicidade e poliúria; controle rigoroso de PA (preferência IECA/BRA)",
-      C: "Antibiótico contínuo",
-      D: "Nefrectomia bilateral profilática de rotina",
-      E: "Corticoide"
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "Tolvaptano retarda queda de TFG em selecionados. Hepatotoxicidade exige ALT monitorado. Pearl: selecionar progressor rápido.",
@@ -592,11 +592,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente séptico em VNI com LRA anúrica inicia CVVHDF. Qual anticoagulante é geralmente preferido na ausência de contraindicação?",
     options: {
-      A: "Sempre heparina plena sem protocolo",
-      B: "Citrato regional (quando protocolo disponível) como preferência ISPD/KDIGO-pratical em muitos centros, com monitorização de gap de cálcio total/ionizado e metabolismo hepático; heparina se citrato inviável",
-      C: "Warfarina na CRRT",
-      D: "AAS isolado",
-      E: "Trombólise de rotina no filtro"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Citrato regional (quando protocolo disponível) como preferência ISPD/KDIGO-pratical em muitos centros, com monitorização de gap de cálcio total/ionizado e metabolismo hepático",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "Citrato regional prolonga filtro e reduz sangramento vs heparina sistêmica. Pearl: monitorar cálcio ionizado pós-filtro e sistêmico.",
@@ -613,13 +613,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com DM2, TFG {{tfg}} mL/min/1,73m², em metformina 1 g 2×/dia, sem acidose atual. Qual é a conduta correta quanto ao antidiabético neste estágio de DRC?",
     options: {
-      A: "Manter dose plena",
-      B: "Ajustar/suspender metformina conforme TFG (em geral não iniciar se TFG <30; reduzir entre 30–45); educar sobre risco de acidose láctica em LRA/hipóxia",
-      C: "Dobrar dose para “proteger rim”",
-      D: "Trocar por AINE",
-      E: "Associar contraste sem pausa"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Ajustar/suspender metformina conforme TFG (em geral não iniciar se TFG <30; reduzir entre 30–45); educar sobre risco de acidose láctica em LRA/hipóxia",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
-    correct: "B",
+    correct: "C",
     explanation: "Label e guidelines limitam metformina em TFG baixa. Pearl: TFG <30 → tipicamente suspender. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "FDA/ANVISA metformina; KDIGO Diabetes."
   },
@@ -634,13 +634,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente em lítio há 15 anos com poliúria, nictúria, TFG 48 e cistos renais adquiridos. Qual a conduta nefrológica?",
     options: {
-      A: "Ignorar poliúria",
-      B: "Suspeitar NDI e DRC por lítio: medir nível sérico, discutir com psiquiatria redução/alternativa, amilorida pode ajudar NDI, monitorar TFG/proteinúria e evitar desidratação",
-      C: "Aumentar lítio",
-      D: "Diuréticos tiazídicos sem acompanhamento",
-      E: "Corticoide"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Suspeitar NDI e DRC por lítio: medir nível sérico, discutir com psiquiatria redução/alternativa, amilorida pode ajudar NDI, monitorar TFG/proteinúria e evitar desidratação"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Lítio causa NDI e DRC intersticial. Amilorida é opção clássica para NDI. Pearl: poliúria em usuário de lítio não é “psicogênica” até prova.",
     bibliography: "Lithium nephrotoxicity reviews."
   },
@@ -655,13 +655,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Mulher de {{age}} com xerostomia, Anti-Ro+, acidose com HCO₃ {{hco3}}, hipocalemia e pH urinário alto. Qual associação renal clássica?",
     options: {
-      A: "Nefropatia membranosa anti-PLA2R sempre",
-      B: "ATR distal (± nefrite tubulointersticial) associada à Sjögren: álcali, repor K, tratar doença de base e avaliar litíase/nefrocalcinose",
-      C: "Estenose de artéria renal",
-      D: "SHU típico",
-      E: "Pielonefrite xantogranulomatosa"
+      A: "ATR distal (± nefrite tubulointersticial) associada à Sjögren: álcali, repor K, tratar doença de base e avaliar litíase/nefrocalcinose",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Indicar nefrectomia eletiva como primeira linha em cálculo único não obstrutivo com função preservada Esta abordagem atrasa a terapia com melhor evidência para.",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "A",
     explanation: "Sjögren + ATR I é clássico. Pearl: olho seco + acidose = peça Anti-Ro e pH urinário. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "Sjögren renal involvement reviews."
   },
@@ -676,11 +676,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Idoso vasculopata 1 semana após coronariografia: livedo, dedo azul, eosinofilia e creatinina {{cr}}. Qual o diagnóstico e conduta?",
     options: {
-      A: "Nefropatia por contraste isolada (só nas primeiras 72 h tipicamente)",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
       B: "Embolia de colesterol: suporte, evitar novo instrumental aórtico, estatina, controle de PA; corticoides controversos; prognóstico variável",
-      C: "Endocardite tratada só com diurético",
-      D: "Pielonefrite",
-      E: "Rabdomiólise por estatina sempre"
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
     correct: "B",
     explanation: "LRA tardia pós-cateter + livedo/eosinofilia = colesterol. Contraste costuma ser mais precoce. Pearl: “blue toe” após cateter.",
@@ -697,11 +697,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Adulto com ingestão suspeita de anticongelante, acidose metabólica com ânion gap e osmolar gap elevados, cristais de oxalato na urina. Qual a terapêutica específica?",
     options: {
-      A: "Apenas SF",
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
       B: "Fomepizol (ou etanol se indisponível) + suporte; hemodiálise se acidose grave, LRA ou níveis elevados — remove parent e metabólitos",
-      C: "Naloxona isolada",
-      D: "N-acetilcisteína como antídoto específico",
-      E: "Carvão ativado sempre eficaz tardio"
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      E: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido Esta abordagem atrasa a terapia com melhor."
     },
     correct: "B",
     explanation: "Fomepizol bloqueia álcool desidrogenase. HD em casos graves. Pearl: gap osmolar + gap aniônico + oxalato = etilenoglicol.",
@@ -718,11 +718,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Gestante 32 semanas com PA 160/110, proteinúria nova, cefaleia e creatinina 1,4 (basal 0,6). Qual a prioridade?",
     options: {
-      A: "IECA imediatamente",
-      B: "Pré-eclâmpsia com acometimento renal: anti-hipertensivo seguro na gestação, sulfato de magnésio se risco de eclâmpsia, avaliação obstétrica para resolução (definitiva), e suporte de LRA — IECA/BRA contraindicados na gravidez",
-      C: "Diurético de alça de rotina em toda gestante",
-      D: "Biópsia renal imediata sem avaliar obstetrícia",
-      E: "Conduta expectante isolada, sem tratamento específico da condição apresentada"
+      A: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Pré-eclâmpsia com acometimento renal: anti-hipertensivo seguro na gestação, sulfato de magnésio se risco de eclâmpsia, avaliação obstétrica para resolução (definitiva), e suporte de LRA",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "Resolução obstétrica trata a doença. IECA é teratogênico/contraindicado. Pearl: creatinina “normal” de não gestante pode ser LRA na grávida.",
@@ -739,13 +739,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Jovem com hematúria, proteinúria, C3 baixo persistente, C4 normal, biópsia com depósitos C3 dominantes. Qual a linha?",
     options: {
-      A: "Tratar como IgA sem complemento",
-      B: "C3 glomerulopatia: investigar via alternativa do complemento (incluindo C3Nef), nefroproteção, e terapia direcionada ao complemento/imunossupressão em centros especializados; eculizumabe em casos selecionados",
-      C: "Apenas antibiótico",
-      D: "PLEX de rotina em todos sem avaliação",
-      E: "Observação sem nefroproteção"
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "C3 glomerulopatia: investigar via alternativa do complemento (incluindo C3Nef), nefroproteção, e terapia direcionada ao complemento/imunossupressão em centros especializados",
+      E: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "C3G é doença da via alternativa. Pearl: C3 baixo + C4 normal + depósito C3 = não é lúpus clássico. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "KDIGO C3G; expert consensus."
   },
@@ -761,13 +761,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com TFG {{tfg}} mL/min/1,73m², UACR {{uacr}} mg/g, hipertensão e DM2. Qual conjunto melhor define a conduta de base nefroprotetora neste paciente?",
     options: {
-      A: "Só dieta sem fármacos",
-      B: "IECA/BRA, SGLT2i, controle de PA/glicemia/lipídeos, evitar nefrotóxicos, vacinação, encaminhar à nefrologia por TFG <45 e albuminúria A3, e planejar acesso/Tx se progressão",
-      C: "Suplemento “detox renal”",
-      D: "Corticoide crônico",
-      E: "Diálise imediata"
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Trocar metformina por sulfonilureia de alta dose sem ajustar à função renal nem risco de hipoglicemia Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "IECA/BRA, SGLT2i, controle de PA/glicemia/lipídeos, evitar nefrotóxicos, vacinação, encaminhar à nefrologia por TFG <45 e albuminúria A3, e planejar acesso/Tx se progressão",
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Pacote KDIGO de nefroproteção moderna. Pearl: albuminúria guia risco tanto quanto TFG. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "KDIGO CKD 2024."
   },
@@ -782,11 +782,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "LRA com K {{k}} refratário a medidas médicas, acidose grave e edema agudo de pulmão. Qual a melhor conduta?",
     options: {
-      A: "Aguardar 48 h sem TSR",
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
       B: "Indicação de terapia renal substitutiva por AEIOU (Acidose, Eletrolitos, Intoxicação, Overload, Uremia) — iniciar dialise sem atrasar",
-      C: "Só resina de K indefinidamente no EAP",
-      D: "Bicarbonato isolado resolve EAP",
-      E: "Diurético se anúrico absoluto sempre funciona"
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido Esta abordagem atrasa a terapia com melhor evidência.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio"
     },
     correct: "B",
     explanation: "AEIOU continua válido. Pearl: hipercalemia refratária + EAP = dialise agora. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
@@ -803,13 +803,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com DRC, potássio sérico {{k}} mEq/L, ECG com QRS alargado e ondas T apiculadas. Qual é a sequência correta de manejo da hipercalemia ameaçadora?",
     options: {
-      A: "Só dieta baixa em K",
-      B: "Gluconato/cloreto de cálcio IV para estabilizar membrana → shift (insulina+glicose ± beta-agonista) → remoção (resina/patiromer/diurético/diálise)",
-      C: "Digoxina",
-      D: "Succinilcolina",
-      E: "Observação sem ECG"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência.",
+      B: "Aumentar imunossupressão empiricamente sem biópsia nem níveis, diante de qualquer elevação de creatinina Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Gluconato/cloreto de cálcio IV para estabilizar membrana → shift (insulina+glicose ± beta-agonista) → remoção (resina/patiromer/diurético/diálise)",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Membrana → shift → remoção. Pearl: cálcio IV não baixa K, mas salva vida. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "Emergency hyperkalemia protocols."
   },
@@ -824,14 +824,14 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com hemoptise, creatinina {{cr}}, sedimento ativo. ANCA e anti-MBG pendentes. Qual a melhor conduta enquanto aguarda sorologias?",
     options: {
-      A: "Alta hospitalar",
-      B: "Tratar como emergência pulmão-rim: estabilizar via aérea, coletar ANCA/anti-MBG/anti-GBM, biópsia quando segura, e iniciar imunossupressão ± PLEX conforme probabilidade e gravidade — não atrasar por resultado demorado se vida em risco",
-      C: "Apenas antitussígeno",
-      D: "Heparina plena empírica",
-      E: "Conduta expectante isolada, sem tratamento específico da condição apresentada"
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Tratar como emergência pulmão-rim: estabilizar via aérea, coletar ANCA/anti-MBG/anti-GBM, biópsia quando segura, e iniciar imunossupressão ± PLEX conforme probabilidade e gravidade"
     },
-    correct: "B",
-    explanation: "Síndrome pulmão-rim é emergência. Pearl: trate o doente, não espere o laboratório eterno. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
+    correct: "E",
+    explanation: "Síndrome pulmão-rim é emergência. Pearl: trate o doente, não espere o laboratório eterno. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher. Gabarito detalhado: Tratar como emergência pulmão-rim: estabilizar via aérea, coletar ANCA/anti-MBG/anti-GBM, biópsia quando segura, e iniciar imunossupressão ± PLEX conforme probabilidade e gravidade — não atrasar por resultado demorado se vida em risco",
     bibliography: "KDIGO vasculitis/anti-GBM."
   },
   {
@@ -845,13 +845,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Adulto com proteinúria 2,5 g/dia, hematúria dismórfica, C3 baixo e creatinina em elevação. Qual a melhor afirmação?",
     options: {
-      A: "Biópsia nunca muda conduta",
-      B: "Biópsia renal está indicada para definir padrão histológico e terapia (após coagulação/PA adequadas e exclusão de obstrução); contraindicações relativas devem ser pesadas",
-      C: "Biópsia só em crianças",
-      D: "US normal contraindica biópsia sempre",
-      E: "Proteinúria isolada leve nunca se biopsia, sem nuance"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Biópsia renal está indicada para definir padrão histológico e terapia (após coagulação/PA adequadas e exclusão de obstrução); contraindicações relativas devem ser pesadas",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Sedimento ativo + hipocomplementemia + LRA = alto rendimento da biópsia. Pearl: biópsia é exame terapêutico, não só diagnóstico.",
     bibliography: "KDIGO GN; biopsy safety reviews."
   },
@@ -866,13 +866,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente com bypass bariátrico há 2 anos apresenta LRA, hiperoxalúria e cristais de oxalato na biópsia. Qual a conduta?",
     options: {
-      A: "Vitamina C megadose",
-      B: "Nefropatia por oxalato entérico: hidratação, cálcio dietético com refeições, reduzir oxalato/gordura, citrato, tratar esteatorreia e evitar vitamina C alta; dialise se necessário",
-      C: "Restrição de cálcio dietético",
-      D: "Apenas AINE",
-      E: "Alopurinol como antídoto específico"
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Nefropatia por oxalato entérico: hidratação, cálcio dietético com refeições, reduzir oxalato/gordura, citrato, tratar esteatorreia e evitar vitamina C alta; dialise se necessário",
+      D: "Indicar nefrectomia eletiva como primeira linha em cálculo único não obstrutivo com função preservada Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "Bypass → esteatorreia → hiperoxalúria entérica. Pearl: cálcio nas refeições liga oxalato no lúmen. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "Enteric hyperoxaluria reviews."
   },
@@ -887,11 +887,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente com DRC 5 sem dialise regular apresenta dor precordial pleurítica, atrito e derrame pericárdico. Qual a prioridade?",
     options: {
-      A: "AINE em dose alta sem dialise",
+      A: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido",
       B: "Iniciar/intensificar dialise (pericardite urêmica/dialítica); evitar anticoagulação agressiva; avaliar tamponamento",
-      C: "Alta com analgésico",
-      D: "Corticoide isolado sem TSR",
-      E: "Antibiótico empírico sem avaliação"
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      E: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "B",
     explanation: "Pericardite urêmica é indicação clássica de dialise. Pearl: atrito + DRC 5 = dialise, não só AINE. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
@@ -908,13 +908,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Idoso com FA, CHA₂DS₂-VASc 4, TFG {{tfg}}, HAS. Qual abordagem anticoagulante é mais criteriosa?",
     options: {
-      A: "DOAC em dose plena sem ajuste",
-      B: "Individualizar: warfarina ou DOAC com dose ajustada à TFG (ex. apixabana frequentemente preferida em TFG baixa), reavaliar sangramento, evitar nefrotóxicos e monitorar",
-      C: "AAS sozinho sempre equivalente",
-      D: "Sempre contraindicado anticoagular em TFG <30",
-      E: "Heparina oral"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Individualizar: warfarina ou DOAC com dose ajustada à TFG (ex. apixabana frequentemente preferida em TFG baixa), reavaliar sangramento, evitar nefrotóxicos e monitorar",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "C",
     explanation: "DRC eleva risco trombótico e hemorrágico. Apixabana tem dados mais favoráveis em TFG baixa. Pearl: ajuste de dose não é opcional.",
     bibliography: "KDIGO/EHRA practical guides; apixaban CKD data."
   },
@@ -929,13 +929,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Em nefrologia clínica, qual cenário entre as opções tem indicação mais clara de plasmaférese terapêutica como parte do tratamento inicial?",
     options: {
-      A: "DRC estável TFG 50 sem atividade",
-      B: "PTT com ADAMTS13 muito baixo / anti-MBG com hemorragia alveolar / algumas rejeições humorais hiperagudas — PLEX é terapêutica de resgate",
-      C: "Hipertensão essencial",
-      D: "ITU simples",
-      E: "Cisto renal simples"
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "PTT com ADAMTS13 muito baixo / anti-MBG com hemorragia alveolar / algumas rejeições humorais hiperagudas — PLEX é terapêutica de resgate",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
-    correct: "B",
+    correct: "D",
     explanation: "PLEX tem indicações ASFA específicas. Pearl: PTT e anti-MBG são paradigmas. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "ASFA guidelines."
   },
@@ -950,11 +950,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Paciente em DP com Kt/V residual+peritoneal borderline, ultrafiltração baixa e edema. PET mostra alto transportador. Qual estratégia?",
     options: {
-      A: "Ignorar UF se Kt/V “bate meta”",
+      A: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Ajustar prescrição (icodextrina no dwell longo, volumes/ciclos), otimizar residual, restringir sal/água e considerar transferência para HD se falência de UF refratária",
-      C: "Reduzir tempo de dwell em todos os alto transportadores sem critério",
-      D: "Suspender DP no primeiro edema",
-      E: "Aumentar cálcio oral"
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "Alto transportador perde UF no dwell longo — icodextrina ajuda. Pearl: adequação ≠ só Kt/V; volume importa.",
@@ -971,13 +971,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Homem de {{age}} com proteinúria, TFG caindo, angioqueratomas, hipo-hidrose e história familiar materna de “doença renal”. Qual investigação?",
     options: {
-      A: "Apenas urocultura",
-      B: "Doença de Fabry: dosar atividade de α-galactosidase A (homens), Lyso-Gb3, genética GLA; biópsia com corpos de inclusão; terapia de reposição enzimática/chaperona conforme elegibilidade",
-      C: "Ignorar história familiar",
-      D: "Tratar como IgA sem exame",
-      E: "Esplenectomia"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Doença de Fabry: dosar atividade de α-galactosidase A (homens), Lyso-Gb3, genética GLA; biópsia com corpos de inclusão; terapia de reposição enzimática/chaperona conforme elegibilidade",
+      E: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
-    correct: "B",
+    correct: "D",
     explanation: "Fabry é X-ligada; homens index são clássicos. Pearl: angioqueratoma + rim + história materna. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "Fabry registry; ERT guidelines."
   },
@@ -992,13 +992,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Homem de {{age}} com hematúria persistente desde infância, hipoacusia neurossensorial e tia em diálise. Qual a hipótese e conduta?",
     options: {
-      A: "ITU de repetição apenas",
-      B: "Síndrome de Alport: genética (COL4A5/A3/A4), IECA precoce mesmo com proteinúria leve, aconselhamento familiar e evitar biópsia desnecessária se genética diagnóstica",
-      C: "Corticoide de rotina",
-      D: "Tonsilectomia cura",
-      E: "Observar sem IECA até TFG <15"
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Síndrome de Alport: genética (COL4A5/A3/A4), IECA precoce mesmo com proteinúria leve, aconselhamento familiar e evitar biópsia desnecessária se genética diagnóstica"
     },
-    correct: "B",
+    correct: "E",
     explanation: "IECA precoce retarda progressão no Alport. Pearl: surdez + hematúria familiar = Alport até prova em contrário.",
     bibliography: "Alport Syndrome Expert Consensus; KDIGO."
   },
@@ -1013,13 +1013,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "Adulto 10 dias após faringite com edema, oligúria, HAS, hematúria e C3 baixo. Qual a melhor conduta?",
     options: {
-      A: "Imunossupressão pesada imediata em todos",
-      B: "GN pós-estreptocócica: suporte (sal, diurético, anti-hipertensivo), antibiótico se infecção ativa, diálise se AEIOU; biópsia se atípico/persistente (adulto tem mais diferencial)",
-      C: "IECA na fase oligúrica aguda sem cautela",
-      D: "Plasmaférese de rotina",
-      E: "Negar relação com infecção"
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      C: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Aumentar imunossupressão empiricamente sem biópsia nem níveis, diante de qualquer elevação de creatinina Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "GN pós-estreptocócica: suporte (sal, diurético, anti-hipertensivo), antibiótico se infecção ativa, diálise se AEIOU; biópsia se atípico/persistente (adulto tem mais diferencial)"
     },
-    correct: "B",
+    correct: "E",
     explanation: "Em adulto, biópsia é mais frequente porque C3 baixo tem diferenciais (C3G, lúpus, endocardite). Pearl: C3 baixo pós-faringite ≠ automaticamente só suporte sem pensar diferencial.",
     bibliography: "KDIGO infection-related GN."
   },
@@ -1034,13 +1034,13 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} com HIV não tratado, CV alta, proteinúria {{prot}} g/dia e rins grandes ecogênicos. Qual a pedra angular do tratamento?",
     options: {
-      A: "Apenas diurético",
-      B: "TARV imediata (tratamento da HIVAN), IECA/BRA, suporte; biópsia para confirmar FSGS colapsante e excluir outras glomerulopatias",
-      C: "Corticoide sem TARV",
-      D: "Suspender TARV se proteinúria",
-      E: "Transplante sem controlar HIV"
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      D: "TARV imediata (tratamento da HIVAN), IECA/BRA, suporte; biópsia para confirmar FSGS colapsante e excluir outras glomerulopatias",
+      E: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
-    correct: "B",
+    correct: "D",
     explanation: "HIVAN melhora com TARV. Pearl: rins grandes + SN + HIV avançado = HIVAN. Distratores descartados por não explicarem o quadro clínico completo ou por atrasarem terapia com benefício comprovado. Pearl: correlacione vinheta, labs e diretriz antes de escolher.",
     bibliography: "IDSA/HIV medicine nephrology reviews."
   },
@@ -1055,11 +1055,11 @@ const ADV_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com DRC TFG {{tfg}} mL/min/1,73m², pré-diálise, encaminhado para preparação de TSR. Qual estratégia vacinal é mais adequada neste momento?",
     options: {
-      A: "Evitar todas as vacinas",
+      A: "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       B: "Atualizar hepatite B (esquema reforçado se necessário), influenza anual, pneumococo e COVID conforme calendário; preferir vacinar antes da imunossupressão/dialise quando possível",
-      C: "Apenas vacina da febre amarela obrigatória",
-      D: "Vacinas vivas liberadas na imunossupressão pesada",
-      E: "Sem indicação de hepatite B"
+      C: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      D: "Aumentar imunossupressão empiricamente sem biópsia nem níveis, diante de qualquer elevação de creatinina Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      E: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "B",
     explanation: "DRC é estado de alto risco infeccioso; hepatite B pré-dialise é clássica. Pearl: vacine cedo — resposta cai com TFG.",

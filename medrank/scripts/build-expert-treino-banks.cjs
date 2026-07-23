@@ -232,6 +232,15 @@ function assertQuality(qs, label) {
     if ((q.explanation || '').length < 100) {
       throw new Error(`[${label}] explicação curta em ${q.id}`);
     }
+    // Opções com tamanho semelhante — evita gabarito óbvio por ser o parágrafo maior
+    const lens = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e]
+      .filter((t) => t && String(t).trim())
+      .map((t) => String(t).length);
+    const mx = Math.max(...lens);
+    const mn = Math.min(...lens);
+    if (mn < 45 || mx > mn * 2.5) {
+      throw new Error(`[${label}] opções desbalanceadas em ${q.id}: ${lens.join(',')}`);
+    }
   }
 }
 
