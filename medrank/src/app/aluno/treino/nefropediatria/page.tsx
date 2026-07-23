@@ -45,8 +45,15 @@ export default async function NefropediatriaTreinoPage() {
 
   const topics = usesDemoStore() ? getNefropediatriaTopics() : await getProductionTopics();
   const stats = await getTreinoUserStats(userId);
-  const history = (await getTreinoHistory(userId)).slice(0, 5);
-  const ranking = await getTreinoRanking(userId);
+  let history: Awaited<ReturnType<typeof getTreinoHistory>> = [];
+  let ranking: Awaited<ReturnType<typeof getTreinoRanking>> = [];
+  let loadError: string | null = null;
+  try {
+    history = (await getTreinoHistory(userId)).slice(0, 5);
+    ranking = await getTreinoRanking(userId);
+  } catch (e) {
+    loadError = e instanceof Error ? e.message : 'Falha ao carregar histórico de treino';
+  }
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8">
@@ -124,6 +131,13 @@ export default async function NefropediatriaTreinoPage() {
         topics={topics}
         dueReview={stats.dueReview}
       />
+      {loadError && (
+        <p className="mt-3 text-sm text-red-700">
+          {loadError.includes('permission denied')
+            ? 'permission denied for table practice_sessions — admin: rode a migration 029 no Supabase e confira SUPABASE_SERVICE_ROLE_KEY na Vercel.'
+            : loadError}
+        </p>
+      )}
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <section className="rounded-2xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">

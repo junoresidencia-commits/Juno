@@ -8,14 +8,24 @@ export type ExamAudience = 'general' | 'nephrology';
 export const NEPHROLOGY_LEAGUE_NAME = 'Liga de Nefrologia';
 
 export interface UserExamContext {
+  /**
+   * Audiência “principal” (compat): nefro se membro da liga; senão geral.
+   * Use `audiences` / `hasNephrology` / `hasGeneral` para liberar 1 ou 2 disputas.
+   */
   audience: ExamAudience;
-  /** Liga de Nefrologia (se membro) — disputa exclusiva. */
+  /** Disputas do dia que o aluno pode fazer (1 ou 2). */
+  audiences: ExamAudience[];
+  hasNephrology: boolean;
+  hasGeneral: boolean;
+  /** Liga/grupo nefro (se membro). */
   leagueId: string | null;
   leagueName: string | null;
+  /** Grupo geral (ex.: NAD, Endo) — disputa residência USP/ENARE. */
+  generalGroupId: string | null;
+  generalGroupName: string | null;
   /**
-   * Grupo cujo ranking o aluno pode ver (só membros).
-   * Nefro → a liga; demais → primeiro grupo ativo (ex.: Endo).
-   * Ranking geral entre grupos = só admin.
+   * Grupo cujo ranking aparece na home (preferência: liga nefro; senão geral).
+   * Ranking entre todas as ligas = só admin.
    */
   rankingGroupId: string | null;
   rankingGroupName: string | null;
@@ -36,46 +46,58 @@ function isNephrologyGroup(g: GroupRow): boolean {
   );
 }
 
-/** Membro da Liga de Nefrologia → disputa nephrology; senão → geral (mesma prova para Endo etc.). */
-export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
-  const empty: UserExamContext = {
-    audience: 'general',
-    leagueId: null,
-    leagueName: null,
-    rankingGroupId: null,
-    rankingGroupName: null,
-  };
+function buildContext(activeGroups: GroupRow[]): UserExamContext {
+  const nefroGroups = activeGroups.filter(isNephrologyGroup);
+  const generalGroups = activeGroups.filter((g) => !isNephrologyGroup);
+  const nefro = nefroGroups[0] ?? null;
+  const general = generalGroups[0] ?? null;
 
+  const hasNephrology = Boolean(nefro);
+  // Sem grupo nenhum: mantém disputa geral (alunos já ativos).
+  const hasGeneral = Boolean(general) || activeGroups.length === 0;
+
+  const audiences: ExamAudience[] = [];
+  if (hasNephrology) audiences.push('nephrology');
+  if (hasGeneral) audiences.push('general');
+
+  const ranking = nefro ?? general;
+
+  return {
+    audience: hasNephrology ? 'nephrology' : 'general',
+    audiences,
+    hasNephrology,
+    hasGeneral,
+    leagueId: nefro?.id ?? null,
+    leagueName: nefro?.name ?? null,
+    generalGroupId: general?.id ?? null,
+    generalGroupName: general?.name ?? null,
+    rankingGroupId: ranking?.id ?? null,
+    rankingGroupName: ranking?.name ?? null,
+  };
+}
+
+/**
+ * Resolve quais disputas diárias o aluno vê:
+ * - Só Liga de Nefrologia → 1 disputa (nefro/nefroped)
+ * - Só grupo de residência (NAD, Endo…) → 1 disputa geral (USP/ENARE)
+ * - Nos dois → 2 disputas no mesmo dia
+ */
+export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
   if (usesDemoStore()) {
     const { getDemoGroupsForUser } = await import('@/lib/groups/demo');
-    const groups = getDemoGroupsForUser(userId);
-    const nefro = groups.find(
-      (g) =>
-        (g as { exam_audience?: string }).exam_audience === 'nephrology' ||
-        g.name.toLowerCase().includes('nefrologia')
-    );
-    if (nefro) {
-      return {
-        audience: 'nephrology',
-        leagueId: nefro.id,
-        leagueName: nefro.name,
-        rankingGroupId: nefro.id,
-        rankingGroupName: nefro.name,
-      };
-    }
-    const first = groups[0];
-    if (first) {
-      return {
-        ...empty,
-        rankingGroupId: first.id,
-        rankingGroupName: first.name,
-      };
-    }
-    return empty;
+    const groups = getDemoGroupsForUser(userId).map((g) => ({
+      id: g.id,
+      name: g.name,
+      active: true,
+      exam_audience: (g as { exam_audience?: string }).exam_audience,
+    }));
+    return buildContext(groups);
   }
 
   const admin = createAdminClient();
-  if (!admin) return empty;
+  if (!admin) {
+    return buildContext([]);
+  }
 
   const { data } = await admin
     .from('study_group_members')
@@ -89,25 +111,15 @@ export async function resolveUserExamAudience(userId: string): Promise<UserExamC
     activeGroups.push(g);
   }
 
-  const nefro = activeGroups.find(isNephrologyGroup);
-  if (nefro) {
-    return {
-      audience: 'nephrology',
-      leagueId: nefro.id,
-      leagueName: nefro.name,
-      rankingGroupId: nefro.id,
-      rankingGroupName: nefro.name,
-    };
-  }
+  return buildContext(activeGroups);
+}
 
-  const home = activeGroups[0] ?? null;
-  return {
-    audience: 'general',
-    leagueId: null,
-    leagueName: null,
-    rankingGroupId: home?.id ?? null,
-    rankingGroupName: home?.name ?? null,
-  };
+export function userCanAccessExamAudience(
+  ctx: UserExamContext,
+  examAudience: string | null | undefined
+): boolean {
+  const a = (examAudience ?? 'general') as ExamAudience;
+  return ctx.audiences.includes(a);
 }
 
 /** Cria/atualiza a Liga de Nefrologia (idempotente). */
@@ -131,7 +143,7 @@ export async function ensureNephrologyLeague(
         exam_audience: 'nephrology',
         active: true,
         description:
-          'Disputa diária exclusiva da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos.',
+          'Disputa diária da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos. Membros também podem estar em grupos de residência e fazer a disputa geral no mesmo dia.',
       })
       .eq('id', existing.id);
     return { id: existing.id, name: existing.name, created: false };
@@ -142,7 +154,7 @@ export async function ensureNephrologyLeague(
     .insert({
       name: NEPHROLOGY_LEAGUE_NAME,
       description:
-        'Disputa diária exclusiva da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos.',
+        'Disputa diária da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos.',
       active: true,
       exam_audience: 'nephrology',
     })
@@ -154,5 +166,5 @@ export async function ensureNephrologyLeague(
 }
 
 export function audienceLabel(audience: ExamAudience): string {
-  return audience === 'nephrology' ? 'Liga de Nefrologia' : 'Disputa geral';
+  return audience === 'nephrology' ? 'Liga de Nefrologia' : 'Disputa geral (residência)';
 }

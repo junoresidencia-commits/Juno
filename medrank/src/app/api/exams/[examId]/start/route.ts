@@ -86,17 +86,19 @@ export async function POST(
     );
   }
 
-  // Só pode iniciar a disputa da própria trilha (geral vs Liga de Nefrologia)
-  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  // Só pode iniciar disputa das audiências do aluno (nefro e/ou geral)
+  const { resolveUserExamAudience, userCanAccessExamAudience } = await import(
+    '@/lib/exams/audience'
+  );
   const ctx = await resolveUserExamAudience(user.id);
   const examAudience = (exam as { audience?: string }).audience ?? 'general';
-  if (examAudience !== ctx.audience) {
+  if (!userCanAccessExamAudience(ctx, examAudience)) {
     return NextResponse.json(
       {
         error:
           examAudience === 'nephrology'
             ? 'Esta disputa é exclusiva da Liga de Nefrologia.'
-            : 'Esta é a disputa geral — sua liga tem outra prova hoje.',
+            : 'Esta é a disputa geral — você precisa estar em um grupo de residência (ex.: NAD).',
       },
       { status: 403 }
     );

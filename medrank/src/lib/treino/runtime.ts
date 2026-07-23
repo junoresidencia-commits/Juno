@@ -407,11 +407,13 @@ export async function createTreinoSession(options: CreateTreinoOptions): Promise
 
   const { data, error } = await admin.from('practice_sessions').insert(row).select('*').single();
   if (error) {
-    throw new Error(
-      error.message.includes('liga')
-        ? `${error.message} — rode a migration 020 atualizada (coluna liga).`
-        : error.message
-    );
+    const hint =
+      /permission denied/i.test(error.message)
+        ? ' — rode no Supabase a migration 029_practice_sessions_grants_again.sql (e confira SUPABASE_SERVICE_ROLE_KEY na Vercel).'
+        : error.message.includes('liga')
+          ? ' — rode a migration 020 atualizada (coluna liga).'
+          : '';
+    throw new Error(`${error.message}${hint}`);
   }
 
   return mapDbRow(data as Record<string, unknown>);

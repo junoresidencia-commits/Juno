@@ -5,98 +5,44 @@ import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
 import { ensureDemoSeedUsers } from '@/lib/demo/seed-users';
 import { mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
-import { AlunoHomeSimple } from '@/components/aluno/AlunoHomeSimple';
+import { AlunoHomeSimple, type HomeDisputeCard } from '@/components/aluno/AlunoHomeSimple';
 import {
   canStudentSeeTodayRanking,
   getTodayRankingDate,
 } from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
-import { audienceLabel, resolveUserExamAudience } from '@/lib/exams/audience';
+import { audienceLabel, resolveUserExamAudience, type ExamAudience } from '@/lib/exams/audience';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 import { canAccessNephrologyTreino } from '@/lib/treino/access';
+import type { Exam } from '@/types/database';
 
-export default async function AlunoDashboard() {
-  const session = await requireAuth();
-  if (!session.profile.active) redirect('/login?blocked=1');
-
-  const today = todayDateStringBrazil();
-  const ctx = await resolveUserExamAudience(session.userId);
-  const trackLabel =
-    ctx.audience === 'nephrology'
-      ? shortTrackLabel(trackForDate(today))
-      : 'Residência (disputa geral)';
-  const leagueLabel =
-    ctx.audience === 'nephrology'
-      ? ctx.leagueName ?? audienceLabel('nephrology')
-      : null;
-  const showNephrologyTreino = await canAccessNephrologyTreino(
-    session.userId,
-    session.profile
-  );
-
-  if (usesDemoStore()) {
-    ensureDemoSeedUsers();
-    const { userId } = session;
-    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
-      getDemoDashboardData(userId);
-
-    const canContinue = Boolean(todayExam && windowPhase === 'open' && attempt && !attempt.finished_at);
-    const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-    const completed = Boolean(todayExam && attempt?.finished_at);
-    const forfeitedToday = Boolean(todayExam && attempt?.finished_at && attempt.forfeited);
-    const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
-
-    return (
-      <AlunoHomeSimple
-        name={session.profile.name}
-        userId={userId}
-        todayExam={todayExam}
-        windowPhase={windowPhase}
-        canStart={canStart}
-        canContinue={canContinue}
-        completed={completed}
-        forfeitedToday={forfeitedToday}
-        missedToday={missedToday}
-        attemptId={attempt?.id}
-        showRanking={showRanking}
-        todayRankings={todayRankings}
-        rankingDate={rankingDate}
-        finishedToday={finishedToday}
-        streakDays={streakDays}
-        trackLabel={trackLabel}
-        leagueLabel={leagueLabel ?? undefined}
-        showNephrologyTreino={showNephrologyTreino}
-      />
-    );
-  }
-
-  const supabase = await createClient();
-  const userId = session.userId;
-  const profile = session.profile;
-
-  // Disputa só aparece se já estiver published (após pipeline IA 20/20).
-  // Geração/revisão: Admin → Gerar disputa ou cron — não na home do aluno.
+async function loadDisputeCard(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  today: string,
+  audience: ExamAudience
+): Promise<HomeDisputeCard> {
   const { data: todayExam } = await supabase
     .from('exams')
     .select('*')
     .eq('date_available', today)
-    .eq('audience', ctx.audience)
+    .eq('audience', audience)
     .eq('status', 'published')
     .maybeSingle();
 
-  const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
+  const exam = (todayExam as Exam | null) ?? null;
+  const windowPhase = exam ? getExamWindowStatus(exam) : null;
 
-  let { data: attempt } = todayExam
+  let { data: attempt } = exam
     ? await supabase
         .from('attempts')
         .select('id, finished_at, submitted_automatically, forfeited')
-        .eq('exam_id', todayExam.id)
+        .eq('exam_id', exam.id)
         .eq('user_id', userId)
         .maybeSingle()
     : { data: null };
 
-  // Saiu da prova / aba abandonada → forfeit (antifraude)
   if (attempt && !attempt.finished_at && windowPhase === 'open') {
     const { createAdminClient } = await import('@/lib/supabase/admin');
     const admin = createAdminClient();
@@ -131,11 +77,97 @@ export default async function AlunoDashboard() {
     attempt = refreshed;
   }
 
-  const hasFinished = Boolean(attempt?.finished_at);
-  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
-  const rankingDate = getTodayRankingDate();
+  const trackLabel =
+    audience === 'nephrology'
+      ? shortTrackLabel(trackForDate(today))
+      : 'Residência (USP/ENARE)';
 
-  // Ranking só do grupo do aluno (nunca o geral entre ligas — isso é admin-only)
+  return {
+    key: audience,
+    exam,
+    trackLabel,
+    leagueLabel: audienceLabel(audience),
+    windowPhase,
+    canStart: Boolean(exam && windowPhase === 'open' && !attempt),
+    completed: Boolean(exam && attempt?.finished_at && !attempt?.forfeited),
+    forfeitedToday: Boolean(exam && attempt?.forfeited),
+    missedToday: Boolean(exam && windowPhase === 'after' && !attempt?.finished_at),
+    attemptId: attempt?.id,
+    qualityStatus: (exam as { quality_status?: string } | null)?.quality_status ?? null,
+    qualitySummary: (exam as { quality_summary?: string } | null)?.quality_summary ?? null,
+  };
+}
+
+export default async function AlunoDashboard() {
+  const session = await requireAuth();
+  if (!session.profile.active) redirect('/login?blocked=1');
+
+  const today = todayDateStringBrazil();
+  const ctx = await resolveUserExamAudience(session.userId);
+  const showNephrologyTreino = await canAccessNephrologyTreino(
+    session.userId,
+    session.profile
+  );
+
+  if (usesDemoStore()) {
+    ensureDemoSeedUsers();
+    const { userId } = session;
+    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
+      getDemoDashboardData(userId);
+
+    const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
+    const completed = Boolean(todayExam && attempt?.finished_at);
+    const forfeitedToday = Boolean(todayExam && attempt?.finished_at && attempt.forfeited);
+    const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
+
+    return (
+      <AlunoHomeSimple
+        name={session.profile.name}
+        userId={userId}
+        disputes={[
+          {
+            key: ctx.audience,
+            exam: todayExam,
+            trackLabel:
+              ctx.audience === 'nephrology'
+                ? shortTrackLabel(trackForDate(today))
+                : 'Residência (USP/ENARE)',
+            leagueLabel: ctx.leagueName ?? audienceLabel(ctx.audience),
+            windowPhase,
+            canStart,
+            completed,
+            forfeitedToday,
+            missedToday,
+            attemptId: attempt?.id,
+          },
+        ]}
+        showRanking={showRanking}
+        todayRankings={todayRankings}
+        rankingDate={rankingDate}
+        finishedToday={finishedToday}
+        streakDays={streakDays}
+        rankingGroupName={ctx.rankingGroupName ?? undefined}
+        showNephrologyTreino={showNephrologyTreino}
+      />
+    );
+  }
+
+  const supabase = await createClient();
+  const userId = session.userId;
+
+  const disputes: HomeDisputeCard[] = [];
+  for (const audience of ctx.audiences) {
+    disputes.push(await loadDisputeCard(supabase, userId, today, audience));
+  }
+
+  const rankingDate = getTodayRankingDate();
+  const primary = disputes[0] ?? null;
+  const hasFinishedAny = disputes.some((d) => d.completed || d.forfeitedToday);
+  const showRanking =
+    Boolean(primary?.exam) &&
+    canStudentSeeTodayRanking(primary?.exam ?? null, hasFinishedAny) &&
+    Boolean(ctx.rankingGroupId);
+
   let todayRankings = null;
   if (showRanking && ctx.rankingGroupId) {
     const { data } = await supabase
@@ -149,33 +181,16 @@ export default async function AlunoDashboard() {
     todayRankings = data;
   }
 
-  const canContinue = false; // antifraude: não há retomada
-  const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
-  const completed = Boolean(todayExam && attempt?.finished_at && !attempt?.forfeited);
-  const forfeitedToday = Boolean(todayExam && attempt?.forfeited);
-  const missedToday = Boolean(todayExam && windowPhase === 'after' && !attempt?.finished_at);
-
   return (
     <AlunoHomeSimple
-      name={profile.name ?? 'Aluno'}
+      name={session.profile.name ?? 'Aluno'}
       userId={userId}
-      todayExam={todayExam}
-      windowPhase={windowPhase}
-      canStart={canStart}
-      canContinue={canContinue}
-      completed={completed}
-      forfeitedToday={forfeitedToday}
-      missedToday={missedToday}
-      attemptId={attempt?.id}
-      showRanking={showRanking && Boolean(ctx.rankingGroupId)}
+      disputes={disputes}
+      showRanking={showRanking}
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}
-      trackLabel={trackLabel}
-      leagueLabel={leagueLabel ?? undefined}
       rankingGroupName={ctx.rankingGroupName ?? undefined}
       showNephrologyTreino={showNephrologyTreino}
-      qualityStatus={(todayExam as { quality_status?: string } | null)?.quality_status ?? null}
-      qualitySummary={(todayExam as { quality_summary?: string } | null)?.quality_summary ?? null}
     />
   );
 }

@@ -20,6 +20,16 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
+    return NextResponse.json(
+      {
+        error:
+          'SUPABASE_SERVICE_ROLE_KEY ausente na Vercel — necessária para gravar treinos (practice_sessions).',
+      },
+      { status: 503 }
+    );
+  }
+
   const body = await request.json().catch(() => ({}));
   const track = ((body as { track?: TreinoTrack }).track ?? 'nefropediatria') as TreinoTrack;
   const count = Number((body as { count?: number }).count) || 20;

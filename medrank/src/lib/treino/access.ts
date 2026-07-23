@@ -13,7 +13,7 @@ export async function canAccessNephrologyTreino(
 ): Promise<boolean> {
   if (profile?.role === 'admin') return true;
   const ctx = await resolveUserExamAudience(userId);
-  return ctx.audience === 'nephrology' && Boolean(ctx.leagueId);
+  return ctx.hasNephrology && Boolean(ctx.leagueId);
 }
 
 export async function requireNephrologyTreinoAccess(
