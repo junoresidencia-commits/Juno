@@ -104,10 +104,24 @@ async function pickTrackQuestions(
   dateStr: string
 ) {
   const tag = TRACK_CONFIG[track].tag;
-  const { data, error } = await admin.from('questions').select('*').contains('tags', [tag]);
-  if (error) throw new Error(error.message);
+  // Paginar: contains(tag) sozinho ainda pode cortar em 1000 no PostgREST.
+  const allTagged: Question[] = [];
+  const pageSize = 1000;
+  for (let page = 0; page < 10; page++) {
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+    const { data, error } = await admin
+      .from('questions')
+      .select('*')
+      .contains('tags', [tag])
+      .range(from, to);
+    if (error) throw new Error(error.message);
+    const rows = (data ?? []) as Question[];
+    allTagged.push(...rows);
+    if (rows.length < pageSize) break;
+  }
 
-  let pool = filterExpertPool((data ?? []) as Question[], count);
+  let pool = filterExpertPool(allTagged, count);
   const avoid = new Set(await recentQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
   if (fresh.length >= count) pool = fresh;
