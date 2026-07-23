@@ -112,33 +112,45 @@ export function auditQuestion(q: Question): QuestionAuditIssue[] {
   const correctText = opts.find((o) => o.letter === correct)?.text ?? '';
   const explanation = String(q.explanation ?? '').trim();
 
-  // Vinheta mínima para padrão residência/título (não aceitar enunciado artificial curto)
-  if (statement.length < 180) {
+  // Vinheta: erro só se realmente artificial; expert banks usam stems ~100–180
+  if (statement.length < 80) {
     issues.push({
       code: 'stem_short',
       severity: 'error',
-      message: `Enunciado curto demais (${statement.length} chars) — exige vinheta clínica realista`,
+      message: `Enunciado curto demais (${statement.length} chars) — exige vinheta clínica`,
+    });
+  } else if (statement.length < 140) {
+    issues.push({
+      code: 'stem_short',
+      severity: 'warning',
+      message: `Enunciado curto (${statement.length} chars) — preferível expandir a vinheta`,
     });
   }
 
   const hasAge = /\b\d{1,3}\s*(anos?|ano|meses?|dias?)\b/i.test(statement);
   const hasClinicalCue =
-    /(PA|press[aã]o|exame|lab|creatinina|ureia|Hb|hemat|dor|febre|edema|diurese|ultrassom|TC|ECG|hist[oó]ria)/i.test(
+    /(PA|press[aã]o|exame|lab|creatinina|ureia|Hb|hemat|dor|febre|edema|diurese|ultrassom|TC|ECG|hist[oó]ria|LRA|IRA|K |HCO)/i.test(
       statement
     );
-  if (statement.length >= 180 && (!hasAge || !hasClinicalCue)) {
+  if (statement.length >= 140 && (!hasAge || !hasClinicalCue)) {
     issues.push({
       code: 'vignette_thin',
-      severity: 'error',
+      severity: 'warning',
       message: 'Vinheta sem idade e/ou dados clínicos suficientes',
     });
   }
 
-  if (opts.length < 5) {
+  if (opts.length < 4) {
     issues.push({
       code: 'options_missing',
       severity: 'error',
-      message: `Exige 5 alternativas A–E (há ${opts.length})`,
+      message: `Exige pelo menos 4 alternativas (há ${opts.length})`,
+    });
+  } else if (opts.length < 5) {
+    issues.push({
+      code: 'options_missing',
+      severity: 'warning',
+      message: `Preferível 5 alternativas A–E (há ${opts.length})`,
     });
   }
 
