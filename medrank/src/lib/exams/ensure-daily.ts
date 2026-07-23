@@ -13,12 +13,13 @@ export type DualEnsureResult = {
 
 /** Garante disputa geral + disputa da Liga de Nefrologia para a data. */
 export async function ensureBothDailyExams(
-  dateStr = todayDateStringBrazil()
+  dateStr = todayDateStringBrazil(),
+  opts?: { force?: boolean }
 ): Promise<DualEnsureResult> {
   await ensureNephrologyLeague();
   // Sequencial: cada trilha faz dezenas de chamadas OpenAI (revisão + trocas).
-  const general = await ensureDailyGeneralExam(dateStr);
-  const nephrology = await ensureDailyNephrologyExam(dateStr);
+  const general = await ensureDailyGeneralExam(dateStr, opts);
+  const nephrology = await ensureDailyNephrologyExam(dateStr, opts);
   return { date: dateStr, general, nephrology };
 }
 

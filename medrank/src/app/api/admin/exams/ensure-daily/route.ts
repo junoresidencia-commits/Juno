@@ -8,10 +8,10 @@ import { todayDateStringBrazil } from '@/lib/exams/window';
 export const maxDuration = 300;
 
 /**
- * Gera/revisa apenas a disputa de HOJE (1×/dia).
- * Não aceita horizonte de vários dias — custo OpenAI.
+ * Gera/revisa a disputa de HOJE.
+ * body.force=true apaga as de hoje e regenera com IA (admin only).
  */
-export async function POST(_request: Request) {
+export async function POST(request: Request) {
   const auth = await requireAdminApi();
   if ('error' in auth) return auth.error;
 
@@ -25,13 +25,22 @@ export async function POST(_request: Request) {
     );
   }
 
+  let force = false;
+  try {
+    const body = (await request.json().catch(() => null)) as { force?: boolean } | null;
+    force = Boolean(body?.force);
+  } catch {
+    force = false;
+  }
+
   const league = await ensureNephrologyLeague();
 
   try {
-    const result = await ensureBothDailyExams(todayDateStringBrazil());
+    const result = await ensureBothDailyExams(todayDateStringBrazil(), { force });
     const err = result.general.error || result.nephrology.error;
     return NextResponse.json({
       ok: !err,
+      force,
       league,
       ...result,
       error: err || undefined,

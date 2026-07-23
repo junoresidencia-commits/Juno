@@ -7,7 +7,14 @@ export function EnsureDailyExamsButton() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function run() {
+  async function run(force: boolean) {
+    if (force) {
+      const ok = window.confirm(
+        'Forçar regenerar apaga as disputas de HOJE (e tentativas) e cria de novo com revisão IA.\n\nUse se qualidade=pending, 0 questões ou prova ruim. Continuar?'
+      );
+      if (!ok) return;
+    }
+
     setLoading(true);
     setMessage(null);
     setError(null);
@@ -15,7 +22,7 @@ export function EnsureDailyExamsButton() {
       const res = await fetch('/api/admin/exams/ensure-daily', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ today: true }),
+        body: JSON.stringify({ today: true, force }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -24,13 +31,21 @@ export function EnsureDailyExamsButton() {
       }
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
-      setMessage(
-        createdCount > 0
-          ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}).`
-          : data.general?.exam || data.nephrology?.exam
-            ? 'Já existiam as disputas de hoje — não reprocessa (1×/dia).'
-            : 'Não foi possível criar as provas de hoje'
-      );
+      if (force) {
+        setMessage(
+          createdCount > 0
+            ? `Disputa(s) regenerada(s) com IA (${createdCount}). Atualize a página.`
+            : 'Regeneração pedida, mas nada foi criado — veja o erro.'
+        );
+      } else {
+        setMessage(
+          createdCount > 0
+            ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}).`
+            : data.general?.exam || data.nephrology?.exam
+              ? 'Já existiam as disputas de hoje — use “Forçar regenerar” se estiverem ruins.'
+              : 'Não foi possível criar as provas de hoje'
+        );
+      }
       const err = data.general?.error || data.nephrology?.error || data.error;
       if (err) setError(err);
     } catch (e) {
@@ -42,18 +57,28 @@ export function EnsureDailyExamsButton() {
 
   return (
     <div className="space-y-2">
-      <button
-        type="button"
-        disabled={loading}
-        onClick={run}
-        className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-      >
-        {loading ? 'Gerando e revisando…' : 'Gerar disputa de hoje'}
-      </button>
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => void run(false)}
+          className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
+        >
+          {loading ? 'Gerando e revisando…' : 'Gerar disputa de hoje'}
+        </button>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => void run(true)}
+          className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-60"
+        >
+          Forçar regenerar
+        </button>
+      </div>
       <p className="text-xs text-slate-600">
-        Só hoje, uma vez por dia (geral + Liga de Nefrologia). Pipeline OpenAI: gerar →
-        revisar → trocar → publicar com 20/20. Se a disputa do dia já existe, não refaz.
-        Sem <code className="rounded bg-slate-100 px-1">OPENAI_API_KEY</code> não publica.
+        Só hoje. Pipeline OpenAI: gerar → revisar → trocar → publicar com 20/20. Se já existe e
+        está ruim (0 Q / pending), use <strong>Forçar regenerar</strong>. Sem{' '}
+        <code className="rounded bg-slate-100 px-1">OPENAI_API_KEY</code> não publica.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {error && <p className="text-sm text-red-700">{error}</p>}

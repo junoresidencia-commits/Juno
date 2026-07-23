@@ -126,7 +126,8 @@ async function pickTrackQuestions(
  * Idempotente: se já existir prova published/draft na data, retorna ela.
  */
 export async function ensureDailyNephrologyExam(
-  dateStr = todayDateStringBrazil()
+  dateStr = todayDateStringBrazil(),
+  opts?: { force?: boolean }
 ): Promise<EnsureDailyExamResult> {
   const track = trackForDate(dateStr);
 
@@ -168,8 +169,23 @@ export async function ensureDailyNephrologyExam(
     .eq('audience', 'nephrology')
     .maybeSingle();
 
-  if (existing) {
+  if (existing && !opts?.force) {
     return { date: dateStr, track, audience: 'nephrology', created: false, exam: existing };
+  }
+
+  if (existing && opts?.force) {
+    const { deleteDailyExamForRegen } = await import('@/lib/exams/delete-daily');
+    const wiped = await deleteDailyExamForRegen(admin, existing.id);
+    if (!wiped.ok) {
+      return {
+        date: dateStr,
+        track,
+        audience: 'nephrology',
+        created: false,
+        exam: existing,
+        error: wiped.error || 'Falha ao apagar disputa antiga para regenerar',
+      };
+    }
   }
 
   let selected: Question[] = [];
