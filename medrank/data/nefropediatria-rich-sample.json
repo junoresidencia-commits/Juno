@@ -34,7 +34,7 @@
       "bibliography": "IPNA Clinical Practice Recommendations for the Diagnosis and Management of Steroid-Sensitive Nephrotic Syndrome (Trautmann et al., 2023); KDIGO Glomerular Diseases 2021."
     },
     {
-      "id": "nefroped-x-000015",
+      "id": "nefroped-x-000021",
       "statement": "Menino de 7 anos com SN idiopática em uso de prednisolona 60 mg/m²/dia há 6 semanas sem remissão (albumina 1.6 g/dL, UPCR 5.8 mg/mg). Creatinina 0.6 mg/dL, PA controlada, C3 normal, FAN negativo. Qual é a melhor conduta neste momento?",
       "option_a": "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -64,7 +64,7 @@
       "bibliography": "IPNA Clinical Practice Recommendations for the Diagnosis and Management of Steroid-Resistant Nephrotic Syndrome (Trautmann et al., Pediatr Nephrol 2020)."
     },
     {
-      "id": "nefroped-x-000029",
+      "id": "nefroped-x-000041",
       "statement": "Menino de 6 anos com SN corticossensível, em remissão há 4 meses após tratamento inicial. Após IVAS, reaparece edema palpebral, ganho ponderal e UPCR 3.6 mg/mg (albumina 2.5 g/dL). Sem dor abdominal, febre ou sinais neurológicos. Qual é a melhor conduta?",
       "option_a": "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Reiniciar prednisolona 60 mg/m²/dia até 3 dias após remissão da proteinúria, seguido de 40 mg/m²/dose em dias alternados por 4 semanas, tratando o gatilho infeccioso conforme necessário",
@@ -94,7 +94,7 @@
       "bibliography": "IPNA SSNS Recommendations 2023; SBP Diretrizes de Nefropediatria."
     },
     {
-      "id": "nefroped-x-000043",
+      "id": "nefroped-x-000061",
       "statement": "Menino de 6 anos com SN idiopática apresenta 3 recidivas em 12 meses, sendo 2 delas durante a redução do corticoide (características de cortico-dependência). Peso está no percentil 97 e altura desacelerando; presença de fácies cushingoide e HAS incipiente. Qual é a próxima estratégia terapêutica mais indicada?",
       "option_a": "Introduzir agente poupador de corticoide (levamisol, micofenolato de mofetila, inibidor de calcineurina ou rituximabe conforme perfil) e planejar desmame do corticoide",
       "option_b": "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -124,7 +124,7 @@
       "bibliography": "IPNA SSNS Recommendations 2023."
     },
     {
-      "id": "nefroped-x-000057",
+      "id": "nefroped-x-000081",
       "statement": "Menino de 4 anos com SN em atividade (ascite, albumina baixa) apresenta há 12 h dor abdominal difusa, febre 39 °C, defesa localizada em fossa ilíaca direita e leucocitose. Sem cirurgia prévia. Qual é a principal preocupação e a melhor conduta?",
       "option_a": "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Peritonite bacteriana espontânea (Streptococcus pneumoniae, gram-negativos): paracentese diagnóstica, hemocultura e antibiótico empírico endovenoso (cobertura para pneumococo e…",
@@ -154,7 +154,7 @@
       "bibliography": "IPNA SSNS 2023 — Complications; SBP."
     },
     {
-      "id": "nefroped-x-000071",
+      "id": "nefroped-x-000101",
       "statement": "Menino de 8 anos com SN grave (albumina 1.4 g/dL) queixa dor e edema assimétrico em membro inferior direito. Sem febre. Qual é a melhor conduta?",
       "option_a": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção.",
       "option_b": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
@@ -184,7 +184,7 @@
       "bibliography": "Kerlin BA et al., Thrombosis in nephrotic syndrome; IPNA."
     },
     {
-      "id": "nefroped-x-000085",
+      "id": "nefroped-x-000121",
       "statement": "RN de 1 meses (4.6 kg) com edema, ascite, albumina 1.2 g/dL e proteinúria maciça (UPCR 19.5 mg/mg) desde o nascimento. Placenta grande à revisão do parto. Qual é a hipótese principal e a melhor conduta?",
       "option_a": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor.",
       "option_b": "SN congênita (tipo finlandês / NPHS1, NPHS2, WT1): suporte agressivo (albumina, nutrição hipercalórica, IECA, indometacina em protocolo, tromboprofilaxia), investigação genética e…",
@@ -214,7 +214,7 @@
       "bibliography": "IPNA Congenital NS reviews; Jalanko H., Pediatr Nephrol."
     },
     {
-      "id": "nefroped-x-000099",
+      "id": "nefroped-x-000141",
       "statement": "Menino de 8 anos apresenta há 3 dias hematúria macroscópica (\"coca-cola\"), edema periorbital e cefaleia. História de impetigo há 3 semanas. PA 146×88 mmHg (> P95 + 12 mmHg). C3 42 mg/dL (baixo), C4 normal, ASLO/anti-DNase B elevados, creatinina 1.1 mg/dL. Qual é a melhor conduta?",
       "option_a": "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
@@ -244,7 +244,7 @@
       "bibliography": "KDIGO Glomerular Diseases 2021; SBP Nefropediatria."
     },
     {
-      "id": "nefroped-x-000113",
+      "id": "nefroped-x-000161",
       "statement": "Menino de 12 anos inicia hematúria macroscópica no mesmo dia de faringite aguda, sem edema significativo. C3 110 mg/dL (normal), creatinina 0.7 mg/dL, UPCR 0.4 mg/mg. Repete hematúria em outras IVAS. Qual é a hipótese diagnóstica mais provável?",
       "option_a": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de. estratégia que não aborda o mecanismo principal deste caso",
       "option_b": "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico. estratégia que não aborda o mecanismo principal deste caso",
@@ -274,7 +274,7 @@
       "bibliography": "KDIGO Glomerular Diseases 2021 (IgA); IPNA."
     },
     {
-      "id": "nefroped-x-000127",
+      "id": "nefroped-x-000181",
       "statement": "Menino de 6 anos com púrpura palpável em membros inferiores há 10 dias, artralgia, dor abdominal cólica e evacuações com sangue. Urina I com hematúria dismórfica e UPCR 1.8 mg/mg; creatinina 0.6 mg/dL. Sem HAS. Qual é a conduta nefrológica inicial mais adequada?",
       "option_a": "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -304,7 +304,7 @@
       "bibliography": "SHARE/IPNA recommendations for IgA vasculitis nephritis."
     },
     {
-      "id": "nefroped-x-000141",
+      "id": "nefroped-x-000201",
       "statement": "Menino de 3 anos internado há 5 dias por diarreia sanguinolenta evolui com palidez intensa, oligúria e edema. Hb 7.2 g/dL, plaquetas 42000/µL, esquizócitos ao esfregaço, LDH elevado, creatinina 2.5 mg/dL e K 5.8 mEq/L. Qual é a conduta inicial mais adequada?",
       "option_a": "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -334,7 +334,7 @@
       "bibliography": "IPNA STEC-HUS/aHUS guidance; Loirat C., Frémeaux-Bacchi V."
     },
     {
-      "id": "nefroped-x-000155",
+      "id": "nefroped-x-000221",
       "statement": "Menino de 2 anos apresenta MAHA + plaquetopenia + LRA (creatinina 3 mg/dL) SEM diarreia prodrômica, com C3 60 mg/dL. Após suporte inicial, tem recidiva. Qual é a linha diagnóstica e terapêutica mais adequada?",
       "option_a": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência.",
       "option_b": "Suspeitar SHU atípica (desregulação do complemento; mutações em CFH, CFI, C3, MCP): dosar ADAMTS13 (afastar PTT), painel de complemento e genética",
@@ -364,7 +364,7 @@
       "bibliography": "IPNA aHUS guideline (Loirat C., Fakhouri F., Ariceta G., 2016)."
     },
     {
-      "id": "nefroped-x-000169",
+      "id": "nefroped-x-000241",
       "statement": "Adolescente de 13 anos com hematúria, proteinúria UPCR 3, oligúria, hemoptise leve e creatinina 3.7 mg/dL em 10 dias. C3 normal, ANCA-MPO positivo. Qual é a melhor conduta?",
       "option_a": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor.",
       "option_b": "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -394,7 +394,7 @@
       "bibliography": "KDIGO Vasculitis 2024; PEXIVAS; SHARE."
     },
     {
-      "id": "nefroped-x-000183",
+      "id": "nefroped-x-000261",
       "statement": "Adolescente de 15 anos com LES (FAN 1:1280, anti-dsDNA alto, C3 40 mg/dL baixo, C4 baixo), UPCR 3.3, hematúria e creatinina 1.4 mg/dL. Biópsia: nefrite lúpica classe IV (proliferativa difusa). Qual é o esquema de indução mais indicado?",
       "option_a": "Corticoide em pulso 30 mg/kg/dia (máx 1 g) por 3 dias seguido de 1 mg/kg/dia com desmame + micofenolato de mofetila 600 mg/m² 2× dia OU ciclofosfamida (regime NIH/Euro-lupus), associado…",
       "option_b": "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -424,7 +424,7 @@
       "bibliography": "KDIGO Lupus Nephritis 2024; SHARE/CARRA pediatric LN."
     },
     {
-      "id": "nefroped-x-000197",
+      "id": "nefroped-x-000281",
       "statement": "Menino de 9 anos com hematúria microscópica persistente desde os 3 anos, agora com proteinúria UPCR 0.6; tio materno em diálise aos 30 anos. Audiometria: perda auditiva neurossensorial bilateral em altas frequências. Qual é a hipótese diagnóstica mais provável e a melhor conduta?",
       "option_a": "Síndrome de Alport (COL4A3/4/5): confirmar por genética (preferível a biópsia), iniciar IECA precoce assim que houver microalbuminúria/proteinúria, rastrear irmãos e mãe (portadora)",
       "option_b": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -454,7 +454,7 @@
       "bibliography": "Expert Guidelines for Diagnosis of Alport Syndrome (Kashtan, Gross et al., Kidney Int 2018)."
     },
     {
-      "id": "nefroped-x-000211",
+      "id": "nefroped-x-000301",
       "statement": "Lactente de 8 meses (7.3 kg), sexo masculino, com febre há 48 h sem foco. Urina coletada por cateterismo: >5 leucócitos/campo, nitrito positivo, cultura com E. coli >100 000 UFC/mL sensível a cefalosporinas. Boa resposta clínica. Qual exame ou conduta deve ser solicitado a seguir?",
       "option_a": "Suspender todos os antidiabéticos e iniciar apenas dieta, sem alternativa farmacológica para o controle glicêmico Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Ultrassonografia de rins e vias urinárias após o primeiro episódio de ITU febril em <2 anos; UCG e/ou DMSA conforme achados (US alterada, ITU atípica, recorrência)",
@@ -484,7 +484,7 @@
       "bibliography": "AAP UTI Guideline (2011, reaffirmed); NICE; SBP."
     },
     {
-      "id": "nefroped-x-000225",
+      "id": "nefroped-x-000321",
       "statement": "Menino de 3 anos com 3 ITU febris em 6 meses; US renal normal. Sem constipação. Qual exame deve ser solicitado a seguir?",
       "option_a": "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Investigar refluxo vesicoureteral (uretrocistografia miccional), disfunção miccional (histórico + diário miccional; urodinâmica em selecionados) e cintilografia com DMSA para cicatrizes",
@@ -514,7 +514,7 @@
       "bibliography": "AAP; ESPU; SBP."
     },
     {
-      "id": "nefroped-x-000239",
+      "id": "nefroped-x-000341",
       "statement": "Menino de 2 anos com ITU febril recorrente; UCG mostra RVU grau III unilateral com rim funcional e contralateral normal, sem disfunção miccional. Qual é a conduta inicial mais adequada?",
       "option_a": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Conduta conservadora: profilaxia antibiótica em selecionados (crianças <1 ano, RVU alto grau com PNA ou disfunção miccional), tratamento vigoroso das ITU, controle de constipação, US e…",
@@ -544,7 +544,7 @@
       "bibliography": "AUA/ESPU VUR guideline; RIVUR trial."
     },
     {
-      "id": "nefroped-x-000253",
+      "id": "nefroped-x-000361",
       "statement": "RN masculino de 11 dias com massa hipogástrica palpável, jato urinário fraco em gotas, ureterohidronefrose bilateral à US, bexiga espessada e creatinina 1.7 mg/dL. Qual é a prioridade imediata de manejo?",
       "option_a": "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -574,7 +574,7 @@
       "bibliography": "Pediatric urology consensus; IPNA."
     },
     {
-      "id": "nefroped-x-000267",
+      "id": "nefroped-x-000381",
       "statement": "RN de 18 dias nascido a termo com hidronefrose antenatal moderada unilateral (SFU 3); pós-natal estável, diurese normal, US confirma dilatação pielocalicial sem ureter dilatado. Qual é a conduta inicial mais adequada?",
       "option_a": "Seguimento com US seriadas (primeira ao redor de 4–6 semanas de vida) e avaliação urológica; investigação adicional (renograma diurético, UCG) se progressão ou ITU",
       "option_b": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",

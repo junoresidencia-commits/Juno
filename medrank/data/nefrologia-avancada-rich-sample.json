@@ -34,7 +34,7 @@
       "bibliography": "KDIGO AKI 2012; Surviving Sepsis 2021."
     },
     {
-      "id": "nefroadv-x-000015",
+      "id": "nefroadv-x-000021",
       "statement": "Homem de 68 anos internado por infarto complicado com choque cardiogênico, recebeu contraste iodado e aminoglicosídeo. Creatinina 3.2, FENa 2.9%, sedimento com cilindros granulosos pigmentados, U/P creatinina baixa. Sem obstrução. Qual é o diagnóstico mais provável e a melhor conduta?",
       "option_a": "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -64,7 +64,7 @@
       "bibliography": "KDIGO AKI 2012; NEJM AKI reviews."
     },
     {
-      "id": "nefroadv-x-000029",
+      "id": "nefroadv-x-000041",
       "statement": "Homem de 82 anos com DRC (TFG 26.8) precisa realizar angioTC para investigar embolia. Qual é a melhor estratégia preventiva de LRA associada a contraste?",
       "option_a": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -94,7 +94,7 @@
       "bibliography": "PRESERVE trial (NEJM 2018); ACR contrast manual; KDIGO."
     },
     {
-      "id": "nefroadv-x-000043",
+      "id": "nefroadv-x-000061",
       "statement": "Homem de 50 anos em uso de omeprazol e amoxicilina/clavulanato há 3 semanas apresenta creatinina 2.7, exantema, febre baixa e eosinofilia periférica. Sedimento urinário com leucócitos e cilindros leucocitários; US sem obstrução. Qual é a melhor conduta?",
       "option_a": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -124,7 +124,7 @@
       "bibliography": "Praga M, Perazella MA — AIN reviews; KDIGO AKI."
     },
     {
-      "id": "nefroadv-x-000057",
+      "id": "nefroadv-x-000081",
       "statement": "Homem de 50 anos com LRA anúrica, K 7.2 mEq/L refratário a medidas conservadoras, acidose (pH 7,05, HCO₃ 10) e edema agudo de pulmão em ventilação mecânica. Qual é a melhor conduta?",
       "option_a": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor.",
       "option_b": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -154,7 +154,7 @@
       "bibliography": "KDIGO AKI; STARRT-AKI trial."
     },
     {
-      "id": "nefroadv-x-000071",
+      "id": "nefroadv-x-000101",
       "statement": "Homem de 50 anos em choque séptico sob noradrenalina alta, anúrico, K 6.6, acidose. Qual é a melhor modalidade e a prescrição inicial de diálise?",
       "option_a": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -184,7 +184,7 @@
       "bibliography": "KDIGO AKI; ATN, RENAL, IVOIRE trials."
     },
     {
-      "id": "nefroadv-x-000085",
+      "id": "nefroadv-x-000121",
       "statement": "Homem de 37 anos após esmagamento em acidente, CK 85000 U/L, mioglobinúria, K 6, creatinina 2.9. Qual é a conduta inicial mais adequada?",
       "option_a": "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
       "option_b": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
@@ -214,7 +214,7 @@
       "bibliography": "Bosch X et al., NEJM Rhabdomyolysis."
     },
     {
-      "id": "nefroadv-x-000099",
+      "id": "nefroadv-x-000141",
       "statement": "Homem de 57 anos com cirrose Child C e ascite, creatinina sobe para 2.9 mg/dL, urinálise sem cilindros, US sem obstrução; sem nefrotóxicos, sem choque; sem melhora após 48 h de albumina 1 g/kg/dia e retirada de diuréticos. Qual é a melhor conduta?",
       "option_a": "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Reduzir a PA à normalidade em menos de 30 minutos com nifedipina sublingual repetida até o alvo Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -244,7 +244,7 @@
       "bibliography": "International Club of Ascites HRS 2015/2019; CONFIRM trial; EASL/AASLD."
     },
     {
-      "id": "nefroadv-x-000113",
+      "id": "nefroadv-x-000161",
       "statement": "Homem de 75 anos com IC de FE reduzida (FE 29.5%), congestão pulmonar e edema periférico, creatinina 2 após aumento de diurético de alça. Qual é a melhor estratégia terapêutica?",
       "option_a": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
       "option_b": "Manter descongestão adequada: aumentar dose ou associar diuréticos (bloqueio sequencial com tiazídico ou acetazolamida",
@@ -274,7 +274,7 @@
       "bibliography": "ADVOR trial (NEJM 2022); Cardiorenal syndrome reviews; ESC HF."
     },
     {
-      "id": "nefroadv-x-000127",
+      "id": "nefroadv-x-000181",
       "statement": "Homem de 65 anos com HAS e osteoartrose usa losartana, hidroclorotiazida e ibuprofeno diário. Após episódio de gastroenterite, creatinina sobe para 1.9 (basal 1,0). Qual é a interpretação correta e a melhor conduta?",
       "option_a": "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos Esta abordagem atrasa a terapia com melhor.",
@@ -304,7 +304,7 @@
       "bibliography": "KDIGO AKI drug-induced."
     },
     {
-      "id": "nefroadv-x-000141",
+      "id": "nefroadv-x-000201",
       "statement": "Homem de 58 anos com DM2, DRC (TFG 41.7 mL/min/1,73 m²), UACR 495.8 mg/g, PA 138/82 em uso de IECA dose máxima tolerada; K 4,6; HbA1c 8,0%. Qual medicamento deve ser iniciado para maior impacto renal e cardiovascular?",
       "option_a": "Manter metformina na dose plena e acrescentar AINE para proteção renal, sem revisar a TFG atual",
       "option_b": "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
@@ -334,7 +334,7 @@
       "bibliography": "KDIGO Diabetes in CKD 2022; DAPA-CKD, EMPA-KIDNEY, FIDELIO-DKD, CREDENCE."
     },
     {
-      "id": "nefroadv-x-000155",
+      "id": "nefroadv-x-000221",
       "statement": "Homem de 53 anos com DRC não-diabética (TFG 38.2, UPCR 1.3), PA 132/80 em IECA dose plena. Qual alternativa está de acordo com a diretriz mais atual?",
       "option_a": "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal) Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Manter metformina na dose plena e acrescentar AINE para proteção renal, sem revisar a TFG atual Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -364,7 +364,7 @@
       "bibliography": "KDIGO CKD 2024 update; EMPA-KIDNEY."
     },
     {
-      "id": "nefroadv-x-000169",
+      "id": "nefroadv-x-000241",
       "statement": "Homem de 57 anos com DRC estágio 5 (TFG 14.7 mL/min/1,73 m²), PA e volemia adequadas, sem asterixe, pericardite, anorexia significativa ou distúrbios eletrolíticos refratários. Está em acompanhamento nefrológico regular. Qual é a melhor conduta neste momento?",
       "option_a": "Preparo antecipado: educação multidisciplinar sobre modalidades (HD/DP/Tx), planejamento de acesso (fístula com antecedência ≥3–6 meses), avaliação para Tx preemptivo, controle de…",
       "option_b": "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -394,7 +394,7 @@
       "bibliography": "IDEAL trial; KDIGO CKD; KDOQI vascular access."
     },
     {
-      "id": "nefroadv-x-000183",
+      "id": "nefroadv-x-000261",
       "statement": "Homem de 64 anos negro, obeso, com massa muscular reduzida, deseja estimar TFG. Qual alternativa está de acordo com a diretriz mais atual?",
       "option_a": "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para. estratégia que não aborda o mecanismo principal deste caso",
       "option_b": "Usar equação CKD-EPI 2021 (sem coeficiente racial) baseada em creatinina. conduta preferencial neste contexto",
@@ -424,7 +424,7 @@
       "bibliography": "CKD-EPI 2021 (Inker LA et al., NEJM); NKF-ASN task force."
     },
     {
-      "id": "nefroadv-x-000197",
+      "id": "nefroadv-x-000281",
       "statement": "Homem de 56 anos com DRC estágio 4, HCO₃ 18 mEq/L persistente em duas dosagens, ânion gap normal, sem hipernatremia. Sem sintomas de sobrecarga volêmica. Qual é o tratamento mais indicado para a acidose metabólica crônica?",
       "option_a": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Corrigir com bicarbonato de sódio oral (0,5–1 mEq/kg/dia titulado) para HCO₃ alvo ≥22 mEq/L, com o objetivo de retardar progressão da DRC, preservar massa muscular e melhorar CKD-MBD",
@@ -454,7 +454,7 @@
       "bibliography": "KDIGO CKD; de Brito-Ashurst et al., JASN."
     },
     {
-      "id": "nefroadv-x-000211",
+      "id": "nefroadv-x-000301",
       "statement": "Homem de 57 anos com edema, albumina 2 g/dL, proteinúria 7.6 g/24 h, FAN/ANCA negativos, anti-PLA2R sérico positivo em títulos altos, rastreio de neoplasia negativo, TFG preservada. Qual é a melhor conduta?",
       "option_a": "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -484,7 +484,7 @@
       "bibliography": "KDIGO Glomerular Diseases 2021; MENTOR (NEJM 2019)."
     },
     {
-      "id": "nefroadv-x-000225",
+      "id": "nefroadv-x-000321",
       "statement": "Mulher de 28 anos com LES ativo, UPCR 4.1 g/g, hematúria dismórfica, hipocomplementemia, anti-dsDNA alto, creatinina 1.5. Biópsia: classe IV. Qual é o esquema de indução mais indicado segundo as diretrizes atuais?",
       "option_a": "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
@@ -514,7 +514,7 @@
       "bibliography": "KDIGO Lupus Nephritis 2024; ACR/EULAR 2019; BLISS-LN; AURORA."
     },
     {
-      "id": "nefroadv-x-000239",
+      "id": "nefroadv-x-000341",
       "statement": "Mulher de 30 anos com LES e SN (albumina 2, proteinúria 6.3); creatinina normal; biópsia mostra classe V pura (nefrite membranosa lúpica). Qual é a melhor conduta?",
       "option_a": "HCQ + nefroproteção (IECA/BRA), estatina se dislipidemia, considerar anticoagulação se albumina muito baixa",
       "option_b": "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
@@ -544,7 +544,7 @@
       "bibliography": "KDIGO LN; ACR/EULAR."
     },
     {
-      "id": "nefroadv-x-000253",
+      "id": "nefroadv-x-000361",
       "statement": "Homem de 64 anos com hemoptise, IRA (creatinina 4.1), sedimento com hematúria dismórfica e cilindros hemáticos, ANCA-MPO positivo. Qual é a melhor conduta?",
       "option_a": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência.",
       "option_b": "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
@@ -574,7 +574,7 @@
       "bibliography": "KDIGO Vasculitis 2024; PEXIVAS (NEJM 2020); RAVE; RITUXVAS."
     },
     {
-      "id": "nefroadv-x-000267",
+      "id": "nefroadv-x-000381",
       "statement": "Homem de 34 anos com hemorragia alveolar, creatinina 5.7 em 5 dias e anti-MBG positivo. Qual é o tratamento clássico mais indicado?",
       "option_a": "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       "option_b": "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",

@@ -36,7 +36,7 @@ const ADV_MASTERS = [
 ];
 
 const ROOT = path.join(__dirname, '..');
-const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 14));
+const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 20));
 
 /** DB enum difficulty vs. label do banco expert. */
 const DIFFICULTY_LABEL_TO_DB = {

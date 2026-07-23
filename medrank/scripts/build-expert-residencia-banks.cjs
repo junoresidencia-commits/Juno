@@ -13,7 +13,7 @@ const { RES_MASTERS_EXTRA } = require('./expert-masters-residencia-extra.cjs');
 const RES_MASTERS = [...RES_BASE, ...RES_MASTERS_EXTRA];
 
 const ROOT = path.join(__dirname, '..');
-const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 14));
+const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 20));
 
 const DIFFICULTY_LABEL_TO_DB = {
   basico: 'facil',
