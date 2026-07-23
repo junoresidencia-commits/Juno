@@ -15,9 +15,11 @@ const { PED_MASTERS_EXTRA } = require('./expert-masters-nefropediatria-extra.cjs
 const { ADV_MASTERS_EXTRA } = require('./expert-masters-nefrologia-extra.cjs');
 const { PED_MASTERS_EXTRA2 } = require('./expert-masters-nefropediatria-extra2.cjs');
 const { ADV_MASTERS_EXTRA2 } = require('./expert-masters-nefrologia-extra2.cjs');
+const { PED_MASTERS_EXTRA3 } = require('./expert-masters-nefropediatria-extra3.cjs');
+const { ADV_MASTERS_EXTRA3 } = require('./expert-masters-nefrologia-extra3.cjs');
 
-const PED_MASTERS = [...PED_BASE, ...PED_MASTERS_EXTRA, ...PED_MASTERS_EXTRA2];
-const ADV_MASTERS = [...ADV_BASE, ...ADV_MASTERS_EXTRA, ...ADV_MASTERS_EXTRA2];
+const PED_MASTERS = [...PED_BASE, ...PED_MASTERS_EXTRA, ...PED_MASTERS_EXTRA2, ...PED_MASTERS_EXTRA3];
+const ADV_MASTERS = [...ADV_BASE, ...ADV_MASTERS_EXTRA, ...ADV_MASTERS_EXTRA2, ...ADV_MASTERS_EXTRA3];
 
 const ROOT = path.join(__dirname, '..');
 const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 12));
@@ -261,8 +263,8 @@ function writeRich(file, masters, track) {
   );
 }
 
-if (PED_MASTERS.length < 170) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 170`);
-if (ADV_MASTERS.length < 180) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 180`);
+if (PED_MASTERS.length < 210) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 210`);
+if (ADV_MASTERS.length < 230) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 230`);
 
 const ped = buildTrack(PED_MASTERS, 'nefropediatria');
 const adv = buildTrack(ADV_MASTERS, 'nefrologia-avancada');
