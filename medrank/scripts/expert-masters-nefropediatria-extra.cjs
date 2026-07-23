@@ -14,10 +14,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} ({{weight}} kg) com síndrome nefrótica corticoresistente. Biópsia: LESFS. Painel genético: variante patogênica em NPHS2 (podocina). Qual é a conduta terapêutica mais adequada?",
     options: {
-      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
-      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
       C: "Evitar imunossupressão intensiva inútil; aconselhar genética familiar, suporte + IECA/BRA e considerar ensaios/terapia alvo conforme a variante; discutir prognóstico com a família",
-      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado."
     },
     correct: "C",
     explanation: "Formas monogênicas (NPHS1/NPHS2/WT1) respondem mal à imunossupressão clássica. Priorizar genética, nefroproteção e evitar toxicidade. A e C pressupõem resposta imune-mediada. D é extremo sem indicação. Pearl: corticoresistência + genética positiva muda o algoritmo.",
@@ -35,8 +35,8 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com SN corticodependente frequente, já falhou ciclofosfamida e MMF. Remissão com prednisona, mas recai ao reduzir. Qual é o próximo passo com melhor evidência para poupar esteroide?",
     options: {
       A: "Rituximabe (anti-CD20) em centro experiente, com monitoramento de linfócitos B e risco infeccioso",
-      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
-      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou.",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou.",
+      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
       D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
     },
     correct: "A",
@@ -54,9 +54,9 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com SN em remissão sob prednisona baixa + MMF. Os pais perguntam sobre vacina de varicela viva. Qual é a conduta correta?",
     options: {
-      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
-      B: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
-      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      A: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
       D: "Vacinas vivas contraindicadas sob imunossupressão significativa; priorizar inativadas (influenza, pneumococo) e imunizar conviventes"
     },
     correct: "D",
@@ -96,9 +96,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com quadro inicial compatível com PSGN, porém C3 permanece baixo após 12 semanas e há proteinúria nefrótica persistente. Qual é o próximo passo?",
     options: {
       A: "Biópsia renal e investigação de glomerulopatias C3-persistentes / outras GN. conduta preferencial neste contexto",
-      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
-      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
-      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de."
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de. estratégia que não aborda o mecanismo principal deste caso",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas. estratégia que não aborda o mecanismo principal deste caso"
     },
     correct: "A",
     explanation: "Hipocomplementemia persistente >8–12 semanas é atípica para PSGN clássica e exige biópsia (C3G, LES, etc.). Pearl: C3 que não sobe = não feche como PSGN.",
@@ -117,8 +117,8 @@ const PED_MASTERS_EXTRA = [
     options: {
       A: "Suporte intensivo (volume/eletrólitos/diálise se preciso); evitar antibiótico/antimotilidade de rotina na fase diarreica STEC",
       B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
-      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
-      D: "Aumentar imunossupressão empiricamente sem biópsia nem níveis, diante de qualquer elevação de creatinina Esta abordagem atrasa a terapia com melhor."
+      C: "Aumentar imunossupressão empiricamente sem biópsia nem níveis, diante de qualquer elevação de creatinina Esta abordagem atrasa a terapia com melhor.",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
     correct: "A",
     explanation: "SHU-STEC: suporte; eculizumab reservado a atípicas/selecionados; antibiótico pode piorar liberação de toxina em alguns contextos. Pearl: diarreia + MAT = suporte primeiro.",
@@ -135,10 +135,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Lactente de {{age}} ano(s) sem diarreia, MAT recorrente, C3 baixo, história familiar. Painel: variante em CFH. Qual é o tratamento de escolha para prevenir recorrência?",
     options: {
-      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial.",
+      A: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica",
       B: "Inibidor terminal do complemento (eculizumab/ravulizumab) + suporte, com vacinação meningocócica",
-      C: "Aguardar culturas negativas por 48–72 h antes de qualquer antimicrobiano, mesmo em choque ou disfunção orgânica",
-      D: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana"
+      C: "Usar apenas antipirético e hidratação oral, reservando antibiótico para falha clínica após uma semana",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial."
     },
     correct: "B",
     explanation: "SHUa por defeito de complemento: bloqueio C5 é padrão em muitos centros; vacinar contra meningococo. Pearl: HUS sem diarreia + CFH = pense C5i.",
@@ -156,9 +156,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com MAT, citopenias e hemoglobinúria noturna. Citometria de fluxo: clone PNH. Qual é a implicação renal/terapêutica?",
     options: {
       A: "PNH pode causar MAT/IRA; eculizumab/ravulizumab trata hemólise e protege rim; anticoagular conforme risco trombótico",
-      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
-      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
-      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica"
+      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
     },
     correct: "A",
     explanation: "PNH é diferencial raro de MAT; bloqueio C5 é terapia chave e reduz trombose. Pearl: hemoglobinúria + MAT = pedir clone PNH.",
@@ -176,9 +176,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Lactente de {{age}} com GECA, taquicardia, enchimento capilar lento, creatinina elevada, ureia/creatinina alta, FENa baixa. Qual é a melhor conduta inicial?",
     options: {
       A: "Reposição volêmica isotônica criteriosa e reavaliação; evitar diurético de alça antes de restaurar volume",
-      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
-      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
-      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
     correct: "A",
     explanation: "IRA pré-renal: volume primeiro; diurético só se congestão. Dopamina renal não tem papel. Pearl: FENa baixa + hipovolemia = reidratar.",
@@ -195,9 +195,9 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com LLA de alta carga iniciando quimioterapia. Qual profilaxia de síndrome de lise tumoral é mais adequada em alto risco?",
     options: {
-      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
       B: "Hidratação vigorosa + hipouricêmico (alopurinol ou rasburicase conforme risco) e monitorização laboratorial seriada",
-      C: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
       D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
     },
     correct: "B",
@@ -215,9 +215,9 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Lactente masculino de {{age}} com hidronefrose pré-natal bilateral, ITU febril, VCUG: RVU grau IV bilateral. Além do tratamento da ITU aguda, qual estratégia comum de prevenção?",
     options: {
-      A: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
-      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
-      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
       D: "Profilaxia antibiótica contínua selecionada + seguimento urológico; considerar cirurgia se breakthroughs ou piora"
     },
     correct: "D",
@@ -236,9 +236,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com DRC estágio 4, Hb {{hb}} g/dL, ferritina e saturação adequadas após reposição de ferro. Qual é o próximo passo para anemia?",
     options: {
       A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
       C: "Iniciar agente estimulador de eritropoiese (EPO/darbepoetina) com alvo individualizado, evitando Hb excessiva",
-      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses"
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "C",
     explanation: "Anemia da DRC: ferro adequado + AEE com alvos seguros pediátricos. Transfusão crônica traz aloimunização. Pearl: corrija ferro antes e com AEE.",
@@ -256,9 +256,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} em DRC, altura <P3 apesar de nutrição otimizada, acidose e hiperparatireoidismo controlados. Qual indicação é mais clara?",
     options: {
       A: "Hormônio de crescimento recombinante (rhGH) sob protocolo nefropediátrico. conduta preferencial neste contexto",
-      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar.",
-      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se.",
-      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de."
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se. estratégia que não aborda o mecanismo principal deste caso",
+      C: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar. estratégia que não aborda o mecanismo principal deste caso"
     },
     correct: "A",
     explanation: "rhGH é indicado em falha de crescimento da DRC após otimizar fatores corrigíveis. Pearl: crescer também é desfecho renal pediátrico.",
@@ -276,9 +276,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com HAS estágio 2, sopro abdominal, assimetria de membros, creatinina normal. Qual é a suspeita principal e o exame?",
     options: {
       A: "Hipertensão renovascular (estenose); angiografia/angiorressonância ou Doppler especializado",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
-      C: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV",
-      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e."
+      B: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica."
     },
     correct: "A",
     explanation: "HAS grave em criança: investigar secundária; renovascular é clássica (sopro, assimetria). Pearl: sopro + HAS = imagem vascular.",
@@ -296,9 +296,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Adolescente de {{age}} com DRC, proteinúria e HAS. Qual anti-hipertensivo é preferencial (sem contraindicação)?",
     options: {
       A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
-      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
       C: "IECA ou BRA (nefroproteção) + otimização de estilo de vida. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "C",
     explanation: "IECA/BRA são pedra angular na DRC proteinúrica pediátrica, com monitorização de K e creatinina. Pearl: antiproteinúrico = anti-hipertensivo de escolha.",
@@ -315,10 +315,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com falha de crescimento, hipercloremia, bicarbonato baixo, ânion gap urinário positivo, hipocalemia e nefrocalcinose. Qual diagnóstico é mais provável?",
     options: {
-      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
       C: "Acidose tubular renal distal (tipo 1). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
     correct: "C",
     explanation: "ATR distal: acidose hiperclorêmica + incapacidade de acidificar urina + nefrocalcinose/cálculos. Pearl: nefrocalcinose + acidose = pense ATR 1.",
@@ -335,10 +335,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com cãibras, hipocalemia, hipomagnesemia, hipocalciúria, PA normal/baixa. Qual diagnóstico é mais provável?",
     options: {
-      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
       B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora.",
       C: "Síndrome de Gitelman. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio"
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "C",
     explanation: "Gitelman (NCC): hipocalemia, hipomagnesemia, hipocalciúria, PA baixa/normal. Bartter tende a hipercalciúria. Pearl: adolescente + Mg baixo + hipocalciúria = Gitelman.",
@@ -356,9 +356,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Lactente menino de {{age}} com poliúria, polidipsia, hipernatremia; osmolaridade urinária baixa que não sobe com desmopressina. Qual é o diagnóstico?",
     options: {
       A: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático Esta abordagem atrasa a terapia com melhor.",
-      B: "Manter metformina na dose plena e acrescentar AINE para proteção renal, sem revisar a TFG atual Esta abordagem atrasa a terapia com melhor.",
+      B: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
       C: "Diabetes insípido nefrogênico (ex.: AVPR2/AQP2). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
+      D: "Manter metformina na dose plena e acrescentar AINE para proteção renal, sem revisar a TFG atual Esta abordagem atrasa a terapia com melhor."
     },
     correct: "C",
     explanation: "Falha de resposta à DDAVP aponta DI nefrogênico (ligado ao X por AVPR2 com frequência). Pearl: DDAVP negativo = rim, não hipófise.",
@@ -375,10 +375,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com cálculos recorrentes pouco opacos, história familiar e cristais hexagonais na urina. Qual é a pedra angular do tratamento?",
     options: {
-      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
       B: "Hiperidratação + alcalinização urinária + tiopronina/D-penicilamina se preciso; orientar sódio/metionina com nutricionista",
       C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial documentada em 6 meses",
-      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "B",
     explanation: "Cistinúria: volume + pH alcalino + quelantes tiólicos quando necessário. Alopurinol é para ácido úrico. Pearl: cristal hexagonal = cistina.",
@@ -395,8 +395,8 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com hematúria microscópica e hipercalciúria idiopática, sem infecção. Qual é a primeira medida dietética/farmacológica usual?",
     options: {
-      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
-      B: "Iniciar tiopronina empiricamente em todo cálculo radiotransparente, sem caracterizar a composição",
+      A: "Iniciar tiopronina empiricamente em todo cálculo radiotransparente, sem caracterizar a composição",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
       C: "Indicar nefrectomia eletiva como primeira linha em cálculo único não obstrutivo com função preservada",
       D: "Alta ingestão hídrica + restrição de sódio; tiazídico se persistir sintomática/cálculos"
     },
@@ -415,10 +415,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} após ITU febril grave. Qual exame melhor avalia cicatriz renal parenquimatosa?",
     options: {
-      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      A: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático",
       B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e.",
       C: "Cintilografia DMSA. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Reduzir metformina pela metade e manter indefinidamente mesmo com TFG <30, desde que assintomático"
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes"
     },
     correct: "C",
     explanation: "DMSA é o padrão para cicatriz/pielonefrite parenquimatosa. Pearl: DMSA = parênquima; VCUG = refluxo. Distratores falham por não cobrir o mecanismo principal, atrasar terapia eficaz ou aplicar lógica de adulto sem ajuste pediátrico. Pearl: priorize vinheta + diretriz IPNA/KDIGO.",
@@ -436,9 +436,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Lactente de {{age}} febril com ITU, toxicado. Antes da cultura, o antibiótico empírico deve cobrir principalmente:",
     options: {
       A: "Enterobactérias (E. coli) com agente parenteral adequado à gravidade e epidemiologia local",
-      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
-      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
-      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios."
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios.",
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica."
     },
     correct: "A",
     explanation: "ITU febril pediátrica: cobrir gram-negativos entéricos; ajustar à cultura. Pearl: E. coli domina — pense beta-lactâmico/aminoglicosídeo local.",
@@ -475,10 +475,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} com LES, biópsia classe V pura com proteinúria nefrótica e função estável. Qual tratamento é típico?",
     options: {
-      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de.",
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico. estratégia que não aborda o mecanismo principal deste caso",
       B: "MMF ou ciclofosfamida/CNI + antiproteinúrico; esteroides conforme protocolo. conduta preferencial neste contexto",
-      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
-      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico."
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de. estratégia que não aborda o mecanismo principal deste caso"
     },
     correct: "B",
     explanation: "Classe V com proteinúria significativa: imunossupressão + nefroproteção. Pearl: V membranosa não é “só IECA” se nefrótica.",
@@ -495,10 +495,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "{{sexWord}} de {{age}} com púrpura palpável em membros inferiores, artralgia, dor abdominal e hematúria/proteinúria. Qual diagnóstico sindrômico e quando biópsiar o rim?",
     options: {
-      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica.",
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
       C: "Vasculite IgA (Schönlein-Henoch); biópsia se nefrite grave/persistente ou dúvida diagnóstica",
-      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica."
     },
     correct: "C",
     explanation: "IgA vasculite: clínica; biópsia renal se nefrite preocupante. Pearl: púrpura + dor abdominal + urina = HSP até prova em contrário.",
@@ -515,8 +515,8 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} com sinusite crônica, nódulos pulmonares, creatinina em ascensão, c-ANCA/PR3 positivo. Qual tratamento de indução em doença grave?",
     options: {
-      A: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico Esta abordagem atrasa a terapia com.",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      A: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Indicar apenas oxigênio a 100% sem titulação e sem broncodilatador, adiando corticoide sistêmico Esta abordagem atrasa a terapia com.",
       C: "Rituximabe ou ciclofosfamida + corticoides; plasmaférese em indicações selecionadas (ex. hemorragia alveolar grave)",
       D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
     },
@@ -537,8 +537,8 @@ const PED_MASTERS_EXTRA = [
     options: {
       A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
       B: "Fibrose hepática congênita / ectasia de ductos biliares. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
-      D: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio"
+      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica"
     },
     correct: "B",
     explanation: "ARPKD (PKHD1): rim + fibrose hepática congênita. Pearl: rim cístico neonatal + fígado = ARPKD. Distratores falham por não cobrir o mecanismo principal, atrasar terapia eficaz ou aplicar lógica de adulto sem ajuste pediátrico. Pearl: priorize vinheta + diretriz IPNA/KDIGO.",
@@ -555,10 +555,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} com história familiar de ADPKD, PA elevada e poucos cistos na US. Qual é a conduta inicial mais importante?",
     options: {
-      A: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor.",
+      A: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão",
       B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
       C: "Controle rigoroso da PA (IECA/BRA se proteinúria/HAS) + hidratação + evitar nefrotóxicos; aconselhar genética/imagem seriada",
-      D: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral apesar de dano de órgão"
+      D: "Iniciar IECA em dose máxima na primeira hora da emergência hipertensiva com LRA, sem titulação IV Esta abordagem atrasa a terapia com melhor."
     },
     correct: "C",
     explanation: "ADPKD jovem: PA e nefroproteção; tolvaptan é decisão especializada/adultos selecionados. Pearl: trate a PA antes de discutir vaptans.",
@@ -577,8 +577,8 @@ const PED_MASTERS_EXTRA = [
     options: {
       A: "Nefronoptise (doença cística medular). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
       B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
-      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos",
-      D: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica"
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese com exames dirigidos"
     },
     correct: "A",
     explanation: "Nefronoptise: poliúria, anemia precoce, DRC progressiva, rins pequenos, hereditária. Pearl: anemia “cedo demais” + poliúria = nefroftise.",
@@ -595,8 +595,8 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Menino de {{age}} com hematúria persistente desde a infância, perda auditiva neurossensorial e tia materna com DRC. Qual gene é mais frequentemente implicado (ligado ao X)?",
     options: {
-      A: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
-      B: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      A: "Adiar qualquer intervenção até resolução espontânea completa, apesar de sinais de gravidade ou organo-ameaça já presentes",
+      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
       C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial.",
       D: "COL4A5 (colágeno IV α5). Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso"
     },
@@ -616,9 +616,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Diagnóstico de Alport em menino de {{age}} com proteinúria. Qual medicação retarda progressão com melhor suporte de evidência?",
     options: {
       A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
-      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes",
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
       C: "IECA (ou BRA) precocemente, mesmo com PA ainda normal-alta. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia específica recomendada pelas diretrizes"
     },
     correct: "C",
     explanation: "IECA precoce é a base nefroprotetora no Alport (EARLY PRO-TECT Alport e prática). Pearl: não espere HAS para iniciar IECA no Alport proteinúrico.",
@@ -655,10 +655,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} em HD crônica. Qual acesso vascular é preferencial a longo prazo quando viável?",
     options: {
-      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese.",
+      A: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
       B: "Fístula arteriovenosa autógena. Esta é a conduta alinhada à vinheta e às diretrizes aplicáveis ao caso",
-      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
-      D: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido"
+      C: "Remover o acesso/cateter em todo episódio febril antes de coletar culturas e iniciar antibiótico dirigido",
+      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a hipótese."
     },
     correct: "B",
     explanation: "FAV permanece o acesso preferencial quando anatomia/tempo permitem; cateter eleva infecção. Pearl: “fístula first” também no adolescente.",
@@ -675,9 +675,9 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Criança de {{age}} D+/R− para CMV após transplante renal. Qual estratégia correta de prevenção?",
     options: {
-      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício.",
-      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
-      C: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver.",
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas.",
+      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver.",
+      C: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício.",
       D: "Profilaxia antiviral (ex. valganciclovir) por período protocolar + monitoramento"
     },
     correct: "D",
@@ -696,9 +696,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Criança de {{age}} transplantada com creatinina em ascensão, US sem obstrução, níveis de tacrolimus adequados. Qual é o próximo passo diagnóstico chave?",
     options: {
       A: "Biópsia do enxerto para diferenciar rejeição, toxicidade, BK e recidiva. conduta preferencial neste contexto",
-      B: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento.",
-      C: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a.",
-      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar."
+      B: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar. estratégia que não aborda o mecanismo principal deste caso",
+      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento. estratégia que não aborda o mecanismo principal deste caso",
+      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a. estratégia que não aborda o mecanismo principal deste caso"
     },
     correct: "A",
     explanation: "Disfunção do enxerto: biópsia guia terapia. Empirismo cego atrasa BK/rejeição. Pearl: creatinina sobe → biopsie (após excluir óbvio).",
@@ -716,9 +716,9 @@ const PED_MASTERS_EXTRA = [
     statement: "{{sexWord}} de {{age}} com IRA, K {{k}} mEq/L e ondas T apiculadas. Qual é a primeira medida para estabilização de membrana?",
     options: {
       A: "Gluconato de cálcio IV (com monitorização) enquanto prepara shift e remoção de K",
-      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem.",
+      B: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia.",
       C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de.",
-      D: "Priorizar apenas medida sintomática isolada (analgésico/dieta/repouso) e adiar a terapia."
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem."
     },
     correct: "A",
     explanation: "ECG alterado: cálcio IV primeiro; depois insulina+glicose, beta-agonista e remoção (diurético/diálise/resina). Pearl: membrana antes do shift.",
@@ -735,10 +735,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Lactente de {{age}} apresenta convulsão tônico-clônica, Na sérico {{na}} mEq/L e sem sinais de desidratação hipovolêmica grave. Qual é a conduta aguda correta para a hiponatremia sintomática?",
     options: {
-      A: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
-      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      A: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
       C: "Bolus de solução salina hipertônica para interromper sintomas graves, depois correção controlada",
-      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
+      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)"
     },
     correct: "C",
     explanation: "Hiponatremia sintomática grave: NaCl 3% em bolus titulado; depois correção lenta para evitar mielinólise. Pearl: convulsão + Na baixo = 3% agora.",
@@ -816,9 +816,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Pré-escolar de {{age}} desidratado recebe ibuprofeno alto para febre e evolui com IRA. Qual é a fisiopatologia principal?",
     options: {
       A: "Inibição de prostaglandinas → perda de vasodilatação aferente em estado de baixo volume efetivo",
-      B: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial.",
-      C: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
-      D: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a."
+      B: "Usar dose plena do fármaco atual sem considerar função renal, interações nem risco de toxicidade acumulada neste estágio",
+      C: "Indicar procedimento invasivo imediato (biópsia/cirurgia/dreno) antes de otimizar medidas clínicas e confirmar a.",
+      D: "Manter a terapia atual sem ajuste e apenas reforçar adesão, reservando mudança para se houver piora laboratorial."
     },
     correct: "A",
     explanation: "AINEs em hipovolemia: IRA hemodinâmica clássica. Pearl: febre + vômito + ibuprofeno = risco renal. Distratores falham por não cobrir o mecanismo principal, atrasar terapia eficaz ou aplicar lógica de adulto sem ajuste pediátrico. Pearl: priorize vinheta + diretriz IPNA/KDIGO.",
@@ -835,10 +835,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} obeso com proteinúria leve, TFG alta e HAS. Qual medida tem maior impacto renal a longo prazo?",
     options: {
-      A: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral.",
-      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem.",
+      A: "Priorizar apenas analgesia e observação, postergando o controle pressórico parenteral. estratégia que não aborda o mecanismo principal deste caso",
+      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem. estratégia que não aborda o mecanismo principal deste caso",
       C: "Perda de peso + IECA/BRA se proteinúria/HAS + manejo da síndrome metabólica. conduta preferencial neste contexto",
-      D: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem."
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem. estratégia que não aborda o mecanismo principal deste caso"
     },
     correct: "C",
     explanation: "Nefropatia da obesidade: peso + nefroproteção. Pearl: hiperfiltração do obeso responde a emagrecer + IECA. Distratores falham por não cobrir o mecanismo principal, atrasar terapia eficaz ou aplicar lógica de adulto sem ajuste pediátrico. Pearl: priorize vinheta + diretriz IPNA/KDIGO.",
@@ -855,8 +855,8 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Adolescente de {{age}} com COVID grave em UTI, proteinúria e IRA; biópsia (se feita) pode mostrar colapso glomerular. Qual é a conduta renal geral?",
     options: {
-      A: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado",
-      B: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      A: "Trocar para classe medicamentosa inadequada ao cenário (ex. nefrotóxico ou agente sem benefício no desfecho principal)",
+      B: "Liberar alta com anti-hipertensivo oral único e retorno ambulatorial em 15 dias, sem ambiente monitorado",
       C: "Suporte da IRA, evitar nefrotóxicos, tratar doença de base; imunossupressão só se glomerulopatia específica indicada",
       D: "Iniciar antifúngico de amplo espectro isolado, sem cobertura bacteriana adequada ao foco provável Esta abordagem atrasa a terapia com."
     },
@@ -876,9 +876,9 @@ const PED_MASTERS_EXTRA = [
     statement: "Adolescente de {{age}} em DP há anos será transferido ao serviço adulto. Qual elemento é essencial no processo de transição?",
     options: {
       A: "Programa estruturado de educação em autocuidado, adesão e transferência planejada de dados clínicos",
-      B: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação",
-      C: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
-      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
+      B: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Iniciar imunossupressão de alto risco empiricamente, sem estratificar gravidade nem excluir infecção ou contraindicação"
     },
     correct: "A",
     explanation: "Transição ped→adulto reduz perda de seguimento e não adesão/rejeição. Pearl: transição é protocolo, não “alta”.",
@@ -895,10 +895,10 @@ const PED_MASTERS_EXTRA = [
     },
     statement: "Pré-escolar de {{age}} em DRC conservadora com baixo peso. Sobre restrição proteica, qual afirmação é correta?",
     options: {
-      A: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação",
+      A: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
       B: "Evitar restrição proteica severa que prejudique crescimento; priorizar calorias adequadas e controlar fósforo/potássio conforme labs",
-      C: "Solicitar apenas exame de imagem avançada e observar, sem iniciar o tratamento clínico urgente que a vinheta já indica",
-      D: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica"
+      C: "Suspender todas as medicações nefroprotetoras/antiproteinúricas por precaução, mesmo na ausência de hipercalemia ou IRA hemodinâmica",
+      D: "Escalar para terapia de substituição renal de imediato apenas pelo valor laboratorial, sem critérios clínicos de indicação"
     },
     correct: "B",
     explanation: "Em pediatria, crescimento supera restrição proteica agressiva estilo adulto. Pearl: criança com DRC precisa crescer — não “low protein” extremo.",

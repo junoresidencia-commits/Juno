@@ -17,11 +17,14 @@ const FILES = [
   { file: 'expert-masters-nefrologia-extra.cjs', exportName: 'ADV_MASTERS_EXTRA', letters: 5 },
   { file: 'expert-masters-nefrologia-extra2.cjs', exportName: 'ADV_MASTERS_EXTRA2', letters: 5 },
   { file: 'expert-masters-nefrologia-extra3.cjs', exportName: 'ADV_MASTERS_EXTRA3', letters: 5 },
+  { file: 'expert-masters-nefrologia-extra4.cjs', exportName: 'ADV_MASTERS_EXTRA4', letters: 5 },
   { file: 'expert-masters-nefropediatria.cjs', exportName: 'PED_MASTERS', letters: 4 },
   { file: 'expert-masters-nefropediatria-extra.cjs', exportName: 'PED_MASTERS_EXTRA', letters: 4 },
   { file: 'expert-masters-nefropediatria-extra2.cjs', exportName: 'PED_MASTERS_EXTRA2', letters: 4 },
   { file: 'expert-masters-nefropediatria-extra3.cjs', exportName: 'PED_MASTERS_EXTRA3', letters: 4 },
+  { file: 'expert-masters-nefropediatria-extra4.cjs', exportName: 'PED_MASTERS_EXTRA4', letters: 4 },
   { file: 'expert-masters-residencia.cjs', exportName: 'RES_MASTERS', letters: 5 },
+  { file: 'expert-masters-residencia-extra.cjs', exportName: 'RES_MASTERS_EXTRA', letters: 5 },
 ];
 
 function mulberry32(a) {

@@ -7,10 +7,13 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { RES_MASTERS } = require('./expert-masters-residencia.cjs');
+const { RES_MASTERS: RES_BASE } = require('./expert-masters-residencia.cjs');
+const { RES_MASTERS_EXTRA } = require('./expert-masters-residencia-extra.cjs');
+
+const RES_MASTERS = [...RES_BASE, ...RES_MASTERS_EXTRA];
 
 const ROOT = path.join(__dirname, '..');
-const VARIATIONS = Math.max(6, Math.min(20, Number(process.argv[2]) || 10));
+const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 14));
 
 const DIFFICULTY_LABEL_TO_DB = {
   basico: 'facil',
@@ -168,8 +171,8 @@ function assertQuality(qs) {
   }
 }
 
-if (RES_MASTERS.length < 100) {
-  throw new Error(`Poucos masters de residência (${RES_MASTERS.length}); mínimo 100`);
+if (RES_MASTERS.length < 350) {
+  throw new Error(`Poucos masters de residência (${RES_MASTERS.length}); mínimo 350`);
 }
 
 const questions = [];

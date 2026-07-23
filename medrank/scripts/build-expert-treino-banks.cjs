@@ -17,12 +17,26 @@ const { PED_MASTERS_EXTRA2 } = require('./expert-masters-nefropediatria-extra2.c
 const { ADV_MASTERS_EXTRA2 } = require('./expert-masters-nefrologia-extra2.cjs');
 const { PED_MASTERS_EXTRA3 } = require('./expert-masters-nefropediatria-extra3.cjs');
 const { ADV_MASTERS_EXTRA3 } = require('./expert-masters-nefrologia-extra3.cjs');
+const { PED_MASTERS_EXTRA4 } = require('./expert-masters-nefropediatria-extra4.cjs');
+const { ADV_MASTERS_EXTRA4 } = require('./expert-masters-nefrologia-extra4.cjs');
 
-const PED_MASTERS = [...PED_BASE, ...PED_MASTERS_EXTRA, ...PED_MASTERS_EXTRA2, ...PED_MASTERS_EXTRA3];
-const ADV_MASTERS = [...ADV_BASE, ...ADV_MASTERS_EXTRA, ...ADV_MASTERS_EXTRA2, ...ADV_MASTERS_EXTRA3];
+const PED_MASTERS = [
+  ...PED_BASE,
+  ...PED_MASTERS_EXTRA,
+  ...PED_MASTERS_EXTRA2,
+  ...PED_MASTERS_EXTRA3,
+  ...PED_MASTERS_EXTRA4,
+];
+const ADV_MASTERS = [
+  ...ADV_BASE,
+  ...ADV_MASTERS_EXTRA,
+  ...ADV_MASTERS_EXTRA2,
+  ...ADV_MASTERS_EXTRA3,
+  ...ADV_MASTERS_EXTRA4,
+];
 
 const ROOT = path.join(__dirname, '..');
-const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 12));
+const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 14));
 
 /** DB enum difficulty vs. label do banco expert. */
 const DIFFICULTY_LABEL_TO_DB = {
@@ -272,8 +286,8 @@ function writeRich(file, masters, track) {
   );
 }
 
-if (PED_MASTERS.length < 210) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 210`);
-if (ADV_MASTERS.length < 230) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 230`);
+if (PED_MASTERS.length < 280) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 280`);
+if (ADV_MASTERS.length < 320) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 320`);
 
 const ped = buildTrack(PED_MASTERS, 'nefropediatria');
 const adv = buildTrack(ADV_MASTERS, 'nefrologia-avancada');
