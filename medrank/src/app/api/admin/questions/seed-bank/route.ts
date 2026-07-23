@@ -4,6 +4,7 @@ import { join } from 'path';
 import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { isStructurallySound, polishQuestionOptions } from '@/lib/question-bank/polish-options';
 import type { Difficulty, OptionLetter, Question } from '@/types/database';
 
 function deterministicUuid(seed: string): string {
@@ -64,21 +65,36 @@ export async function POST() {
   }
 
   const combined = [
-    ...loadBankFile('imported-questions.json'),
-    ...loadBankFile('supplement-questions.json'),
-    ...loadBankFile('original-style-questions.json'),
+    ...loadBankFile('residencia-expert-questions.json'),
     ...loadBankFile('nefropediatria-questions.json'),
     ...loadBankFile('nefrologia-avancada-questions.json'),
+    ...loadBankFile('supplement-questions.json'),
+    ...loadBankFile('original-style-questions.json'),
+    // Importado por último e só entra se passar no filtro estrutural (após polish)
+    ...loadBankFile('imported-questions.json'),
   ];
 
-  // Deduplicate by statement
+  // Deduplicate by statement; polish opções ruins; descarta o que ainda falhar
   const seen = new Set<string>();
-  const unique = combined.filter((q) => {
-    const key = q.statement.slice(0, 120).toLowerCase().replace(/\s+/g, ' ');
-    if (seen.has(key)) return false;
+  let polishedCount = 0;
+  let droppedWeak = 0;
+  const unique: Question[] = [];
+  for (const raw of combined) {
+    const key = raw.statement.slice(0, 120).toLowerCase().replace(/\s+/g, ' ');
+    if (seen.has(key)) continue;
     seen.add(key);
-    return true;
-  });
+
+    let q = raw;
+    if (!isStructurallySound(q)) {
+      q = polishQuestionOptions(q);
+      polishedCount += 1;
+    }
+    if (!isStructurallySound(q)) {
+      droppedWeak += 1;
+      continue;
+    }
+    unique.push(q);
+  }
 
   if (unique.length === 0) {
     return NextResponse.json(
@@ -115,8 +131,10 @@ export async function POST() {
     ok: errors.length === 0,
     imported,
     totalInDb: count ?? imported,
+    polishedOnImport: polishedCount,
+    droppedWeak,
     sources:
-      'ENARE + Revalida (abertos) + originais MedRank (estilo USP/UNICAMP/etc.) + nefropediatria (SBN/SBNPed)',
+      'Expert residência + nefro/nefroped + originais MedRank (+ importados só se passarem no filtro de qualidade)',
     styleBanks: [...styleTags].sort(),
     errors,
   });

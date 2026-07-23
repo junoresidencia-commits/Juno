@@ -118,7 +118,6 @@ function QuestionReview({
     >
       <p className="text-xs font-medium text-slate-600">
         Questão {index}
-        {question.subtopic ? ` · ${question.subtopic}` : ''}
       </p>
       <p className="mt-2 whitespace-pre-wrap text-sm">{question.statement}</p>
       <div className="mt-3 space-y-1 text-sm">
