@@ -67,6 +67,7 @@ export async function POST() {
     ...loadBankFile('imported-questions.json'),
     ...loadBankFile('supplement-questions.json'),
     ...loadBankFile('original-style-questions.json'),
+    ...loadBankFile('residencia-expert-questions.json'),
     ...loadBankFile('nefropediatria-questions.json'),
     ...loadBankFile('nefrologia-avancada-questions.json'),
   ];

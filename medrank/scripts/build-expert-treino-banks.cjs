@@ -9,11 +9,34 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { PED_MASTERS } = require('./expert-masters-nefropediatria.cjs');
-const { ADV_MASTERS } = require('./expert-masters-nefrologia.cjs');
+const { PED_MASTERS: PED_BASE } = require('./expert-masters-nefropediatria.cjs');
+const { ADV_MASTERS: ADV_BASE } = require('./expert-masters-nefrologia.cjs');
+const { PED_MASTERS_EXTRA } = require('./expert-masters-nefropediatria-extra.cjs');
+const { ADV_MASTERS_EXTRA } = require('./expert-masters-nefrologia-extra.cjs');
+const { PED_MASTERS_EXTRA2 } = require('./expert-masters-nefropediatria-extra2.cjs');
+const { ADV_MASTERS_EXTRA2 } = require('./expert-masters-nefrologia-extra2.cjs');
+const { PED_MASTERS_EXTRA3 } = require('./expert-masters-nefropediatria-extra3.cjs');
+const { ADV_MASTERS_EXTRA3 } = require('./expert-masters-nefrologia-extra3.cjs');
+const { PED_MASTERS_EXTRA4 } = require('./expert-masters-nefropediatria-extra4.cjs');
+const { ADV_MASTERS_EXTRA4 } = require('./expert-masters-nefrologia-extra4.cjs');
+
+const PED_MASTERS = [
+  ...PED_BASE,
+  ...PED_MASTERS_EXTRA,
+  ...PED_MASTERS_EXTRA2,
+  ...PED_MASTERS_EXTRA3,
+  ...PED_MASTERS_EXTRA4,
+];
+const ADV_MASTERS = [
+  ...ADV_BASE,
+  ...ADV_MASTERS_EXTRA,
+  ...ADV_MASTERS_EXTRA2,
+  ...ADV_MASTERS_EXTRA3,
+  ...ADV_MASTERS_EXTRA4,
+];
 
 const ROOT = path.join(__dirname, '..');
-const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 12));
+const VARIATIONS = Math.max(6, Math.min(24, Number(process.argv[2]) || 20));
 
 /** DB enum difficulty vs. label do banco expert. */
 const DIFFICULTY_LABEL_TO_DB = {
@@ -223,6 +246,15 @@ function assertQuality(qs, label) {
     if ((q.explanation || '').length < 100) {
       throw new Error(`[${label}] explicação curta em ${q.id}`);
     }
+    // Opções com tamanho semelhante — evita gabarito óbvio por ser o parágrafo maior
+    const lens = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e]
+      .filter((t) => t && String(t).trim())
+      .map((t) => String(t).length);
+    const mx = Math.max(...lens);
+    const mn = Math.min(...lens);
+    if (mn < 45 || mx > mn * 2.5) {
+      throw new Error(`[${label}] opções desbalanceadas em ${q.id}: ${lens.join(',')}`);
+    }
   }
 }
 
@@ -254,8 +286,8 @@ function writeRich(file, masters, track) {
   );
 }
 
-if (PED_MASTERS.length < 80) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 80`);
-if (ADV_MASTERS.length < 80) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 80`);
+if (PED_MASTERS.length < 280) throw new Error(`Poucos masters pediátricos (${PED_MASTERS.length}); mínimo 280`);
+if (ADV_MASTERS.length < 320) throw new Error(`Poucos masters adultos (${ADV_MASTERS.length}); mínimo 320`);
 
 const ped = buildTrack(PED_MASTERS, 'nefropediatria');
 const adv = buildTrack(ADV_MASTERS, 'nefrologia-avancada');
