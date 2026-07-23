@@ -6,6 +6,10 @@ import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isStructurallySound, polishQuestionOptions, stripOptionRationaleLeak } from '@/lib/question-bank/polish-options';
 import { statementFingerprint } from '@/lib/question-bank/provenance';
+import {
+  classifyQuestionQuality,
+  isOfficialQuestion,
+} from '@/lib/question-bank/quality-classify';
 import type { Difficulty, OptionLetter, Question, QuestionOrigin } from '@/types/database';
 
 /** Importa dezenas de milhares de questões — precisa de timeout longo. */
@@ -63,10 +67,23 @@ function cleanOptionFields(q: BankQuestion): BankQuestion {
 function toInsertRow(question: BankQuestion) {
   const correct = String(question.correct_option || 'A').toUpperCase() as OptionLetter;
   const difficulty = (question.difficulty as Difficulty | null) ?? null;
-  const official = isOfficialRow(question);
+  const official = isOfficialRow(question) || isOfficialQuestion(question);
   const origin: QuestionOrigin =
     question.question_origin ||
     (official ? 'official' : 'original');
+
+  const classified = classifyQuestionQuality({
+    ...question,
+    id: question.id || 'tmp',
+    correct_option: correct,
+    tags: question.tags ?? [],
+    question_origin: origin,
+    reproduction_allowed: official,
+    created_at: question.created_at || new Date().toISOString(),
+  } as Question);
+
+  // Oficiais entram aprovadas; tudo artificial fica suspenso até revisão humana
+  const bank_status = official ? 'approved' : 'disabled';
 
   return {
     id: deterministicUuid(question.id || question.statement.slice(0, 80)),
@@ -87,7 +104,7 @@ function toInsertRow(question: BankQuestion) {
     tags: question.tags ?? [],
     image_url: question.image_url ?? null,
     bibliography: question.bibliography ?? null,
-    bank_status: 'approved' as const,
+    bank_status,
     question_origin: origin,
     institution: question.institution ?? (official ? question.source : null) ?? null,
     exam_name: question.exam_name ?? null,
@@ -95,6 +112,10 @@ function toInsertRow(question: BankQuestion) {
     official_answer: question.official_answer ?? (official ? correct : null),
     reproduction_allowed: official ? true : Boolean(question.reproduction_allowed),
     statement_fingerprint: statementFingerprint(question.statement),
+    quality_label: official ? 'aprovada' : classified.quality_label,
+    quality_notes: official
+      ? 'Prova oficial importada (enunciado preservado).'
+      : classified.notes,
   };
 }
 

@@ -38,11 +38,12 @@ python3 scripts/build-official-residency-bank.py /tmp/healthqa-br.parquet
 
 ## Como publicar no app
 
-1. Deploy com este PR
-2. Admin → Questões → **Importar banco completo (ENARE/Revalida oficiais)**
-3. Admin → Provas → **Gerar do banco (grátis)** (ou Forçar regenerar banco)
+1. Deploy + SQL **031** e **032** no Supabase
+2. Admin → Questões → **Importar banco completo** (oficiais aprovadas; sintéticas **suspensas**)
+3. Admin → Questões → **Auditoria** → Classificar e suspender ruins
+4. Admin → Provas → **Gerar do banco (grátis)** / Forçar regenerar
 
-A disputa geral **prioriza** `question_origin=official` e evita questões sintéticas curtas/óbvias.
+A disputa só usa `bank_status=approved`. Sintéticas ficam `disabled` até revisão humana.
 
 ## Atribuição
 

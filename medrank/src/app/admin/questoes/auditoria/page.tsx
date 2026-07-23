@@ -13,9 +13,9 @@ export default async function QuestoesAuditoriaPage() {
       <header className="mt-4 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Auditoria do banco</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Varredura automática de enunciados, alternativas, gabarito e explicações (estrutura e
-          qualidade de formulação). Para anular/corrigir questão já aplicada numa disputa, use
-          Remediação na prova.
+          Classifique, suspenda e exclua questões ruins. Prioridade: provas oficiais reais. Menos
+          questões e melhor qualidade. Remediação (zerar/devolver pontos) também está em cada
+          questão e em Provas → Remediação.
         </p>
       </header>
       <QuestionAuditPanel />
