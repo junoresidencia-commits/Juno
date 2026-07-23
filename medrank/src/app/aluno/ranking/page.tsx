@@ -29,7 +29,7 @@ export default async function RankingAlunoPage({
 
   if (usesDemoStore()) {
     const { showRanking } = getDemoDashboardData(userId);
-    const canSeeDaily = period === 'weekly' || showRanking;
+    const canSeeDaily = period !== 'daily' || showRanking;
 
     const { rankings } = period === 'daily'
       ? getDemoRanking('daily', getTodayRankingDate())
@@ -38,14 +38,14 @@ export default async function RankingAlunoPage({
 
     return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">
-        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking</h1>
+        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking do grupo</h1>
         <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
         {period === 'daily' && !canSeeDaily && (
           <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
         )}
         {period === 'daily' && canSeeDaily && (
           <p className="mt-3 text-sm text-slate-600">
-            {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme os alunos terminam.
+            {studentDailyRankingLabel(getTodayRankingDate())} — só quem está no seu grupo.
           </p>
         )}
         {canSeeDaily && myRanking && (
@@ -90,6 +90,21 @@ export default async function RankingAlunoPage({
   const { resolveUserExamAudience } = await import('@/lib/exams/audience');
   const ctx = await resolveUserExamAudience(userId);
 
+  if (!ctx.rankingGroupId) {
+    return (
+      <div className="mx-auto w-full px-4 py-6 md:px-6">
+        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking do grupo</h1>
+        <p className="mt-4 text-sm text-slate-600">
+          Você ainda não está em nenhum grupo. Peça ao professor para te adicionar (ex.: Liga de
+          Nefrologia, Endo…). Só membros do grupo veem o ranking interno.
+        </p>
+        <Link href="/aluno/grupos" className="mt-4 inline-block text-sm font-semibold text-emerald-700">
+          Ver grupos →
+        </Link>
+      </div>
+    );
+  }
+
   const { data: todayExam } = await supabase
     .from('exams')
     .select('id, date_available, audience')
@@ -108,72 +123,56 @@ export default async function RankingAlunoPage({
     : { data: null };
 
   const showRanking = canStudentSeeTodayRanking(todayExam, Boolean(attempt?.finished_at));
-  const canSeeDaily = period === 'weekly' || showRanking;
+  const canSee = period !== 'daily' || showRanking;
 
-  const bounds = period === 'daily'
-    ? { start: getTodayRankingDate(), end: getTodayRankingDate() }
-    : getPeriodBounds(period);
+  const bounds =
+    period === 'daily'
+      ? { start: getTodayRankingDate(), end: getTodayRankingDate() }
+      : getPeriodBounds(period);
 
   let rankings = null;
-  if (canSeeDaily) {
-    if (period === 'daily' && ctx.audience === 'nephrology' && ctx.leagueId) {
-      const { data } = await supabase
-        .from('study_group_rankings')
-        .select('user_id, position, total_score, profiles(name)')
-        .eq('group_id', ctx.leagueId)
-        .eq('period_type', 'daily')
-        .eq('period_start', bounds.start)
-        .order('position', { ascending: true });
-      rankings = data;
-    } else {
-      const { data } = await supabase
-        .from('rankings')
-        .select('user_id, position, total_score, profiles(name)')
-        .eq('period_type', period)
-        .eq('period_start', bounds.start)
-        .order('position', { ascending: true });
-      rankings = data;
-    }
-  }
-
   let myRanking = null;
-  if (canSeeDaily) {
-    if (period === 'daily' && ctx.audience === 'nephrology' && ctx.leagueId) {
-      const { data } = await supabase
-        .from('study_group_rankings')
-        .select('position, total_score')
-        .eq('group_id', ctx.leagueId)
-        .eq('user_id', userId)
-        .eq('period_type', 'daily')
-        .eq('period_start', bounds.start)
-        .maybeSingle();
-      myRanking = data;
-    } else {
-      const { data } = await supabase
-        .from('rankings')
-        .select('position, total_score')
-        .eq('user_id', userId)
-        .eq('period_type', period)
-        .eq('period_start', bounds.start)
-        .maybeSingle();
-      myRanking = data;
-    }
+  if (canSee) {
+    const { data } = await supabase
+      .from('study_group_rankings')
+      .select('user_id, position, total_score, profiles(name)')
+      .eq('group_id', ctx.rankingGroupId)
+      .eq('period_type', period)
+      .eq('period_start', bounds.start)
+      .order('position', { ascending: true });
+    rankings = data;
+
+    const { data: mine } = await supabase
+      .from('study_group_rankings')
+      .select('position, total_score')
+      .eq('group_id', ctx.rankingGroupId)
+      .eq('user_id', userId)
+      .eq('period_type', period)
+      .eq('period_start', bounds.start)
+      .maybeSingle();
+    myRanking = mine;
   }
 
   return (
-      <div className="mx-auto w-full px-4 py-6 md:px-6">
-        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking</h1>
+    <div className="mx-auto w-full px-4 py-6 md:px-6">
+      <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
+        Ranking · {ctx.rankingGroupName}
+      </h1>
+      <p className="mt-1 text-sm text-slate-600">
+        Só quem participa deste grupo vê este ranking. O ranking geral entre todas as ligas é
+        exclusivo do administrador.
+      </p>
       <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
-      {period === 'daily' && !canSeeDaily && (
+      {period === 'daily' && !canSee && (
         <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
       )}
-      {period === 'daily' && canSeeDaily && (
+      {period === 'daily' && canSee && (
         <p className="mt-3 text-sm text-slate-600">
-          {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme os alunos terminam.
+          {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme o grupo termina.
         </p>
       )}
 
-      {canSeeDaily && myRanking && (
+      {canSee && myRanking && (
         <div className="mt-4 rounded-xl bg-emerald-50 p-4">
           <p className="font-semibold text-emerald-800">
             Você: {myRanking.position}º · {myRanking.total_score} pts
@@ -181,7 +180,7 @@ export default async function RankingAlunoPage({
         </div>
       )}
 
-      {canSeeDaily && (
+      {canSee && (
         <ol className="mt-6 space-y-2">
           {(rankings ?? []).length === 0 ? (
             <li className="text-sm text-slate-600">Aguardando primeiros resultados…</li>
@@ -208,6 +207,11 @@ export default async function RankingAlunoPage({
           )}
         </ol>
       )}
+      <p className="mt-6 text-sm">
+        <Link href="/aluno/grupos" className="font-semibold text-emerald-700 hover:underline">
+          Outros grupos →
+        </Link>
+      </p>
     </div>
   );
 }

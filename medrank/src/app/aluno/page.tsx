@@ -129,29 +129,18 @@ export default async function AlunoDashboard() {
   const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
   const rankingDate = getTodayRankingDate();
 
-  // Ranking da Liga de Nefrologia vs ranking global (disputa geral)
+  // Ranking só do grupo do aluno (nunca o geral entre ligas — isso é admin-only)
   let todayRankings = null;
-  if (showRanking) {
-    if (ctx.audience === 'nephrology' && ctx.leagueId) {
-      const { data } = await supabase
-        .from('study_group_rankings')
-        .select('id, position, total_score, user_id, profiles(name)')
-        .eq('group_id', ctx.leagueId)
-        .eq('period_type', 'daily')
-        .eq('period_start', rankingDate)
-        .order('position', { ascending: true })
-        .limit(15);
-      todayRankings = data;
-    } else {
-      const { data } = await supabase
-        .from('rankings')
-        .select('id, position, total_score, user_id, profiles(name)')
-        .eq('period_type', 'daily')
-        .eq('period_start', rankingDate)
-        .order('position', { ascending: true })
-        .limit(15);
-      todayRankings = data;
-    }
+  if (showRanking && ctx.rankingGroupId) {
+    const { data } = await supabase
+      .from('study_group_rankings')
+      .select('id, position, total_score, user_id, profiles(name)')
+      .eq('group_id', ctx.rankingGroupId)
+      .eq('period_type', 'daily')
+      .eq('period_start', rankingDate)
+      .order('position', { ascending: true })
+      .limit(15);
+    todayRankings = data;
   }
 
   const canContinue = false; // antifraude: não há retomada
@@ -172,11 +161,12 @@ export default async function AlunoDashboard() {
       forfeitedToday={forfeitedToday}
       missedToday={missedToday}
       attemptId={attempt?.id}
-      showRanking={showRanking}
+      showRanking={showRanking && Boolean(ctx.rankingGroupId)}
       todayRankings={mapRankingPreviewRows(todayRankings)}
       rankingDate={rankingDate}
       trackLabel={trackLabel}
       leagueLabel={leagueLabel ?? undefined}
+      rankingGroupName={ctx.rankingGroupName ?? undefined}
       qualityStatus={(todayExam as { quality_status?: string } | null)?.quality_status ?? null}
       qualitySummary={(todayExam as { quality_summary?: string } | null)?.quality_summary ?? null}
     />

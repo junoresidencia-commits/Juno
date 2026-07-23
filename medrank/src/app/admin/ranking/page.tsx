@@ -61,7 +61,12 @@ export default async function AdminRankingPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <h1 className="mt-4 text-2xl font-bold text-slate-900">Rankings</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Ranking geral</h1>
+      <p className="mt-1 text-sm text-slate-600">
+        Visão só do administrador — entre todas as ligas/grupos (Endo, Nefro, etc.). Alunos veem
+        apenas o ranking do próprio grupo. Liberação mensal pública pode ser feita depois a partir
+        daqui.
+      </p>
       <p className="text-sm text-slate-600">{periodTitle[period]}</p>
 
       <RankingPeriodNav basePath="/admin/ranking" current={period} />

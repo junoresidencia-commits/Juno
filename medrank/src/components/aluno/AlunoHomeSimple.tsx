@@ -31,6 +31,8 @@ interface Props {
   trackLabel?: string;
   /** Nome da liga (ex.: Liga de Nefrologia) quando a disputa é exclusiva. */
   leagueLabel?: string;
+  /** Grupo cujo ranking aparece na home (só membros). */
+  rankingGroupName?: string;
   qualityStatus?: string | null;
   qualitySummary?: string | null;
 }
@@ -53,6 +55,7 @@ export function AlunoHomeSimple({
   streakDays = 0,
   trackLabel,
   leagueLabel,
+  rankingGroupName,
   qualityStatus,
   qualitySummary,
 }: Props) {
@@ -192,9 +195,9 @@ export function AlunoHomeSimple({
           </>
         ) : (
           <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
-            <p className="text-slate-600">Gerando disputa de hoje ({specialty})…</p>
+            <p className="text-slate-600">Sem disputa publicada para hoje ({specialty}).</p>
             <p className="mt-2 text-sm text-slate-500">
-              Se persistir, peça ao professor para importar o banco e gerar a disputa.
+              O professor gera 1× por dia (ou o cron). Aguarde a revisão automática da IA.
             </p>
           </div>
         )}
@@ -202,19 +205,28 @@ export function AlunoHomeSimple({
 
       <section className="mt-8 rounded-2xl bg-white p-5 text-slate-900 ring-1 ring-slate-200 md:max-w-xl">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-semibold text-slate-900">{studentDailyRankingLabel(rankingDate)}</h2>
-          {showRanking && (
+          <h2 className="font-semibold text-slate-900">
+            {rankingGroupName
+              ? `Ranking · ${rankingGroupName}`
+              : studentDailyRankingLabel(rankingDate)}
+          </h2>
+          {showRanking && rankingGroupName && (
             <Link href="/aluno/ranking" className="shrink-0 text-sm text-emerald-700">
               Ver →
             </Link>
           )}
         </div>
         <div className="mt-3">
-          {showRanking ? (
+          {!rankingGroupName ? (
+            <p className="text-sm text-slate-600">
+              Você ainda não está em um grupo. O professor adiciona você na liga — aí o ranking
+              aparece aqui (só para quem participa).
+            </p>
+          ) : showRanking ? (
             todayRankings.length > 0 ? (
               <RankingPreviewList rankings={todayRankings} userId={userId} />
             ) : (
-              <p className="text-sm text-slate-600">Aguardando primeiros resultados…</p>
+              <p className="text-sm text-slate-600">Aguardando primeiros resultados do grupo…</p>
             )
           ) : (
             <p className="text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>

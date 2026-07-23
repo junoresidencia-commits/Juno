@@ -9,12 +9,43 @@ export const NEPHROLOGY_LEAGUE_NAME = 'Liga de Nefrologia';
 
 export interface UserExamContext {
   audience: ExamAudience;
+  /** Liga de Nefrologia (se membro) — disputa exclusiva. */
   leagueId: string | null;
   leagueName: string | null;
+  /**
+   * Grupo cujo ranking o aluno pode ver (só membros).
+   * Nefro → a liga; demais → primeiro grupo ativo (ex.: Endo).
+   * Ranking geral entre grupos = só admin.
+   */
+  rankingGroupId: string | null;
+  rankingGroupName: string | null;
 }
 
-/** Membro da Liga de Nefrologia → disputa nephrology; senão → geral. */
+type GroupRow = {
+  id: string;
+  name: string;
+  active: boolean;
+  exam_audience?: string;
+};
+
+function isNephrologyGroup(g: GroupRow): boolean {
+  return (
+    g.exam_audience === 'nephrology' ||
+    g.name.toLowerCase() === 'liga de nefrologia' ||
+    g.name.toLowerCase().includes('nefrologia')
+  );
+}
+
+/** Membro da Liga de Nefrologia → disputa nephrology; senão → geral (mesma prova para Endo etc.). */
 export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
+  const empty: UserExamContext = {
+    audience: 'general',
+    leagueId: null,
+    leagueName: null,
+    rankingGroupId: null,
+    rankingGroupName: null,
+  };
+
   if (usesDemoStore()) {
     const { getDemoGroupsForUser } = await import('@/lib/groups/demo');
     const groups = getDemoGroupsForUser(userId);
@@ -24,35 +55,59 @@ export async function resolveUserExamAudience(userId: string): Promise<UserExamC
         g.name.toLowerCase().includes('nefrologia')
     );
     if (nefro) {
-      return { audience: 'nephrology', leagueId: nefro.id, leagueName: nefro.name };
+      return {
+        audience: 'nephrology',
+        leagueId: nefro.id,
+        leagueName: nefro.name,
+        rankingGroupId: nefro.id,
+        rankingGroupName: nefro.name,
+      };
     }
-    return { audience: 'general', leagueId: null, leagueName: null };
+    const first = groups[0];
+    if (first) {
+      return {
+        ...empty,
+        rankingGroupId: first.id,
+        rankingGroupName: first.name,
+      };
+    }
+    return empty;
   }
 
   const admin = createAdminClient();
-  if (!admin) {
-    return { audience: 'general', leagueId: null, leagueName: null };
-  }
+  if (!admin) return empty;
 
   const { data } = await admin
     .from('study_group_members')
     .select('group_id, study_groups(id, name, active, exam_audience)')
     .eq('user_id', userId);
 
+  const activeGroups: GroupRow[] = [];
   for (const row of data ?? []) {
-    const g = row.study_groups as unknown as {
-      id: string;
-      name: string;
-      active: boolean;
-      exam_audience?: string;
-    } | null;
+    const g = row.study_groups as unknown as GroupRow | null;
     if (!g || !g.active) continue;
-    if (g.exam_audience === 'nephrology' || g.name.toLowerCase() === 'liga de nefrologia') {
-      return { audience: 'nephrology', leagueId: g.id, leagueName: g.name };
-    }
+    activeGroups.push(g);
   }
 
-  return { audience: 'general', leagueId: null, leagueName: null };
+  const nefro = activeGroups.find(isNephrologyGroup);
+  if (nefro) {
+    return {
+      audience: 'nephrology',
+      leagueId: nefro.id,
+      leagueName: nefro.name,
+      rankingGroupId: nefro.id,
+      rankingGroupName: nefro.name,
+    };
+  }
+
+  const home = activeGroups[0] ?? null;
+  return {
+    audience: 'general',
+    leagueId: null,
+    leagueName: null,
+    rankingGroupId: home?.id ?? null,
+    rankingGroupName: home?.name ?? null,
+  };
 }
 
 /** Cria/atualiza a Liga de Nefrologia (idempotente). */
