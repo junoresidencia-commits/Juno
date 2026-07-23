@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { DAILY_EXAM_HORIZON_DAYS } from '@/lib/exams/daily-schedule';
 import { ensureBothDailyHorizons } from '@/lib/exams/ensure-daily';
 
+/** Pipeline IA por dia × 2 audiências — precisa de timeout longo. */
+export const maxDuration = 300;
+
 /**
  * Vercel Cron: gera disputa geral + disputa da Liga de Nefrologia.
  */
@@ -18,6 +21,16 @@ export async function GET(request: Request) {
   } else if (process.env.NODE_ENV === 'production' && process.env.DEMO_MODE !== 'true') {
     return NextResponse.json(
       { error: 'CRON_SECRET não configurado na Vercel.' },
+      { status: 503 }
+    );
+  }
+
+  if (!process.env.OPENAI_API_KEY?.trim()) {
+    return NextResponse.json(
+      {
+        error:
+          'OPENAI_API_KEY obrigatória no cron: sem ela a disputa não passa pela revisão clínica e não publica.',
+      },
       { status: 503 }
     );
   }
@@ -41,6 +54,7 @@ export async function GET(request: Request) {
         examId: r.general.exam?.id ?? null,
         title: r.general.exam?.title ?? null,
         error: r.general.error ?? null,
+        quality: (r.general.exam as { quality_status?: string } | null)?.quality_status ?? null,
       },
       nephrology: {
         track: r.nephrology.track,
@@ -48,6 +62,7 @@ export async function GET(request: Request) {
         examId: r.nephrology.exam?.id ?? null,
         title: r.nephrology.exam?.title ?? null,
         error: r.nephrology.error ?? null,
+        quality: (r.nephrology.exam as { quality_status?: string } | null)?.quality_status ?? null,
       },
     })),
   });

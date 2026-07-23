@@ -72,11 +72,13 @@ export async function POST(
   }
 
   const qualityStatus = (exam as { quality_status?: string }).quality_status;
-  if (qualityStatus === 'blocked') {
+  if (qualityStatus === 'blocked' || qualityStatus === 'pending') {
     return NextResponse.json(
       {
         error:
-          'Disputa pausada: a revisão de qualidade encontrou problema nas questões. O professor foi avisado.',
+          qualityStatus === 'pending'
+            ? 'Disputa ainda em revisão pela IA. Aguarde a publicação automática.'
+            : 'Disputa não publicada: a revisão IA reprovou questões. O administrador foi avisado.',
         quality_status: qualityStatus,
         quality_summary: (exam as { quality_summary?: string }).quality_summary,
       },

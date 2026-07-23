@@ -73,9 +73,10 @@ export function EnsureDailyExamsButton() {
         </button>
       </div>
       <p className="text-xs text-slate-600">
-        Gera as duas disputas do dia: <strong>geral</strong> (outras ligas) e{' '}
-        <strong>Liga de Nefrologia</strong> (Nefrologia ↔ Nefropediatria). Quem faz ganha
-        pontos; quem não faz fica sem pontos no dia.
+        Pipeline automático com OpenAI obrigatória: gera 20 questões → revisa cada uma →
+        reprova/substitui → 2ª passagem do lote → só publica com 20/20 aprovadas. Pode levar
+        alguns minutos. Sem <code className="rounded bg-slate-100 px-1">OPENAI_API_KEY</code> não
+        publica.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {error && <p className="text-sm text-red-700">{error}</p>}

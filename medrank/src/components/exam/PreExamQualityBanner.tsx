@@ -18,19 +18,23 @@ export function PreExamQualityBanner({ status, summary, blocking }: Props) {
     return null;
   }
 
-  if (blocking || status === 'blocked') {
+  if (blocking || status === 'blocked' || status === 'pending') {
     return (
       <div className="border-b border-red-300 bg-red-50 px-4 py-3 text-center text-sm text-red-950">
-        <p className="font-semibold">Disputa pausada para revisão de qualidade</p>
+        <p className="font-semibold">
+          {status === 'pending'
+            ? 'Disputa ainda em revisão automática pela IA'
+            : 'Disputa pausada — revisão IA não aprovou o lote'}
+        </p>
         <p className="mt-1">
           {summary ||
-            'Encontramos problema em uma ou mais questões. O professor foi avisado e vai corrigir/liberar antes da prova.'}
+            'A disputa só fica disponível depois que as 20 questões forem aprovadas (gerar → revisar → trocar → publicar).'}
         </p>
       </div>
     );
   }
 
-  if (status === 'warning' || status === 'pending') {
+  if (status === 'warning') {
     return (
       <div className="border-b border-amber-300 bg-amber-50 px-4 py-2 text-center text-sm text-amber-950">
         <strong>Aviso da revisão automática:</strong>{' '}

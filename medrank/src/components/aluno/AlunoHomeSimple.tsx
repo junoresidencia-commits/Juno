@@ -59,7 +59,7 @@ export function AlunoHomeSimple({
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
   const specialty = trackLabel ?? 'Disputa do dia';
-  const qualityBlocked = qualityStatus === 'blocked';
+  const qualityBlocked = qualityStatus === 'blocked' || qualityStatus === 'pending';
   const effectiveCanStart = canStart && !qualityBlocked;
 
   return (
@@ -104,10 +104,16 @@ export function AlunoHomeSimple({
 
             {qualityBlocked && (
               <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-950 ring-1 ring-red-200">
-                <p className="font-semibold">Aguarde — revisão de qualidade</p>
+                <p className="font-semibold">
+                  {qualityStatus === 'pending'
+                    ? 'Aguarde — revisão IA em andamento'
+                    : 'Disputa não publicada — revisão IA'}
+                </p>
                 <p className="mt-1">
                   {qualitySummary ||
-                    'A IA/revisão automática encontrou problema em questões da disputa de hoje. O professor foi avisado e vai corrigir antes da liberação.'}
+                    (qualityStatus === 'pending'
+                      ? 'A disputa só libera depois que as 20 questões forem aprovadas automaticamente pela IA.'
+                      : 'A revisão automática reprovou questões. O sistema deve substituí-las e republicar; o administrador foi avisado.')}
                 </p>
               </div>
             )}

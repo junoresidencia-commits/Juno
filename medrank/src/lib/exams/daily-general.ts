@@ -9,7 +9,7 @@ import { mixDifficulty } from '@/lib/treino/progress';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   reviewAndPersistExamQuality,
-  selectReviewReadyQuestions,
+  buildAiApprovedExamSet,
 } from '@/lib/exams/quality-gate';
 import {
   addCalendarDaysBrazil,
@@ -76,7 +76,7 @@ async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   count: number,
   dateStr: string
-): Promise<Question[]> {
+) {
   const { data, error } = await admin.from('questions').select('*');
   if (error) throw new Error(error.message);
 
@@ -84,7 +84,6 @@ async function pickGeneralQuestions(
     (q) => !isNephrologyTagged(q) && isStructurallySound(q)
   );
 
-  // Preferir banco expert de residência (CM/Ped/Cirurgia/GO/…) quando houver volume
   const expert = pool.filter(isResidenciaExpert);
   if (expert.length >= count) pool = expert;
 
@@ -99,12 +98,11 @@ async function pickGeneralQuestions(
   }
 
   const seed = Number(dateStr.replace(/-/g, '')) || 1;
-  const { questions } = await selectReviewReadyQuestions(pool, count, (candidates, n) => {
+  return buildAiApprovedExamSet(pool, count, (candidates, n) => {
     const picked = pickDailyExamQuestions(candidates, n, seed);
     if (picked.length >= n) return picked.slice(0, n);
     return mixDifficulty(candidates, n);
   });
-  return questions;
 }
 
 /** Disputa diária geral (outras ligas / quem não está na Liga de Nefrologia). */
@@ -148,20 +146,22 @@ export async function ensureDailyGeneralExam(
     .maybeSingle();
 
   if (existing) {
-    await ensureExistingExamReviewed(admin, existing.id);
+    // Não re-roda IA a cada pageview (custo). Só retorna; geração nova faz a revisão.
     return { date: dateStr, audience: 'general', created: false, exam: existing };
   }
 
-  let selected: Question[];
+  let selected: Question[] = [];
+  let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
   try {
-    selected = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    builtMeta = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    selected = builtMeta.questions;
   } catch (err) {
     return {
       date: dateStr,
       audience: 'general',
       created: false,
       exam: null,
-      error: err instanceof Error ? err.message : 'Falha ao sortear questões',
+      error: err instanceof Error ? err.message : 'Falha ao sortear/revisar questões com IA',
     };
   }
 
@@ -176,9 +176,11 @@ export async function ensureDailyGeneralExam(
       show_answers_after_submit: false,
       show_answers_when_all_done: false,
       selection_mode: 'auto',
-      status: 'published',
+      status: 'draft',
       exam_kind: 'daily',
       audience: 'general',
+      quality_status: 'pending',
+      quality_summary: 'Revisão IA em andamento…',
       date_closes: release.date_closes,
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
@@ -234,33 +236,36 @@ export async function ensureDailyGeneralExam(
   }
 
   const orderById = new Map(selected.map((q, i) => [q.id, i + 1]));
-  await reviewAndPersistExamQuality(admin, exam.id, selected, orderById);
+  try {
+    await reviewAndPersistExamQuality(admin, exam.id, selected, orderById, {
+      secondPassNotes: `${builtMeta.secondPassNotes} · trocas=${builtMeta.replaced} · polish=${builtMeta.polished}`,
+      reviews: builtMeta.reviews,
+    });
+  } catch (err) {
+    await admin
+      .from('exams')
+      .update({
+        status: 'draft',
+        quality_status: 'blocked',
+        quality_summary: err instanceof Error ? err.message : 'Falha na revisão IA',
+      })
+      .eq('id', exam.id);
+    return {
+      date: dateStr,
+      audience: 'general',
+      created: true,
+      exam,
+      error: err instanceof Error ? err.message : 'Falha na revisão IA',
+    };
+  }
 
-  return { date: dateStr, audience: 'general', created: true, exam };
-}
-
-async function ensureExistingExamReviewed(
-  admin: NonNullable<ReturnType<typeof createAdminClient>>,
-  examId: string
-) {
-  const { data: exam } = await admin
+  const { data: refreshed } = await admin
     .from('exams')
-    .select('quality_status')
-    .eq('id', examId)
-    .maybeSingle();
-  if (exam?.quality_status && exam.quality_status !== 'pending') return;
+    .select('id, title, date_available, total_questions, duration_minutes, status, quality_status, quality_summary')
+    .eq('id', exam.id)
+    .single();
 
-  const { data: eqs } = await admin
-    .from('exam_questions')
-    .select('question_id, order_number')
-    .eq('exam_id', examId)
-    .order('order_number');
-  const ids = (eqs ?? []).map((e) => e.question_id);
-  if (ids.length === 0) return;
-  const { data: qs } = await admin.from('questions').select('*').in('id', ids);
-  if (!qs?.length) return;
-  const orderById = new Map((eqs ?? []).map((e) => [e.question_id as string, e.order_number as number]));
-  await reviewAndPersistExamQuality(admin, examId, qs as Question[], orderById);
+  return { date: dateStr, audience: 'general', created: true, exam: refreshed ?? exam };
 }
 
 export async function ensureDailyGeneralHorizon(

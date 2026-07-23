@@ -81,13 +81,17 @@ export default async function ProvaPage({
 
   const qualityStatus = (exam as { quality_status?: string }).quality_status ?? null;
   const qualitySummary = (exam as { quality_summary?: string }).quality_summary ?? null;
-  if (qualityStatus === 'blocked') {
+  if (qualityStatus === 'blocked' || qualityStatus === 'pending') {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <h1 className="text-xl font-bold text-red-900">Disputa em revisão</h1>
+        <h1 className="text-xl font-bold text-red-900">
+          {qualityStatus === 'pending' ? 'Revisão IA em andamento' : 'Disputa não publicada'}
+        </h1>
         <p className="mt-3 text-sm text-red-800">
           {qualitySummary ||
-            'A revisão automática encontrou problema nas questões. O professor foi avisado e liberará a prova em breve.'}
+            (qualityStatus === 'pending'
+              ? 'A disputa só libera depois que as 20 questões forem aprovadas automaticamente.'
+              : 'A revisão automática reprovou questões. O administrador foi avisado.')}
         </p>
         <a href="/aluno" className="mt-6 inline-block text-sm font-semibold text-emerald-700 hover:underline">
           ← Voltar ao início

@@ -16,10 +16,9 @@ export async function ensureBothDailyExams(
   dateStr = todayDateStringBrazil()
 ): Promise<DualEnsureResult> {
   await ensureNephrologyLeague();
-  const [general, nephrology] = await Promise.all([
-    ensureDailyGeneralExam(dateStr),
-    ensureDailyNephrologyExam(dateStr),
-  ]);
+  // Sequencial: cada trilha faz dezenas de chamadas OpenAI (revisão + trocas).
+  const general = await ensureDailyGeneralExam(dateStr);
+  const nephrology = await ensureDailyNephrologyExam(dateStr);
   return { date: dateStr, general, nephrology };
 }
 

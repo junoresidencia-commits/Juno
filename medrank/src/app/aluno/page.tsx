@@ -12,7 +12,6 @@ import {
 } from '@/lib/exams/ranking-visibility';
 import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
-import { ensureBothDailyExams } from '@/lib/exams/ensure-daily';
 import { audienceLabel, resolveUserExamAudience } from '@/lib/exams/audience';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
@@ -70,9 +69,8 @@ export default async function AlunoDashboard() {
   const userId = session.userId;
   const profile = session.profile;
 
-  // Garante as duas disputas do dia; o aluno só vê a da sua liga
-  await ensureBothDailyExams(today);
-
+  // Disputa só aparece se já estiver published (após pipeline IA 20/20).
+  // Geração/revisão: Admin → Gerar disputa ou cron — não na home do aluno.
   const { data: todayExam } = await supabase
     .from('exams')
     .select('*')
