@@ -376,12 +376,7 @@ export function ExamRunner({
       </div>
 
       <div className="mb-4 rounded-xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        {current.topic && (
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-emerald-600">
-            {current.topic}
-            {current.subtopic ? ` · ${current.subtopic}` : ''}
-          </p>
-        )}
+        {/* Não exibir topic/subtopic/dificuldade: entrega o diagnóstico e o nível ao aluno. */}
         <p className="exam-no-select whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element

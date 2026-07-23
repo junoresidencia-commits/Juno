@@ -32,7 +32,7 @@ export default async function ComentariosPage() {
           queue.map((q, index) => (
             <article key={q.id} className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                #{index + 1} · {q.topic ?? 'Sem tema'} · {q.difficulty ?? '—'}
+                #{index + 1}
               </p>
               <p className="mt-2 text-sm font-medium text-slate-900">{q.statement}</p>
               <p className="mt-2 text-xs text-slate-500">
