@@ -46,9 +46,10 @@ export async function POST(request: Request) {
       error: err || undefined,
     });
   } catch (e) {
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : 'Falha no pipeline IA da disputa' },
-      { status: 500 }
-    );
+    const raw = e instanceof Error ? e.message : 'Falha no pipeline IA da disputa';
+    const error = /ByteString|8230|greater than 255/i.test(raw)
+      ? 'Falha de encoding na chamada OpenAI (caractere invalido na OPENAI_API_KEY ou header). Na Vercel: apague a OPENAI_API_KEY, crie de novo colando so sk-..., Redeploy, e tente Forcar regenerar.'
+      : raw.replace(/[\u0100-\uFFFF]/g, '?');
+    return NextResponse.json({ error }, { status: 500 });
   }
 }

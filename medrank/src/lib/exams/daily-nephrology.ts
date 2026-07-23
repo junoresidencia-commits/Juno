@@ -242,7 +242,7 @@ export async function ensureDailyNephrologyExam(
       exam_kind: 'daily',
       audience: 'nephrology',
       quality_status: 'pending',
-      quality_summary: 'Revisão IA em andamento…',
+      quality_summary: 'Revisao IA em andamento...',
       date_closes: release.date_closes,
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
