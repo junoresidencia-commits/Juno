@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import { DAILY_EXAM_HORIZON_DAYS } from '@/lib/exams/daily-schedule';
-import { ensureBothDailyHorizons } from '@/lib/exams/ensure-daily';
+import { ensureBothDailyExams } from '@/lib/exams/ensure-daily';
+import { todayDateStringBrazil } from '@/lib/exams/window';
 
-/** Pipeline IA por dia × 2 audiências — precisa de timeout longo. */
+/** Só a disputa de hoje — 1×/dia via cron. */
 export const maxDuration = 300;
 
 /**
- * Vercel Cron: gera disputa geral + disputa da Liga de Nefrologia.
+ * Vercel Cron: gera e revisa com IA apenas a disputa de HOJE
+ * (geral + Liga de Nefrologia). Se já existir, não reprocessa.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -35,36 +36,34 @@ export async function GET(request: Request) {
     );
   }
 
-  const results = await ensureBothDailyHorizons(DAILY_EXAM_HORIZON_DAYS);
+  const date = todayDateStringBrazil();
+  const result = await ensureBothDailyExams(date);
+  const errors = [result.general.error, result.nephrology.error].filter(Boolean);
   const created =
-    results.filter((r) => r.general.created).length +
-    results.filter((r) => r.nephrology.created).length;
-  const errors = results.flatMap((r) =>
-    [r.general.error, r.nephrology.error].filter(Boolean)
-  );
+    (result.general.created ? 1 : 0) + (result.nephrology.created ? 1 : 0);
 
   return NextResponse.json({
     ok: errors.length === 0,
+    mode: 'today_only',
+    date,
     created,
-    checked: results.length * 2,
-    results: results.map((r) => ({
-      date: r.date,
-      general: {
-        created: r.general.created,
-        examId: r.general.exam?.id ?? null,
-        title: r.general.exam?.title ?? null,
-        error: r.general.error ?? null,
-        quality: (r.general.exam as { quality_status?: string } | null)?.quality_status ?? null,
-      },
-      nephrology: {
-        track: r.nephrology.track,
-        created: r.nephrology.created,
-        examId: r.nephrology.exam?.id ?? null,
-        title: r.nephrology.exam?.title ?? null,
-        error: r.nephrology.error ?? null,
-        quality: (r.nephrology.exam as { quality_status?: string } | null)?.quality_status ?? null,
-      },
-    })),
+    checked: 2,
+    general: {
+      created: result.general.created,
+      examId: result.general.exam?.id ?? null,
+      title: result.general.exam?.title ?? null,
+      error: result.general.error ?? null,
+      quality: (result.general.exam as { quality_status?: string } | null)?.quality_status ?? null,
+    },
+    nephrology: {
+      track: result.nephrology.track,
+      created: result.nephrology.created,
+      examId: result.nephrology.exam?.id ?? null,
+      title: result.nephrology.exam?.title ?? null,
+      error: result.nephrology.error ?? null,
+      quality:
+        (result.nephrology.exam as { quality_status?: string } | null)?.quality_status ?? null,
+    },
   });
 }
 

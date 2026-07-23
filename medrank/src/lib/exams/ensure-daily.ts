@@ -26,9 +26,10 @@ export async function ensureBothDailyHorizons(
   days = DAILY_EXAM_HORIZON_DAYS,
   fromDate = todayDateStringBrazil()
 ): Promise<DualEnsureResult[]> {
+  // Mantido para testes; em produção o cron/admin usam só hoje (days=1).
   await ensureNephrologyLeague();
   const results: DualEnsureResult[] = [];
-  const n = Math.max(1, Math.min(31, days));
+  const n = Math.max(1, Math.min(1, days)); // forçar no máx. 1 dia
   for (let i = 0; i < n; i++) {
     const date = addCalendarDaysBrazil(fromDate, i);
     results.push(await ensureBothDailyExams(date));
