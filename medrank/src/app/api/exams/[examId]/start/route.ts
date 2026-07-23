@@ -41,12 +41,11 @@ export async function POST(
     }
 
     if (existing && !existing.finished_at) {
-      const { forfeitDemoAttempt } = await import('@/lib/demo/runtime');
-      const forfeited = forfeitDemoAttempt(existing.id, { violationType: 'abandoned_session' });
-      return NextResponse.json(
-        { error: 'Prova encerrada por abandono (antifraude).', attemptId: existing.id, forfeited: true, attempt: forfeited },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        attempt: existing,
+        initialAnswers: mapSavedAnswers(existing.id),
+        resumed: true,
+      });
     }
 
     const attempt = createDemoAttempt(examId, userId);
@@ -119,29 +118,23 @@ export async function POST(
   }
 
   if (existing && !existing.finished_at) {
-    // Tolerância zero: tentativa aberta = abandono → forfeit
-    const { createAdminClient } = await import('@/lib/supabase/admin');
-    const admin = createAdminClient();
-    await (admin ?? supabase).rpc('forfeit_attempt', {
-      p_attempt_id: existing.id,
-      p_violation_type: 'abandoned_session',
-      p_question_id: null,
-      p_elapsed_seconds: null,
-      p_ip: null,
-      p_device: null,
-      p_browser: null,
-      p_os: null,
-      p_user_agent: null,
-      p_metadata: {},
+    const { data: answers } = await supabase
+      .from('attempt_answers')
+      .select('question_id, selected_option')
+      .eq('attempt_id', existing.id);
+
+    const initialAnswers: Record<string, OptionLetter> = {};
+    for (const row of answers ?? []) {
+      if (row.selected_option) {
+        initialAnswers[row.question_id] = row.selected_option as OptionLetter;
+      }
+    }
+
+    return NextResponse.json({
+      attempt: existing,
+      initialAnswers,
+      resumed: true,
     });
-    return NextResponse.json(
-      {
-        error: 'Prova encerrada por abandono da sessão (antifraude).',
-        attemptId: existing.id,
-        forfeited: true,
-      },
-      { status: 400 }
-    );
   }
 
   const { data: attempt, error } = await supabase

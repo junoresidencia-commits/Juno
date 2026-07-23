@@ -17,7 +17,8 @@ type Options = {
   onTerminated: (violationType: ViolationType) => void;
 };
 
-const GRACE_MS = 1200;
+const GRACE_MS = 4500; // iPhone/Safari: barra de URL e foco inicial não podem zerar a prova
+const VISIBILITY_DEBOUNCE_MS = 800;
 
 export function useExamAntiFraud({
   enabled,
@@ -96,15 +97,30 @@ export function useExamAntiFraud({
       trigger(type, extra);
     };
 
+    let visibilityTimer: number | null = null;
     const onVisibility = () => {
-      if (document.visibilityState === 'hidden') {
-        safeTrigger('visibility_hidden');
+      if (document.visibilityState !== 'hidden') {
+        if (visibilityTimer != null) {
+          window.clearTimeout(visibilityTimer);
+          visibilityTimer = null;
+        }
+        return;
       }
+      // Debounce: notificações / gestos no iOS escondem a aba por milissegundos
+      visibilityTimer = window.setTimeout(() => {
+        if (document.visibilityState === 'hidden') {
+          safeTrigger('visibility_hidden');
+        }
+      }, VISIBILITY_DEBOUNCE_MS);
     };
 
     const onContextMenu = (e: Event) => {
       e.preventDefault();
-      safeTrigger('context_menu');
+      // Long-press no celular ≠ cola; só bloqueia o menu
+      const coarse =
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(pointer: coarse)').matches;
+      if (!coarse) safeTrigger('context_menu');
     };
 
     const onCopy = (e: ClipboardEvent) => {
@@ -121,7 +137,7 @@ export function useExamAntiFraud({
       const target = e.target as HTMLElement | null;
       if (target?.closest?.('[data-exam-allow-select]')) return;
       e.preventDefault();
-      safeTrigger('select_text');
+      // Não encerra a prova só por selecionar — evita falso positivo no mobile
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -173,6 +189,7 @@ export function useExamAntiFraud({
 
     return () => {
       window.clearTimeout(armTimer);
+      if (visibilityTimer != null) window.clearTimeout(visibilityTimer);
       window.clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibility);
       document.removeEventListener('contextmenu', onContextMenu, true);
