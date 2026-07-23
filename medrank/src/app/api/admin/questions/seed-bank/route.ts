@@ -6,7 +6,7 @@ import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isStructurallySound, polishQuestionOptions, stripOptionRationaleLeak } from '@/lib/question-bank/polish-options';
 import { statementFingerprint } from '@/lib/question-bank/provenance';
-import type { Difficulty, OptionLetter, Question } from '@/types/database';
+import type { Difficulty, OptionLetter, Question, QuestionOrigin } from '@/types/database';
 
 /** Importa dezenas de milhares de questões — precisa de timeout longo. */
 export const maxDuration = 300;
@@ -22,15 +22,34 @@ function deterministicUuid(seed: string): string {
   ].join('-');
 }
 
-function loadBankFile(fileName: string): Question[] {
+type BankQuestion = Question & {
+  institution?: string | null;
+  exam_name?: string | null;
+  source_url?: string | null;
+  official_answer?: string | null;
+  reproduction_allowed?: boolean | null;
+  question_origin?: QuestionOrigin | null;
+  bank_status?: string | null;
+};
+
+function loadBankFile(fileName: string): BankQuestion[] {
   const path = join(process.cwd(), 'data', fileName);
   if (!existsSync(path)) return [];
-  const raw = JSON.parse(readFileSync(path, 'utf-8')) as { questions?: Question[] } | Question[];
+  const raw = JSON.parse(readFileSync(path, 'utf-8')) as { questions?: BankQuestion[] } | BankQuestion[];
   if (Array.isArray(raw)) return raw;
   return raw.questions ?? [];
 }
 
-function cleanOptionFields(q: Question): Question {
+function isOfficialRow(q: BankQuestion): boolean {
+  if (q.question_origin === 'official') return true;
+  if (q.reproduction_allowed === true) return true;
+  const tags = q.tags ?? [];
+  if (tags.includes('official') || tags.includes('real')) return true;
+  const src = String(q.source || '').toLowerCase();
+  return src === 'enare' || src === 'revalida';
+}
+
+function cleanOptionFields(q: BankQuestion): BankQuestion {
   return {
     ...q,
     option_a: stripOptionRationaleLeak(String(q.option_a || '')),
@@ -41,9 +60,13 @@ function cleanOptionFields(q: Question): Question {
   };
 }
 
-function toInsertRow(question: Question) {
+function toInsertRow(question: BankQuestion) {
   const correct = String(question.correct_option || 'A').toUpperCase() as OptionLetter;
   const difficulty = (question.difficulty as Difficulty | null) ?? null;
+  const official = isOfficialRow(question);
+  const origin: QuestionOrigin =
+    question.question_origin ||
+    (official ? 'official' : 'original');
 
   return {
     id: deterministicUuid(question.id || question.statement.slice(0, 80)),
@@ -65,9 +88,13 @@ function toInsertRow(question: Question) {
     image_url: question.image_url ?? null,
     bibliography: question.bibliography ?? null,
     bank_status: 'approved' as const,
-    question_origin: 'original' as const,
+    question_origin: origin,
+    institution: question.institution ?? (official ? question.source : null) ?? null,
+    exam_name: question.exam_name ?? null,
+    source_url: question.source_url ?? null,
+    official_answer: question.official_answer ?? (official ? correct : null),
+    reproduction_allowed: official ? true : Boolean(question.reproduction_allowed),
     statement_fingerprint: statementFingerprint(question.statement),
-    reproduction_allowed: false,
   };
 }
 
@@ -83,44 +110,64 @@ export async function POST() {
     );
   }
 
+  // Oficiais primeiro (ENARE/Revalida CC-BY); expert MedRank depois (treino/fallback)
   const combined = [
+    ...loadBankFile('official-residency-questions.json'),
+    ...loadBankFile('imported-questions.json'),
+    ...loadBankFile('original-style-questions.json'),
+    ...loadBankFile('supplement-questions.json'),
     ...loadBankFile('residencia-expert-questions.json'),
     ...loadBankFile('nefropediatria-questions.json'),
     ...loadBankFile('nefrologia-avancada-questions.json'),
-    ...loadBankFile('supplement-questions.json'),
-    ...loadBankFile('original-style-questions.json'),
-    // Importado por último e só entra se passar no filtro estrutural (após polish)
-    ...loadBankFile('imported-questions.json'),
   ];
 
-  // Deduplicate by statement; polish opções ruins; descarta o que ainda falhar
   const seen = new Set<string>();
   let polishedCount = 0;
   let droppedWeak = 0;
-  const unique: Question[] = [];
+  let officialCount = 0;
+  const unique: BankQuestion[] = [];
+
   for (const raw of combined) {
     const key = raw.statement.slice(0, 120).toLowerCase().replace(/\s+/g, ' ');
     if (seen.has(key)) continue;
     seen.add(key);
 
+    const official = isOfficialRow(raw);
     let q = cleanOptionFields(raw);
-    if (!isStructurallySound(q) || /esta abordagem atrasa/i.test(
-      `${q.option_a} ${q.option_b} ${q.option_c} ${q.option_d} ${q.option_e}`
-    )) {
-      q = polishQuestionOptions(q);
-      polishedCount += 1;
+
+    // Nunca reescrever alternativas de prova oficial
+    if (!official) {
+      if (
+        !isStructurallySound(q) ||
+        /esta abordagem atrasa/i.test(
+          `${q.option_a} ${q.option_b} ${q.option_c} ${q.option_d} ${q.option_e}`
+        )
+      ) {
+        q = polishQuestionOptions(q);
+        polishedCount += 1;
+      }
+      if (!isStructurallySound(q)) {
+        droppedWeak += 1;
+        continue;
+      }
+    } else {
+      // Oficiais: só exige enunciado + 5 opções + gabarito
+      const hasOptions = [q.option_a, q.option_b, q.option_c, q.option_d, q.option_e].every(
+        (o) => String(o || '').trim().length > 0
+      );
+      if (!String(q.statement || '').trim() || !hasOptions) {
+        droppedWeak += 1;
+        continue;
+      }
+      officialCount += 1;
     }
-    // Só descarta erros graves (não warning de stem curto)
-    if (!isStructurallySound(q)) {
-      droppedWeak += 1;
-      continue;
-    }
+
     unique.push(q);
   }
 
   if (unique.length === 0) {
     return NextResponse.json(
-      { error: 'Arquivos data/imported-questions.json não encontrados no deploy.' },
+      { error: 'Nenhum arquivo de banco encontrado em data/.' },
       { status: 404 }
     );
   }
@@ -142,22 +189,15 @@ export async function POST() {
 
   const { count } = await admin.from('questions').select('*', { count: 'exact', head: true });
 
-  const styleTags = new Set<string>();
-  for (const q of unique) {
-    for (const tag of q.tags ?? []) {
-      if (tag.startsWith('estilo-')) styleTags.add(tag.replace('estilo-', ''));
-    }
-  }
-
   return NextResponse.json({
     ok: errors.length === 0,
     imported,
+    officialCount,
     totalInDb: count ?? imported,
     polishedOnImport: polishedCount,
     droppedWeak,
     sources:
-      'Expert residência + nefro/nefroped + originais MedRank (+ importados só se passarem no filtro de qualidade)',
-    styleBanks: [...styleTags].sort(),
+      'Oficiais ENARE/Revalida (CC-BY) primeiro + originais MedRank + expert nefro (fallback)',
     errors,
   });
 }

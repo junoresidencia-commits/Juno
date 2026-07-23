@@ -85,10 +85,9 @@ export default async function QuestoesPage() {
       {!usesDemoStore() ? (
         <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
           <p className="mb-3 text-sm text-emerald-950">
-            {totalCount < 500
-              ? 'Banco vazio ou incompleto. Importe ENARE + Revalida (abertos) e originais MedRank com tags estilo-USP/UNICAMP/SUS-SP/etc. (sem copiar prova oficial).'
-              : 'Reinstalar: botão abaixo (upsert). Tags estilo-* permitem filtrar por banca pedagógica.'}{' '}
-            Política: docs/BANCO-QUESTOES.md.
+            Prioridade: questões <strong>oficiais</strong> ENARE/Revalida (CC-BY, enunciado
+            original). USP/UNIFESP/etc. só via Importar prova quando a fonte permitir. Depois do
+            import: Provas → Gerar do banco (grátis). Ver docs/BANCO-PROVAS-PUBLICAS.md.
           </p>
           <SeedQuestionBankButton />
         </div>
