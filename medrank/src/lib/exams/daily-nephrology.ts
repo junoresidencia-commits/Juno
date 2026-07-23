@@ -38,6 +38,13 @@ export interface EnsureDailyExamResult {
   created: boolean;
   exam: Pick<Exam, 'id' | 'title' | 'date_available' | 'total_questions' | 'duration_minutes' | 'status'> | null;
   error?: string;
+  progress?: {
+    poolSize: number;
+    selected: number;
+    approved: number;
+    rejected: number;
+    target: number;
+  };
 }
 
 /** Templates genéricos do banco-vivo antigo — nunca entram na disputa. */
@@ -321,7 +328,14 @@ export async function ensureDailyNephrologyExam(
     .eq('id', exam.id)
     .single();
 
-  return { date: dateStr, track, audience: 'nephrology', created: true, exam: refreshed ?? exam };
+  return {
+    date: dateStr,
+    track,
+    audience: 'nephrology',
+    created: true,
+    exam: refreshed ?? exam,
+    progress: builtMeta.progress,
+  };
 }
 
 /** Garante hoje + próximos N-1 dias. */

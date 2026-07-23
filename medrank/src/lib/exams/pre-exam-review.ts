@@ -47,10 +47,11 @@ export type ExamReviewResult = {
   secondPassNotes?: string;
 };
 
-/** Limiares obrigatórios para liberar questão na disputa. */
+/** Limiares obrigatórios para liberar questão na disputa (spec MedRank). */
 export const REVIEW_THRESHOLDS = {
-  overallQualityMin: 90,
-  gabaritoConfidenceMin: 95,
+  overallQualityMin: 85,
+  gabaritoConfidenceMin: 90,
+  alternativesQualityMin: 85,
   ambiguityMustBe: 'ausente' as const,
 };
 
@@ -89,6 +90,11 @@ function passesThresholds(scores: AiQuestionScores, hasExplanation: boolean): {
   if (scores.gabaritoConfidence < REVIEW_THRESHOLDS.gabaritoConfidenceMin) {
     reasons.push(
       `confiança no gabarito ${scores.gabaritoConfidence}% < ${REVIEW_THRESHOLDS.gabaritoConfidenceMin}%`
+    );
+  }
+  if (scores.alternativesQuality < REVIEW_THRESHOLDS.alternativesQualityMin) {
+    reasons.push(
+      `qualidade das alternativas ${scores.alternativesQuality}% < ${REVIEW_THRESHOLDS.alternativesQualityMin}%`
     );
   }
   if (String(scores.ambiguity).toLowerCase() !== REVIEW_THRESHOLDS.ambiguityMustBe) {
@@ -143,48 +149,79 @@ async function callOpenAiJson(prompt: string): Promise<Record<string, unknown>> 
  * Questão só é aprovada se passar nos limiares de qualidade.
  */
 export async function reviewQuestionMandatoryAi(q: Question): Promise<QuestionReviewResult> {
+  const { evaluateQuestionQualityLocal } = await import(
+    '@/lib/question-bank/quality-review'
+  );
+  const localQuality = evaluateQuestionQualityLocal(q);
   const structural = structuralGate(q);
   const codes = new Set(structural.map((i) => i.code));
   const hasExplanation = String(q.explanation || '').trim().length >= 80;
 
-  if (structural.some((i) => i.severity === 'error')) {
+  // Falha dura local: só vazamentos/absurdos/tamanho óbvio — o resto a IA decide.
+  const hardFail =
+    structural.some((i) => i.severity === 'error') ||
+    !localQuality.noAnswerExplanationInsideOptions ||
+    !localQuality.noAbsurdDistractors ||
+    !localQuality.correctAnswerNotObviousByLength ||
+    localQuality.qualityScore < 50;
+
+  if (hardFail) {
     return {
       questionId: q.id,
       severity: 'error',
-      codes: [...codes, 'structural_fail'],
-      message: structural
-        .filter((i) => i.severity === 'error')
-        .map((i) => i.message)
+      codes: [...codes, 'structural_fail', 'local_quality_fail'],
+      message: [
+        ...structural.filter((i) => i.severity === 'error').map((i) => i.message),
+        ...localQuality.rejectionReasons,
+      ]
+        .slice(0, 5)
         .join('; '),
       issues: structural,
       approved: false,
+      scores: {
+        specialty: String(q.specialty || q.topic || 'Geral'),
+        difficulty: String(q.difficulty || 'medio'),
+        stemQuality: localQuality.qualityScore,
+        gabaritoConfidence: localQuality.correctAnswerNotObviousByLength ? 80 : 40,
+        ambiguity: localQuality.ambiguityDetected ? 'grave' : 'ausente',
+        alternativesQuality: localQuality.optionsHaveSimilarLength ? 80 : 40,
+        scientificCurrency: 70,
+        overallQuality: localQuality.qualityScore,
+        singleCorrect: localQuality.hasSingleBestAnswer,
+        hasJustification: localQuality.answerMatchesExplanation,
+        vignetteComplete: localQuality.stemContainsRequiredInformation,
+        askType: 'outro',
+      },
     };
   }
 
-  const prompt = `Você é revisor sênior de questões de residência (padrão USP/ENARE) e prova de título (nefrologia).
-Revise esta questão para disputa diária. Se reprovar em QUALQUER critério, approved=false.
+  const prompt = `Você é revisor sênior de provas USP, ENARE, ENARI, federais, residência e título (SBN/nefrologia).
+Revise esta questão para disputa diária. Se falhar em QUALQUER critério crítico, approved=false.
 
-APROVAÇÃO exige:
-1. Vinheta clínica realista e bem construída (idade, história, exame e exames relevantes quando couber). Dados suficientes, sem enchimento inútil.
-2. Pergunta objetiva: melhor conduta / diagnóstico mais provável / tratamento / próximo passo / interpretação / complicação-prognóstico.
-3. Cinco alternativas A–E CLINICAMENTE RELACIONADAS AO MESMO CASO.
-4. Distratores plausíveis = erros reais de raciocínio ou condutas possíveis em outras circunstâncias (NÃO genéricos de outro tema).
-5. Apenas UMA melhor resposta; gabarito clinicamente correto e atual.
-6. Alternativas com tamanho e estrutura semelhantes (sem gabarito óbvio por tamanho/detalhe).
-7. Justificativa correta e coerente (fica SÓ no campo explanation — nunca na alternativa).
-8. Nível: residência USP/ENARE (geral) ou título/nefrologista (se nefro). NÃO basta citar "USP/ENARE" — o estilo deve ser verdadeiro.
+A questão DEVE exigir raciocínio clínico verdadeiro (não memorização óbvia).
 
-REPROVE AUTOMATICAMENTE se houver:
-- palavra "gabarito" em enunciado ou alternativas;
-- justificativa/explicação dentro da alternativa correta;
-- "conduta alinhada à vinheta/guidelines", "raciocínio típico de bancas", "item MedRank", "USP-5", "questão estilo USP/ENARE", "banca competitiva";
-- distratores desconectados do caso (ex.: hemorragia pós-parto com opções de nefroproteção/proteinúria genéricas);
-- templates genéricos reutilizados; enunciado curto/artificial; pista visual (correta bem mais longa);
-- mais de uma resposta defensável; ambiguidade; desatualização científica.
+APROVAÇÃO (todos obrigatórios):
+1. Vinheta com dados que PERMITEM diferenciar hipóteses/condutas (idade, clínica, labs relevantes).
+2. Pergunta de melhor conduta / diagnóstico mais provável / próximo passo / modalidade / timing.
+3. Cinco alternativas A–E do MESMO domínio clínico, tamanho e estrutura SEMELHANTES.
+4. Distratores = erros clínicos reais (dx diferencial próximo; conduta correta em outro contexto; momento errado; dose; contraindicação; modalidade inadequada à estabilidade).
+5. UMA única melhor resposta; gabarito coerente com a explanation.
+6. NÃO é possível acertar só pelo tamanho/detalhe da alternativa correta.
+7. Nenhuma alternativa contém justificativa, meta-texto ou frases que denunciam o erro.
+8. Nível comparável a USP/ENARE/título — NÃO fácil/previsível.
+
+REPROVE se:
+- correta é um "mini-aula" e erradas são curtas/absurdas (Litíase, Enurese, Pneumonia viral genérica);
+- frases como "Esta abordagem atrasa…", "sem excluir contraindicações", "iniciar empiricamente…";
+- enunciado já entrega o diagnóstico/conduta sem exigir interpretação;
+- não há dúvida real entre 2–3 opções plausíveis;
+- palavra gabarito / USP-5 / ENARE / MedRank / "estilo banca" no texto do aluno;
+- ambiguidade; mais de uma resposta defensável; desatualização.
 
 Responda JSON:
 {
   "approved": boolean,
+  "requiresClinicalReasoning": boolean,
   "specialty": string,
   "difficulty": "facil"|"medio"|"dificil",
   "stemQuality": 0-100,
@@ -197,6 +234,8 @@ Responda JSON:
   "hasJustification": boolean,
   "vignetteComplete": boolean,
   "distractorsOnTopic": boolean,
+  "distractorsPlausible": boolean,
+  "correctNotObviousByLength": boolean,
   "noMetaLabels": boolean,
   "askType": "conduta"|"diagnostico"|"tratamento"|"proximo_passo"|"interpretacao"|"complicacao_prognostico"|"outro",
   "problems": string[],
@@ -215,6 +254,7 @@ ${JSON.stringify({
   subtopic: q.subtopic,
   source: q.source,
   tags: q.tags,
+  localQualityScore: localQuality.qualityScore,
 })}`;
 
   const parsed = await callOpenAiJson(prompt);
@@ -235,15 +275,25 @@ ${JSON.stringify({
   };
 
   const threshold = passesThresholds(scores, hasExplanation);
-  const distractorsOk = parsed.distractorsOnTopic !== false;
+  const distractorsOk =
+    parsed.distractorsOnTopic !== false && parsed.distractorsPlausible !== false;
   const noMeta = parsed.noMetaLabels !== false;
+  const lengthOk = parsed.correctNotObviousByLength !== false;
+  const reasoningOk = parsed.requiresClinicalReasoning !== false;
   const aiApproved =
-    parsed.approved === true && threshold.ok && distractorsOk && noMeta;
+    parsed.approved === true &&
+    threshold.ok &&
+    distractorsOk &&
+    noMeta &&
+    lengthOk &&
+    reasoningOk;
   const problems = [
     ...(Array.isArray(parsed.problems) ? parsed.problems.map(String) : []),
     ...threshold.reasons,
-    ...(!distractorsOk ? ['distratores fora do caso / genéricos'] : []),
-    ...(!noMeta ? ['meta-texto de banca ou pista de gabarito'] : []),
+    ...(!distractorsOk ? ['distratores não plausíveis / fora do caso'] : []),
+    ...(!noMeta ? ['meta-texto ou pista de gabarito'] : []),
+    ...(!lengthOk ? ['gabarito óbvio por tamanho'] : []),
+    ...(!reasoningOk ? ['não exige raciocínio clínico'] : []),
   ];
 
   if (!aiApproved) {

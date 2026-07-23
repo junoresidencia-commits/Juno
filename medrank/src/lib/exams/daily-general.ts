@@ -24,6 +24,13 @@ export interface EnsureGeneralExamResult {
   created: boolean;
   exam: Pick<Exam, 'id' | 'title' | 'date_available' | 'total_questions' | 'duration_minutes' | 'status'> | null;
   error?: string;
+  progress?: {
+    poolSize: number;
+    selected: number;
+    approved: number;
+    rejected: number;
+    target: number;
+  };
 }
 
 function titleForGeneral(dateStr: string): string {
@@ -341,7 +348,13 @@ export async function ensureDailyGeneralExam(
     .eq('id', exam.id)
     .single();
 
-  return { date: dateStr, audience: 'general', created: true, exam: refreshed ?? exam };
+  return {
+    date: dateStr,
+    audience: 'general',
+    created: true,
+    exam: refreshed ?? exam,
+    progress: builtMeta.progress,
+  };
 }
 
 export async function ensureDailyGeneralHorizon(
