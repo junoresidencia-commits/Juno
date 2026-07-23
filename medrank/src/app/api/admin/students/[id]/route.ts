@@ -8,6 +8,8 @@ import {
   writeDemoStore,
 } from '@/lib/demo-store';
 import { requireAdminApi } from '@/lib/api-auth';
+import { normalizeTracks } from '@/lib/tracks/config';
+import { syncTrackGroupMembership } from '@/lib/exams/audience';
 
 export async function PATCH(
   request: Request,
@@ -56,13 +58,20 @@ export async function PATCH(
       return NextResponse.json({ ok: true, league_admin: false });
     }
 
+    if (action === 'set_tracks') {
+      const tracks = normalizeTracks((body as { tracks?: string[] }).tracks);
+      (student as { enabled_tracks?: string[] }).enabled_tracks = tracks;
+      writeDemoStore(store);
+      return NextResponse.json({ ok: true, enabled_tracks: tracks });
+    }
+
     return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });
   }
 
   const admin = createAdminClient() ?? auth.supabase;
   const { data: student } = await admin
     .from('profiles')
-    .select('id, role, active, approved_at, league_admin')
+    .select('id, role, active, approved_at, league_admin, enabled_tracks')
     .eq('id', id)
     .eq('role', 'student')
     .single();
@@ -102,6 +111,28 @@ export async function PATCH(
     const { error } = await admin.from('profiles').update({ league_admin: false }).eq('id', id);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, league_admin: false });
+  }
+
+  if (action === 'set_tracks') {
+    const tracks = normalizeTracks((body as { tracks?: string[] }).tracks);
+    const { error } = await admin
+      .from('profiles')
+      .update({ enabled_tracks: tracks })
+      .eq('id', id);
+    if (error) {
+      if (/enabled_tracks|schema cache/i.test(error.message)) {
+        return NextResponse.json(
+          {
+            error:
+              'Migration 030 ainda não aplicada no Supabase (coluna enabled_tracks). Rode o SQL e tente de novo.',
+          },
+          { status: 503 }
+        );
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    await syncTrackGroupMembership(id, tracks, createAdminClient());
+    return NextResponse.json({ ok: true, enabled_tracks: tracks });
   }
 
   return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });

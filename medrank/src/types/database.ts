@@ -23,6 +23,11 @@ export interface Profile {
   created_at: string;
   /** Aluno autorizado a criar ligas (grupos). Professores sempre podem. */
   league_admin?: boolean;
+  /**
+   * Módulos ligados pelo admin: nephrology | general | mri…
+   * Controla disputas diárias e treinos livres.
+   */
+  enabled_tracks?: string[];
 }
 
 export interface Question {

@@ -71,10 +71,11 @@ export const PERIOD_OPTIONS: { value: PeriodType; label: string }[] = [
   { value: 'general', label: 'Geral' },
 ];
 
-/** Períodos visíveis para alunos (competição diária + semanal) */
+/** Períodos visíveis para alunos = ranking do GRUPO (não o geral entre ligas). */
 export const STUDENT_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
   { value: 'daily', label: 'Diário' },
   { value: 'weekly', label: 'Semanal' },
+  { value: 'monthly', label: 'Mensal' },
 ];
 
 /** Rankings internos de grupo (inclui mensal) */

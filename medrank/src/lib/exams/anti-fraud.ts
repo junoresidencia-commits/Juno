@@ -23,9 +23,9 @@ export function isViolationType(value: string): value is ViolationType {
 export const EXAM_TERMINATED_TITLE = 'PROVA ENCERRADA';
 
 export const EXAM_TERMINATED_BODY = [
-  'Foi detectada uma violação das regras de segurança (saída da tela da prova ou tentativa de interação não permitida).',
-  'Conforme as regras da plataforma, sua prova foi encerrada automaticamente.',
-  'Uma nova tentativa estará disponível somente no próximo dia.',
+  'A disputa foi encerrada porque a tela saiu do foco (troca de aba/app) ou houve tentativa de copiar conteúdo.',
+  'Esta disputa não pode ser refeita hoje. Se você também tiver outra disputa (outro módulo), ela continua disponível.',
+  'Se foi um erro técnico (ex.: ligação, notificação), fale com o professor — ele pode liberar de novo quando for bug.',
 ].join('\n\n');
 
 export type ClientDeviceInfo = {

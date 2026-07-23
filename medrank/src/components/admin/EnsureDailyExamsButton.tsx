@@ -7,7 +7,7 @@ export function EnsureDailyExamsButton() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function run(todayOnly: boolean) {
+  async function run() {
     setLoading(true);
     setMessage(null);
     setError(null);
@@ -15,36 +15,24 @@ export function EnsureDailyExamsButton() {
       const res = await fetch('/api/admin/exams/ensure-daily', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(todayOnly ? { today: true } : { days: 14 }),
+        body: JSON.stringify({ today: true }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Falha ao gerar disputas');
+        setError(data.error || 'Falha ao gerar disputa');
         return;
       }
-      if (todayOnly) {
-        const createdCount =
-          (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
-        setMessage(
-          createdCount > 0
-            ? `Criadas ${createdCount} disputa(s) de hoje (geral + Liga de Nefrologia)`
-            : data.general?.exam || data.nephrology?.exam
-              ? 'Já existiam: disputa geral + Liga de Nefrologia'
-              : 'Não foi possível criar as provas de hoje'
-        );
-        const err = data.general?.error || data.nephrology?.error;
-        if (err) setError(err);
-      } else {
-        setMessage(
-          `Geradas ${data.created} novas · verificadas ${data.checked} (próximos 14 dias)`
-        );
-        const firstError = (data.results ?? []).find(
-          (r: { general?: { error?: string }; nephrology?: { error?: string } }) =>
-            r.general?.error || r.nephrology?.error
-        );
-        const err = firstError?.general?.error || firstError?.nephrology?.error;
-        if (err) setError(err);
-      }
+      const createdCount =
+        (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
+      setMessage(
+        createdCount > 0
+          ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}).`
+          : data.general?.exam || data.nephrology?.exam
+            ? 'Já existiam as disputas de hoje — não reprocessa (1×/dia).'
+            : 'Não foi possível criar as provas de hoje'
+      );
+      const err = data.general?.error || data.nephrology?.error || data.error;
+      if (err) setError(err);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro de rede');
     } finally {
@@ -54,28 +42,18 @@ export function EnsureDailyExamsButton() {
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => run(true)}
-          className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-        >
-          {loading ? 'Gerando…' : 'Gerar disputa de hoje'}
-        </button>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => run(false)}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-teal-800 ring-1 ring-teal-300 hover:bg-teal-50 disabled:opacity-60"
-        >
-          Pré-gerar 14 dias
-        </button>
-      </div>
+      <button
+        type="button"
+        disabled={loading}
+        onClick={run}
+        className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
+      >
+        {loading ? 'Gerando e revisando…' : 'Gerar disputa de hoje'}
+      </button>
       <p className="text-xs text-slate-600">
-        Gera as duas disputas do dia: <strong>geral</strong> (outras ligas) e{' '}
-        <strong>Liga de Nefrologia</strong> (Nefrologia ↔ Nefropediatria). Quem faz ganha
-        pontos; quem não faz fica sem pontos no dia.
+        Só hoje, uma vez por dia (geral + Liga de Nefrologia). Pipeline OpenAI: gerar →
+        revisar → trocar → publicar com 20/20. Se a disputa do dia já existe, não refaz.
+        Sem <code className="rounded bg-slate-100 px-1">OPENAI_API_KEY</code> não publica.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {error && <p className="text-sm text-red-700">{error}</p>}

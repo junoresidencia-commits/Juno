@@ -4,17 +4,15 @@ import type { RankingPreviewRow } from '@/components/ranking/RankingPreviewList'
 import { RankingPreviewList } from '@/components/ranking/RankingPreviewList';
 import { DisputeOnboarding } from '@/components/aluno/DisputeOnboarding';
 import { formatExamWindowShort } from '@/lib/exams/window';
-import {
-  studentDailyRankingLabel,
-  studentRankingBeforeFinishMessage,
-} from '@/lib/exams/ranking-visibility';
+import { studentRankingBeforeFinishMessage } from '@/lib/exams/ranking-visibility';
 
 type WindowPhase = 'before' | 'open' | 'after' | 'wrong_day' | null;
 
-interface Props {
-  name: string;
-  userId?: string;
-  todayExam: Exam | null;
+export type HomeDisputeCard = {
+  key: string;
+  exam: Exam | null;
+  trackLabel: string;
+  leagueLabel?: string | null;
   windowPhase: WindowPhase;
   canStart: boolean;
   canContinue?: boolean;
@@ -22,191 +20,217 @@ interface Props {
   forfeitedToday: boolean;
   missedToday: boolean;
   attemptId?: string;
+  qualityStatus?: string | null;
+  qualitySummary?: string | null;
+};
+
+interface Props {
+  name: string;
+  userId?: string;
+  disputes: HomeDisputeCard[];
   showRanking: boolean;
   todayRankings: RankingPreviewRow[];
   rankingDate: string;
   finishedToday?: number;
   streakDays?: number;
-  /** Especialidade da disputa de hoje (Nefrologia, Nefropediatria ou Residência). */
+  rankingGroupName?: string;
+  showNephrologyTreino?: boolean;
+  todayExam?: Exam | null;
+  windowPhase?: WindowPhase;
+  canStart?: boolean;
+  canContinue?: boolean;
+  completed?: boolean;
+  forfeitedToday?: boolean;
+  missedToday?: boolean;
+  attemptId?: string;
   trackLabel?: string;
-  /** Nome da liga (ex.: Liga de Nefrologia) quando a disputa é exclusiva. */
   leagueLabel?: string;
   qualityStatus?: string | null;
   qualitySummary?: string | null;
 }
 
+function DisputeBlock({ card }: { card: HomeDisputeCard }) {
+  const examHref = card.exam ? `/aluno/prova/${card.exam.id}` : '/aluno';
+  const resultHref = card.attemptId ? `/aluno/resultado/${card.attemptId}` : '/aluno';
+  const specialty = card.trackLabel;
+  const qualityBlocked =
+    card.qualityStatus === 'blocked' || card.qualityStatus === 'pending';
+  const effectiveCanStart = card.canStart && !qualityBlocked;
+  const qCount = card.exam?.total_questions ?? 20;
+
+  return (
+    <article className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <p className="text-xs font-semibold uppercase tracking-wide text-teal-800">
+        {card.leagueLabel || 'Disputa'}
+      </p>
+      <h3 className="mt-1 text-lg font-bold text-slate-900">{specialty}</h3>
+      {card.exam && (
+        <p className="mt-1 text-sm text-slate-600">
+          {qCount} questões · {card.exam.duration_minutes} min · {formatExamWindowShort()}
+        </p>
+      )}
+
+      {qualityBlocked && (
+        <div className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-950 ring-1 ring-red-200">
+          <p className="font-semibold">
+            {card.qualityStatus === 'pending' ? 'Revisão IA em andamento' : 'Aguardando republicação'}
+          </p>
+          <p className="mt-1 text-xs">
+            {card.qualitySummary || 'A disputa só libera depois da revisão automática.'}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-4">
+        {!card.exam ? (
+          <p className="rounded-xl bg-slate-50 px-4 py-6 text-center text-sm text-slate-600">
+            Ainda sem disputa publicada para hoje.
+          </p>
+        ) : card.canContinue ? (
+          <Link
+            href={examHref}
+            prefetch={false}
+            className="exam-tap flex w-full items-center justify-center rounded-2xl bg-amber-600 px-6 py-5 text-lg font-bold text-white shadow-md shadow-amber-600/20 active:scale-[0.98]"
+          >
+            Continuar disputa
+          </Link>
+        ) : effectiveCanStart ? (
+          <Link
+            href={examHref}
+            prefetch={false}
+            className="exam-tap flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-5 text-lg font-bold text-white shadow-md shadow-emerald-600/20 active:scale-[0.98]"
+          >
+            Iniciar disputa
+          </Link>
+        ) : card.forfeitedToday ? (
+          <div className="rounded-xl bg-red-50 px-4 py-5 text-center ring-1 ring-red-100">
+            <p className="font-semibold text-red-900">Você saiu da disputa</p>
+            <p className="mt-1 text-sm text-red-700">
+              Esta prova encerrou (antifraude ou abandono). Não dá para refazer hoje — a outra
+              disputa, se houver, continua disponível.
+            </p>
+            {card.attemptId && (
+              <Link href={resultHref} className="mt-3 inline-block text-sm font-medium text-red-800 underline">
+                Ver registro →
+              </Link>
+            )}
+          </div>
+        ) : card.completed ? (
+          <Link
+            href={resultHref}
+            className="flex w-full items-center justify-center rounded-2xl bg-slate-800 px-6 py-4 text-base font-semibold text-white"
+          >
+            Ver resultado
+          </Link>
+        ) : card.windowPhase === 'before' ? (
+          <div className="rounded-xl bg-blue-50 px-4 py-5 text-center text-sm text-blue-900 ring-1 ring-blue-100">
+            Abre às 7h (Brasília)
+          </div>
+        ) : card.missedToday ? (
+          <div className="rounded-xl bg-slate-100 px-4 py-5 text-center text-sm text-slate-700">
+            Prazo encerrado — sem pontos nesta disputa hoje.
+          </div>
+        ) : (
+          <p className="text-center text-sm text-slate-500">Aguardando…</p>
+        )}
+      </div>
+    </article>
+  );
+}
+
 export function AlunoHomeSimple({
   name,
   userId,
+  disputes: disputesProp,
+  showRanking,
+  todayRankings,
+  rankingGroupName,
+  showNephrologyTreino = false,
   todayExam,
   windowPhase,
   canStart,
-  canContinue = false,
+  canContinue,
   completed,
   forfeitedToday,
   missedToday,
   attemptId,
-  showRanking,
-  todayRankings,
-  rankingDate,
-  finishedToday = 0,
-  streakDays = 0,
   trackLabel,
   leagueLabel,
   qualityStatus,
   qualitySummary,
 }: Props) {
-  const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
-  const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
-  const specialty = trackLabel ?? 'Disputa do dia';
-  const qualityBlocked = qualityStatus === 'blocked';
-  const effectiveCanStart = canStart && !qualityBlocked;
+  const disputes: HomeDisputeCard[] =
+    disputesProp?.length > 0
+      ? disputesProp
+      : [
+          {
+            key: 'legacy',
+            exam: todayExam ?? null,
+            trackLabel: trackLabel ?? 'Disputa do dia',
+            leagueLabel,
+            windowPhase: windowPhase ?? null,
+            canStart: Boolean(canStart),
+            canContinue: Boolean(canContinue),
+            completed: Boolean(completed),
+            forfeitedToday: Boolean(forfeitedToday),
+            missedToday: Boolean(missedToday),
+            attemptId,
+            qualityStatus,
+            qualitySummary,
+          },
+        ];
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
-      <header>
+    <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-xl flex-col px-4 py-6">
+      <header className="mb-2">
         <p className="text-sm text-slate-600">Olá,</p>
-        <div className="flex items-start justify-between gap-3">
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{name}</h1>
-          {streakDays > 0 && (
-            <span className="shrink-0 rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-800 ring-1 ring-orange-200">
-              🔥 {streakDays} {streakDays === 1 ? 'dia' : 'dias'}
-            </span>
-          )}
-        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{name}</h1>
       </header>
 
-      <DisputeOnboarding />
+      <DisputeOnboarding disputeCount={disputes.length} hasTreino={showNephrologyTreino} />
 
-      {(canStart || windowPhase === 'open') && finishedToday > 0 && (
-        <p className="mb-4 text-center text-sm text-slate-600">
-          <strong className="text-emerald-700">{finishedToday}</strong>{' '}
-          {finishedToday === 1 ? 'aluno já disputou' : 'alunos já disputaram'} hoje
-        </p>
-      )}
-
-      <section className="mt-4 flex flex-1 flex-col md:max-w-xl">
-        {todayExam ? (
-          <>
-            <p className="mb-3 text-center text-sm font-medium text-teal-800">
-              {leagueLabel ? (
-                <>
-                  <span className="font-bold">{leagueLabel}</span>
-                  {' · '}
-                  Hoje: <span className="font-bold">{specialty}</span>
-                </>
-              ) : (
-                <>
-                  Hoje: <span className="font-bold">{specialty}</span>
-                </>
-              )}
-            </p>
-
-            {qualityBlocked && (
-              <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-950 ring-1 ring-red-200">
-                <p className="font-semibold">Aguarde — revisão de qualidade</p>
-                <p className="mt-1">
-                  {qualitySummary ||
-                    'A IA/revisão automática encontrou problema em questões da disputa de hoje. O professor foi avisado e vai corrigir antes da liberação.'}
-                </p>
-              </div>
-            )}
-
-            {!qualityBlocked && qualityStatus === 'warning' && (
-              <div className="mb-4 rounded-2xl bg-amber-50 p-3 text-sm text-amber-950 ring-1 ring-amber-200">
-                <strong>Aviso:</strong>{' '}
-                {qualitySummary || 'Há alertas menores na revisão automática desta prova.'}
-              </div>
-            )}
-
-            {effectiveCanStart && (
-              <Link
-                href={examHref}
-                prefetch={false}
-                className="exam-tap flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]"
-              >
-                Começar a disputa!
-              </Link>
-            )}
-            {forfeitedToday && (
-              <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Você saiu da disputa</p>
-                <p className="mt-2 text-sm text-red-700">Perdeu o dia — não dá para refazer hoje.</p>
-                {attemptId && (
-                  <Link
-                    href={resultHref}
-                    className="mt-4 inline-block text-sm font-medium text-red-800 underline-offset-2 hover:underline"
-                  >
-                    Ver o que ficou registrado →
-                  </Link>
-                )}
-              </div>
-            )}
-            {completed && !forfeitedToday && (
-              <Link
-                href={resultHref}
-                className="flex w-full items-center justify-center rounded-2xl bg-slate-700 px-6 py-5 text-lg font-semibold text-white active:scale-[0.98]"
-              >
-                Ver seu resultado
-              </Link>
-            )}
-            {windowPhase === 'before' && (
-              <div className="rounded-2xl bg-blue-50 px-6 py-8 text-center ring-1 ring-blue-100">
-                <p className="text-lg font-semibold text-blue-900">Disputa abre às 7h</p>
-                <p className="mt-2 text-sm text-blue-700">
-                  Hoje é {specialty}. Volte mais tarde para disputar.
-                </p>
-              </div>
-            )}
-            {missedToday && (
-              <div className="rounded-2xl bg-red-50 px-6 py-8 text-center ring-1 ring-red-100">
-                <p className="text-lg font-semibold text-red-900">Você não fez a disputa hoje</p>
-                <p className="mt-2 text-sm text-red-700">Sem pontos neste dia — veja o ranking abaixo.</p>
-              </div>
-            )}
-
-            <p className="mt-4 text-center text-sm text-slate-600">
-              {todayExam.total_questions} questões · {todayExam.duration_minutes} min · {formatExamWindowShort()}
-            </p>
-            {effectiveCanStart && (
-              <p className="mt-2 text-center text-xs text-slate-500">
-                Uma chance por dia · {specialty} · máx. 2.000 pts
-              </p>
-            )}
-            {canStart && qualityBlocked && (
-              <p className="mt-2 text-center text-xs text-red-700">
-                Início bloqueado até o professor liberar a disputa.
-              </p>
-            )}
-            {canContinue && (
-              <p className="mt-2 text-center text-xs text-slate-500">
-                Disputa em andamento — continue antes do tempo acabar.
-              </p>
-            )}
-          </>
-        ) : (
-          <div className="rounded-2xl bg-white px-6 py-10 text-center text-slate-900 ring-1 ring-slate-200">
-            <p className="text-slate-600">Gerando disputa de hoje ({specialty})…</p>
-            <p className="mt-2 text-sm text-slate-500">
-              Se persistir, peça ao professor para importar o banco e gerar a disputa.
-            </p>
+      {/* 1) Disputas — job principal */}
+      <section className="mt-4 space-y-3">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+          Suas disputas de hoje
+        </h2>
+        {disputes.length === 0 ? (
+          <div className="rounded-2xl bg-amber-50 px-5 py-6 text-sm text-amber-950 ring-1 ring-amber-200">
+            Nenhum módulo liberado. Peça ao professor para ligar <strong>Nefrologia</strong> e/ou{' '}
+            <strong>Residência</strong> no seu cadastro.
           </div>
+        ) : (
+          disputes.map((card) => <DisputeBlock key={card.key} card={card} />)
         )}
       </section>
 
-      <section className="mt-8 rounded-2xl bg-white p-5 text-slate-900 ring-1 ring-slate-200 md:max-w-xl">
+      {/* 2) Ranking do grupo — secundário */}
+      <section className="mt-8">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-semibold text-slate-900">{studentDailyRankingLabel(rankingDate)}</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+            Ranking do seu grupo
+          </h2>
           {showRanking && (
-            <Link href="/aluno/ranking" className="shrink-0 text-sm text-emerald-700">
-              Ver →
+            <Link href="/aluno/ranking" className="text-sm font-medium text-emerald-700">
+              Ver completo →
             </Link>
           )}
         </div>
-        <div className="mt-3">
-          {showRanking ? (
+        <p className="mt-1 text-xs text-slate-500">
+          Só quem está no mesmo grupo vê este ranking. O ranking geral entre ligas é só do
+          professor.
+        </p>
+        <div className="mt-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+          {!rankingGroupName ? (
+            <p className="text-sm text-slate-600">
+              Você ainda não está em um grupo de ranking. O professor te adiciona na liga.
+            </p>
+          ) : showRanking ? (
             todayRankings.length > 0 ? (
-              <RankingPreviewList rankings={todayRankings} userId={userId} />
+              <>
+                <p className="mb-2 text-sm font-semibold text-slate-800">{rankingGroupName}</p>
+                <RankingPreviewList rankings={todayRankings} userId={userId} />
+              </>
             ) : (
               <p className="text-sm text-slate-600">Aguardando primeiros resultados…</p>
             )
@@ -216,36 +240,33 @@ export function AlunoHomeSimple({
         </div>
       </section>
 
-      <section className="mt-6 space-y-3 md:max-w-xl">
-        <div>
-          <h2 className="font-semibold text-slate-900">Treinos</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Gere um simulado agora. As questões vêm do banco da especialidade.
+      {/* 3) Treino livre — não compete com a disputa */}
+      {showNephrologyTreino && (
+        <section className="mt-8">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+            Treino livre
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Não conta no ranking da disputa. Treine quantas vezes quiser.
           </p>
-        </div>
-        <Link
-          href="/aluno/treino/nefrologia"
-          className="block rounded-2xl bg-teal-700 px-5 py-4 text-white shadow-sm hover:bg-teal-800"
-        >
-          <p className="text-sm font-medium text-teal-100">Adulto · Título SBN</p>
-          <p className="text-lg font-bold">Nefrologia</p>
-          <p className="mt-1 text-sm text-teal-100">Clínica Médica aplicada ao rim · gerar prova</p>
-        </Link>
-        <Link
-          href="/aluno/treino/nefropediatria"
-          className="block rounded-2xl bg-white px-5 py-4 text-slate-900 shadow-sm ring-1 ring-teal-200 hover:ring-teal-400"
-        >
-          <p className="text-sm font-medium text-teal-800">Pediátrica · SBN/SBP</p>
-          <p className="text-lg font-bold">Nefrologia Pediátrica</p>
-          <p className="mt-1 text-sm text-slate-600">Casos pediátricos · gerar prova</p>
-        </Link>
-      </section>
-
-      <footer className="mt-6 pb-4 text-center">
-        <Link href="/aluno/ranking?period=weekly" className="text-sm text-slate-600 underline-offset-2 hover:text-emerald-700 hover:underline">
-          Ranking da semana
-        </Link>
-      </footer>
+          <div className="mt-3 grid gap-2">
+            <Link
+              href="/aluno/treino/nefrologia"
+              className="rounded-xl bg-teal-700 px-4 py-3 text-white hover:bg-teal-800"
+            >
+              <p className="text-sm font-bold">Nefrologia adulta · título SBN</p>
+              <p className="text-xs text-teal-100">Simulados · tema · revisão de erros</p>
+            </Link>
+            <Link
+              href="/aluno/treino/nefropediatria"
+              className="rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-teal-200 hover:ring-teal-400"
+            >
+              <p className="text-sm font-bold">Nefrologia pediátrica · SBN/SBP</p>
+              <p className="text-xs text-slate-600">Simulados · tema · revisão de erros</p>
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

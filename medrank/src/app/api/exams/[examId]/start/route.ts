@@ -41,12 +41,11 @@ export async function POST(
     }
 
     if (existing && !existing.finished_at) {
-      const { forfeitDemoAttempt } = await import('@/lib/demo/runtime');
-      const forfeited = forfeitDemoAttempt(existing.id, { violationType: 'abandoned_session' });
-      return NextResponse.json(
-        { error: 'Prova encerrada por abandono (antifraude).', attemptId: existing.id, forfeited: true, attempt: forfeited },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        attempt: existing,
+        initialAnswers: mapSavedAnswers(existing.id),
+        resumed: true,
+      });
     }
 
     const attempt = createDemoAttempt(examId, userId);
@@ -72,11 +71,13 @@ export async function POST(
   }
 
   const qualityStatus = (exam as { quality_status?: string }).quality_status;
-  if (qualityStatus === 'blocked') {
+  if (qualityStatus === 'blocked' || qualityStatus === 'pending') {
     return NextResponse.json(
       {
         error:
-          'Disputa pausada: a revisão de qualidade encontrou problema nas questões. O professor foi avisado.',
+          qualityStatus === 'pending'
+            ? 'Disputa ainda em revisão pela IA. Aguarde a publicação automática.'
+            : 'Disputa não publicada: a revisão IA reprovou questões. O administrador foi avisado.',
         quality_status: qualityStatus,
         quality_summary: (exam as { quality_summary?: string }).quality_summary,
       },
@@ -84,17 +85,19 @@ export async function POST(
     );
   }
 
-  // Só pode iniciar a disputa da própria trilha (geral vs Liga de Nefrologia)
-  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  // Só pode iniciar disputa das audiências do aluno (nefro e/ou geral)
+  const { resolveUserExamAudience, userCanAccessExamAudience } = await import(
+    '@/lib/exams/audience'
+  );
   const ctx = await resolveUserExamAudience(user.id);
   const examAudience = (exam as { audience?: string }).audience ?? 'general';
-  if (examAudience !== ctx.audience) {
+  if (!userCanAccessExamAudience(ctx, examAudience)) {
     return NextResponse.json(
       {
         error:
           examAudience === 'nephrology'
             ? 'Esta disputa é exclusiva da Liga de Nefrologia.'
-            : 'Esta é a disputa geral — sua liga tem outra prova hoje.',
+            : 'Esta é a disputa geral — você precisa estar em um grupo de residência (ex.: NAD).',
       },
       { status: 403 }
     );
@@ -115,29 +118,23 @@ export async function POST(
   }
 
   if (existing && !existing.finished_at) {
-    // Tolerância zero: tentativa aberta = abandono → forfeit
-    const { createAdminClient } = await import('@/lib/supabase/admin');
-    const admin = createAdminClient();
-    await (admin ?? supabase).rpc('forfeit_attempt', {
-      p_attempt_id: existing.id,
-      p_violation_type: 'abandoned_session',
-      p_question_id: null,
-      p_elapsed_seconds: null,
-      p_ip: null,
-      p_device: null,
-      p_browser: null,
-      p_os: null,
-      p_user_agent: null,
-      p_metadata: {},
+    const { data: answers } = await supabase
+      .from('attempt_answers')
+      .select('question_id, selected_option')
+      .eq('attempt_id', existing.id);
+
+    const initialAnswers: Record<string, OptionLetter> = {};
+    for (const row of answers ?? []) {
+      if (row.selected_option) {
+        initialAnswers[row.question_id] = row.selected_option as OptionLetter;
+      }
+    }
+
+    return NextResponse.json({
+      attempt: existing,
+      initialAnswers,
+      resumed: true,
     });
-    return NextResponse.json(
-      {
-        error: 'Prova encerrada por abandono da sessão (antifraude).',
-        attemptId: existing.id,
-        forfeited: true,
-      },
-      { status: 400 }
-    );
   }
 
   const { data: attempt, error } = await supabase

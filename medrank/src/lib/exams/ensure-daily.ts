@@ -16,10 +16,9 @@ export async function ensureBothDailyExams(
   dateStr = todayDateStringBrazil()
 ): Promise<DualEnsureResult> {
   await ensureNephrologyLeague();
-  const [general, nephrology] = await Promise.all([
-    ensureDailyGeneralExam(dateStr),
-    ensureDailyNephrologyExam(dateStr),
-  ]);
+  // Sequencial: cada trilha faz dezenas de chamadas OpenAI (revisão + trocas).
+  const general = await ensureDailyGeneralExam(dateStr);
+  const nephrology = await ensureDailyNephrologyExam(dateStr);
   return { date: dateStr, general, nephrology };
 }
 
@@ -27,9 +26,10 @@ export async function ensureBothDailyHorizons(
   days = DAILY_EXAM_HORIZON_DAYS,
   fromDate = todayDateStringBrazil()
 ): Promise<DualEnsureResult[]> {
+  // Mantido para testes; em produção o cron/admin usam só hoje (days=1).
   await ensureNephrologyLeague();
   const results: DualEnsureResult[] = [];
-  const n = Math.max(1, Math.min(31, days));
+  const n = Math.max(1, Math.min(1, days)); // forçar no máx. 1 dia
   for (let i = 0; i < n; i++) {
     const date = addCalendarDaysBrazil(fromDate, i);
     results.push(await ensureBothDailyExams(date));

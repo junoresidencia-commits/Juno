@@ -4,7 +4,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { usesDemoStore } from '@/lib/demo-data';
 import { approveExamQualityOverride, reviewAndPersistExamQuality } from '@/lib/exams/quality-gate';
+import { requireOpenAiKey } from '@/lib/exams/pre-exam-review';
 import type { Question } from '@/types/database';
+
+export const maxDuration = 300;
 
 /** GET: status da revisão da prova */
 export async function GET(request: Request) {
@@ -83,20 +86,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, quality_status: 'approved_override' });
   }
 
-  const { data: eqs } = await admin
-    .from('exam_questions')
-    .select('question_id, order_number')
-    .eq('exam_id', body.examId)
-    .order('order_number');
-  const ids = (eqs ?? []).map((e) => e.question_id);
-  const { data: qs } = await admin.from('questions').select('*').in('id', ids);
-  const orderById = new Map((eqs ?? []).map((e) => [e.question_id as string, e.order_number as number]));
-  const result = await reviewAndPersistExamQuality(
-    admin,
-    body.examId,
-    (qs ?? []) as Question[],
-    orderById
-  );
+  try {
+    requireOpenAiKey();
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : 'OPENAI_API_KEY obrigatória' },
+      { status: 503 }
+    );
+  }
 
-  return NextResponse.json({ ok: true, result });
+  try {
+    const { data: eqs } = await admin
+      .from('exam_questions')
+      .select('question_id, order_number')
+      .eq('exam_id', body.examId)
+      .order('order_number');
+    const ids = (eqs ?? []).map((e) => e.question_id);
+    const { data: qs } = await admin.from('questions').select('*').in('id', ids);
+    const orderById = new Map(
+      (eqs ?? []).map((e) => [e.question_id as string, e.order_number as number])
+    );
+    const result = await reviewAndPersistExamQuality(
+      admin,
+      body.examId,
+      (qs ?? []) as Question[],
+      orderById
+    );
+
+    return NextResponse.json({ ok: true, result });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : 'Falha na revisão IA' },
+      { status: 500 }
+    );
+  }
 }

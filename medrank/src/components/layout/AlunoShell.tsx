@@ -20,7 +20,14 @@ function isActive(pathname: string, href: string, exact?: boolean) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AlunoShell({ children }: { children: React.ReactNode }) {
+export function AlunoShell({
+  children,
+  showTreinoNav = false,
+}: {
+  children: React.ReactNode;
+  /** Só Liga de Nefrologia (ou admin) vê o menu Treino. */
+  showTreinoNav?: boolean;
+}) {
   const pathname = usePathname() ?? '';
   const hideNav =
     pathname.startsWith('/aluno/prova/') ||
@@ -29,6 +36,8 @@ export function AlunoShell({ children }: { children: React.ReactNode }) {
   if (hideNav) {
     return <>{children}</>;
   }
+
+  const nav = NAV.filter((item) => item.href !== '/aluno/treino' || showTreinoNav);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -41,7 +50,7 @@ export function AlunoShell({ children }: { children: React.ReactNode }) {
             className="flex flex-1 items-center justify-end gap-1 overflow-x-auto pb-0.5 md:gap-2"
             aria-label="Menu do aluno"
           >
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const active = isActive(pathname, item.href, 'exact' in item ? item.exact : false);
               return (
                 <Link

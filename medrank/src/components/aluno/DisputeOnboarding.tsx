@@ -2,15 +2,19 @@
 
 import { useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'medrank-onboarding-dismissed';
+const STORAGE_KEY = 'medrank-onboarding-v2';
 
-export function DisputeOnboarding() {
+type Props = {
+  disputeCount?: number;
+  hasTreino?: boolean;
+};
+
+export function DisputeOnboarding({ disputeCount = 1, hasTreino = false }: Props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     try {
-      const dismissed = localStorage.getItem(STORAGE_KEY);
-      if (!dismissed) setOpen(true);
+      if (!localStorage.getItem(STORAGE_KEY)) setOpen(true);
     } catch {
       setOpen(true);
     }
@@ -28,34 +32,30 @@ export function DisputeOnboarding() {
   if (!open) return null;
 
   return (
-    <div className="mb-6 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 p-5 text-white shadow-lg">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-lg font-bold">⚔️ Como funciona a disputa</p>
-          <ul className="mt-3 space-y-2 text-sm text-emerald-50">
-            <li>• <strong className="text-white">1 chance por dia</strong> — 20 questões</li>
-            <li>• <strong className="text-white">Liga de Nefrologia</strong> — disputa Nefrologia ↔ Nefropediatria</li>
-            <li>• <strong className="text-white">Outras ligas</strong> — disputa geral de residência</li>
-            <li>• <strong className="text-white">Máx. 2.000 pts</strong> — quem faz ganha; quem não faz, fica sem pontos</li>
-            <li>• <strong className="text-white">Antifraude</strong> — sair da tela / trocar aba encerra a prova (0 pts)</li>
-            <li>• <strong className="text-white">Janela 7h–23h59</strong> (horário de Brasília)</li>
-          </ul>
-        </div>
-        <button
-          type="button"
-          onClick={dismiss}
-          className="shrink-0 rounded-lg bg-white/20 px-2 py-1 text-sm font-medium hover:bg-white/30"
-          aria-label="Fechar"
-        >
-          ✕
-        </button>
-      </div>
+    <div className="mb-5 rounded-2xl bg-emerald-700 p-5 text-white shadow-md">
+      <p className="text-lg font-bold">Em 30 segundos</p>
+      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-emerald-50">
+        <li>
+          <strong className="text-white">Disputa do dia</strong> — você tem{' '}
+          {disputeCount === 1 ? '1 disputa' : `${disputeCount} disputas`} hoje
+          {disputeCount > 1 ? ' (uma por módulo/grupo)' : ''}. Cada uma conta sozinha.
+        </li>
+        <li>
+          <strong className="text-white">1 chance por disputa</strong> — 20 questões · 7h–23h59.
+          Fique na tela: trocar de aba/app encerra com 0 pts. Refresh ou queda de conexão não
+          zera — você pode continuar.
+        </li>
+        <li>
+          <strong className="text-white">Ranking</strong> — só o do seu grupo. Treino livre
+          {hasTreino ? ' (abaixo)' : ''} não entra no ranking.
+        </li>
+      </ol>
       <button
         type="button"
         onClick={dismiss}
-        className="exam-tap mt-4 w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-emerald-800"
+        className="exam-tap mt-4 w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-emerald-900"
       >
-        Entendi — bora disputar!
+        Entendi
       </button>
     </div>
   );

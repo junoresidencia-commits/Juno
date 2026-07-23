@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSessionProfile } from '@/lib/auth';
 import { getTreinoSession, saveTreinoAnswer } from '@/lib/treino/runtime';
+import { canAccessNephrologyTreino } from '@/lib/treino/access';
 import type { OptionLetter } from '@/types/database';
 
 export async function PUT(
@@ -11,6 +12,10 @@ export async function PUT(
   const session = await getSessionProfile();
   if (!session) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  if (!(await canAccessNephrologyTreino(session.userId, session.profile))) {
+    return NextResponse.json({ error: 'Treino exclusivo da Liga de Nefrologia' }, { status: 403 });
   }
 
   const treino = await getTreinoSession(sessionId);

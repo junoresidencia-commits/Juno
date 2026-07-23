@@ -7,6 +7,7 @@ import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoReportData, getDemoRanking } from '@/lib/demo/presenters';
 import { RankingPreviewList, mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { getPeriodBounds } from '@/lib/periods';
+import { DayHealthPanel } from '@/components/admin/DayHealthPanel';
 
 export default async function AdminDashboard() {
   await requireRole('admin');
@@ -97,6 +98,8 @@ export default async function AdminDashboard() {
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Painel do Professor</h1>
         <p className="text-sm text-slate-600">MedRank — administração</p>
       </header>
+
+      <DayHealthPanel />
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">

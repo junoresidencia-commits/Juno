@@ -58,6 +58,7 @@ export default async function AlunosPage({
     active: boolean;
     approved_at: string | null;
     league_admin: boolean;
+    enabled_tracks: string[];
   }[] = [];
 
   if (isDemoMode()) {
@@ -68,22 +69,43 @@ export default async function AlunosPage({
       active: s.active,
       approved_at: s.approvedAt,
       league_admin: !!s.leagueAdmin,
+      enabled_tracks: s.enabled_tracks ?? [],
     }));
   } else {
     const supabase = await createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
-      .select('id, name, email, active, approved_at, league_admin')
+      .select('id, name, email, active, approved_at, league_admin, enabled_tracks')
       .eq('role', 'student')
       .order('created_at', { ascending: false });
-    students = (data ?? []).map((s) => ({
-      id: s.id,
-      name: s.name,
-      email: s.email,
-      active: s.active,
-      approved_at: s.approved_at,
-      league_admin: !!s.league_admin,
-    }));
+    if (error && /enabled_tracks|schema cache/i.test(error.message)) {
+      const { data: fallback } = await supabase
+        .from('profiles')
+        .select('id, name, email, active, approved_at, league_admin')
+        .eq('role', 'student')
+        .order('created_at', { ascending: false });
+      students = (fallback ?? []).map((s) => ({
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        active: s.active,
+        approved_at: s.approved_at,
+        league_admin: !!s.league_admin,
+        enabled_tracks: [],
+      }));
+    } else {
+      students = (data ?? []).map((s) => ({
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        active: s.active,
+        approved_at: s.approved_at,
+        league_admin: !!s.league_admin,
+        enabled_tracks: Array.isArray((s as { enabled_tracks?: string[] }).enabled_tracks)
+          ? ((s as { enabled_tracks?: string[] }).enabled_tracks as string[])
+          : [],
+      }));
+    }
   }
 
   const pending = students.filter((s) => !s.active && !s.approved_at);
@@ -134,33 +156,37 @@ export default async function AlunosPage({
       <section className="mt-8">
         <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Use <span className="font-medium">Tornar admin de liga</span> para autorizar um aluno a
-          criar ligas.
+          Em cada aluno, ligue ou desligue os módulos (Nefrologia, Residência, RM…). Isso define
+          quais disputas e treinos aparecem para ele.
         </p>
         <div className="mt-4 space-y-3">
           {others.length === 0 && pending.length === 0 ? (
             <p className="text-slate-600">Nenhum aluno ainda. Crie o primeiro login acima.</p>
           ) : (
             others.map((s) => (
-              <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+              <div
+                key={s.id}
+                className="flex flex-col gap-3 rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200 sm:flex-row sm:items-start sm:justify-between"
+              >
                 <div>
                   <p className="font-medium">{s.name}</p>
                   <p className="text-sm text-slate-600">{s.email}</p>
+                  <div className="mt-2">
+                    <StudentStatus
+                      active={s.active}
+                      approvedAt={s.approved_at}
+                      leagueAdmin={s.league_admin}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <StudentStatus
-                    active={s.active}
-                    approvedAt={s.approved_at}
-                    leagueAdmin={s.league_admin}
-                  />
-                  <StudentActions
-                    studentId={s.id}
-                    name={s.name}
-                    active={s.active}
-                    pending={!s.active && !s.approved_at}
-                    leagueAdmin={s.league_admin}
-                  />
-                </div>
+                <StudentActions
+                  studentId={s.id}
+                  name={s.name}
+                  active={s.active}
+                  pending={!s.active && !s.approved_at}
+                  leagueAdmin={s.league_admin}
+                  enabledTracks={s.enabled_tracks as import('@/lib/tracks/config').AppTrackId[]}
+                />
               </div>
             ))
           )}

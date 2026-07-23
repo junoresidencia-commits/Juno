@@ -298,7 +298,24 @@ export function ExamRunner({
   }, [durationMinutes, linearMode, mounted, questionLimit, questions, skipQuestion, startedAt, submitExam]);
 
   const current = questions[currentIndex];
-  if (!current) return null;
+  if (!current) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="text-xl font-bold text-red-900">Não foi possível carregar as questões</h1>
+        <p className="mt-3 text-sm text-slate-700">
+          Volte ao início e tente de novo. Se continuar em branco, peça ao professor para
+          regenerar a disputa de hoje.
+        </p>
+        <button
+          type="button"
+          onClick={() => router.push('/aluno')}
+          className="mt-6 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
+        >
+          Voltar ao início
+        </button>
+      </div>
+    );
+  }
 
   const answeredCount = Object.keys(answers).length;
   const isUrgent = remaining <= 300;

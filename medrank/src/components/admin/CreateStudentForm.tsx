@@ -1,3 +1,5 @@
+import { APP_TRACKS } from '@/lib/tracks/config';
+
 interface Props {
   initialError?: string;
   initialSuccess?: { name: string; email: string };
@@ -8,7 +10,8 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
     <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
       <h2 className="font-semibold text-slate-900">Criar login do aluno</h2>
       <p className="mt-1 text-sm text-slate-600">
-        Você define o e-mail e a senha. O aluno entra em <strong>/login</strong> com esses dados.
+        Você define o e-mail, a senha e quais módulos ficam ligados. Depois pode ligar/desligar
+        na lista de alunos.
       </p>
 
       {initialSuccess && (
@@ -78,6 +81,41 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
           />
         </div>
+
+        <fieldset className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+          <legend className="px-1 text-sm font-semibold text-slate-900">
+            Módulos liberados
+          </legend>
+          <p className="mt-1 text-xs text-slate-600">
+            Marque o que este aluno vai ver (disputa diária e treinos). Pode mudar depois.
+          </p>
+          <div className="mt-3 space-y-3">
+            {APP_TRACKS.map((t) => (
+              <label
+                key={t.id}
+                className={`flex cursor-pointer items-start gap-3 rounded-lg bg-white p-3 ring-1 ring-slate-200 ${
+                  t.comingSoon ? 'opacity-60' : ''
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  name={`track_${t.id}`}
+                  value="on"
+                  defaultChecked={t.id === 'general'}
+                  disabled={t.comingSoon}
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-emerald-700"
+                />
+                <span>
+                  <span className="block text-sm font-medium text-slate-900">
+                    {t.label}
+                    {t.comingSoon ? ' · em breve' : ''}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-slate-600">{t.description}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <button
           type="submit"

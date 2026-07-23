@@ -2,60 +2,167 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { usesDemoStore } from '@/lib/demo-data';
+import { normalizeTracks, type AppTrackId } from '@/lib/tracks/config';
 
 export type ExamAudience = 'general' | 'nephrology';
 
 export const NEPHROLOGY_LEAGUE_NAME = 'Liga de Nefrologia';
 
 export interface UserExamContext {
+  /**
+   * Audiência “principal” (compat): nefro se liberado; senão geral.
+   */
   audience: ExamAudience;
+  /** Disputas do dia liberadas pelos tracks do admin. */
+  audiences: ExamAudience[];
+  hasNephrology: boolean;
+  hasGeneral: boolean;
+  /** Tracks ligados pelo admin (nephrology, general, mri…). */
+  enabledTracks: AppTrackId[];
   leagueId: string | null;
   leagueName: string | null;
+  generalGroupId: string | null;
+  generalGroupName: string | null;
+  rankingGroupId: string | null;
+  rankingGroupName: string | null;
 }
 
-/** Membro da Liga de Nefrologia → disputa nephrology; senão → geral. */
+type GroupRow = {
+  id: string;
+  name: string;
+  active: boolean;
+  exam_audience?: string;
+};
+
+function isNephrologyGroup(g: GroupRow): boolean {
+  return (
+    g.exam_audience === 'nephrology' ||
+    g.name.toLowerCase() === 'liga de nefrologia' ||
+    g.name.toLowerCase().includes('nefrologia')
+  );
+}
+
+function buildContext(
+  enabledTracks: AppTrackId[],
+  activeGroups: GroupRow[]
+): UserExamContext {
+  const tracks = normalizeTracks(enabledTracks);
+  // Fallback legado: se ainda não tem tracks, deriva dos grupos
+  const inferred: AppTrackId[] =
+    tracks.length > 0
+      ? tracks
+      : [
+          ...(activeGroups.some(isNephrologyGroup) ? (['nephrology'] as AppTrackId[]) : []),
+          ...(activeGroups.some((g) => !isNephrologyGroup)
+            ? (['general'] as AppTrackId[])
+            : []),
+        ];
+
+  const hasNephrology = inferred.includes('nephrology');
+  const hasGeneral = inferred.includes('general');
+
+  const audiences: ExamAudience[] = [];
+  if (hasNephrology) audiences.push('nephrology');
+  if (hasGeneral) audiences.push('general');
+
+  const nefro = activeGroups.find(isNephrologyGroup) ?? null;
+  const general = activeGroups.find((g) => !isNephrologyGroup) ?? null;
+  const ranking = nefro ?? general;
+
+  return {
+    audience: hasNephrology ? 'nephrology' : 'general',
+    audiences,
+    hasNephrology,
+    hasGeneral,
+    enabledTracks: inferred,
+    leagueId: nefro?.id ?? null,
+    leagueName: nefro?.name ?? null,
+    generalGroupId: general?.id ?? null,
+    generalGroupName: general?.name ?? null,
+    rankingGroupId: ranking?.id ?? null,
+    rankingGroupName: ranking?.name ?? null,
+  };
+}
+
+/**
+ * Resolve disputas diárias a partir dos tracks que o admin ligou no aluno.
+ * Grupos continuam para ranking interno.
+ */
 export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
   if (usesDemoStore()) {
     const { getDemoGroupsForUser } = await import('@/lib/groups/demo');
-    const groups = getDemoGroupsForUser(userId);
-    const nefro = groups.find(
-      (g) =>
-        (g as { exam_audience?: string }).exam_audience === 'nephrology' ||
-        g.name.toLowerCase().includes('nefrologia')
+    const { readDemoStore } = await import('@/lib/demo-store');
+    const groups = getDemoGroupsForUser(userId).map((g) => ({
+      id: g.id,
+      name: g.name,
+      active: true,
+      exam_audience: (g as { exam_audience?: string }).exam_audience,
+    }));
+    const student = readDemoStore().students.find((s) => s.id === userId);
+    const tracks = normalizeTracks(
+      (student as { enabled_tracks?: string[] } | undefined)?.enabled_tracks
     );
-    if (nefro) {
-      return { audience: 'nephrology', leagueId: nefro.id, leagueName: nefro.name };
-    }
-    return { audience: 'general', leagueId: null, leagueName: null };
+    return buildContext(tracks, groups);
   }
 
   const admin = createAdminClient();
   if (!admin) {
-    return { audience: 'general', leagueId: null, leagueName: null };
+    return buildContext([], []);
   }
+
+  const { data: profile } = await admin
+    .from('profiles')
+    .select('enabled_tracks')
+    .eq('id', userId)
+    .maybeSingle();
+
+  const tracks = normalizeTracks(
+    (profile as { enabled_tracks?: string[] } | null)?.enabled_tracks
+  );
 
   const { data } = await admin
     .from('study_group_members')
     .select('group_id, study_groups(id, name, active, exam_audience)')
     .eq('user_id', userId);
 
+  const activeGroups: GroupRow[] = [];
   for (const row of data ?? []) {
-    const g = row.study_groups as unknown as {
-      id: string;
-      name: string;
-      active: boolean;
-      exam_audience?: string;
-    } | null;
+    const g = row.study_groups as unknown as GroupRow | null;
     if (!g || !g.active) continue;
-    if (g.exam_audience === 'nephrology' || g.name.toLowerCase() === 'liga de nefrologia') {
-      return { audience: 'nephrology', leagueId: g.id, leagueName: g.name };
-    }
+    activeGroups.push(g);
   }
 
-  return { audience: 'general', leagueId: null, leagueName: null };
+  return buildContext(tracks, activeGroups);
 }
 
-/** Cria/atualiza a Liga de Nefrologia (idempotente). */
+export function userCanAccessExamAudience(
+  ctx: UserExamContext,
+  examAudience: string | null | undefined
+): boolean {
+  const a = (examAudience ?? 'general') as ExamAudience;
+  return ctx.audiences.includes(a);
+}
+
+/** Ao ligar Nefrologia, garante membro da Liga (ranking + disputa). */
+export async function syncTrackGroupMembership(
+  userId: string,
+  tracks: AppTrackId[],
+  admin?: SupabaseClient | null
+): Promise<void> {
+  const client = admin ?? createAdminClient();
+  if (!client) return;
+
+  if (tracks.includes('nephrology')) {
+    const league = await ensureNephrologyLeague(client);
+    if (league) {
+      await client.from('study_group_members').upsert(
+        { group_id: league.id, user_id: userId },
+        { onConflict: 'group_id,user_id' }
+      );
+    }
+  }
+}
+
 export async function ensureNephrologyLeague(
   admin?: SupabaseClient | null
 ): Promise<{ id: string; name: string; created: boolean } | null> {
@@ -76,7 +183,7 @@ export async function ensureNephrologyLeague(
         exam_audience: 'nephrology',
         active: true,
         description:
-          'Disputa diária exclusiva da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos.',
+          'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia.',
       })
       .eq('id', existing.id);
     return { id: existing.id, name: existing.name, created: false };
@@ -87,7 +194,7 @@ export async function ensureNephrologyLeague(
     .insert({
       name: NEPHROLOGY_LEAGUE_NAME,
       description:
-        'Disputa diária exclusiva da liga: um dia Nefrologia, outro Nefropediatria. Quem faz ganha pontos; quem não faz, fica sem pontos.',
+        'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia.',
       active: true,
       exam_audience: 'nephrology',
     })
@@ -99,5 +206,5 @@ export async function ensureNephrologyLeague(
 }
 
 export function audienceLabel(audience: ExamAudience): string {
-  return audience === 'nephrology' ? 'Liga de Nefrologia' : 'Disputa geral';
+  return audience === 'nephrology' ? 'Liga de Nefrologia' : 'Residência médica geral';
 }

@@ -167,19 +167,31 @@ export default async function ResultadoPage({
   const showGabarito = canStudentSeeExamGabarito(exam, true);
   const showPdf = canStudentDownloadExamPdf(exam, true);
 
-  const { data: ranking } = await supabase
-    .from('rankings')
-    .select('position')
-    .eq('user_id', userId)
-    .eq('period_type', 'daily')
-    .eq('period_start', exam.date_available)
-    .maybeSingle();
+  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  const ctx = await resolveUserExamAudience(userId);
 
-  const { data: allRankings } = await supabase
-    .from('rankings')
-    .select('position, total_score, user_id')
-    .eq('period_type', 'daily')
-    .eq('period_start', exam.date_available);
+  let ranking: { position: number | null } | null = null;
+  let allRankings: Array<{ position: number | null; total_score: number; user_id: string }> = [];
+
+  if (ctx.rankingGroupId) {
+    const { data: mine } = await supabase
+      .from('study_group_rankings')
+      .select('position')
+      .eq('group_id', ctx.rankingGroupId)
+      .eq('user_id', userId)
+      .eq('period_type', 'daily')
+      .eq('period_start', exam.date_available)
+      .maybeSingle();
+    ranking = mine;
+
+    const { data: peers } = await supabase
+      .from('study_group_rankings')
+      .select('position, total_score, user_id')
+      .eq('group_id', ctx.rankingGroupId)
+      .eq('period_type', 'daily')
+      .eq('period_start', exam.date_available);
+    allRankings = peers ?? [];
+  }
 
   const { count: finishedToday } = await supabase
     .from('attempts')

@@ -35,5 +35,8 @@ export function addCalendarDaysBrazil(dateStr: string, days: number): string {
 
 export const DAILY_EXAM_QUESTION_COUNT = 20;
 export const DAILY_EXAM_DURATION_MINUTES = 30;
-/** Quantos dias futuros o cron pré-gera (hoje incluso). */
-export const DAILY_EXAM_HORIZON_DAYS = 14;
+/**
+ * Pipeline IA (revisar + trocar) é caro — só gera a disputa de HOJE (1×/dia).
+ * Não pré-gerar horizonte longo.
+ */
+export const DAILY_EXAM_HORIZON_DAYS = 1;
