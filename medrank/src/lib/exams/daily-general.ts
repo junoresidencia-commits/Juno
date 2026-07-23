@@ -72,20 +72,55 @@ async function recentGeneralQuestionIds(
   return (eqs ?? []).map((row) => String(row.question_id));
 }
 
+async function fetchQuestionsByTag(
+  admin: NonNullable<ReturnType<typeof createAdminClient>>,
+  tag: string,
+  pageSize = 1000,
+  maxPages = 10
+): Promise<Question[]> {
+  const out: Question[] = [];
+  for (let page = 0; page < maxPages; page++) {
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+    const { data, error } = await admin
+      .from('questions')
+      .select('*')
+      .contains('tags', [tag])
+      .range(from, to);
+    if (error) throw new Error(error.message);
+    const rows = (data ?? []) as Question[];
+    out.push(...rows);
+    if (rows.length < pageSize) break;
+  }
+  return out;
+}
+
 async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   count: number,
   dateStr: string
 ) {
-  const { data, error } = await admin.from('questions').select('*');
-  if (error) throw new Error(error.message);
-
-  let pool = ((data ?? []) as Question[]).filter(
-    (q) => !isNephrologyTagged(q) && isStructurallySound(q)
+  // Não usar select('*') sem filtro: o PostgREST limita ~1000 linhas e o banco
+  // fica dominado por Nefro → pool geral ficava com 4/20.
+  let pool = (await fetchQuestionsByTag(admin, 'residencia-expert')).filter(
+    (q) => !isNephrologyTagged(q)
   );
 
-  const expert = pool.filter(isResidenciaExpert);
-  if (expert.length >= count) pool = expert;
+  if (pool.length < count) {
+    // fallback: banco-expert não-nefro
+    const expert = (await fetchQuestionsByTag(admin, 'banco-expert')).filter(
+      (q) => !isNephrologyTagged(q)
+    );
+    const byId = new Map(pool.map((q) => [q.id, q]));
+    for (const q of expert) byId.set(q.id, q);
+    pool = [...byId.values()];
+  }
+
+  const sound = pool.filter((q) => isStructurallySound(q));
+  if (sound.length >= count) pool = sound;
+
+  const prefer = pool.filter(isResidenciaExpert);
+  if (prefer.length >= count) pool = prefer;
 
   const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
@@ -93,7 +128,7 @@ async function pickGeneralQuestions(
 
   if (pool.length < count) {
     throw new Error(
-      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
+      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo (precisa tag residencia-expert).`
     );
   }
 
