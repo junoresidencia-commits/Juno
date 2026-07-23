@@ -68,6 +68,9 @@ export interface Exam {
   /** general = outras ligas; nephrology = Liga de Nefrologia */
   audience?: 'general' | 'nephrology';
   exam_kind?: 'daily' | 'simulado';
+  quality_status?: 'pending' | 'passed' | 'warning' | 'blocked' | 'approved_override';
+  quality_summary?: string | null;
+  quality_reviewed_at?: string | null;
   created_at: string;
 }
 

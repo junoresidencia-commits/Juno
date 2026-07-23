@@ -8,6 +8,10 @@ import { mixDifficulty } from '@/lib/treino/progress';
 import { TRACK_CONFIG } from '@/lib/treino/config';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
+  reviewAndPersistExamQuality,
+  selectReviewReadyQuestions,
+} from '@/lib/exams/quality-gate';
+import {
   addCalendarDaysBrazil,
   DAILY_EXAM_DURATION_MINUTES,
   DAILY_EXAM_HORIZON_DAYS,
@@ -114,7 +118,9 @@ async function pickTrackQuestions(
     );
   }
 
-  return mixDifficulty(pool, count);
+  return (
+    await selectReviewReadyQuestions(pool, count, (candidates, n) => mixDifficulty(candidates, n))
+  ).questions;
 }
 
 /**
@@ -157,12 +163,15 @@ export async function ensureDailyNephrologyExam(
 
   const { data: existing } = await admin
     .from('exams')
-    .select('id, title, date_available, total_questions, duration_minutes, status')
+    .select(
+      'id, title, date_available, total_questions, duration_minutes, status, quality_status, quality_summary'
+    )
     .eq('date_available', dateStr)
     .eq('audience', 'nephrology')
     .maybeSingle();
 
   if (existing) {
+    await ensureExistingNefroExamReviewed(admin, existing.id);
     return { date: dateStr, track, audience: 'nephrology', created: false, exam: existing };
   }
 
@@ -232,7 +241,50 @@ export async function ensureDailyNephrologyExam(
     return { date: dateStr, track, audience: 'nephrology', created: false, exam: null, error: eqError.message };
   }
 
+  for (const q of selected) {
+    await admin.from('questions').upsert(
+      {
+        id: q.id,
+        option_a: q.option_a,
+        option_b: q.option_b,
+        option_c: q.option_c,
+        option_d: q.option_d,
+        option_e: q.option_e ?? '',
+        correct_option: q.correct_option,
+        explanation: q.explanation,
+      },
+      { onConflict: 'id' }
+    );
+  }
+
+  const orderById = new Map(selected.map((q, i) => [q.id, i + 1]));
+  await reviewAndPersistExamQuality(admin, exam.id, selected, orderById);
+
   return { date: dateStr, track, audience: 'nephrology', created: true, exam };
+}
+
+async function ensureExistingNefroExamReviewed(
+  admin: NonNullable<ReturnType<typeof createAdminClient>>,
+  examId: string
+) {
+  const { data: exam } = await admin
+    .from('exams')
+    .select('quality_status')
+    .eq('id', examId)
+    .maybeSingle();
+  if (exam?.quality_status && exam.quality_status !== 'pending') return;
+
+  const { data: eqs } = await admin
+    .from('exam_questions')
+    .select('question_id, order_number')
+    .eq('exam_id', examId)
+    .order('order_number');
+  const ids = (eqs ?? []).map((e) => e.question_id);
+  if (ids.length === 0) return;
+  const { data: qs } = await admin.from('questions').select('*').in('id', ids);
+  if (!qs?.length) return;
+  const orderById = new Map((eqs ?? []).map((e) => [e.question_id as string, e.order_number as number]));
+  await reviewAndPersistExamQuality(admin, examId, qs as Question[], orderById);
 }
 
 /** Garante hoje + próximos N-1 dias. */
