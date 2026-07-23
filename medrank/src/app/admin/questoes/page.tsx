@@ -64,6 +64,12 @@ export default async function QuestoesPage() {
           >
             Nova questão
           </Link>
+          <Link
+            href="/admin/questoes/auditoria"
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            Auditoria do banco
+          </Link>
         </div>
       </div>
 

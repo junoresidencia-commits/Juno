@@ -102,6 +102,8 @@ export interface AttemptAnswer {
   is_correct: boolean | null;
   answered_at: string | null;
   time_spent_seconds?: number | null;
+  /** Questão anulada nesta prova — não entra na pontuação */
+  excluded_from_score?: boolean;
 }
 
 export interface Ranking {
