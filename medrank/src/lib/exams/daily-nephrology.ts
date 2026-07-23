@@ -10,6 +10,7 @@ import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
+  buildBankOnlyExamSet,
 } from '@/lib/exams/quality-gate';
 import {
   addCalendarDaysBrazil,
@@ -64,19 +65,18 @@ const WEAK_DISTRACTOR = [
   /\{\{[a-z0-9_]+\}\}/i,
 ];
 
-function filterExpertPool(pool: Question[], count: number): Question[] {
+function filterExpertPool(pool: Question[], count: number, strictExpert: boolean): Question[] {
   const cleaned = pool.filter((q) => {
     const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}\n${q.option_e ?? ''}`;
     return !WEAK_DISTRACTOR.some((re) => re.test(blob)) && isStructurallySound(q);
   });
-  // Liga de Nefrologia: SOMENTE banco-expert (padrão título)
   const expert = cleaned.filter((q) => q.tags?.includes('banco-expert'));
-  if (expert.length < count) {
-    throw new Error(
-      `Banco expert insuficiente (${expert.length}/${count}). Admin → Questões → Importar banco completo.`
-    );
-  }
-  return expert;
+  if (expert.length >= count) return expert;
+  if (!strictExpert && cleaned.length >= count) return cleaned;
+  if (!strictExpert && cleaned.length > 0) return cleaned;
+  throw new Error(
+    `Banco expert insuficiente (${expert.length}/${count}; limpas ${cleaned.length}). Admin -> Questoes -> Importar banco completo.`
+  );
 }
 
 async function recentQuestionIds(
@@ -108,10 +108,10 @@ async function pickTrackQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   track: DailyExamTrack,
   count: number,
-  dateStr: string
+  dateStr: string,
+  mode: 'ai' | 'bank' = 'bank'
 ) {
   const tag = TRACK_CONFIG[track].tag;
-  // Paginar: contains(tag) sozinho ainda pode cortar em 1000 no PostgREST.
   const allTagged: Question[] = [];
   const pageSize = 1000;
   for (let page = 0; page < 10; page++) {
@@ -128,18 +128,27 @@ async function pickTrackQuestions(
     if (rows.length < pageSize) break;
   }
 
-  let pool = filterExpertPool(allTagged, count);
+  let pool = filterExpertPool(allTagged, count, mode === 'ai');
   const avoid = new Set(await recentQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
   if (fresh.length >= count) pool = fresh;
 
   if (pool.length < count) {
-    throw new Error(
-      `Questões insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count}). Admin → Questões → Importar banco completo.`
-    );
+    // Em modo banco, ainda tenta o pool cru da tag
+    if (mode === 'bank' && allTagged.length >= count) {
+      pool = allTagged;
+    } else {
+      throw new Error(
+        `Questoes insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
+      );
+    }
   }
 
-  return buildAiApprovedExamSet(pool, count, (candidates, n) => mixDifficulty(candidates, n));
+  const pick = (candidates: Question[], n: number) => mixDifficulty(candidates, n);
+  if (mode === 'ai') {
+    return buildAiApprovedExamSet(pool, count, pick);
+  }
+  return buildBankOnlyExamSet(pool, count, pick);
 }
 
 /**
@@ -148,7 +157,7 @@ async function pickTrackQuestions(
  */
 export async function ensureDailyNephrologyExam(
   dateStr = todayDateStringBrazil(),
-  opts?: { force?: boolean }
+  opts?: { force?: boolean; mode?: 'ai' | 'bank' }
 ): Promise<EnsureDailyExamResult> {
   const track = trackForDate(dateStr);
 
@@ -211,8 +220,9 @@ export async function ensureDailyNephrologyExam(
 
   let selected: Question[] = [];
   let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
+  const mode = opts?.mode ?? 'bank';
   try {
-    builtMeta = await pickTrackQuestions(admin, track, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    builtMeta = await pickTrackQuestions(admin, track, DAILY_EXAM_QUESTION_COUNT, dateStr, mode);
     selected = builtMeta.questions;
   } catch (err) {
     return {

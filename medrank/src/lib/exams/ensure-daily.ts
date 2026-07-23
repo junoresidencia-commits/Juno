@@ -7,30 +7,44 @@ import { ensureNephrologyLeague } from '@/lib/exams/audience';
 
 export type DualEnsureResult = {
   date: string;
+  mode: 'ai' | 'bank';
   general: EnsureGeneralExamResult;
   nephrology: EnsureDailyExamResult;
 };
 
+export type EnsureDailyOpts = {
+  force?: boolean;
+  /** ai = OpenAI (pago); bank = só banco local (gratis). Default: bank. */
+  mode?: 'ai' | 'bank';
+};
+
+export function resolveDailyMode(requested?: 'ai' | 'bank'): 'ai' | 'bank' {
+  if (requested === 'ai' || requested === 'bank') return requested;
+  const env = process.env.MEDRANK_DAILY_MODE?.trim().toLowerCase();
+  if (env === 'ai' || env === 'bank') return env;
+  // Sem credito OpenAI: padrao banco local
+  return 'bank';
+}
+
 /** Garante disputa geral + disputa da Liga de Nefrologia para a data. */
 export async function ensureBothDailyExams(
   dateStr = todayDateStringBrazil(),
-  opts?: { force?: boolean }
+  opts?: EnsureDailyOpts
 ): Promise<DualEnsureResult> {
   await ensureNephrologyLeague();
-  // Sequencial: cada trilha faz dezenas de chamadas OpenAI (revisão + trocas).
-  const general = await ensureDailyGeneralExam(dateStr, opts);
-  const nephrology = await ensureDailyNephrologyExam(dateStr, opts);
-  return { date: dateStr, general, nephrology };
+  const mode = resolveDailyMode(opts?.mode);
+  const general = await ensureDailyGeneralExam(dateStr, { force: opts?.force, mode });
+  const nephrology = await ensureDailyNephrologyExam(dateStr, { force: opts?.force, mode });
+  return { date: dateStr, mode, general, nephrology };
 }
 
 export async function ensureBothDailyHorizons(
   days = DAILY_EXAM_HORIZON_DAYS,
   fromDate = todayDateStringBrazil()
 ): Promise<DualEnsureResult[]> {
-  // Mantido para testes; em produção o cron/admin usam só hoje (days=1).
   await ensureNephrologyLeague();
   const results: DualEnsureResult[] = [];
-  const n = Math.max(1, Math.min(1, days)); // forçar no máx. 1 dia
+  const n = Math.max(1, Math.min(1, days));
   for (let i = 0; i < n; i++) {
     const date = addCalendarDaysBrazil(fromDate, i);
     results.push(await ensureBothDailyExams(date));

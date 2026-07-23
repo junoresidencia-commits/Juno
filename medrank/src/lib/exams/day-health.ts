@@ -28,8 +28,9 @@ export async function getDayHealthReport(
 ): Promise<DayHealthReport> {
   const issues: string[] = [];
   const openaiConfigured = Boolean(process.env.OPENAI_API_KEY?.trim());
-  if (!openaiConfigured) {
-    issues.push('OPENAI_API_KEY não configurada — revisão IA obrigatória falhará ao gerar.');
+  const dailyMode = (process.env.MEDRANK_DAILY_MODE || 'bank').toLowerCase();
+  if (!openaiConfigured && dailyMode === 'ai') {
+    issues.push('OPENAI_API_KEY não configurada — modo IA falhará. Use Gerar do banco (gratis).');
   }
 
   const admin = createAdminClient();

@@ -10,6 +10,7 @@ import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
+  buildBankOnlyExamSet,
 } from '@/lib/exams/quality-gate';
 import {
   addCalendarDaysBrazil,
@@ -123,7 +124,8 @@ async function fetchAllQuestionsPaged(
 async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   count: number,
-  dateStr: string
+  dateStr: string,
+  mode: 'ai' | 'bank' = 'bank'
 ) {
   // Busca por tag + paginação completa (evita teto ~1000 do PostgREST).
   let pool = (await fetchQuestionsByTag(admin, 'residencia-expert')).filter(
@@ -161,22 +163,27 @@ async function pickGeneralQuestions(
 
   if (pool.length < count) {
     throw new Error(
-      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo de novo (após o fix de qualidade).`
+      `Questoes insuficientes para disputa geral (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
     );
   }
 
   const seed = Number(dateStr.replace(/-/g, '')) || 1;
-  return buildAiApprovedExamSet(pool, count, (candidates, n) => {
+  const pick = (candidates: Question[], n: number) => {
     const picked = pickDailyExamQuestions(candidates, n, seed);
     if (picked.length >= n) return picked.slice(0, n);
     return mixDifficulty(candidates, n);
-  });
+  };
+
+  if (mode === 'ai') {
+    return buildAiApprovedExamSet(pool, count, pick);
+  }
+  return buildBankOnlyExamSet(pool, count, pick);
 }
 
 /** Disputa diária geral (outras ligas / quem não está na Liga de Nefrologia). */
 export async function ensureDailyGeneralExam(
   dateStr = todayDateStringBrazil(),
-  opts?: { force?: boolean }
+  opts?: { force?: boolean; mode?: 'ai' | 'bank' }
 ): Promise<EnsureGeneralExamResult> {
   if (usesDemoStore()) {
     return {
@@ -235,8 +242,9 @@ export async function ensureDailyGeneralExam(
 
   let selected: Question[] = [];
   let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
+  const mode = opts?.mode ?? 'bank';
   try {
-    builtMeta = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr);
+    builtMeta = await pickGeneralQuestions(admin, DAILY_EXAM_QUESTION_COUNT, dateStr, mode);
     selected = builtMeta.questions;
   } catch (err) {
     return {

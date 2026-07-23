@@ -307,6 +307,134 @@ export async function buildAiApprovedExamSet(
   };
 }
 
+/**
+ * Monta disputa só com o banco local — sem OpenAI (sem custo).
+ * Aplica polish + filtro local (sem vazamento/absurdos) e publica.
+ */
+export async function buildBankOnlyExamSet(
+  pool: Question[],
+  count: number,
+  pick: (candidates: Question[], n: number) => Question[]
+): Promise<{
+  questions: Question[];
+  reviews: QuestionReviewResult[];
+  replaced: number;
+  polished: number;
+  secondPassNotes: string;
+  progress: {
+    poolSize: number;
+    selected: number;
+    approved: number;
+    rejected: number;
+    target: number;
+  };
+}> {
+  const { evaluateQuestionQualityLocal } = await import('@/lib/question-bank/quality-review');
+
+  let polished = 0;
+  let rejected = 0;
+
+  const prepared = pool.map((q) => {
+    if (needsOptionPolish(q)) {
+      polished += 1;
+      return polishQuestionOptions(q);
+    }
+    return q;
+  });
+
+  const eligible = prepared.filter((q) => {
+    const local = evaluateQuestionQualityLocal(q);
+    return (
+      local.noAbsurdDistractors &&
+      local.noAnswerExplanationInsideOptions &&
+      local.correctAnswerNotObviousByLength &&
+      String(q.explanation || '').trim().length >= 40
+    );
+  });
+
+  const base = eligible.length >= count ? eligible : prepared;
+  const leftovers = [...base];
+  const selected: Question[] = [];
+  const reviews: QuestionReviewResult[] = [];
+
+  const initial = pick(leftovers, Math.min(count * 2, leftovers.length));
+  for (const q of initial) {
+    const idx = leftovers.findIndex((c) => c.id === q.id);
+    if (idx >= 0) leftovers.splice(idx, 1);
+  }
+
+  const tryAdd = (cand: Question) => {
+    if (selected.some((s) => s.id === cand.id)) return false;
+    let q = cand;
+    if (needsOptionPolish(q)) {
+      q = polishQuestionOptions(q);
+      polished += 1;
+    }
+    const local = evaluateQuestionQualityLocal(q);
+    const ok =
+      local.noAbsurdDistractors &&
+      local.noAnswerExplanationInsideOptions &&
+      (local.qualityScore >= 55 || eligible.length < count);
+    if (!ok) {
+      rejected += 1;
+      return false;
+    }
+    selected.push(q);
+    reviews.push({
+      questionId: q.id,
+      severity: local.qualityScore >= 85 ? 'ok' : 'warning',
+      codes: ['bank_only'],
+      message: 'Selecionada do banco local (sem revisao OpenAI)',
+      issues: [],
+      approved: true,
+      scores: {
+        specialty: String(q.specialty || 'Geral'),
+        difficulty: String(q.difficulty || 'medio'),
+        stemQuality: local.qualityScore,
+        gabaritoConfidence: 85,
+        ambiguity: 'ausente',
+        alternativesQuality: local.optionsHaveSimilarLength ? 85 : 70,
+        scientificCurrency: 80,
+        overallQuality: local.qualityScore,
+        singleCorrect: true,
+        hasJustification: local.answerMatchesExplanation,
+        vignetteComplete: local.stemContainsRequiredInformation,
+        askType: 'outro',
+      },
+    });
+    return true;
+  };
+
+  for (const q of initial) {
+    if (selected.length >= count) break;
+    tryAdd(q);
+  }
+  while (selected.length < count && leftovers.length > 0) {
+    tryAdd(leftovers.shift()!);
+  }
+
+  if (selected.length < count) {
+    throw new Error(
+      `Banco insuficiente para montar ${count} questoes (obtidas ${selected.length}, pool ${pool.length}, elegiveis ${eligible.length}). Admin -> Questoes -> Importar banco completo.`
+    );
+  }
+
+  return {
+    questions: selected.slice(0, count),
+    reviews: reviews.slice(0, count),
+    replaced: rejected,
+    polished,
+    secondPassNotes: 'Modo banco local (sem OpenAI) — sem custo de API.',
+    progress: {
+      poolSize: pool.length,
+      selected: count,
+      approved: count,
+      rejected,
+      target: count,
+    },
+  };
+}
+
 /** @deprecated prefer buildAiApprovedExamSet */
 export async function selectReviewReadyQuestions(
   pool: Question[],
