@@ -31,6 +31,8 @@ interface Props {
   trackLabel?: string;
   /** Nome da liga (ex.: Liga de Nefrologia) quando a disputa é exclusiva. */
   leagueLabel?: string;
+  qualityStatus?: string | null;
+  qualitySummary?: string | null;
 }
 
 export function AlunoHomeSimple({
@@ -51,10 +53,14 @@ export function AlunoHomeSimple({
   streakDays = 0,
   trackLabel,
   leagueLabel,
+  qualityStatus,
+  qualitySummary,
 }: Props) {
   const examHref = todayExam ? `/aluno/prova/${todayExam.id}` : '/aluno';
   const resultHref = attemptId ? `/aluno/resultado/${attemptId}` : '/aluno';
   const specialty = trackLabel ?? 'Disputa do dia';
+  const qualityBlocked = qualityStatus === 'blocked';
+  const effectiveCanStart = canStart && !qualityBlocked;
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] w-full flex-col px-4 py-6 md:px-6">
@@ -95,7 +101,25 @@ export function AlunoHomeSimple({
                 </>
               )}
             </p>
-            {canStart && (
+
+            {qualityBlocked && (
+              <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-950 ring-1 ring-red-200">
+                <p className="font-semibold">Aguarde — revisão de qualidade</p>
+                <p className="mt-1">
+                  {qualitySummary ||
+                    'A IA/revisão automática encontrou problema em questões da disputa de hoje. O professor foi avisado e vai corrigir antes da liberação.'}
+                </p>
+              </div>
+            )}
+
+            {!qualityBlocked && qualityStatus === 'warning' && (
+              <div className="mb-4 rounded-2xl bg-amber-50 p-3 text-sm text-amber-950 ring-1 ring-amber-200">
+                <strong>Aviso:</strong>{' '}
+                {qualitySummary || 'Há alertas menores na revisão automática desta prova.'}
+              </div>
+            )}
+
+            {effectiveCanStart && (
               <Link
                 href={examHref}
                 prefetch={false}
@@ -144,9 +168,14 @@ export function AlunoHomeSimple({
             <p className="mt-4 text-center text-sm text-slate-600">
               {todayExam.total_questions} questões · {todayExam.duration_minutes} min · {formatExamWindowShort()}
             </p>
-            {canStart && (
+            {effectiveCanStart && (
               <p className="mt-2 text-center text-xs text-slate-500">
                 Uma chance por dia · {specialty} · máx. 2.000 pts
+              </p>
+            )}
+            {canStart && qualityBlocked && (
+              <p className="mt-2 text-center text-xs text-red-700">
+                Início bloqueado até o professor liberar a disputa.
               </p>
             )}
             {canContinue && (

@@ -71,6 +71,19 @@ export async function POST(
     return NextResponse.json({ error: 'Prova não disponível' }, { status: 404 });
   }
 
+  const qualityStatus = (exam as { quality_status?: string }).quality_status;
+  if (qualityStatus === 'blocked') {
+    return NextResponse.json(
+      {
+        error:
+          'Disputa pausada: a revisão de qualidade encontrou problema nas questões. O professor foi avisado.',
+        quality_status: qualityStatus,
+        quality_summary: (exam as { quality_summary?: string }).quality_summary,
+      },
+      { status: 423 }
+    );
+  }
+
   // Só pode iniciar a disputa da própria trilha (geral vs Liga de Nefrologia)
   const { resolveUserExamAudience } = await import('@/lib/exams/audience');
   const ctx = await resolveUserExamAudience(user.id);

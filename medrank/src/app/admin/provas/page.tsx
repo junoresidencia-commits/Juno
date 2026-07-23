@@ -7,6 +7,7 @@ import { getDemoExams } from '@/lib/demo/content';
 import { todayDateString, formatExamWindowShort } from '@/lib/exams/release';
 import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { EnsureDailyExamsButton } from '@/components/admin/EnsureDailyExamsButton';
+import { ExamQualityAdminCard } from '@/components/admin/ExamQualityAdminCard';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function ProvasPage() {
@@ -143,15 +144,29 @@ export default async function ProvasPage() {
         <section className="mb-8 space-y-3 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-200">
           <h2 className="text-lg font-semibold text-emerald-900">Provas de hoje</h2>
           {todayNefro && (
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-teal-800">Liga de Nefrologia</p>
-              <p className="font-medium">{todayNefro.title}</p>
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-teal-800">Liga de Nefrologia</p>
+                <p className="font-medium">{todayNefro.title}</p>
+              </div>
+              <ExamQualityAdminCard
+                examId={todayNefro.id}
+                initialStatus={(todayNefro as { quality_status?: string }).quality_status}
+                initialSummary={(todayNefro as { quality_summary?: string }).quality_summary}
+              />
             </div>
           )}
           {todayGeneral && (
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Disputa geral</p>
-              <p className="font-medium">{todayGeneral.title}</p>
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Disputa geral</p>
+                <p className="font-medium">{todayGeneral.title}</p>
+              </div>
+              <ExamQualityAdminCard
+                examId={todayGeneral.id}
+                initialStatus={(todayGeneral as { quality_status?: string }).quality_status}
+                initialSummary={(todayGeneral as { quality_summary?: string }).quality_summary}
+              />
             </div>
           )}
         </section>
