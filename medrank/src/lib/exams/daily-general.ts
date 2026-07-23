@@ -107,7 +107,8 @@ async function pickGeneralQuestions(
 
 /** Disputa diária geral (outras ligas / quem não está na Liga de Nefrologia). */
 export async function ensureDailyGeneralExam(
-  dateStr = todayDateStringBrazil()
+  dateStr = todayDateStringBrazil(),
+  opts?: { force?: boolean }
 ): Promise<EnsureGeneralExamResult> {
   if (usesDemoStore()) {
     return {
@@ -145,9 +146,23 @@ export async function ensureDailyGeneralExam(
     .eq('audience', 'general')
     .maybeSingle();
 
-  if (existing) {
+  if (existing && !opts?.force) {
     // Não re-roda IA a cada pageview (custo). Só retorna; geração nova faz a revisão.
     return { date: dateStr, audience: 'general', created: false, exam: existing };
+  }
+
+  if (existing && opts?.force) {
+    const { deleteDailyExamForRegen } = await import('@/lib/exams/delete-daily');
+    const wiped = await deleteDailyExamForRegen(admin, existing.id);
+    if (!wiped.ok) {
+      return {
+        date: dateStr,
+        audience: 'general',
+        created: false,
+        exam: existing,
+        error: wiped.error || 'Falha ao apagar disputa antiga para regenerar',
+      };
+    }
   }
 
   let selected: Question[] = [];
