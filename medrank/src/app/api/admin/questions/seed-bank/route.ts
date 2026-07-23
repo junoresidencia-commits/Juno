@@ -4,8 +4,11 @@ import { join } from 'path';
 import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { isStructurallySound, polishQuestionOptions } from '@/lib/question-bank/polish-options';
+import { isStructurallySound, polishQuestionOptions, stripOptionRationaleLeak } from '@/lib/question-bank/polish-options';
 import type { Difficulty, OptionLetter, Question } from '@/types/database';
+
+/** Importa dezenas de milhares de questões — precisa de timeout longo. */
+export const maxDuration = 300;
 
 function deterministicUuid(seed: string): string {
   const hex = createHash('sha256').update(`medrank-q:${seed}`).digest('hex');
@@ -24,6 +27,17 @@ function loadBankFile(fileName: string): Question[] {
   const raw = JSON.parse(readFileSync(path, 'utf-8')) as { questions?: Question[] } | Question[];
   if (Array.isArray(raw)) return raw;
   return raw.questions ?? [];
+}
+
+function cleanOptionFields(q: Question): Question {
+  return {
+    ...q,
+    option_a: stripOptionRationaleLeak(String(q.option_a || '')),
+    option_b: stripOptionRationaleLeak(String(q.option_b || '')),
+    option_c: stripOptionRationaleLeak(String(q.option_c || '')),
+    option_d: stripOptionRationaleLeak(String(q.option_d || '')),
+    option_e: stripOptionRationaleLeak(String(q.option_e || '')),
+  };
 }
 
 function toInsertRow(question: Question) {
@@ -84,11 +98,14 @@ export async function POST() {
     if (seen.has(key)) continue;
     seen.add(key);
 
-    let q = raw;
-    if (!isStructurallySound(q)) {
+    let q = cleanOptionFields(raw);
+    if (!isStructurallySound(q) || /esta abordagem atrasa/i.test(
+      `${q.option_a} ${q.option_b} ${q.option_c} ${q.option_d} ${q.option_e}`
+    )) {
       q = polishQuestionOptions(q);
       polishedCount += 1;
     }
+    // Só descarta erros graves (não warning de stem curto)
     if (!isStructurallySound(q)) {
       droppedWeak += 1;
       continue;

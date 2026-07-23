@@ -95,24 +95,50 @@ async function fetchQuestionsByTag(
   return out;
 }
 
+async function fetchAllQuestionsPaged(
+  admin: NonNullable<ReturnType<typeof createAdminClient>>,
+  pageSize = 1000,
+  maxPages = 20
+): Promise<Question[]> {
+  const out: Question[] = [];
+  for (let page = 0; page < maxPages; page++) {
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+    const { data, error } = await admin.from('questions').select('*').range(from, to);
+    if (error) throw new Error(error.message);
+    const rows = (data ?? []) as Question[];
+    out.push(...rows);
+    if (rows.length < pageSize) break;
+  }
+  return out;
+}
+
 async function pickGeneralQuestions(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   count: number,
   dateStr: string
 ) {
-  // Não usar select('*') sem filtro: o PostgREST limita ~1000 linhas e o banco
-  // fica dominado por Nefro → pool geral ficava com 4/20.
+  // Busca por tag + paginação completa (evita teto ~1000 do PostgREST).
   let pool = (await fetchQuestionsByTag(admin, 'residencia-expert')).filter(
     (q) => !isNephrologyTagged(q)
   );
 
   if (pool.length < count) {
-    // fallback: banco-expert não-nefro
     const expert = (await fetchQuestionsByTag(admin, 'banco-expert')).filter(
       (q) => !isNephrologyTagged(q)
     );
     const byId = new Map(pool.map((q) => [q.id, q]));
     for (const q of expert) byId.set(q.id, q);
+    pool = [...byId.values()];
+  }
+
+  if (pool.length < count) {
+    // Último recurso: varrer o banco todo (paginado) e tirar Nefro
+    const all = await fetchAllQuestionsPaged(admin);
+    const byId = new Map(pool.map((q) => [q.id, q]));
+    for (const q of all) {
+      if (!isNephrologyTagged(q)) byId.set(q.id, q);
+    }
     pool = [...byId.values()];
   }
 
@@ -128,7 +154,7 @@ async function pickGeneralQuestions(
 
   if (pool.length < count) {
     throw new Error(
-      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo (precisa tag residencia-expert).`
+      `Questões insuficientes para disputa geral (${pool.length}/${count}). Admin → Questões → Importar banco completo de novo (após o fix de qualidade).`
     );
   }
 
