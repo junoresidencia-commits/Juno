@@ -263,7 +263,7 @@ export async function ensureDailyGeneralExam(
       exam_kind: 'daily',
       audience: 'general',
       quality_status: 'pending',
-      quality_summary: 'Revisão IA em andamento…',
+      quality_summary: 'Revisao IA em andamento...',
       date_closes: release.date_closes,
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,

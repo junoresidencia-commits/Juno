@@ -56,10 +56,17 @@ export const REVIEW_THRESHOLDS = {
 };
 
 export function requireOpenAiKey(): string {
-  const key = process.env.OPENAI_API_KEY?.trim();
+  const raw = process.env.OPENAI_API_KEY?.trim() || '';
+  // Remove BOM / reticências / espaços invisíveis que quebram headers HTTP (ByteString)
+  const key = raw.replace(/^\uFEFF/, '').replace(/[^\x21-\x7E]/g, '').trim();
   if (!key) {
     throw new Error(
-      'OPENAI_API_KEY obrigatória para gerar/publicar a disputa. Configure na Vercel (e localmente) — sem ela a prova não é publicada.'
+      'OPENAI_API_KEY obrigatoria para gerar/publicar a disputa. Configure na Vercel (e localmente) — sem ela a prova nao e publicada.'
+    );
+  }
+  if (key.length < 20 || !/^sk-/.test(key)) {
+    throw new Error(
+      'OPENAI_API_KEY parece invalida. Na Vercel, cole apenas a chave (comeca com sk-), sem texto extra nem reticencias.'
     );
   }
   return key;
@@ -109,22 +116,31 @@ function passesThresholds(scores: AiQuestionScores, hasExplanation: boolean): {
 }
 
 async function callOpenAiJson(prompt: string): Promise<Record<string, unknown>> {
-  const key = requireOpenAiKey();
+  // Undici/fetch exige ByteString (Latin-1) em headers. Chave colada com
+  // caracteres como "…" (U+2026) gera: "Cannot convert argument to a ByteString".
+  const key = requireOpenAiKey().replace(/[^\x21-\x7E]/g, '').trim();
+  if (key.length < 20) {
+    throw new Error(
+      'OPENAI_API_KEY invalida na Vercel (caracteres estranhos ou chave incompleta). Gere de novo em platform.openai.com e cole so a chave sk-...'
+    );
+  }
+
+  const headers = new Headers();
+  headers.set('Authorization', `Bearer ${key}`);
+  headers.set('Content-Type', 'application/json');
+
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
-      model: process.env.OPENAI_REVIEW_MODEL || 'gpt-4o-mini',
+      model: (process.env.OPENAI_REVIEW_MODEL || 'gpt-4o-mini').replace(/[^\x21-\x7E]/g, ''),
       temperature: 0,
       response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
           content:
-            'Você é revisor sênior de questões de prova de título (SBN), residência médica e NRE. Seja rigoroso. Responda só JSON válido.',
+            'Voce e revisor senior de questoes de prova de titulo (SBN), residencia medica e NRE. Seja rigoroso. Responda so JSON valido.',
         },
         { role: 'user', content: prompt },
       ],
@@ -134,7 +150,8 @@ async function callOpenAiJson(prompt: string): Promise<Record<string, unknown>> 
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`Falha OpenAI (${res.status}): ${text.slice(0, 200)}`);
+    const safe = text.replace(/[^\x20-\x7E\n]/g, '?').slice(0, 200);
+    throw new Error(`Falha OpenAI (${res.status}): ${safe}`);
   }
 
   const data = (await res.json()) as {

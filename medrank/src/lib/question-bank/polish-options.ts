@@ -52,7 +52,7 @@ function shortenCorrect(text: string): string {
     if (acc.length >= 70) return acc;
   }
 
-  if (t.length > 190) t = `${t.slice(0, 187).replace(/\s+\S*$/, '')}…`;
+  if (t.length > 190) t = `${t.slice(0, 187).replace(/\s+\S*$/, '')}...`;
   return t;
 }
 
