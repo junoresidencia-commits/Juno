@@ -33,6 +33,8 @@ interface Props {
   leagueLabel?: string;
   /** Grupo cujo ranking aparece na home (só membros). */
   rankingGroupName?: string;
+  /** Treinos Nefro/Nefroped — só Liga de Nefrologia (ou admin). */
+  showNephrologyTreino?: boolean;
   qualityStatus?: string | null;
   qualitySummary?: string | null;
 }
@@ -56,6 +58,7 @@ export function AlunoHomeSimple({
   trackLabel,
   leagueLabel,
   rankingGroupName,
+  showNephrologyTreino = false,
   qualityStatus,
   qualitySummary,
 }: Props) {
@@ -234,11 +237,12 @@ export function AlunoHomeSimple({
         </div>
       </section>
 
+      {showNephrologyTreino && (
       <section className="mt-6 space-y-3 md:max-w-xl">
         <div>
           <h2 className="font-semibold text-slate-900">Treinos</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Gere um simulado agora. As questões vêm do banco da especialidade.
+            Exclusivo da Liga de Nefrologia. Gere um simulado agora.
           </p>
         </div>
         <Link
@@ -258,6 +262,7 @@ export function AlunoHomeSimple({
           <p className="mt-1 text-sm text-slate-600">Casos pediátricos · gerar prova</p>
         </Link>
       </section>
+      )}
 
       <footer className="mt-6 pb-4 text-center">
         <Link href="/aluno/ranking?period=weekly" className="text-sm text-slate-600 underline-offset-2 hover:text-emerald-700 hover:underline">

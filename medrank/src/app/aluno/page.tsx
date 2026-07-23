@@ -14,6 +14,7 @@ import { getExamWindowStatus } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 import { audienceLabel, resolveUserExamAudience } from '@/lib/exams/audience';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
+import { canAccessNephrologyTreino } from '@/lib/treino/access';
 
 export default async function AlunoDashboard() {
   const session = await requireAuth();
@@ -29,6 +30,10 @@ export default async function AlunoDashboard() {
     ctx.audience === 'nephrology'
       ? ctx.leagueName ?? audienceLabel('nephrology')
       : null;
+  const showNephrologyTreino = await canAccessNephrologyTreino(
+    session.userId,
+    session.profile
+  );
 
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
@@ -61,6 +66,7 @@ export default async function AlunoDashboard() {
         streakDays={streakDays}
         trackLabel={trackLabel}
         leagueLabel={leagueLabel ?? undefined}
+        showNephrologyTreino={showNephrologyTreino}
       />
     );
   }
@@ -167,6 +173,7 @@ export default async function AlunoDashboard() {
       trackLabel={trackLabel}
       leagueLabel={leagueLabel ?? undefined}
       rankingGroupName={ctx.rankingGroupName ?? undefined}
+      showNephrologyTreino={showNephrologyTreino}
       qualityStatus={(todayExam as { quality_status?: string } | null)?.quality_status ?? null}
       qualitySummary={(todayExam as { quality_summary?: string } | null)?.quality_summary ?? null}
     />

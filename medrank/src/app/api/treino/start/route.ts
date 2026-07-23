@@ -2,11 +2,22 @@ import { NextResponse } from 'next/server';
 import { getSessionProfile } from '@/lib/auth';
 import { createTreinoSession, type TreinoMode } from '@/lib/treino/runtime';
 import { TRACK_CONFIG, type TreinoTrack } from '@/lib/treino/bank';
+import { canAccessNephrologyTreino } from '@/lib/treino/access';
 
 export async function POST(request: Request) {
   const session = await getSessionProfile();
   if (!session) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  if (!(await canAccessNephrologyTreino(session.userId, session.profile))) {
+    return NextResponse.json(
+      {
+        error:
+          'Treinos de Nefrologia são exclusivos da Liga de Nefrologia. Peça ao professor para te adicionar.',
+      },
+      { status: 403 }
+    );
   }
 
   const body = await request.json().catch(() => ({}));
