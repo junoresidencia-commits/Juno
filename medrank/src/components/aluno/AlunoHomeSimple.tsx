@@ -229,11 +229,19 @@ export function AlunoHomeSimple({
       )}
 
       <section className="mt-4 flex flex-1 flex-col gap-4 md:max-w-xl">
+        <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Suas disputas de hoje
+        </h2>
+        {disputes.length === 0 ? (
+          <div className="rounded-2xl bg-amber-50 px-6 py-8 text-center text-sm text-amber-950 ring-1 ring-amber-200">
+            Nenhum módulo liberado ainda. Peça ao professor para ligar Nefrologia e/ou Residência
+            no seu cadastro.
+          </div>
+        ) : null}
         {disputes.length > 1 && (
           <p className="text-center text-xs text-slate-600">
-            Você está em mais de um grupo — pode fazer as{' '}
-            <strong>{disputes.length} disputas</strong> de hoje (cada uma conta no ranking do
-            respectivo grupo).
+            Você tem <strong>{disputes.length} disputas</strong> hoje — cada uma com ranking e
+            resultado próprios.
           </p>
         )}
         {disputes.map((card) => (

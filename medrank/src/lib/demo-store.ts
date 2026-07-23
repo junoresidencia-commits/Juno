@@ -25,6 +25,8 @@ export interface DemoStudent {
   createdAt: string;
   /** Pode criar ligas (grupos de estudo). */
   leagueAdmin?: boolean;
+  /** Módulos ligados pelo admin. */
+  enabled_tracks?: string[];
 }
 
 export interface DemoStore {
@@ -291,7 +293,8 @@ export function registerDemoStudent(
 export function createDemoStudentByAdmin(
   name: string,
   email: string,
-  password: string
+  password: string,
+  tracks: string[] = ['general']
 ): { ok: boolean; error?: string; id?: string } {
   const emailNorm = normalizeEmail(email);
   if (!name.trim()) return { ok: false, error: 'Informe o nome do aluno.' };
@@ -313,6 +316,7 @@ export function createDemoStudentByAdmin(
     active: true,
     approvedAt: now,
     createdAt: now,
+    enabled_tracks: tracks,
   });
   writeDemoStore(store);
 

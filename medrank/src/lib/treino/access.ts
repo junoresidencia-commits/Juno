@@ -9,11 +9,13 @@ import { resolveUserExamAudience } from '@/lib/exams/audience';
  */
 export async function canAccessNephrologyTreino(
   userId: string,
-  profile?: Pick<Profile, 'role'> | null
+  profile?: Pick<Profile, 'role' | 'enabled_tracks'> | null
 ): Promise<boolean> {
   if (profile?.role === 'admin') return true;
+  const tracks = profile?.enabled_tracks;
+  if (Array.isArray(tracks) && tracks.includes('nephrology')) return true;
   const ctx = await resolveUserExamAudience(userId);
-  return ctx.hasNephrology && Boolean(ctx.leagueId);
+  return ctx.hasNephrology;
 }
 
 export async function requireNephrologyTreinoAccess(
