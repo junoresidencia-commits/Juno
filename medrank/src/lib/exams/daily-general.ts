@@ -6,6 +6,7 @@ import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
 import { mixDifficulty } from '@/lib/treino/progress';
+import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   addCalendarDaysBrazil,
   DAILY_EXAM_DURATION_MINUTES,
@@ -75,7 +76,9 @@ async function pickGeneralQuestions(
   const { data, error } = await admin.from('questions').select('*');
   if (error) throw new Error(error.message);
 
-  let pool = ((data ?? []) as Question[]).filter((q) => !isNephrologyTagged(q));
+  let pool = ((data ?? []) as Question[]).filter(
+    (q) => !isNephrologyTagged(q) && isStructurallySound(q)
+  );
 
   // Preferir banco expert de residência (CM/Ped/Cirurgia/GO/…) quando houver volume
   const expert = pool.filter(isResidenciaExpert);

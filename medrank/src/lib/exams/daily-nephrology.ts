@@ -6,6 +6,7 @@ import { defaultExamReleaseFields } from '@/lib/exams/release';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 import { mixDifficulty } from '@/lib/treino/progress';
 import { TRACK_CONFIG } from '@/lib/treino/config';
+import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   addCalendarDaysBrazil,
   DAILY_EXAM_DURATION_MINUTES,
@@ -55,7 +56,7 @@ const WEAK_DISTRACTOR = [
 function filterExpertPool(pool: Question[], count: number): Question[] {
   const cleaned = pool.filter((q) => {
     const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}\n${q.option_e ?? ''}`;
-    return !WEAK_DISTRACTOR.some((re) => re.test(blob));
+    return !WEAK_DISTRACTOR.some((re) => re.test(blob)) && isStructurallySound(q);
   });
   // Liga de Nefrologia: SOMENTE banco-expert (padrão título)
   const expert = cleaned.filter((q) => q.tags?.includes('banco-expert'));
