@@ -102,14 +102,6 @@ export function useExamAntiFraud({
       }
     };
 
-    const onBlur = () => {
-      safeTrigger('window_blur');
-    };
-
-    const onPageHide = () => {
-      safeTrigger('page_hide');
-    };
-
     const onContextMenu = (e: Event) => {
       e.preventDefault();
       safeTrigger('context_menu');
@@ -170,8 +162,8 @@ export function useExamAntiFraud({
     };
 
     document.addEventListener('visibilitychange', onVisibility);
-    window.addEventListener('blur', onBlur);
-    window.addEventListener('pagehide', onPageHide);
+    // Não usar window.blur / pagehide: no iPhone/Safari disparam ao abrir a prova
+    // (barra de URL, teclado, gesto) e zeravam a disputa com tela estranha.
     document.addEventListener('contextmenu', onContextMenu, true);
     document.addEventListener('copy', onCopy, true);
     document.addEventListener('cut', onCut, true);
@@ -183,8 +175,6 @@ export function useExamAntiFraud({
       window.clearTimeout(armTimer);
       window.clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibility);
-      window.removeEventListener('blur', onBlur);
-      window.removeEventListener('pagehide', onPageHide);
       document.removeEventListener('contextmenu', onContextMenu, true);
       document.removeEventListener('copy', onCopy, true);
       document.removeEventListener('cut', onCut, true);

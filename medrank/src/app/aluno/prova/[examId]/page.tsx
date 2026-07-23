@@ -145,7 +145,10 @@ export default async function ProvaPage({
     attempt = newAttempt;
   }
 
-  const { data: examQuestions } = await supabase
+  // Service role evita falha de RLS no embed questions(*) (tela em branco).
+  const admin = createAdminClient();
+  const reader = admin ?? supabase;
+  const { data: examQuestions, error: eqLoadError } = await reader
     .from('exam_questions')
     .select('order_number, questions(*)')
     .eq('exam_id', examId)
@@ -153,10 +156,28 @@ export default async function ProvaPage({
 
   const questions = (examQuestions ?? [])
     .map((eq) => {
-      const q = eq.questions as unknown as Question;
+      const raw = eq.questions as unknown;
+      const q = (Array.isArray(raw) ? raw[0] : raw) as Question | null;
+      if (!q?.id) return null;
       return { ...q, order_number: eq.order_number };
     })
-    .filter((q) => q.id);
+    .filter((q): q is Question & { order_number: number } => Boolean(q?.id));
+
+  if (questions.length === 0) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="text-xl font-bold text-red-900">Prova sem questões</h1>
+        <p className="mt-3 text-sm text-red-800">
+          A disputa de hoje está publicada, mas não há questões vinculadas
+          {eqLoadError ? ` (${eqLoadError.message})` : ''}. Peça ao professor para gerar de novo a
+          disputa (Admin → Gerar disputa de hoje).
+        </p>
+        <a href="/aluno" className="mt-6 inline-block text-sm font-semibold text-emerald-700 hover:underline">
+          ← Voltar ao início
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div>
