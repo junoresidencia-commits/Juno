@@ -136,16 +136,31 @@ function buildDistractors(
     if (out.includes(d)) {
       d = `${d.replace(/\.$/, '')}, reavaliando apenas se houver nova intercorrência clínica`;
     }
-    const target = correctShort.length;
-    if (d.length < target * 0.85) {
-      d = `${d} Esta abordagem atrasa a terapia com melhor evidência para o quadro apresentado.`;
-    }
-    if (d.length > target * 1.25) {
-      d = `${d.slice(0, Math.max(60, Math.floor(target * 1.1))).replace(/\s+\S*$/, '')}.`;
+    // NÃO anexar meta-texto tipo "Esta abordagem atrasa..." — vaza no aluno e desequilibra.
+    const target = Math.max(90, Math.min(correctShort.length, 160));
+    d = ensureMinLength(
+      d,
+      Math.floor(target * 0.85),
+      'sem cobrir o mecanismo prioritário indicado pela vinheta'
+    );
+    if (d.length > target * 1.3) {
+      d = `${d.slice(0, Math.max(80, Math.floor(target * 1.15))).replace(/\s+\S*$/, '')}.`;
     }
     out.push(d);
   }
   return out;
+}
+
+/** Remove sufixos de “por que está errado” que poluíam as alternativas. */
+export function stripOptionRationaleLeak(text: string): string {
+  return String(text || '')
+    .replace(
+      /\s*Esta abordagem atrasa a terapia com melhor evidência[^.]*\.?/gi,
+      ''
+    )
+    .replace(/\s*Esta abordagem atrasa[^.]*\.?/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function optionsOf(q: Question): { letter: OptionLetter; text: string }[] {
@@ -168,14 +183,15 @@ export function isStructurallySound(q: Question): boolean {
  * distratores curtos/absurdos são substituídos por erros clínicos plausíveis.
  */
 export function polishQuestionOptions(q: Question): Question {
-  const letters = optionsOf(q).map((o) => o.letter);
-  const n = Math.max(4, letters.length);
+  // Sempre montar 5 alternativas na disputa/treino (padrão residência)
+  const n = 5;
   const rnd = mulberry32(hashId(q.id || q.statement.slice(0, 40)));
 
   const correctLetter = (String(q.correct_option || 'A').toUpperCase() || 'A') as OptionLetter;
-  const rawCorrect =
+  const rawCorrect = stripOptionRationaleLeak(
     String(q[`option_${correctLetter.toLowerCase()}` as keyof Question] ?? '').trim() ||
-    String(q.option_a || '').trim();
+      String(q.option_a || '').trim()
+  );
 
   let correctShort = shortenCorrect(rawCorrect);
   correctShort = ensureMinLength(
@@ -186,7 +202,8 @@ export function polishQuestionOptions(q: Question): Question {
 
   const existingWrong = optionsOf(q)
     .filter((o) => o.letter !== correctLetter)
-    .map((o) => o.text);
+    .map((o) => stripOptionRationaleLeak(o.text))
+    .filter((t) => t.length >= 40);
 
   const built = buildDistractors(q, correctShort, n - 1, rnd);
   const distractors: string[] = [];
