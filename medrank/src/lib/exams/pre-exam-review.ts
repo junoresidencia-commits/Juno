@@ -161,17 +161,26 @@ export async function reviewQuestionMandatoryAi(q: Question): Promise<QuestionRe
     };
   }
 
-  const prompt = `Revise esta questão para disputa diária de alto nível (título/residência/NRE).
+  const prompt = `Você é revisor sênior de questões de residência (padrão USP/ENARE) e prova de título (nefrologia).
+Revise esta questão para disputa diária. Se reprovar em QUALQUER critério, approved=false.
 
-Critérios obrigatórios de APROVAÇÃO:
-- Enunciado claro, bem escrito, sem contradição; vinheta clínica completa (idade, história, exame físico e exames relevantes quando couber).
-- Pergunta preferencialmente: melhor conduta / diagnóstico mais provável / tratamento / próximo passo / interpretação / complicação-prognóstico.
-- Apenas UMA alternativa inequivocamente correta.
-- Gabarito = melhor conduta segundo evidência atual.
-- Justificativa correta e coerente.
-- Eliminar: fácil demais, amadora, ambígua, repetitiva, mal formulada, gabarito óbvio por tamanho.
-- Nível: prova de título / residência / concurso alto nível.
-- Nefrologia: pode misturar clínica médica + nefro adulta + nefropediatria em nível de nefrologista.
+APROVAÇÃO exige:
+1. Vinheta clínica realista e bem construída (idade, história, exame e exames relevantes quando couber). Dados suficientes, sem enchimento inútil.
+2. Pergunta objetiva: melhor conduta / diagnóstico mais provável / tratamento / próximo passo / interpretação / complicação-prognóstico.
+3. Cinco alternativas A–E CLINICAMENTE RELACIONADAS AO MESMO CASO.
+4. Distratores plausíveis = erros reais de raciocínio ou condutas possíveis em outras circunstâncias (NÃO genéricos de outro tema).
+5. Apenas UMA melhor resposta; gabarito clinicamente correto e atual.
+6. Alternativas com tamanho e estrutura semelhantes (sem gabarito óbvio por tamanho/detalhe).
+7. Justificativa correta e coerente (fica SÓ no campo explanation — nunca na alternativa).
+8. Nível: residência USP/ENARE (geral) ou título/nefrologista (se nefro). NÃO basta citar "USP/ENARE" — o estilo deve ser verdadeiro.
+
+REPROVE AUTOMATICAMENTE se houver:
+- palavra "gabarito" em enunciado ou alternativas;
+- justificativa/explicação dentro da alternativa correta;
+- "conduta alinhada à vinheta/guidelines", "raciocínio típico de bancas", "item MedRank", "USP-5", "questão estilo USP/ENARE", "banca competitiva";
+- distratores desconectados do caso (ex.: hemorragia pós-parto com opções de nefroproteção/proteinúria genéricas);
+- templates genéricos reutilizados; enunciado curto/artificial; pista visual (correta bem mais longa);
+- mais de uma resposta defensável; ambiguidade; desatualização científica.
 
 Responda JSON:
 {
@@ -187,6 +196,8 @@ Responda JSON:
   "singleCorrect": boolean,
   "hasJustification": boolean,
   "vignetteComplete": boolean,
+  "distractorsOnTopic": boolean,
+  "noMetaLabels": boolean,
   "askType": "conduta"|"diagnostico"|"tratamento"|"proximo_passo"|"interpretacao"|"complicacao_prognostico"|"outro",
   "problems": string[],
   "note": string
@@ -224,10 +235,15 @@ ${JSON.stringify({
   };
 
   const threshold = passesThresholds(scores, hasExplanation);
-  const aiApproved = parsed.approved === true && threshold.ok;
+  const distractorsOk = parsed.distractorsOnTopic !== false;
+  const noMeta = parsed.noMetaLabels !== false;
+  const aiApproved =
+    parsed.approved === true && threshold.ok && distractorsOk && noMeta;
   const problems = [
     ...(Array.isArray(parsed.problems) ? parsed.problems.map(String) : []),
     ...threshold.reasons,
+    ...(!distractorsOk ? ['distratores fora do caso / genéricos'] : []),
+    ...(!noMeta ? ['meta-texto de banca ou pista de gabarito'] : []),
   ];
 
   if (!aiApproved) {
@@ -272,8 +288,16 @@ export async function reviewExamSetSecondPass(questions: Question[]): Promise<{
   }));
 
   const parsed = await callOpenAiJson(`Segunda revisão do CONJUNTO de ${questions.length} questões da disputa diária.
-Reprove itens que: repitam o mesmo raciocínio, estejam fáceis demais no lote, ambíguas, ou destoem do nível título/residência.
-Só aprove o lote se TODOS estiverem aptos.
+Padrão: residência USP/ENARE (geral) ou título/nefrologista (nefro) — estilo real, não rótulo no texto.
+
+Reprove e liste rejectIds se houver:
+- repetição de raciocínio/alternativas;
+- meta-texto (USP-5, ENARE, MedRank, banca, gabarito nas opções);
+- distratores desconectados do caso;
+- nível fácil/amador demais no lote;
+- enunciados artificiais curtos.
+
+Só aprove o lote se TODOS estiverem aptos (estilo verdadeiro USP/ENARE ou título).
 
 JSON:
 {

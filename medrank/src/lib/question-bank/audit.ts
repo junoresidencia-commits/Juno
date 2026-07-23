@@ -18,6 +18,7 @@ export type QuestionAuditRow = {
   issues: QuestionAuditIssue[];
 };
 
+/** Distratores/templates genéricos reutilizados — reprovação automática. */
 const WEAK_DISTRACTOR = [
   /Terapia empírica sem fisiopatologia/i,
   /Suspender nefroproteção sem motivo/i,
@@ -26,9 +27,70 @@ const WEAK_DISTRACTOR = [
   /Observação sem seguimento em risco alto/i,
   /Labs e contexto compatíveis/i,
   /Conduta alinhada a guidelines/i,
+  /Conduta alinhada à vinheta/i,
+  /conduta alinhada a(o)? (vinheta|caso|guidelines?)/i,
   /Tipo de cobrança/i,
   /\{\{[a-z0-9_]+\}\}/i,
   /\banos anos\b/i,
+  /em avaliação de .+ — foco:/i,
+  /Labs e contexto compatíveis/i,
+];
+
+/**
+ * Meta-texto de banca / pista de gabarito — NUNCA pode aparecer para o aluno
+ * no enunciado ou nas alternativas.
+ */
+const BANNED_META_COPY = [
+  { re: /\bgabarito\b/i, code: 'banned_gabarito', msg: 'Contém a palavra "gabarito" (pista/meta)' },
+  {
+    re: /racioc[ií]nio t[ií]pico de bancas?/i,
+    code: 'banned_banca_meta',
+    msg: 'Meta-texto de banca ("raciocínio típico de bancas")',
+  },
+  {
+    re: /bancas? competitivas?/i,
+    code: 'banned_banca_meta',
+    msg: 'Meta-texto "banca competitiva"',
+  },
+  {
+    re: /item\s+medrank/i,
+    code: 'banned_medrank_item',
+    msg: 'Meta-texto "item MedRank" no enunciado/opções',
+  },
+  {
+    re: /quest[aã]o\s+estilo\s+usp/i,
+    code: 'banned_style_label',
+    msg: 'Meta-texto "questão estilo USP"',
+  },
+  { re: /\bUSP-?\s*\d+\b/i, code: 'banned_style_label', msg: 'Rótulo USP-N no texto do aluno' },
+  {
+    re: /\bestilo[- ]?(USP|ENARE|SBN|HCPA)\b/i,
+    code: 'banned_style_label',
+    msg: 'Rótulo de estilo de banca no texto do aluno',
+  },
+  { re: /\bENARE\b/i, code: 'banned_enare_label', msg: 'Menção a ENARE no enunciado/opções' },
+  {
+    re: /justificativa\s*(da\s*)?(resposta|alternativa|correta)/i,
+    code: 'banned_justification_in_option',
+    msg: 'Justificativa embutida na alternativa',
+  },
+  {
+    re: /\b(resposta\s+correta|alternativa\s+correta)\b/i,
+    code: 'banned_correct_label',
+    msg: 'Marca explícita de resposta correta',
+  },
+];
+
+/** Na alternativa correta: vazamento de explicação. */
+const CORRECT_OPTION_LEAK = [
+  /\bporque\b/i,
+  /\bpois\b/i,
+  /\bjá que\b/i,
+  /\bvisto que\b/i,
+  /\bgabarito\b/i,
+  /\bjustific/i,
+  /\bconforme (a )?diretriz\b/i,
+  /\bé a (melhor|única) (conduta|resposta)\b/i,
 ];
 
 function optionsOf(q: Question): { letter: OptionLetter; text: string }[] {
@@ -48,20 +110,35 @@ export function auditQuestion(q: Question): QuestionAuditIssue[] {
   const opts = optionsOf(q);
   const correct = q.correct_option;
   const correctText = opts.find((o) => o.letter === correct)?.text ?? '';
+  const explanation = String(q.explanation ?? '').trim();
 
-  if (statement.length < 70) {
+  // Vinheta mínima para padrão residência/título (não aceitar enunciado artificial curto)
+  if (statement.length < 180) {
     issues.push({
       code: 'stem_short',
       severity: 'error',
-      message: `Enunciado curto (${statement.length} chars)`,
+      message: `Enunciado curto demais (${statement.length} chars) — exige vinheta clínica realista`,
     });
   }
 
-  if (opts.length < 4) {
+  const hasAge = /\b\d{1,3}\s*(anos?|ano|meses?|dias?)\b/i.test(statement);
+  const hasClinicalCue =
+    /(PA|press[aã]o|exame|lab|creatinina|ureia|Hb|hemat|dor|febre|edema|diurese|ultrassom|TC|ECG|hist[oó]ria)/i.test(
+      statement
+    );
+  if (statement.length >= 180 && (!hasAge || !hasClinicalCue)) {
+    issues.push({
+      code: 'vignette_thin',
+      severity: 'error',
+      message: 'Vinheta sem idade e/ou dados clínicos suficientes',
+    });
+  }
+
+  if (opts.length < 5) {
     issues.push({
       code: 'options_missing',
       severity: 'error',
-      message: `Menos de 4 alternativas (${opts.length})`,
+      message: `Exige 5 alternativas A–E (há ${opts.length})`,
     });
   }
 
@@ -73,12 +150,11 @@ export function auditQuestion(q: Question): QuestionAuditIssue[] {
     });
   }
 
-  const explanation = String(q.explanation ?? '').trim();
   if (explanation.length < 80) {
     issues.push({
       code: 'explanation_thin',
-      severity: 'warning',
-      message: `Explicação fraca/ausente (${explanation.length} chars)`,
+      severity: 'error',
+      message: `Justificativa ausente/fraca (${explanation.length} chars) — obrigatória após a resposta`,
     });
   }
 
@@ -86,25 +162,25 @@ export function auditQuestion(q: Question): QuestionAuditIssue[] {
   if (lens.length >= 4) {
     const mx = Math.max(...lens);
     const mn = Math.min(...lens);
-    if (mn < 25) {
+    if (mn < 30) {
       issues.push({
         code: 'option_too_short',
         severity: 'error',
         message: `Alternativa muito curta (mín ${mn} chars) — risco de gabarito óbvio`,
       });
     }
-    if (mx > mn * 2.8) {
+    if (mx > mn * 2.2) {
       issues.push({
         code: 'options_unbalanced',
         severity: 'error',
         message: `Tamanhos desbalanceados (${lens.join('/')}) — gabarito pode saltar aos olhos`,
       });
     }
-    if (correctText && correctText.length >= mx && correctText.length > mn * 2) {
+    if (correctText && correctText.length >= mx && correctText.length > mn * 1.6) {
       issues.push({
         code: 'correct_longest',
-        severity: 'warning',
-        message: 'Alternativa correta é a mais longa (possível vazamento visual)',
+        severity: 'error',
+        message: 'Alternativa correta é a mais longa/detalhada (pista visual)',
       });
     }
   }
@@ -118,13 +194,45 @@ export function auditQuestion(q: Question): QuestionAuditIssue[] {
     });
   }
 
+  // Meta-texto / pistas no enunciado + opções (nunca no aluno)
+  const studentVisible = `${statement}\n${opts.map((o) => o.text).join('\n')}`;
+  for (const ban of BANNED_META_COPY) {
+    if (ban.re.test(studentVisible)) {
+      issues.push({ code: ban.code, severity: 'error', message: ban.msg });
+    }
+  }
+
+  // "gabarito" ou justificativa só nas opções (ainda mais grave)
+  for (const o of opts) {
+    if (/\bgabarito\b/i.test(o.text)) {
+      issues.push({
+        code: 'gabarito_in_option',
+        severity: 'error',
+        message: `Alternativa ${o.letter} contém a palavra "gabarito"`,
+      });
+    }
+  }
+
+  if (correctText) {
+    for (const re of CORRECT_OPTION_LEAK) {
+      if (re.test(correctText)) {
+        issues.push({
+          code: 'correct_leaks_rationale',
+          severity: 'error',
+          message: 'Alternativa correta contém justificativa/explicação (deve ir só no comentário)',
+        });
+        break;
+      }
+    }
+  }
+
   const blob = `${statement}\n${opts.map((o) => o.text).join('\n')}\n${explanation}`;
   for (const re of WEAK_DISTRACTOR) {
     if (re.test(blob)) {
       issues.push({
         code: 'weak_template',
         severity: 'error',
-        message: `Padrão fraco/template detectado: ${re}`,
+        message: `Padrão fraco/template genérico detectado`,
       });
       break;
     }
