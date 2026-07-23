@@ -8,6 +8,10 @@ import { mixDifficulty } from '@/lib/treino/progress';
 import { TRACK_CONFIG } from '@/lib/treino/config';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
+  filterApprovedBank,
+  sortByBankPriority,
+} from '@/lib/question-bank/provenance';
+import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
   buildBankOnlyExamSet,
@@ -128,15 +132,17 @@ async function pickTrackQuestions(
     if (rows.length < pageSize) break;
   }
 
-  let pool = filterExpertPool(allTagged, count, mode === 'ai');
+  const approvedTagged = filterApprovedBank(allTagged);
+  let pool = filterExpertPool(approvedTagged, count, mode === 'ai');
+  pool = sortByBankPriority(pool);
   const avoid = new Set(await recentQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
   if (fresh.length >= count) pool = fresh;
 
   if (pool.length < count) {
-    // Em modo banco, ainda tenta o pool cru da tag
-    if (mode === 'bank' && allTagged.length >= count) {
-      pool = allTagged;
+    // Em modo banco, ainda tenta o pool cru da tag (só aprovadas)
+    if (mode === 'bank' && approvedTagged.length >= count) {
+      pool = sortByBankPriority(approvedTagged);
     } else {
       throw new Error(
         `Questoes insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
@@ -144,7 +150,8 @@ async function pickTrackQuestions(
     }
   }
 
-  const pick = (candidates: Question[], n: number) => mixDifficulty(candidates, n);
+  const pick = (candidates: Question[], n: number) =>
+    mixDifficulty(sortByBankPriority(candidates), n);
   if (mode === 'ai') {
     return buildAiApprovedExamSet(pool, count, pick);
   }

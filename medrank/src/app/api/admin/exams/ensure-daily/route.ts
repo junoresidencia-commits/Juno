@@ -3,6 +3,7 @@ import { requireAdminApi } from '@/lib/api-auth';
 import { ensureBothDailyExams, resolveDailyMode } from '@/lib/exams/ensure-daily';
 import { ensureNephrologyLeague } from '@/lib/exams/audience';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import { getAiPaidSettings } from '@/lib/exams/ai-paid-settings';
 
 /** Pipeline do dia (2 audiencias). Modo banco e rapido; modo IA precisa de timeout longo. */
 export const maxDuration = 300;
@@ -30,14 +31,28 @@ export async function POST(request: Request) {
   }
 
   const resolved = resolveDailyMode(mode);
-  if (resolved === 'ai' && !process.env.OPENAI_API_KEY?.trim()) {
-    return NextResponse.json(
-      {
-        error:
-          'Modo IA exige OPENAI_API_KEY com credito. Use mode=bank (Gerar do banco) — gratis, sem OpenAI.',
-      },
-      { status: 503 }
-    );
+
+  if (resolved === 'ai') {
+    const ai = await getAiPaidSettings();
+    if (!ai.enabled) {
+      return NextResponse.json(
+        {
+          error:
+            'IA paga desativada no painel. Ative em Admin → Provas (com confirmação de custo) ou use Gerar do banco (grátis).',
+          estimate_usd_per_day: { min: 0.5, max: 5 },
+        },
+        { status: 403 }
+      );
+    }
+    if (!process.env.OPENAI_API_KEY?.trim()) {
+      return NextResponse.json(
+        {
+          error:
+            'Modo IA exige OPENAI_API_KEY com credito. Use mode=bank (Gerar do banco) — gratis, sem OpenAI.',
+        },
+        { status: 503 }
+      );
+    }
   }
 
   const league = await ensureNephrologyLeague();

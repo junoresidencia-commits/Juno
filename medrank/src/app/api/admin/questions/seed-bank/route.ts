@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isStructurallySound, polishQuestionOptions, stripOptionRationaleLeak } from '@/lib/question-bank/polish-options';
+import { statementFingerprint } from '@/lib/question-bank/provenance';
 import type { Difficulty, OptionLetter, Question } from '@/types/database';
 
 /** Importa dezenas de milhares de questões — precisa de timeout longo. */
@@ -63,6 +64,10 @@ function toInsertRow(question: Question) {
     tags: question.tags ?? [],
     image_url: question.image_url ?? null,
     bibliography: question.bibliography ?? null,
+    bank_status: 'approved' as const,
+    question_origin: 'original' as const,
+    statement_fingerprint: statementFingerprint(question.statement),
+    reproduction_allowed: false,
   };
 }
 

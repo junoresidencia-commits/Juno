@@ -8,11 +8,16 @@ export function EnsureDailyExamsButton() {
   const [error, setError] = useState<string | null>(null);
 
   async function run(force: boolean, mode: 'bank' | 'ai') {
-    if (force) {
+    if (mode === 'ai') {
       const ok = window.confirm(
-        mode === 'bank'
-          ? 'Forçar regenerar (BANCO) apaga as disputas de HOJE e monta de novo só com o banco local — sem custo OpenAI. Continuar?'
-          : 'Forçar regenerar (IA) apaga as disputas de HOJE e usa OpenAI (pago). Continuar?'
+        'IA PAGA — estimativa ~US$ 0,50 a US$ 5 por regeneração completa.\n\n' +
+          'Só funciona se "Permitir IA paga" estiver ATIVADA em Admin → Provas.\n\n' +
+          'Recomendado: use Gerar do banco (grátis). Continuar com IA?'
+      );
+      if (!ok) return;
+    } else if (force) {
+      const ok = window.confirm(
+        'Forçar regenerar (BANCO) apaga as disputas de HOJE e monta de novo só com o banco local — sem custo OpenAI. Continuar?'
       );
       if (!ok) return;
     }
@@ -83,13 +88,12 @@ export function EnsureDailyExamsButton() {
         </button>
       </div>
       <p className="text-xs text-slate-600">
-        <strong>Recomendado:</strong> Gerar do banco — usa as questoes ja importadas, sem gastar
-        OpenAI. Antes: Aba Questoes → Importar banco completo. So use IA se tiver credito na
-        platform.openai.com.
+        <strong>Recomendado:</strong> Gerar do banco — sorteia questões já aprovadas (provas
+        públicas + banco MedRank), sem gastar OpenAI. Fluxo: Importar prova → Revisar → Gerar.
       </p>
       <p className="text-xs text-slate-500">
-        Provas da internet: so importe material que voce tem direito de usar (provas oficiais
-        publicadas / suas). Nao copie prova comercial sem autorizacao.
+        Provas da internet: só importe material com direito de uso (fontes oficiais públicas). Não
+        copie prova comercial sem autorização. Ver docs/BANCO-PROVAS-PUBLICAS.md.
       </p>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {error && <p className="text-sm text-red-700">{error}</p>}

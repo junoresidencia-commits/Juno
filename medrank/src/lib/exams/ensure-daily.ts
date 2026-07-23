@@ -4,6 +4,7 @@ import { DAILY_EXAM_HORIZON_DAYS, addCalendarDaysBrazil } from '@/lib/exams/dail
 import { ensureDailyNephrologyExam, type EnsureDailyExamResult } from '@/lib/exams/daily-nephrology';
 import { ensureDailyGeneralExam, type EnsureGeneralExamResult } from '@/lib/exams/daily-general';
 import { ensureNephrologyLeague } from '@/lib/exams/audience';
+import { getAiPaidSettings } from '@/lib/exams/ai-paid-settings';
 
 export type DualEnsureResult = {
   date: string;
@@ -32,7 +33,16 @@ export async function ensureBothDailyExams(
   opts?: EnsureDailyOpts
 ): Promise<DualEnsureResult> {
   await ensureNephrologyLeague();
-  const mode = resolveDailyMode(opts?.mode);
+  let mode = resolveDailyMode(opts?.mode);
+
+  if (mode === 'ai') {
+    const ai = await getAiPaidSettings();
+    if (!ai.enabled) {
+      // Fallback seguro: nunca gastar OpenAI se o toggle estiver off
+      mode = 'bank';
+    }
+  }
+
   const general = await ensureDailyGeneralExam(dateStr, { force: opts?.force, mode });
   const nephrology = await ensureDailyNephrologyExam(dateStr, { force: opts?.force, mode });
   return { date: dateStr, mode, general, nephrology };

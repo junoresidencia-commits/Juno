@@ -8,6 +8,10 @@ import { pickDailyExamQuestions } from '@/lib/question-bank/daily-selection';
 import { mixDifficulty } from '@/lib/treino/progress';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
+  filterApprovedBank,
+  sortByBankPriority,
+} from '@/lib/question-bank/provenance';
+import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
   buildBankOnlyExamSet,
@@ -151,11 +155,17 @@ async function pickGeneralQuestions(
     pool = [...byId.values()];
   }
 
+  // Só questões aprovadas (importações ficam em pending_review até conferência)
+  pool = filterApprovedBank(pool);
+
   const sound = pool.filter((q) => isStructurallySound(q));
   if (sound.length >= count) pool = sound;
 
   const prefer = pool.filter(isResidenciaExpert);
   if (prefer.length >= count) pool = prefer;
+
+  // Prioridade: oficiais > baseadas em prova > originais > diretrizes
+  pool = sortByBankPriority(pool);
 
   const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
@@ -169,9 +179,10 @@ async function pickGeneralQuestions(
 
   const seed = Number(dateStr.replace(/-/g, '')) || 1;
   const pick = (candidates: Question[], n: number) => {
-    const picked = pickDailyExamQuestions(candidates, n, seed);
+    const prioritized = sortByBankPriority(candidates);
+    const picked = pickDailyExamQuestions(prioritized, n, seed);
     if (picked.length >= n) return picked.slice(0, n);
-    return mixDifficulty(candidates, n);
+    return mixDifficulty(prioritized, n);
   };
 
   if (mode === 'ai') {

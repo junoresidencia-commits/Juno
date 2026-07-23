@@ -6,7 +6,13 @@ import Link from 'next/link';
 export default function ImportarPage() {
   const isTestMode = process.env.NEXT_PUBLIC_SITE_URL?.includes('trycloudflare') ?? false;
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ imported: number; errors: string[] } | null>(null);
+  const [autoApprove, setAutoApprove] = useState(false);
+  const [result, setResult] = useState<{
+    imported: number;
+    errors: string[];
+    message?: string;
+    pending_review?: boolean;
+  } | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -18,6 +24,7 @@ export default function ImportarPage() {
 
     const body = new FormData();
     body.append('file', file);
+    if (autoApprove) body.append('auto_approve', 'true');
 
     const res = await fetch('/api/admin/import', { method: 'POST', body });
     const data = await res.json();
@@ -32,11 +39,30 @@ export default function ImportarPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
+      <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
+        ← Painel
+      </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar questões</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Envie um arquivo CSV ou Excel com as colunas do template.
+        CSV/Excel entram em <strong>revisão</strong> antes da disputa. Para provas oficiais em texto/JSON,
+        use o fluxo dedicado.
       </p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Link
+          href="/admin/importar/prova"
+          className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+        >
+          Importar prova completa
+        </Link>
+        <Link
+          href="/admin/questoes/revisao"
+          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800"
+        >
+          Fila de revisão
+        </Link>
+      </div>
+
       {isTestMode && (
         <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
           No modo teste, o app já vem preenchido com um banco demo autoral para 5 meses de provas.
@@ -49,14 +75,22 @@ export default function ImportarPage() {
         Baixar template CSV
       </a>
 
-      <form onSubmit={handleSubmit} className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        <input
-          name="file"
-          type="file"
-          accept=".csv,.xlsx,.xls"
-          required
-          className="text-sm"
-        />
+      <form
+        onSubmit={handleSubmit}
+        className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"
+      >
+        <input name="file" type="file" accept=".csv,.xlsx,.xls" required className="text-sm" />
+        <label className="mt-3 flex items-start gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={autoApprove}
+            onChange={(e) => setAutoApprove(e.target.checked)}
+            className="mt-1"
+          />
+          <span>
+            Publicar sem revisão (não recomendado). Padrão: enviar para a fila de conferência.
+          </span>
+        </label>
         <button
           type="submit"
           disabled={loading}
@@ -68,7 +102,17 @@ export default function ImportarPage() {
 
       {result && (
         <div className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="font-medium text-emerald-700">{result.imported} questões importadas</p>
+          <p className="font-medium text-emerald-700">
+            {result.message || `${result.imported} questões importadas`}
+          </p>
+          {result.pending_review && (
+            <p className="mt-2 text-sm text-slate-600">
+              Próximo passo:{' '}
+              <Link href="/admin/questoes/revisao" className="font-semibold text-emerald-700 underline">
+                aprovar na fila de revisão
+              </Link>
+            </p>
+          )}
           {result.errors.length > 0 && (
             <ul className="mt-2 list-inside list-disc text-sm text-red-600">
               {result.errors.map((e, i) => (
