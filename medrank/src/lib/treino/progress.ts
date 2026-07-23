@@ -209,7 +209,7 @@ export function computeTreinoStats(progress: TreinoProgressStore) {
   };
 }
 
-export function mixDifficulty<T extends { difficulty?: Difficulty | null }>(
+export function mixDifficulty<T extends { difficulty?: Difficulty | null; statement?: string }>(
   pool: T[],
   count: number
 ): T[] {
@@ -217,10 +217,16 @@ export function mixDifficulty<T extends { difficulty?: Difficulty | null }>(
   const medio = pool.filter((q) => q.difficulty === 'medio');
   const dificil = pool.filter((q) => q.difficulty === 'dificil');
   const other = pool.filter((q) => !q.difficulty);
+  // "Avançada" (15%): entre as difíceis, prioriza vinhetas mais longas
+  const avancado = [...dificil].sort(
+    (a, b) => String(b.statement || '').length - String(a.statement || '').length
+  );
 
-  const nFacil = Math.round(count * 0.25);
-  const nDificil = Math.round(count * 0.25);
-  const nMedio = count - nFacil - nDificil;
+  // Spec MedRank: 10% fácil · 40% intermediária · 35% difícil · 15% avançada
+  const nFacil = Math.max(0, Math.round(count * 0.1));
+  const nMedio = Math.max(0, Math.round(count * 0.4));
+  const nAvancado = Math.max(0, Math.round(count * 0.15));
+  const nDificil = Math.max(0, count - nFacil - nMedio - nAvancado);
 
   const pick = (arr: T[], n: number) => {
     const copy = [...arr];
@@ -232,20 +238,28 @@ export function mixDifficulty<T extends { difficulty?: Difficulty | null }>(
   };
 
   let selected = [
-    ...pick(facil.length ? facil : pool, nFacil),
-    ...pick(medio.length ? medio : pool, nMedio),
+    ...pick(facil.length ? facil : other.length ? other : pool, nFacil),
+    ...pick(medio.length ? medio : other.length ? other : pool, nMedio),
     ...pick(dificil.length ? dificil : pool, nDificil),
+    ...pick(avancado.length ? avancado : dificil.length ? dificil : pool, nAvancado),
   ];
 
+  // Dedup
+  const seen = new Set<T>();
+  selected = selected.filter((q) => {
+    if (seen.has(q)) return false;
+    seen.add(q);
+    return true;
+  });
+
   if (selected.length < count) {
-    const used = new Set(selected);
     selected = selected.concat(
       pick(
-        [...pool, ...other].filter((q) => !used.has(q)),
+        pool.filter((q) => !seen.has(q)),
         count - selected.length
       )
     );
   }
 
-  return pick(selected, count);
+  return selected.slice(0, count);
 }

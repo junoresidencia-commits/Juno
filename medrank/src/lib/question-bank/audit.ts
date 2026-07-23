@@ -79,6 +79,26 @@ const BANNED_META_COPY = [
     code: 'banned_correct_label',
     msg: 'Marca explícita de resposta correta',
   },
+  {
+    re: /esta abordagem atrasa/i,
+    code: 'banned_error_leak',
+    msg: 'Alternativa denuncia o erro ("Esta abordagem atrasa…")',
+  },
+  {
+    re: /sem excluir contraindica/i,
+    code: 'banned_error_leak',
+    msg: 'Pista de erro nas alternativas ("sem excluir contraindicações")',
+  },
+  {
+    re: /iniciar .{0,50}empiricamente/i,
+    code: 'banned_error_leak',
+    msg: 'Pista de erro ("iniciar… empiricamente")',
+  },
+  {
+    re: /apenas observar sem investigar/i,
+    code: 'banned_error_leak',
+    msg: 'Distrator caricaturesco ("apenas observar sem investigar")',
+  },
 ];
 
 /** Na alternativa correta: vazamento de explicação. */

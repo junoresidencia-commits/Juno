@@ -31,16 +31,24 @@ export function EnsureDailyExamsButton() {
       }
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
+      const progressBits = [data.general, data.nephrology]
+        .filter(Boolean)
+        .map((r: { progress?: { approved?: number; rejected?: number; target?: number; poolSize?: number }; exam?: { title?: string } }) => {
+          const p = r.progress;
+          if (!p) return null;
+          return `aprovadas ${p.approved ?? '?'}/${p.target ?? 20} · reprovadas ${p.rejected ?? 0} · pool ${p.poolSize ?? '?'}`;
+        })
+        .filter(Boolean);
       if (force) {
         setMessage(
           createdCount > 0
-            ? `Disputa(s) regenerada(s) com IA (${createdCount}). Atualize a página.`
+            ? `Disputa(s) regenerada(s) com IA (${createdCount}). ${progressBits.join(' | ')} Atualize a página.`
             : 'Regeneração pedida, mas nada foi criado — veja o erro.'
         );
       } else {
         setMessage(
           createdCount > 0
-            ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}).`
+            ? `Disputa(s) de hoje gerada(s) e revisada(s) pela IA (${createdCount}). ${progressBits.join(' | ')}`
             : data.general?.exam || data.nephrology?.exam
               ? 'Já existiam as disputas de hoje — use “Forçar regenerar” se estiverem ruins.'
               : 'Não foi possível criar as provas de hoje'

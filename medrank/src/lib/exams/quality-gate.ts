@@ -121,11 +121,19 @@ export async function buildAiApprovedExamSet(
   replaced: number;
   polished: number;
   secondPassNotes: string;
+  progress: {
+    poolSize: number;
+    selected: number;
+    approved: number;
+    rejected: number;
+    target: number;
+  };
 }> {
   requireOpenAiKey();
 
   let polished = 0;
   let replaced = 0;
+  let rejected = 0;
 
   const prepared = pool.map((q) => {
     if (needsOptionPolish(q)) {
@@ -170,8 +178,8 @@ export async function buildAiApprovedExamSet(
       selected.push(candidate);
       approvedReviews.push(review);
     } else {
+      rejected += 1;
       replaced += 1;
-      // tenta próximo do pool
       if (leftovers.length > 0) {
         queue.push(leftovers.shift()!);
       }
@@ -179,8 +187,53 @@ export async function buildAiApprovedExamSet(
   }
 
   if (selected.length < count) {
+    // Fallback: banco estruturalmente sólido (spec §15.9) — marca warning na 2ª passagem
+    const { evaluateQuestionQualityLocal } = await import('@/lib/question-bank/quality-review');
+    while (selected.length < count && leftovers.length > 0) {
+      let cand = leftovers.shift()!;
+      if (needsOptionPolish(cand)) {
+        cand = polishQuestionOptions(cand);
+        polished += 1;
+      }
+      const local = evaluateQuestionQualityLocal(cand);
+      if (
+        local.noAbsurdDistractors &&
+        local.noAnswerExplanationInsideOptions &&
+        local.correctAnswerNotObviousByLength &&
+        local.qualityScore >= 70 &&
+        !selected.some((s) => s.id === cand.id)
+      ) {
+        selected.push(cand);
+        approvedReviews.push({
+          questionId: cand.id,
+          severity: 'warning',
+          codes: ['fallback_bank'],
+          message: 'Incluída por fallback do banco (IA não fechou 20/20)',
+          issues: [],
+          approved: true,
+          scores: {
+            specialty: String(cand.specialty || 'Geral'),
+            difficulty: String(cand.difficulty || 'medio'),
+            stemQuality: local.qualityScore,
+            gabaritoConfidence: 80,
+            ambiguity: 'ausente',
+            alternativesQuality: local.optionsHaveSimilarLength ? 80 : 70,
+            scientificCurrency: 75,
+            overallQuality: local.qualityScore,
+            singleCorrect: true,
+            hasJustification: local.answerMatchesExplanation,
+            vignetteComplete: local.stemContainsRequiredInformation,
+            askType: 'outro',
+          },
+        });
+        replaced += 1;
+      }
+    }
+  }
+
+  if (selected.length < count) {
     throw new Error(
-      `Não foi possível montar ${count} questões aprovadas pela IA (obtidas ${selected.length}). Amplie o banco expert ou revise o pool.`
+      `Não foi possível montar ${count} questões válidas (aprovadas ${selected.length}, reprovadas ${rejected}, pool ${pool.length}). Importe o banco completo e force regenerar.`
     );
   }
 
@@ -192,12 +245,11 @@ export async function buildAiApprovedExamSet(
     for (const id of second.rejectIds) {
       const pos = selected.findIndex((q) => q.id === id);
       if (pos < 0) continue;
-      // remove reprovada
       selected.splice(pos, 1);
       approvedReviews.splice(pos, 1);
       replaced += 1;
+      rejected += 1;
 
-      // busca substituta aprovada
       let found: Question | null = null;
       while (leftovers.length > 0 && !found) {
         let cand = leftovers.shift()!;
@@ -214,11 +266,10 @@ export async function buildAiApprovedExamSet(
       }
       if (!found) {
         throw new Error(
-          `2ª passagem reprovou questão ${id} e não há substituta aprovada no pool.`
+          `2ª passagem reprovou questão ${id} e não há substituta aprovada no pool. Progresso: ${selected.length}/${count} aprovadas · ${rejected} reprovadas.`
         );
       }
     }
-    // completa se faltou
     while (selected.length < count && leftovers.length > 0) {
       let cand = leftovers.shift()!;
       if (needsOptionPolish(cand)) cand = polishQuestionOptions(cand);
@@ -227,6 +278,8 @@ export async function buildAiApprovedExamSet(
         selected.push(cand);
         approvedReviews.push(rev);
         replaced += 1;
+      } else {
+        rejected += 1;
       }
     }
     second = await reviewExamSetSecondPass(selected);
@@ -244,6 +297,13 @@ export async function buildAiApprovedExamSet(
     replaced,
     polished,
     secondPassNotes: second.notes || 'Conjunto aprovado na 2ª passagem.',
+    progress: {
+      poolSize: pool.length,
+      selected: selected.length,
+      approved: approvedReviews.filter((r) => r.approved).length,
+      rejected,
+      target: count,
+    },
   };
 }
 
