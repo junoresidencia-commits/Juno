@@ -35,23 +35,36 @@ export interface EnsureDailyExamResult {
   error?: string;
 }
 
+/** Templates genéricos do banco-vivo antigo — nunca entram na disputa. */
+const WEAK_DISTRACTOR = [
+  /Terapia empírica sem fisiopatologia/i,
+  /Suspender nefroproteção sem motivo/i,
+  /Integrar achados clínicos\/labs e seguir guideline/i,
+  /Intervenção agressiva sem indicação/i,
+  /Observação sem seguimento em risco alto/i,
+  /em HD, K .+ ECG com alterações\. Conduta imediata\?/i,
+  /em avaliação de .+ — foco:/i,
+  /Labs e contexto compatíveis/i,
+  /Conduta alinhada a guidelines/i,
+  /Tipo de cobrança/i,
+  /\(i % \d+/,
+  /\banos anos\b/i,
+  /\{\{[a-z0-9_]+\}\}/i,
+];
+
 function filterExpertPool(pool: Question[], count: number): Question[] {
-  const badStem = [
-    /em avaliação de .+ — foco:/i,
-    /Labs e contexto compatíveis/i,
-    /Conduta alinhada a guidelines/i,
-    /Tipo de cobrança/i,
-    /\(i % \d+/,
-    /\banos anos\b/i,
-    /\{\{[a-z0-9_]+\}\}/i,
-  ];
-  let filtered = pool.filter((q) => {
-    const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}`;
-    return !badStem.some((re) => re.test(blob));
+  const cleaned = pool.filter((q) => {
+    const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}\n${q.option_e ?? ''}`;
+    return !WEAK_DISTRACTOR.some((re) => re.test(blob));
   });
-  const expert = filtered.filter((q) => q.tags?.includes('banco-expert'));
-  if (expert.length >= count) filtered = expert;
-  return filtered;
+  // Liga de Nefrologia: SOMENTE banco-expert (padrão título)
+  const expert = cleaned.filter((q) => q.tags?.includes('banco-expert'));
+  if (expert.length < count) {
+    throw new Error(
+      `Banco expert insuficiente (${expert.length}/${count}). Admin → Questões → Importar banco completo.`
+    );
+  }
+  return expert;
 }
 
 async function recentQuestionIds(

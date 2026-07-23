@@ -95,15 +95,6 @@ export function AlunoHomeSimple({
                 </>
               )}
             </p>
-            {canContinue && (
-              <Link
-                href={examHref}
-                prefetch={false}
-                className="exam-tap flex w-full items-center justify-center rounded-2xl bg-amber-500 px-6 py-6 text-xl font-bold text-white shadow-lg shadow-amber-500/25 active:scale-[0.98] hover:bg-amber-600"
-              >
-                Continuar a disputa →
-              </Link>
-            )}
             {canStart && (
               <Link
                 href={examHref}

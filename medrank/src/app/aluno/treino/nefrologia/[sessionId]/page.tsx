@@ -52,6 +52,7 @@ export default async function NefropediatriaSessionPage({
         apiBase="/api/treino"
         finishLabel="Finalizar treino"
         collectConfidence
+        antiFraud={false}
       />
     </div>
   );

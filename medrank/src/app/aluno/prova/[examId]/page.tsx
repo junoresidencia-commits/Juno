@@ -7,11 +7,13 @@ import type { OptionLetter, Question } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
 import {
   createDemoAttempt,
+  forfeitDemoAttempt,
   getDemoAttemptAnswers,
   getDemoAttemptByExam,
 } from '@/lib/demo/runtime';
 import { getDemoExamQuestions, getDemoExams } from '@/lib/demo/content';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 function mapDemoAnswers(attemptId: string): Record<string, OptionLetter> {
   const initial: Record<string, OptionLetter> = {};
@@ -38,17 +40,20 @@ export default async function ProvaPage({
       redirect(`/aluno/resultado/${attempt.id}`);
     }
 
-    if (!attempt) {
-      attempt = createDemoAttempt(examId, userId);
+    // Sessão abandonada = forfeit (não retoma)
+    if (attempt && !attempt.finished_at) {
+      attempt = forfeitDemoAttempt(attempt.id, { violationType: 'abandoned_session' });
+      redirect(`/aluno/resultado/${attempt.id}`);
     }
 
+    attempt = createDemoAttempt(examId, userId);
     const questions = getDemoExamQuestions(examId);
     const initialAnswers = mapDemoAnswers(attempt.id);
 
     return (
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-          {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
+          {formatExamWindowLabel()}. Antifraude ativo · 30 min · até 1 min 30 s por questão.
         </div>
         <ExamRunner
           attemptId={attempt.id}
@@ -57,6 +62,7 @@ export default async function ProvaPage({
           startedAt={attempt.started_at}
           questions={questions}
           initialAnswers={initialAnswers}
+          antiFraud
         />
       </div>
     );
@@ -81,6 +87,25 @@ export default async function ProvaPage({
     .maybeSingle();
 
   if (attempt?.finished_at) {
+    redirect(`/aluno/resultado/${attempt.id}`);
+  }
+
+  // Tentativa aberta = abandonou a sessão → forfeit (0 pts)
+  if (attempt && !attempt.finished_at) {
+    const admin = createAdminClient();
+    const client = admin ?? supabase;
+    await client.rpc('forfeit_attempt', {
+      p_attempt_id: attempt.id,
+      p_violation_type: 'abandoned_session',
+      p_question_id: null,
+      p_elapsed_seconds: null,
+      p_ip: null,
+      p_device: null,
+      p_browser: null,
+      p_os: null,
+      p_user_agent: null,
+      p_metadata: {},
+    });
     redirect(`/aluno/resultado/${attempt.id}`);
   }
 
@@ -112,22 +137,10 @@ export default async function ProvaPage({
     })
     .filter((q) => q.id);
 
-  const { data: savedAnswers } = await supabase
-    .from('attempt_answers')
-    .select('question_id, selected_option')
-    .eq('attempt_id', attempt.id);
-
-  const initialAnswers: Record<string, OptionLetter> = {};
-  for (const row of savedAnswers ?? []) {
-    if (row.selected_option) {
-      initialAnswers[row.question_id] = row.selected_option as OptionLetter;
-    }
-  }
-
   return (
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-        {formatExamWindowLabel()}. 30 min no total · até 1 min 30 s por questão · uma de cada vez.
+        {formatExamWindowLabel()}. Antifraude ativo · 30 min · até 1 min 30 s por questão.
       </div>
       <ExamRunner
         attemptId={attempt.id}
@@ -135,7 +148,8 @@ export default async function ProvaPage({
         durationMinutes={exam.duration_minutes}
         startedAt={attempt.started_at}
         questions={questions}
-        initialAnswers={initialAnswers}
+        initialAnswers={{}}
+        antiFraud
       />
     </div>
   );

@@ -6,6 +6,9 @@ import type { Question, OptionLetter } from '@/types/database';
 import { getEffectiveExamRemainingSeconds } from '@/lib/utils';
 import { getQuestionTimeLimitSeconds } from '@/lib/exams/scoring';
 import { formatDuration } from '@/lib/format';
+import { useExamAntiFraud } from '@/hooks/useExamAntiFraud';
+import { ExamTerminatedOverlay } from '@/components/exam/ExamTerminatedOverlay';
+import type { ViolationType } from '@/lib/exams/anti-fraud';
 
 interface ExamQuestion extends Question {
   order_number: number;
@@ -24,6 +27,8 @@ interface Props {
   linearMode?: boolean;
   /** Coleta confiança 1–5 antes de confirmar (treino) */
   collectConfidence?: boolean;
+  /** Tolerância zero — disputa diária. Desligado em treino/simulados. */
+  antiFraud?: boolean;
 }
 
 function secondsOnQuestion(questionStartedAtMs: number, now = Date.now()): number {
@@ -42,6 +47,7 @@ export function ExamRunner({
   finishLabel = 'Finalizar prova',
   linearMode = true,
   collectConfidence = false,
+  antiFraud = true,
 }: Props) {
   const router = useRouter();
   const questionLimit = getQuestionTimeLimitSeconds(durationMinutes, questions.length);
@@ -59,9 +65,11 @@ export function ExamRunner({
   const [submitting, setSubmitting] = useState(false);
   const [pendingChoice, setPendingChoice] = useState<OptionLetter | null>(null);
   const [confidence, setConfidence] = useState<number | null>(null);
+  const [terminated, setTerminated] = useState(false);
 
   const questionStartedAt = useRef(Date.now());
   const finishedRef = useRef(false);
+  const antiFraudLockedRef = useRef(false);
   const selectingRef = useRef(false);
   const pendingRef = useRef<OptionLetter | null>(null);
   const answersRef = useRef(initialAnswers);
@@ -72,6 +80,26 @@ export function ExamRunner({
   currentIndexRef.current = currentIndex;
   submittingRef.current = submitting;
 
+  const currentQuestionId = questions[currentIndex]?.id ?? null;
+
+  const handleTerminated = useCallback((_type: ViolationType) => {
+    finishedRef.current = true;
+    antiFraudLockedRef.current = true;
+    setTerminated(true);
+    setSubmitting(true);
+    submittingRef.current = true;
+  }, []);
+
+  useExamAntiFraud({
+    enabled: antiFraud && !terminated,
+    attemptId,
+    apiBase,
+    questionId: currentQuestionId,
+    startedAt,
+    lockedRef: antiFraudLockedRef,
+    onTerminated: handleTerminated,
+  });
+
   useEffect(() => {
     setMounted(true);
     setRemaining(getEffectiveExamRemainingSeconds(startedAt, durationMinutes));
@@ -79,19 +107,20 @@ export function ExamRunner({
   }, [startedAt, durationMinutes, questionLimit]);
 
   useEffect(() => {
-    if (finishedRef.current) return;
+    if (finishedRef.current || antiFraud) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = '';
     };
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
-  }, []);
+  }, [antiFraud]);
 
   const submitExam = useCallback(async (auto = false) => {
-    if (submittingRef.current) return;
+    if (submittingRef.current || finishedRef.current) return;
     setSubmitting(true);
     submittingRef.current = true;
+    antiFraudLockedRef.current = true;
     try {
       const res = await fetch(`${apiBase}/${attemptId}/submit`, {
         method: 'POST',
@@ -104,11 +133,13 @@ export function ExamRunner({
         router.push(resultPath ?? `/aluno/resultado/${attemptId}`);
         router.refresh();
       } else {
+        antiFraudLockedRef.current = false;
         alert((data as { error?: string }).error ?? 'Erro ao enviar prova');
         setSubmitting(false);
         submittingRef.current = false;
       }
     } catch {
+      antiFraudLockedRef.current = false;
       alert('Erro de conexão ao enviar prova');
       setSubmitting(false);
       submittingRef.current = false;
@@ -139,7 +170,7 @@ export function ExamRunner({
 
   const pickOption = useCallback(
     (option: OptionLetter) => {
-      if (submittingRef.current) return;
+      if (submittingRef.current || finishedRef.current || antiFraudLockedRef.current) return;
       const question = questions[currentIndexRef.current];
       if (!question || answersRef.current[question.id]) return;
 
@@ -286,7 +317,18 @@ export function ExamRunner({
   const progressPct = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8">
+    <div
+      className={`mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8 ${
+        antiFraud ? 'exam-no-select' : ''
+      }`}
+    >
+      {terminated ? <ExamTerminatedOverlay attemptId={attemptId} /> : null}
+      {antiFraud ? (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+          <strong>Tolerância zero:</strong> sair da tela, trocar de aba, copiar texto ou abrir
+          ferramentas do navegador encerra a prova imediatamente (0 pontos hoje).
+        </div>
+      ) : null}
       <div className="mb-4">
         <div className="mb-1 flex justify-between text-xs font-medium text-slate-600">
           <span>Progresso</span>

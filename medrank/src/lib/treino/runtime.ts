@@ -157,8 +157,14 @@ async function pickProductionQuestions(
 
   let pool = (data ?? []) as Question[];
 
-  // Descarta templates ruins de bancos antigos (se ainda existirem no DB)
+  // Descarta templates ruins do banco-vivo antigo
   const badStem = [
+    /Terapia empírica sem fisiopatologia/i,
+    /Suspender nefroproteção sem motivo/i,
+    /Integrar achados clínicos\/labs e seguir guideline/i,
+    /Intervenção agressiva sem indicação/i,
+    /Observação sem seguimento em risco alto/i,
+    /ECG com alterações\. Conduta imediata\?/i,
     /em avaliação de .+ — foco:/i,
     /Labs e contexto compatíveis/i,
     /Conduta alinhada a guidelines/i,
@@ -171,9 +177,14 @@ async function pickProductionQuestions(
     const blob = `${q.statement}\n${q.option_a}\n${q.option_b}\n${q.option_c ?? ''}\n${q.option_d ?? ''}\n${q.option_e ?? ''}`;
     return !badStem.some((re) => re.test(blob));
   });
-  // Preferir banco expert (título SBN/SBP-Nefroped) quando disponível
+  // Exigir banco expert (padrão título) — sem fallback para templates fracos
   const expert = pool.filter((q) => q.tags?.includes('banco-expert'));
-  if (expert.length >= count) pool = expert;
+  if (expert.length < count) {
+    throw new Error(
+      `Banco expert insuficiente (${expert.length}/${count}). Admin → Questões → Importar banco completo.`
+    );
+  }
+  pool = expert;
 
   const bias = leagueTopicBias(opts.liga);
   if (bias?.length && !opts.topic) {
