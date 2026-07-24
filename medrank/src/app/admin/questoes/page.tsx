@@ -65,6 +65,12 @@ export default async function QuestoesPage() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
+            href="/admin/importar/lote"
+            className="rounded-lg bg-teal-800 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-900"
+          >
+            Importar lote (JSON)
+          </Link>
+          <Link
             href="/admin/importar/prova"
             className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
           >
