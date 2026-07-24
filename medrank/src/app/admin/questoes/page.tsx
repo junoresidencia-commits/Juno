@@ -1,76 +1,23 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/auth';
-import { usesDemoStore } from '@/lib/demo-data';
-import { createAdminClient } from '@/lib/supabase/admin';
-import { createClient } from '@/lib/supabase/server';
-
-const LOT_OR =
-  'lote_importacao.like.MEDRANK_AUTORAL_2026_LOTE_%,lote_importacao.like.MEDRANK_NEFRO_NEFROPED_2026_LOTE_%,lote_importacao.like.MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_%';
+import { BankReadinessPanel } from '@/components/admin/BankReadinessPanel';
 
 export default async function QuestoesPage() {
   await requireRole('admin');
 
-  let approvedLots = 0;
-  let draftLotsQs = 0;
-  let officialRecent = 0;
-  let draftBatches = 0;
-
-  if (!usesDemoStore()) {
-    const admin = createAdminClient();
-    const client = admin ?? (await createClient());
-    const [approvedRes, draftRes, officialRes, batchesRes] = await Promise.all([
-      client.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'approved').or(LOT_OR),
-      client.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'draft').or(LOT_OR),
-      client
-        .from('questions')
-        .select('*', { count: 'exact', head: true })
-        .eq('bank_status', 'approved')
-        .eq('question_origin', 'official')
-        .gte('year', 2024),
-      client
-        .from('question_import_batches')
-        .select('*', { count: 'exact', head: true })
-        .eq('batch_kind', 'authorial')
-        .in('status', ['draft', 'pending_review', 'partially_approved']),
-    ]);
-    approvedLots = approvedRes.count ?? 0;
-    draftLotsQs = draftRes.count ?? 0;
-    officialRecent = officialRes.count ?? 0;
-    draftBatches = batchesRes.count ?? 0;
-  }
-
-  const totalActive = approvedLots + officialRecent;
-
   return (
-    <div className="mx-auto max-w-lg px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
         ← Painel
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Questões</h1>
       <p className="mt-2 text-sm text-slate-600">
         Banco ativo = <strong>lotes MedRank (01–27)</strong> +{' '}
-        <strong>oficiais ENARE/USP 2024+</strong>. Antigas e desatualizadas ficam fora.
+        <strong>oficiais ENARE/USP 2024+</strong>. Confira o checklist antes da semana de provas.
       </p>
 
-      <div className="mt-4 space-y-3">
-        <div className="rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-200">
-          <p className="text-3xl font-bold text-emerald-900">{totalActive}</p>
-          <p className="text-sm text-emerald-800">no banco ativo (disputa)</p>
-        </div>
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
-            <p className="text-xl font-bold text-slate-900">{approvedLots}</p>
-            <p className="text-xs text-slate-600">lotes publicadas</p>
-          </div>
-          <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
-            <p className="text-xl font-bold text-slate-900">{officialRecent}</p>
-            <p className="text-xs text-slate-600">oficiais 2024+</p>
-          </div>
-        </div>
-        <p className="text-xs text-slate-500">
-          {draftLotsQs} em rascunho nos lotes
-          {draftBatches > 0 ? ` · ${draftBatches} lote(s) não publicados` : ''}
-        </p>
+      <div className="mt-6">
+        <BankReadinessPanel />
       </div>
 
       <div className="mt-8 space-y-4">

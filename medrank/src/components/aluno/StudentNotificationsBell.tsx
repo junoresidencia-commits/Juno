@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
 type Notification = {
@@ -28,10 +28,6 @@ export function StudentNotificationsBell() {
       /* ignore */
     }
   }
-
-  useEffect(() => {
-    load();
-  }, []);
 
   async function markAll() {
     await fetch('/api/notifications', {

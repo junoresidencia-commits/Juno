@@ -11,6 +11,7 @@ import { ExamQualityAdminCard } from '@/components/admin/ExamQualityAdminCard';
 import { DayHealthPanel } from '@/components/admin/DayHealthPanel';
 import { AiPaidSettingsCard } from '@/components/admin/AiPaidSettingsCard';
 import { BankInventoryPanel } from '@/components/admin/BankInventoryPanel';
+import { BankReadinessPanel } from '@/components/admin/BankReadinessPanel';
 import { ReleaseForfeitedPanel } from '@/components/admin/ReleaseForfeitedPanel';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
@@ -139,6 +140,8 @@ export default async function ProvasPage() {
           Nova prova
         </Link>
       </div>
+
+      <BankReadinessPanel />
 
       <BankInventoryPanel />
 
