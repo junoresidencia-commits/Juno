@@ -2,9 +2,28 @@
 
 import { useState } from 'react';
 
+type Progress = {
+  poolSize?: number;
+  selected?: number;
+  approved?: number;
+  rejected?: number;
+  target?: number;
+};
+
+function formatProgress(label: string, p?: Progress | null, examQs?: number | null) {
+  if (!p && examQs == null) return null;
+  const selected = p?.selected ?? examQs ?? 0;
+  const pool = p?.poolSize ?? 0;
+  if (pool > 0) {
+    return `${label}: ${selected} na prova · pool de ${pool} no banco`;
+  }
+  return `${label}: ${selected} questões na prova`;
+}
+
 export function EnsureDailyExamsButton() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [details, setDetails] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   async function run(force: boolean, mode: 'ai' | 'bank') {
@@ -24,6 +43,7 @@ export function EnsureDailyExamsButton() {
 
     setLoading(true);
     setMessage(null);
+    setDetails([]);
     setError(null);
     try {
       const res = await fetch('/api/admin/exams/ensure-daily', {
@@ -39,10 +59,30 @@ export function EnsureDailyExamsButton() {
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
       const modeLabel = data.mode === 'ai' ? 'IA' : 'banco local';
+
+      const lines: string[] = [];
+      const gLine = formatProgress(
+        'Residência Geral',
+        data.general?.progress,
+        data.general?.exam?.total_questions
+      );
+      const nLine = formatProgress(
+        'Nefrologia',
+        data.nephrology?.progress,
+        data.nephrology?.exam?.total_questions
+      );
+      if (gLine) lines.push(gLine);
+      if (nLine) lines.push(nLine);
+      setDetails(lines);
+
       if (createdCount > 0) {
-        setMessage(`Disputa(s) gerada(s) via ${modeLabel} (${createdCount}). Atualize a página.`);
+        setMessage(
+          `Geradas ${createdCount} disputa(s) via ${modeLabel}. Veja abaixo quantas questões entraram.`
+        );
       } else if (data.general?.exam || data.nephrology?.exam) {
-        setMessage('Já existiam as de hoje — use Forçar regenerar ou Apagar futuras.');
+        setMessage(
+          'Já existiam as de hoje — use Forçar regenerar para remontar e ver as contagens novas.'
+        );
       } else {
         setMessage('Não foi possível criar as provas de hoje');
       }
@@ -63,6 +103,7 @@ export function EnsureDailyExamsButton() {
 
     setLoading(true);
     setMessage(null);
+    setDetails([]);
     setError(null);
     try {
       const res = await fetch('/api/admin/exams/reset-bank', {
@@ -76,9 +117,24 @@ export function EnsureDailyExamsButton() {
         window.alert(data.error || 'Falha ao resetar');
         return;
       }
-      setMessage(data.message || 'Ok');
-      window.alert(data.message || 'Pronto — atualize a página.');
-      window.location.reload();
+      const lines: string[] = [];
+      const gLine = formatProgress(
+        'Residência Geral',
+        data.general?.progress,
+        data.general?.exam?.total_questions
+      );
+      const nLine = formatProgress(
+        'Nefrologia',
+        data.nephrology?.progress,
+        data.nephrology?.exam?.total_questions
+      );
+      if (gLine) lines.push(gLine);
+      if (nLine) lines.push(nLine);
+      setDetails(lines);
+      setMessage(data.message || 'Ok — provas regeneradas.');
+      window.alert(
+        `${data.message || 'Pronto'}\n\n${lines.join('\n') || 'Atualize a página para ver as provas.'}`
+      );
     } catch (e) {
       const m = e instanceof Error ? e.message : 'Erro de rede';
       setError(m);
@@ -99,8 +155,8 @@ export function EnsureDailyExamsButton() {
         {loading ? 'Apagando e regenerando…' : 'Apagar disputas futuras e regenerar com banco novo'}
       </button>
       <p className="text-xs text-slate-600">
-        Use depois de publicar os lotes novos. Some as provas pré-montadas com questões antigas e
-        remonta a de hoje com o banco aprovado (oficiais + lotes).
+        Busca nos lotes por especialidade (Clínica Médica, Nefrologia…). Depois da geração, aparece
+        quantas questões entraram em cada prova.
       </p>
 
       <div className="flex flex-wrap gap-2">
@@ -122,6 +178,15 @@ export function EnsureDailyExamsButton() {
         </button>
       </div>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
+      {details.length > 0 ? (
+        <ul className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-950 ring-1 ring-emerald-200">
+          {details.map((line) => (
+            <li key={line} className="font-medium">
+              {line}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       {error && <p className="text-sm text-red-700">{error}</p>}
     </div>
   );

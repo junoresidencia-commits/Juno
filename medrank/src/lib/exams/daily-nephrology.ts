@@ -12,6 +12,11 @@ import {
   sortByBankPriority,
 } from '@/lib/question-bank/provenance';
 import {
+  fetchApprovedNefroLotsBySpecialty,
+  NEFRO_ADULT_SPECIALTY,
+  NEFRO_PED_SPECIALTY,
+} from '@/lib/question-bank/lot-pool';
+import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
   buildBankOnlyExamSet,
@@ -125,40 +130,46 @@ async function pickTrackQuestions(
   mode: 'ai' | 'bank' = 'bank'
 ) {
   const tag = TRACK_CONFIG[track].tag;
+  const specialty =
+    track === 'nefropediatria' ? NEFRO_PED_SPECIALTY : NEFRO_ADULT_SPECIALTY;
   const columns =
     'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, area, created_at';
   const byId = new Map<string, Question>();
   const pageSize = 500;
 
-  // 1) Tag de trilha (nefrologia-avancada / nefropediatria)
-  for (let page = 0; page < 6; page++) {
-    const from = page * pageSize;
-    const to = from + pageSize - 1;
-    let { data, error } = await admin
-      .from('questions')
-      .select(columns)
-      .contains('tags', [tag])
-      .eq('bank_status', 'approved')
-      .range(from, to);
-    if (error && /bank_status|schema cache/i.test(error.message)) {
-      const retry = await admin
+  // 1) PRINCIPAL: lotes MedRank Nefro pela especialidade do arquivo (Nefrologia / Nefropediatria)
+  const fromSpecialty = await fetchApprovedNefroLotsBySpecialty(admin, specialty);
+  for (const q of fromSpecialty) byId.set(q.id, q);
+
+  // 2) Tag de trilha (se ainda existir)
+  if (byId.size < count) {
+    for (let page = 0; page < 6; page++) {
+      const from = page * pageSize;
+      const to = from + pageSize - 1;
+      let { data, error } = await admin
         .from('questions')
-        .select(columns.replace(', bank_status', ''))
+        .select(columns)
         .contains('tags', [tag])
+        .eq('bank_status', 'approved')
         .range(from, to);
-      data = retry.data as typeof data;
-      error = retry.error;
+      if (error && /bank_status|schema cache/i.test(error.message)) {
+        const retry = await admin
+          .from('questions')
+          .select(columns.replace(', bank_status', ''))
+          .contains('tags', [tag])
+          .range(from, to);
+        data = retry.data as typeof data;
+        error = retry.error;
+      }
+      if (error) break;
+      const rows = (data ?? []) as unknown as Question[];
+      for (const q of rows) byId.set(q.id, q);
+      if (rows.length < pageSize) break;
     }
-    if (error) throw new Error(error.message);
-    const rows = (data ?? []) as unknown as Question[];
-    for (const q of rows) byId.set(q.id, q);
-    if (rows.length < pageSize) break;
   }
 
-  // 2) Fallback: lotes MedRank Nefro + especialidade (mesmo se a tag de trilha foi apagada no publish)
+  // 3) Fallback: qualquer questão aprovada com essa especialidade (mesmo fora do prefixo NEFRO)
   if (byId.size < count) {
-    const specialty =
-      track === 'nefropediatria' ? 'Nefropediatria' : 'Nefrologia';
     for (let page = 0; page < 6; page++) {
       const from = page * pageSize;
       const to = from + pageSize - 1;
@@ -166,7 +177,6 @@ async function pickTrackQuestions(
         .from('questions')
         .select(columns)
         .eq('bank_status', 'approved')
-        .like('lote_importacao', 'MEDRANK_NEFRO_NEFROPED_2026_LOTE_%')
         .ilike('specialty', specialty)
         .range(from, to);
       if (error) break;
@@ -176,7 +186,7 @@ async function pickTrackQuestions(
     }
   }
 
-  // 3) Fallback amplo: qualquer lote Nefro (adulto+ped) se ainda faltar
+  // 4) Fallback amplo: lote NEFRO inteiro
   if (byId.size < count) {
     for (let page = 0; page < 6; page++) {
       const from = page * pageSize;
@@ -207,7 +217,7 @@ async function pickTrackQuestions(
       pool = sortByBankPriority(approvedTagged);
     } else {
       throw new Error(
-        `Questoes insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count} no pool; ${approvedTagged.length} aprovadas com tag/lote). Admin → Questões → Corrigir tags dos lotes → Provas → regenerar.`
+        `Questoes insuficientes de ${TRACK_CONFIG[track].label} / especialidade ${specialty} (${pool.length}/${count}; ${approvedTagged.length} no lote). Publique os lotes NEFRO e regenere.`
       );
     }
   }

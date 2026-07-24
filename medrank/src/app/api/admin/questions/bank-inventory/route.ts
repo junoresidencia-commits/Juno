@@ -3,8 +3,9 @@ import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isDemoMode } from '@/lib/demo-auth';
 import { repairAuthorialTrackTags } from '@/lib/question-bank/publish-authorial-batch';
+import { countApprovedLotsBySpecialty } from '@/lib/question-bank/lot-pool';
 
-/** Contagens reais do banco — para o admin ver o volume e diagnosticar “insuficiente”. */
+/** Contagens reais do banco — por especialidade dos lotes + totais. */
 export async function GET() {
   const auth = await requireAdminApi();
   if ('error' in auth) return auth.error;
@@ -19,6 +20,7 @@ export async function GET() {
       residenciaTagged: 0,
       official2024plus: 0,
       draftLots: 0,
+      bySpecialty: [],
       note: 'Demo mode',
     });
   }
@@ -41,6 +43,8 @@ export async function GET() {
     official2024plus,
     draftLots,
     nefroBySpecialty,
+    clinicaMedica,
+    bySpecialty,
   ] = await Promise.all([
     admin.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'approved'),
     admin.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'approved').or(LOT_OR),
@@ -79,7 +83,14 @@ export async function GET() {
       .from('questions')
       .select('*', { count: 'exact', head: true })
       .eq('bank_status', 'approved')
-      .or('specialty.ilike.Nefrologia,specialty.ilike.Nefropediatria,area.ilike.Nefrologia,area.ilike.Nefropediatria'),
+      .or('specialty.ilike.Nefrologia,specialty.ilike.Nefropediatria'),
+    admin
+      .from('questions')
+      .select('*', { count: 'exact', head: true })
+      .eq('bank_status', 'approved')
+      .or(LOT_OR)
+      .ilike('specialty', 'Clínica Médica'),
+    countApprovedLotsBySpecialty(admin),
   ]);
 
   return NextResponse.json({
@@ -89,19 +100,25 @@ export async function GET() {
     nefroAdultTagged: nefroAdultTagged.count ?? 0,
     nefroPedTagged: nefroPedTagged.count ?? 0,
     nefroBySpecialty: nefroBySpecialty.count ?? 0,
+    clinicaMedica: clinicaMedica.count ?? 0,
     residenciaTagged: residenciaTagged.count ?? 0,
     official2024plus: official2024plus.count ?? 0,
     draftLots: draftLots.count ?? 0,
+    bySpecialty,
     canBuildNefro:
-      (nefroAdultTagged.count ?? 0) >= 10 ||
-      (nefroPedTagged.count ?? 0) >= 10 ||
+      (nefroBySpecialty.count ?? 0) >= 20 ||
       (nefroLots.count ?? 0) >= 20 ||
-      (nefroBySpecialty.count ?? 0) >= 20,
+      (nefroAdultTagged.count ?? 0) >= 10,
+    canBuildGeneral:
+      (clinicaMedica.count ?? 0) + (lotsApproved.count ?? 0) - (nefroLots.count ?? 0) >= 20 ||
+      (lotsApproved.count ?? 0) >= 20 ||
+      (official2024plus.count ?? 0) >= 20,
     hint:
-      (nefroAdultTagged.count ?? 0) + (nefroPedTagged.count ?? 0) === 0 &&
-      (nefroLots.count ?? 0) > 0
-        ? 'Há lotes Nefro publicados, mas sem tags de trilha. Clique em Corrigir tags dos lotes.'
-        : null,
+      (nefroBySpecialty.count ?? 0) === 0 && (nefroLots.count ?? 0) > 0
+        ? 'Lotes Nefro publicados, mas especialidade vazia. Clique em Corrigir tags / regenere após republicar.'
+        : (clinicaMedica.count ?? 0) === 0 && (lotsApproved.count ?? 0) > 0
+          ? 'Há lotes, mas poucas com especialidade Clínica Médica. Confira se os lotes Autoral foram publicados.'
+          : null,
   });
 }
 

@@ -14,6 +14,7 @@ import {
   isStaleOfficial,
   sortByBankPriority,
 } from '@/lib/question-bank/provenance';
+import { fetchApprovedGeneralLots } from '@/lib/question-bank/lot-pool';
 import {
   reviewAndPersistExamQuality,
   buildAiApprovedExamSet,
@@ -173,27 +174,29 @@ async function pickGeneralQuestions(
   dateStr: string,
   mode: 'ai' | 'bank' = 'bank'
 ) {
-  // 1) Oficiais/universidade 2024+ (preferência 2026/2025 no sort)
-  // 2) Lotes MedRank novos (residencia-expert)
-  // Nunca varre o banco inteiro com select('*').
-  const [officialRecent, residencia] = await Promise.all([
+  // Fonte principal: lotes MedRank por especialidade (Clínica Médica, Pediatria, etc.)
+  // + oficiais/universidade 2024+. Não depende só de tags.
+  const [lotPool, officialRecent] = await Promise.all([
+    fetchApprovedGeneralLots(admin),
     fetchApprovedOfficialRecent(admin),
-    fetchApprovedQuestionsByTag(admin, 'residencia-expert'),
   ]);
 
   const byId = new Map<string, Question>();
-  for (const q of officialRecent) {
+  for (const q of lotPool) {
     if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
   }
-  for (const q of residencia) {
+  for (const q of officialRecent) {
     if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
   }
 
   let pool = [...byId.values()];
 
   if (pool.length < count) {
-    const expert = await fetchApprovedQuestionsByTag(admin, 'banco-expert');
-    for (const q of expert) {
+    const [residencia, expert] = await Promise.all([
+      fetchApprovedQuestionsByTag(admin, 'residencia-expert'),
+      fetchApprovedQuestionsByTag(admin, 'banco-expert'),
+    ]);
+    for (const q of [...residencia, ...expert]) {
       if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
     }
     pool = [...byId.values()];
@@ -201,7 +204,6 @@ async function pickGeneralQuestions(
 
   pool = filterApprovedBank(pool).filter((q) => !isStaleOfficial(q));
 
-  // Preferir oficiais 2025/2026 se houver volume; senão oficiais 2024+ + lotes MedRank
   const y2026 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2026);
   const y2025 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2025);
   const y2024 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2024);
@@ -235,7 +237,7 @@ async function pickGeneralQuestions(
 
   if (pool.length < count) {
     throw new Error(
-      `Questoes insuficientes para disputa geral (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
+      `Questoes insuficientes para disputa geral (${pool.length}/${count} no pool dos lotes/oficiais). Confira se os lotes Autoral/Diretrizes estão publicados (especialidade Clínica Médica etc.).`
     );
   }
 
