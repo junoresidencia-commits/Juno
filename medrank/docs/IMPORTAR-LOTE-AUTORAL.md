@@ -14,12 +14,11 @@
 
 | Arquivo | Qs | Notas |
 |---------|----|-------|
-| `MEDRANK_AUTORAL_2026_LOTE_01.json` | 50 | Nefro/CM foco inicial |
-| `MEDRANK_AUTORAL_2026_LOTE_04.json` … `_11.json` | 50×8 | Pacote multiespecialidades 400 Qs |
-| `MEDRANK_NEFRO_NEFROPED_2026_LOTE_12.json` … `_19.json` | 50×8 | Nefrologia + Nefropediatria (400 Qs) |
-| `MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20.json` … `_27.json` | 50×8 | Diretrizes atuais multiespecialidades (400 Qs) |
+| `MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20.json` … `_27.json` | 50×8 | **Ativos** — diretrizes atuais (400 Qs) |
 
-Importar **um arquivo por vez** na UI (cada um vira um `lote_importacao` distinto). Ou use **Confirmar e publicar TODOS** / **Publicar TODOS agora**.
+Lotes 01–19 foram retirados da UI. Para limpar o banco: botão **Apagar autorais antigos** ou SQL `035_purge_old_authorial_keep_diretrizes.sql`.
+
+Importar **um arquivo por vez** na UI. Ou use **Confirmar e publicar TODOS** / **Publicar TODOS agora**.
 
 ## Tipos (`tipo_da_questao`)
 

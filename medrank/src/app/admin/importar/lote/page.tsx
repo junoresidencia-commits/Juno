@@ -4,25 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const REPO_LOTES = [
-  'MEDRANK_AUTORAL_2026_LOTE_01',
-  'MEDRANK_AUTORAL_2026_LOTE_02',
-  'MEDRANK_AUTORAL_2026_LOTE_03',
-  'MEDRANK_AUTORAL_2026_LOTE_04',
-  'MEDRANK_AUTORAL_2026_LOTE_05',
-  'MEDRANK_AUTORAL_2026_LOTE_06',
-  'MEDRANK_AUTORAL_2026_LOTE_07',
-  'MEDRANK_AUTORAL_2026_LOTE_08',
-  'MEDRANK_AUTORAL_2026_LOTE_09',
-  'MEDRANK_AUTORAL_2026_LOTE_10',
-  'MEDRANK_AUTORAL_2026_LOTE_11',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_12',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_13',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_14',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_15',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_16',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_17',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_18',
-  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_19',
   'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20',
   'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_21',
   'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22',
@@ -34,10 +15,7 @@ const REPO_LOTES = [
 ] as const;
 
 function loteLabel(lote: string): string {
-  return lote
-    .replace('MEDRANK_AUTORAL_2026_', '')
-    .replace('MEDRANK_NEFRO_NEFROPED_2026_', 'NEFRO_')
-    .replace('MEDRANK_DIRETRIZES_ATUAIS_2026_', 'DIR_');
+  return lote.replace('MEDRANK_DIRETRIZES_ATUAIS_2026_', 'DIR_');
 }
 
 type PreviewRow = {
@@ -276,6 +254,44 @@ export default function ImportarLotePage() {
     }
   }
 
+  async function purgeOldAuthorial() {
+    if (
+      !window.confirm(
+        'Apagar TODOS os lotes autorais antigos (01–19 etc.) e deixar SÓ diretrizes 20–27?\n\nOficiais ENARE não são apagadas.'
+      )
+    ) {
+      return;
+    }
+    if (!window.confirm('Confirma apagar os lotes autorais antigos? Não dá para desfazer fácil.')) {
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      const res = await fetch('/api/admin/batches/authorial/purge-old', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(data.error || 'Falha ao limpar');
+        window.alert(data.error || 'Falha ao limpar');
+        return;
+      }
+      setMsg(data.message || 'Limpeza ok');
+      window.alert(data.message || 'Limpeza ok');
+      await loadBatches();
+    } catch (e) {
+      const m = e instanceof Error ? e.message : 'Falha de rede';
+      setErr(m);
+      window.alert(m);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function undoLast() {
     if (!window.confirm('Desfazer a última importação de lote autoral?')) return;
     setBusy(true);
@@ -360,19 +376,26 @@ export default function ImportarLotePage() {
 
       <div className="mt-4 rounded-xl bg-teal-50 p-4 ring-1 ring-teal-200">
         <p className="text-sm font-semibold text-teal-950">
-          Lotes autorais prontos (JSON) — 50 questões cada
+          Só lotes novos: diretrizes atuais 20–27 (50 cada)
         </p>
         <p className="mt-1 text-xs text-teal-900">
-          <strong>Carregar aqui</strong> ou <strong>Baixar JSON</strong> + Escolher arquivo. Depois:
-          Validar → Confirmar. Um por vez. Autoral (rascunho), não ENARE.
+          Lotes 01–19 foram retirados desta lista. Use{' '}
+          <strong>Apagar autorais antigos</strong> para limpar o banco.
         </p>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void purgeOldAuthorial()}
+          className="mt-3 rounded-lg bg-red-800 px-4 py-2.5 text-xs font-bold text-white disabled:opacity-50"
+        >
+          Apagar autorais antigos (manter só 20–27)
+        </button>
         <ul className="mt-3 space-y-2">
           {REPO_LOTES.map((lote) => {
             const label = loteLabel(lote);
             const href = `/templates/${lote}.json`;
             const active = loadedLote === lote;
-            const nefro = lote.includes('NEFRO');
-            const dir = lote.includes('DIRETRIZES');
+            const dir = true;
             return (
               <li
                 key={lote}
@@ -380,9 +403,6 @@ export default function ImportarLotePage() {
               >
                 <span className="min-w-[6.5rem] text-xs font-bold text-teal-950">
                   {label}
-                  {nefro ? (
-                    <span className="ml-1 font-medium text-teal-700">nefro</span>
-                  ) : null}
                   {dir ? (
                     <span className="ml-1 font-medium text-teal-700">diretriz</span>
                   ) : null}
