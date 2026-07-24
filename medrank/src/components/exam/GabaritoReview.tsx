@@ -3,6 +3,7 @@
 import type { Question, OptionLetter } from '@/types/database';
 import { formatQuestionExplanation } from '@/lib/question-bank/quality';
 import { formatStudentSourceLabel } from '@/lib/question-bank/presentation';
+import { formatExamReadableText } from '@/lib/exams/format-readable-text';
 
 export type GabaritoRow = {
   id: string;
@@ -37,7 +38,9 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
                 Questão {i + 1}
                 {unanswered && ' · não respondida'}
               </p>
-              <p className="mt-2 whitespace-pre-wrap text-sm font-medium text-slate-900">{q.statement}</p>
+              <p className="exam-stem mt-2 text-sm font-medium leading-relaxed text-slate-900">
+                {formatExamReadableText(q.statement)}
+              </p>
               <div className="mt-3 space-y-1.5 text-sm">
                 {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
                   const text = q[`option_${letter.toLowerCase()}` as keyof Question] as string;
@@ -54,7 +57,7 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
                             : 'bg-white/80 text-slate-800'
                       }`}
                     >
-                      {letter}) {text}
+                      {letter}) {formatExamReadableText(text)}
                       {isCorrect && ' ✓'}
                       {isSelected && !isCorrect && ' ✗'}
                     </p>

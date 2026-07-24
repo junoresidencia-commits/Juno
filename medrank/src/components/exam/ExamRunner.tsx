@@ -10,6 +10,7 @@ import { useExamAntiFraud } from '@/hooks/useExamAntiFraud';
 import { ExamTerminatedOverlay } from '@/components/exam/ExamTerminatedOverlay';
 import type { ViolationType } from '@/lib/exams/anti-fraud';
 import { formatStudentSourceLabel } from '@/lib/question-bank/presentation';
+import { formatExamReadableText } from '@/lib/exams/format-readable-text';
 
 interface ExamQuestion extends Question {
   order_number: number;
@@ -294,7 +295,7 @@ export function ExamRunner({
     };
 
     tick();
-    const interval = setInterval(tick, 250);
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, [durationMinutes, linearMode, mounted, questionLimit, questions, skipQuestion, startedAt, submitExam]);
 
@@ -333,85 +334,101 @@ export function ExamRunner({
   const questionTimerDisplay = mounted ? formatDuration(questionRemaining) : '--:--';
 
   const progressPct = questions.length ? Math.round((answeredCount / questions.length) * 100) : 0;
+  const statementText = formatExamReadableText(current.statement);
 
   return (
     <div
-      className={`mx-auto w-full max-w-3xl px-4 py-6 pb-8 lg:max-w-4xl lg:px-8 ${
+      className={`exam-shell mx-auto w-full max-w-3xl px-4 pt-4 lg:max-w-4xl lg:px-8 ${
         antiFraud ? 'exam-no-select' : ''
       }`}
     >
       {terminated ? <ExamTerminatedOverlay attemptId={attemptId} /> : null}
       {antiFraud ? (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
-          <strong>Tolerância zero:</strong> sair da tela, trocar de aba, copiar texto ou abrir
-          ferramentas do navegador encerra a prova imediatamente (0 pontos hoje).
+        <div className="mb-3 rounded-2xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-snug text-red-900 sm:text-sm">
+          <strong>Tolerância zero:</strong> sair da tela, trocar de aba ou copiar encerra a prova (0 pts).
         </div>
       ) : null}
-      <div className="mb-4">
-        <div className="mb-1 flex justify-between text-xs font-medium text-slate-600">
-          <span>Progresso</span>
-          <span>{answeredCount}/{questions.length} · {progressPct}%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-slate-200">
-          <div
-            className="h-full rounded-full bg-emerald-500 transition-all duration-300"
-            style={{ width: `${Math.max(progressPct, answeredCount > 0 ? 4 : 0)}%` }}
-          />
-        </div>
-      </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo total</p>
-          <p
-            suppressHydrationWarning
-            className={`mt-1 font-mono text-2xl font-bold tabular-nums ${
-              isUrgent ? 'text-red-700' : 'text-emerald-800'
-            }`}
-          >
-            {timerDisplay}
-          </p>
-          <p className="mt-1 text-xs text-slate-600">
-            Questão {currentIndex + 1} de {questions.length} · {answeredCount} respondidas
-          </p>
+      <div className="exam-sticky-top mb-3 space-y-3">
+        <div>
+          <div className="mb-1 flex justify-between text-xs font-medium text-slate-600">
+            <span>
+              Questão {currentIndex + 1}/{questions.length}
+            </span>
+            <span>
+              {answeredCount} respondidas · {progressPct}%
+            </span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-slate-200/80">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-[width] duration-300 ease-out"
+              style={{ width: `${Math.max(progressPct, answeredCount > 0 ? 4 : 0)}%` }}
+            />
+          </div>
         </div>
-        {linearMode && (
-          <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Tempo nesta questão</p>
+
+        <div className={`grid gap-2 ${linearMode ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <div className="rounded-2xl bg-white/95 p-3 shadow-sm ring-1 ring-slate-200/80 backdrop-blur sm:p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 sm:text-xs">
+              Tempo total
+            </p>
             <p
               suppressHydrationWarning
-              className={`mt-1 font-mono text-2xl font-bold tabular-nums ${
-                questionUrgent ? 'text-red-700' : 'text-slate-900'
+              className={`mt-0.5 font-mono text-xl font-bold tabular-nums sm:text-2xl ${
+                isUrgent ? 'text-red-600' : 'text-emerald-800'
               }`}
             >
-              {questionTimerDisplay}
-            </p>
-            <p className="mt-1 text-xs text-slate-600">
-              Máx. {questionLimitLabel} · acerto rápido vale mais
+              {timerDisplay}
             </p>
           </div>
-        )}
+          {linearMode && (
+            <div className="rounded-2xl bg-white/95 p-3 shadow-sm ring-1 ring-slate-200/80 backdrop-blur sm:p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 sm:text-xs">
+                Nesta questão
+              </p>
+              <p
+                suppressHydrationWarning
+                className={`mt-0.5 font-mono text-xl font-bold tabular-nums sm:text-2xl ${
+                  questionUrgent ? 'text-red-600' : 'text-slate-900'
+                }`}
+              >
+                {questionTimerDisplay}
+              </p>
+              <p className="mt-0.5 text-[10px] text-slate-500 sm:text-xs">
+                Máx. {questionLimitLabel} · rápido vale mais
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="mb-4 rounded-xl bg-white p-6 text-slate-900 shadow-sm ring-1 ring-slate-200">
-        {/* Não exibir topic/subtopic/dificuldade: entrega o diagnóstico e o nível ao aluno. */}
-        <p className="exam-no-select whitespace-pre-wrap text-base leading-relaxed text-slate-900">{current.statement}</p>
+      <article className="mb-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200/90 sm:p-6">
+        <p className="exam-stem exam-no-select text-[17px] leading-7 text-slate-900 sm:text-lg sm:leading-8">
+          {statementText}
+        </p>
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={current.image_url} alt="Imagem da questão" className="mt-4 max-h-64 rounded-lg" />
+          <img
+            src={current.image_url}
+            alt="Imagem da questão"
+            className="mt-4 max-h-72 w-full rounded-xl object-contain"
+            loading="lazy"
+            decoding="async"
+          />
         )}
         {formatStudentSourceLabel(current) && (
-          <p className="exam-no-select mt-4 text-xs font-medium text-slate-500">
+          <p className="exam-no-select mt-4 border-t border-slate-100 pt-3 text-xs font-medium text-slate-500">
             {formatStudentSourceLabel(current)}
           </p>
         )}
-      </div>
+      </article>
 
-      <div key={current.id} className="mb-4 space-y-3" role="group" aria-label="Alternativas">
+      <div key={current.id} className="mb-4 space-y-2.5 sm:space-y-3" role="group" aria-label="Alternativas">
         {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
           const text = current[`option_${letter.toLowerCase()}` as keyof Question] as string;
           if (!text) return null;
           const selected = pendingChoice === letter;
+          const optionText = formatExamReadableText(text);
 
           return (
             <button
@@ -420,36 +437,36 @@ export function ExamRunner({
               disabled={!canPick}
               aria-pressed={selected}
               onClick={() => pickOption(letter)}
-              className={`exam-tap flex min-h-[4.5rem] w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition hover:border-emerald-400 active:scale-[0.99] disabled:opacity-50 ${
+              className={`exam-tap flex min-h-[3.25rem] w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left transition active:scale-[0.99] disabled:opacity-50 sm:min-h-[4rem] sm:p-4 ${
                 selected
-                  ? 'border-emerald-600 bg-emerald-100 ring-2 ring-emerald-300'
-                  : 'border-slate-300 bg-white active:bg-slate-50'
+                  ? 'border-emerald-500 bg-emerald-50 shadow-sm ring-2 ring-emerald-200'
+                  : 'border-slate-200 bg-white hover:border-emerald-300'
               }`}
             >
               <span
-                className={`pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
-                  selected ? 'bg-emerald-600 text-white' : 'bg-sky-100 text-sky-900'
+                className={`pointer-events-none flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold sm:h-10 sm:w-10 sm:text-base ${
+                  selected ? 'bg-emerald-600 text-white' : 'bg-teal-50 text-teal-900'
                 }`}
               >
                 {letter}
               </span>
-              <span className="pointer-events-none pt-1.5 text-base leading-relaxed text-slate-900">{text}</span>
+              <span className="pointer-events-none flex-1 pt-1 text-[15px] leading-6 text-slate-900 sm:text-base sm:leading-7">
+                {optionText}
+              </span>
             </button>
           );
         })}
       </div>
 
       {linearMode && canPick && (
-        <div className="mb-8">
+        <div className="exam-sticky-bottom">
           {pendingChoice ? (
             <p className="mb-2 text-center text-sm font-medium text-emerald-800">
-              Você marcou: <span className="text-lg font-bold">{pendingChoice}</span>
-              {collectConfidence ? ' — informe sua confiança e confirme' : ' — confirme abaixo para continuar'}
+              Marcada: <span className="text-lg font-bold">{pendingChoice}</span>
+              {collectConfidence ? ' — confiança e confirme' : ' — confirme para seguir'}
             </p>
           ) : (
-            <p className="mb-2 text-center text-sm text-slate-500">
-              Selecione uma alternativa (A–{questions.some((q) => q.option_e) ? 'E' : 'D'} no teclado) ou clique na opção
-            </p>
+            <p className="mb-2 text-center text-sm text-slate-500">Toque numa alternativa</p>
           )}
           {collectConfidence && pendingChoice && (
             <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
@@ -459,10 +476,10 @@ export function ExamRunner({
                   key={n}
                   type="button"
                   onClick={() => setConfidence(n)}
-                  className={`h-9 w-9 rounded-lg text-sm font-semibold ${
+                  className={`h-9 w-9 rounded-xl text-sm font-semibold ${
                     confidence === n
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                      : 'bg-slate-100 text-slate-700'
                   }`}
                 >
                   {n}
@@ -474,7 +491,7 @@ export function ExamRunner({
             type="button"
             disabled={!pendingChoice || submitting || (collectConfidence && confidence == null)}
             onClick={handleNext}
-            className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-5 text-xl font-bold text-white shadow-md active:scale-[0.99] disabled:opacity-50 ${
+            className={`exam-tap flex w-full items-center justify-center rounded-2xl px-6 py-4 text-lg font-bold text-white shadow-md active:scale-[0.99] disabled:opacity-50 sm:py-5 sm:text-xl ${
               pendingChoice && (!collectConfidence || confidence != null)
                 ? 'bg-emerald-600 active:bg-emerald-700'
                 : 'bg-slate-300'
@@ -505,12 +522,12 @@ export function ExamRunner({
               </button>
             ))}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <button
               type="button"
               disabled={currentIndex === 0}
               onClick={() => setCurrentIndex((i) => i - 1)}
-              className="exam-tap rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+              className="exam-tap rounded-xl border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
             >
               Anterior
             </button>
@@ -518,7 +535,7 @@ export function ExamRunner({
               type="button"
               disabled={currentIndex === questions.length - 1}
               onClick={() => setCurrentIndex((i) => i + 1)}
-              className="exam-tap rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+              className="exam-tap rounded-xl border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
             >
               Próxima
             </button>
@@ -528,7 +545,7 @@ export function ExamRunner({
               onClick={() => {
                 if (confirm('Deseja finalizar a prova?')) submitExam(false);
               }}
-              className="exam-tap ml-auto rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+              className="exam-tap ml-auto rounded-xl bg-emerald-600 px-6 py-2 text-sm font-semibold text-white disabled:opacity-50"
             >
               {submitting ? 'Enviando...' : finishLabel}
             </button>
