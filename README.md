@@ -1,23 +1,29 @@
-# Meu Rim — Plantão
+# Meu Rim
 
-Jogo educativo estilo Duolingo sobre cuidado renal em ambiente hospitalar.
+Ecossistema de educação e pesquisa em cuidado renal.
 
-O projeto está em [`hospital-game/`](./hospital-game/).
+## Projetos
 
-## Início rápido
+| Pasta | O que é |
+|-------|---------|
+| [`hospital-game/`](./hospital-game/) | Jogo educativo estilo plantão (Duolingo hospitalar) |
+| [`irc-estudos/`](./irc-estudos/) | Plataforma de **trabalhos de pesquisa** na região IRC (DRC, CKD-EPI, prevalência) |
+| [`medrank/`](./medrank/) | Competição de questões médicas (MedRank) |
+
+## Estudos IRC (pesquisa)
+
+Cadastro de pacientes com cálculo automático de TFG (CKD-EPI 2021), vários trabalhos na mesma plataforma, painel de prevalência e exportação CSV/backup.
+
+```bash
+cd irc-estudos
+npm install
+npm run dev
+```
+
+## Plantão (jogo)
 
 ```bash
 cd hospital-game
 npm install
 npm run dev
 ```
-
-Abra http://localhost:5173
-
-## O jogo
-
-- Paciente chega, enfermeira e médico trabalham em sequência
-- Perguntas com tempo — a paciente piora se você demorar
-- Prescrição de medicamentos (oxacilina + dose)
-- Exames limitados ao que o hospital tem (sem TC/RM)
-- Baseado no material educativo sobre doença renal crônica
