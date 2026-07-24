@@ -181,31 +181,46 @@ export default function ImportarLotePage() {
       </p>
 
       <div className="mt-4 rounded-xl bg-teal-50 p-4 ring-1 ring-teal-200">
-        <p className="text-sm font-semibold text-teal-950">Lotes prontos no app (50 questões cada)</p>
-        <p className="mt-1 text-xs text-teal-900">
-          Toque no lote → Validar e prévia → Confirmar importação. Um por vez.
+        <p className="text-sm font-semibold text-teal-950">
+          Lotes autorais (JSON) — 50 questões cada
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <p className="mt-1 text-xs text-teal-900">
+          Duas formas: <strong>Carregar aqui</strong> (preenche a caixa) ou{' '}
+          <strong>Baixar</strong> no celular e usar “Escolher arquivo”. Depois: Validar →
+          Confirmar. Um lote por vez. Isso é autoral (rascunho), não o banco oficial ENARE.
+        </p>
+        <ul className="mt-3 space-y-2">
           {REPO_LOTES.map((lote) => {
             const label = lote.replace('MEDRANK_AUTORAL_2026_', '');
+            const href = `/templates/${lote}.json`;
             const active = loadedLote === lote;
             return (
-              <button
+              <li
                 key={lote}
-                type="button"
-                disabled={busy}
-                onClick={() => void loadRepoLote(lote)}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${
-                  active
-                    ? 'bg-teal-800 text-white'
-                    : 'bg-white text-teal-900 ring-1 ring-teal-300'
-                }`}
+                className="flex flex-wrap items-center gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-teal-200"
               >
-                {label}
-              </button>
+                <span className="min-w-[4.5rem] text-xs font-bold text-teal-950">{label}</span>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void loadRepoLote(lote)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50 ${
+                    active ? 'bg-teal-900' : 'bg-teal-700'
+                  }`}
+                >
+                  Carregar aqui
+                </button>
+                <a
+                  href={href}
+                  download={`${lote}.json`}
+                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-teal-900 ring-1 ring-teal-300"
+                >
+                  Baixar JSON
+                </a>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
 
       <div className="mt-6 space-y-3 rounded-xl bg-white p-5 ring-1 ring-slate-200">
