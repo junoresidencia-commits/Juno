@@ -122,7 +122,7 @@ export async function POST(request: Request) {
       quality_notes:
         'Removida do banco ativo no rebuild oficial. Snapshot em questions_archive.',
     })
-    .neq('id', '00000000-0000-0000-0000-000000000000'); // atualiza todas
+    .not('id', 'is', null);
 
   if (disableErr) {
     return NextResponse.json({ error: disableErr.message }, { status: 500 });
