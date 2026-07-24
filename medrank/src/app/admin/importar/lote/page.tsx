@@ -3,6 +3,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
+const REPO_LOTES = [
+  'MEDRANK_AUTORAL_2026_LOTE_01',
+  'MEDRANK_AUTORAL_2026_LOTE_02',
+  'MEDRANK_AUTORAL_2026_LOTE_03',
+  'MEDRANK_AUTORAL_2026_LOTE_04',
+  'MEDRANK_AUTORAL_2026_LOTE_05',
+  'MEDRANK_AUTORAL_2026_LOTE_06',
+  'MEDRANK_AUTORAL_2026_LOTE_07',
+  'MEDRANK_AUTORAL_2026_LOTE_08',
+  'MEDRANK_AUTORAL_2026_LOTE_09',
+  'MEDRANK_AUTORAL_2026_LOTE_10',
+  'MEDRANK_AUTORAL_2026_LOTE_11',
+] as const;
+
 type PreviewRow = {
   index: number;
   id_externo: string;
@@ -38,6 +52,7 @@ export default function ImportarLotePage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loadedLote, setLoadedLote] = useState<string | null>(null);
 
   const loadBatches = useCallback(async () => {
     const res = await fetch('/api/admin/batches/authorial');
@@ -82,8 +97,36 @@ export default function ImportarLotePage() {
     if (!file) return;
     const text = await file.text();
     setContent(text);
+    setPreview(null);
+    setSummary(null);
+    setLoadedLote(file.name);
     if (file.name.endsWith('.csv')) setFormat('csv');
     else setFormat('json');
+  }
+
+  async function loadRepoLote(loteCodigo: string) {
+    setBusy(true);
+    setMsg(null);
+    setErr(null);
+    setPreview(null);
+    setSummary(null);
+    try {
+      const res = await fetch(`/templates/${loteCodigo}.json`);
+      if (!res.ok) {
+        setErr(`Não achei ${loteCodigo}.json no app (deploy pode estar antigo).`);
+        return;
+      }
+      const text = await res.text();
+      setFormat('json');
+      setContent(text);
+      setTitle(`MedRank — ${loteCodigo.replace('MEDRANK_AUTORAL_2026_', '')}`);
+      setLoadedLote(loteCodigo);
+      setMsg(`Lote ${loteCodigo} carregado. Clique em Validar e prévia.`);
+    } catch {
+      setErr('Falha ao carregar o lote do app.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function batchAction(id: string, action: 'publish' | 'suspend' | 'delete' | 'undo') {
@@ -133,13 +176,37 @@ export default function ImportarLotePage() {
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar lote de questões</h1>
       <p className="mt-2 text-sm text-slate-600">
-        JSON (preferencial) ou CSV produzido externamente (ChatGPT). Entra como{' '}
+        Carregue um lote pronto abaixo (ou envie arquivo / cole JSON). Entra como{' '}
         <strong>rascunho</strong> — nunca como prova oficial USP/ENARE. Sem API paga.
       </p>
-      <p className="mt-1 text-xs text-slate-500">
-        Template: <code>/templates/lote-autorais-50.json</code> · padrão 50 questões (20 CM / 10
-        Cirurgia / 10 Ped / 5 GO / 5 Prev).
-      </p>
+
+      <div className="mt-4 rounded-xl bg-teal-50 p-4 ring-1 ring-teal-200">
+        <p className="text-sm font-semibold text-teal-950">Lotes prontos no app (50 questões cada)</p>
+        <p className="mt-1 text-xs text-teal-900">
+          Toque no lote → Validar e prévia → Confirmar importação. Um por vez.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {REPO_LOTES.map((lote) => {
+            const label = lote.replace('MEDRANK_AUTORAL_2026_', '');
+            const active = loadedLote === lote;
+            return (
+              <button
+                key={lote}
+                type="button"
+                disabled={busy}
+                onClick={() => void loadRepoLote(lote)}
+                className={`rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${
+                  active
+                    ? 'bg-teal-800 text-white'
+                    : 'bg-white text-teal-900 ring-1 ring-teal-300'
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       <div className="mt-6 space-y-3 rounded-xl bg-white p-5 ring-1 ring-slate-200">
         <label className="block text-sm">
@@ -173,6 +240,11 @@ export default function ImportarLotePage() {
             className="text-sm"
           />
         </div>
+        {loadedLote && (
+          <p className="text-xs text-slate-500">
+            Carregado: <code>{loadedLote}</code>
+          </p>
+        )}
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
