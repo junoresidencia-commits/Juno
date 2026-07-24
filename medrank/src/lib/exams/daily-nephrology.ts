@@ -81,10 +81,14 @@ function filterExpertPool(pool: Question[], count: number, strictExpert: boolean
   });
   const expert = cleaned.filter((q) => q.tags?.includes('banco-expert'));
   if (expert.length >= count) return expert;
+  // Modo banco: lotes MedRank publicados bastam (não exige tag banco-expert)
   if (!strictExpert && cleaned.length >= count) return cleaned;
   if (!strictExpert && cleaned.length > 0) return cleaned;
+  // Último recurso: pool bruto aprovado (ainda sem limpeza estrutural)
+  if (!strictExpert && pool.length >= count) return pool;
+  if (!strictExpert && pool.length > 0) return pool;
   throw new Error(
-    `Banco expert insuficiente (${expert.length}/${count}; limpas ${cleaned.length}). Admin -> Questoes -> Importar banco completo.`
+    `Banco Nefrologia insuficiente (${expert.length} expert / ${cleaned.length} limpas / ${pool.length} no pool; precisa ${count}). Confira se os lotes NEFRO foram publicados e use “Corrigir tags dos lotes” em Questões.`
   );
 }
 
@@ -122,19 +126,20 @@ async function pickTrackQuestions(
 ) {
   const tag = TRACK_CONFIG[track].tag;
   const columns =
-    'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, created_at';
-  const allTagged: Question[] = [];
+    'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, area, created_at';
+  const byId = new Map<string, Question>();
   const pageSize = 500;
+
+  // 1) Tag de trilha (nefrologia-avancada / nefropediatria)
   for (let page = 0; page < 6; page++) {
     const from = page * pageSize;
     const to = from + pageSize - 1;
-    let query = admin
+    let { data, error } = await admin
       .from('questions')
       .select(columns)
       .contains('tags', [tag])
       .eq('bank_status', 'approved')
       .range(from, to);
-    let { data, error } = await query;
     if (error && /bank_status|schema cache/i.test(error.message)) {
       const retry = await admin
         .from('questions')
@@ -146,10 +151,50 @@ async function pickTrackQuestions(
     }
     if (error) throw new Error(error.message);
     const rows = (data ?? []) as unknown as Question[];
-    allTagged.push(...rows);
+    for (const q of rows) byId.set(q.id, q);
     if (rows.length < pageSize) break;
   }
 
+  // 2) Fallback: lotes MedRank Nefro + especialidade (mesmo se a tag de trilha foi apagada no publish)
+  if (byId.size < count) {
+    const specialty =
+      track === 'nefropediatria' ? 'Nefropediatria' : 'Nefrologia';
+    for (let page = 0; page < 6; page++) {
+      const from = page * pageSize;
+      const to = from + pageSize - 1;
+      const { data, error } = await admin
+        .from('questions')
+        .select(columns)
+        .eq('bank_status', 'approved')
+        .like('lote_importacao', 'MEDRANK_NEFRO_NEFROPED_2026_LOTE_%')
+        .ilike('specialty', specialty)
+        .range(from, to);
+      if (error) break;
+      const rows = (data ?? []) as unknown as Question[];
+      for (const q of rows) byId.set(q.id, q);
+      if (rows.length < pageSize) break;
+    }
+  }
+
+  // 3) Fallback amplo: qualquer lote Nefro (adulto+ped) se ainda faltar
+  if (byId.size < count) {
+    for (let page = 0; page < 6; page++) {
+      const from = page * pageSize;
+      const to = from + pageSize - 1;
+      const { data, error } = await admin
+        .from('questions')
+        .select(columns)
+        .eq('bank_status', 'approved')
+        .like('lote_importacao', 'MEDRANK_NEFRO_NEFROPED_2026_LOTE_%')
+        .range(from, to);
+      if (error) break;
+      const rows = (data ?? []) as unknown as Question[];
+      for (const q of rows) byId.set(q.id, q);
+      if (rows.length < pageSize) break;
+    }
+  }
+
+  const allTagged = [...byId.values()];
   const approvedTagged = filterApprovedBank(allTagged);
   let pool = filterExpertPool(approvedTagged, count, mode === 'ai');
   pool = sortByBankPriority(pool);
@@ -162,7 +207,7 @@ async function pickTrackQuestions(
       pool = sortByBankPriority(approvedTagged);
     } else {
       throw new Error(
-        `Questoes insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count}). Admin -> Questoes -> Importar banco completo.`
+        `Questoes insuficientes de ${TRACK_CONFIG[track].label} (${pool.length}/${count} no pool; ${approvedTagged.length} aprovadas com tag/lote). Admin → Questões → Corrigir tags dos lotes → Provas → regenerar.`
       );
     }
   }
