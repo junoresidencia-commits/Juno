@@ -67,6 +67,8 @@ export default function ImportarLotePage() {
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [loadedLote, setLoadedLote] = useState<string | null>(null);
+  const [lastImportedBatchId, setLastImportedBatchId] = useState<string | null>(null);
+  const [lastPublishedOk, setLastPublishedOk] = useState(false);
 
   const loadBatches = useCallback(async () => {
     const res = await fetch('/api/admin/batches/authorial');
@@ -100,6 +102,8 @@ export default function ImportarLotePage() {
       setMsg(data.message || 'Ok');
       if (commit) {
         setContent('');
+        setLastImportedBatchId(typeof data.batchId === 'string' ? data.batchId : null);
+        setLastPublishedOk(false);
         await loadBatches();
       }
     } finally {
@@ -149,6 +153,9 @@ export default function ImportarLotePage() {
         ? 'Lote publicado após revisão'
         : window.prompt('Motivo:') || '';
     if (action !== 'publish' && reason.length < 5) return;
+    if (action === 'publish' && !window.confirm('Publicar este lote? As questões passam a valer no banco (autoral).')) {
+      return;
+    }
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/batches/authorial/${id}`, {
@@ -158,7 +165,13 @@ export default function ImportarLotePage() {
       });
       const data = await res.json();
       if (!res.ok) setErr(data.error || 'Falha');
-      else setMsg(data.message || 'Ok');
+      else {
+        setMsg(data.message || 'Ok');
+        if (action === 'publish') {
+          setLastPublishedOk(true);
+          setLastImportedBatchId(null);
+        }
+      }
       await loadBatches();
     } finally {
       setBusy(false);
@@ -183,15 +196,76 @@ export default function ImportarLotePage() {
     }
   }
 
+  const draftBatches = batches.filter((b) =>
+    ['draft', 'pending_review', 'partially_approved'].includes(b.status)
+  );
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <Link href="/admin/importar" className="text-sm text-emerald-700 hover:underline">
         ← Importar
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar lote de questões</h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Carregue um lote pronto abaixo (ou envie arquivo / cole JSON). Entra como{' '}
-        <strong>rascunho</strong> — nunca como prova oficial USP/ENARE. Sem API paga.
+
+      <ol className="mt-4 space-y-2 rounded-xl bg-amber-50 p-4 text-sm text-amber-950 ring-1 ring-amber-200">
+        <li>
+          <strong>1.</strong> Carregar lote → <strong>Validar</strong> → <strong>Confirmar</strong>{' '}
+          (vira rascunho)
+        </li>
+        <li>
+          <strong>2.</strong> Embaixo, toque <strong>Publicar lote</strong> (senão o aluno não vê)
+        </li>
+        <li>
+          <strong>3.</strong> Vá em{' '}
+          <Link href="/admin/provas" className="font-semibold underline">
+            Provas
+          </Link>{' '}
+          → <strong>Forçar regenerar (banco)</strong>
+        </li>
+      </ol>
+
+      {lastImportedBatchId && (
+        <div className="mt-4 rounded-xl bg-emerald-100 p-4 ring-1 ring-emerald-300">
+          <p className="text-sm font-bold text-emerald-950">Importado! Próximo passo:</p>
+          <p className="mt-1 text-sm text-emerald-900">
+            Publique o lote agora — ainda está só em rascunho.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void batchAction(lastImportedBatchId, 'publish')}
+              className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white"
+            >
+              Publicar este lote agora
+            </button>
+            <Link
+              href={`/admin/importar/lote/${lastImportedBatchId}`}
+              className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-300"
+            >
+              Revisar antes
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {lastPublishedOk && (
+        <div className="mt-4 rounded-xl bg-teal-100 p-4 ring-1 ring-teal-300">
+          <p className="text-sm font-bold text-teal-950">Lote publicado.</p>
+          <p className="mt-1 text-sm text-teal-900">
+            Agora regenera a disputa do dia com o banco (grátis).
+          </p>
+          <Link
+            href="/admin/provas"
+            className="mt-3 inline-flex rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-bold text-white"
+          >
+            Ir para Provas → Forçar regenerar
+          </Link>
+        </div>
+      )}
+
+      <p className="mt-4 text-sm text-slate-600">
+        Autoral = rascunho até publicar. Nunca vira “prova oficial USP/ENARE”. Sem API paga.
       </p>
 
       <div className="mt-4 rounded-xl bg-teal-50 p-4 ring-1 ring-teal-200">
@@ -355,15 +429,26 @@ export default function ImportarLotePage() {
       )}
 
       <section className="mt-10">
-        <h2 className="font-semibold text-slate-900">Lotes autorais</h2>
+        <h2 className="font-semibold text-slate-900">Seus lotes</h2>
+        {draftBatches.length > 0 && (
+          <p className="mt-1 text-sm text-amber-800">
+            {draftBatches.length} lote(s) em rascunho — publique para entrar no banco.
+          </p>
+        )}
         <div className="mt-3 space-y-3">
           {batches.length === 0 ? (
             <p className="text-sm text-slate-500">Nenhum lote ainda.</p>
           ) : (
-            batches.map((b) => (
+            batches.map((b) => {
+              const isDraft = ['draft', 'pending_review', 'partially_approved'].includes(b.status);
+              return (
               <div
                 key={b.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white p-4 ring-1 ring-slate-200"
+                className={`flex flex-wrap items-center justify-between gap-2 rounded-xl p-4 ring-1 ${
+                  isDraft
+                    ? 'bg-amber-50 ring-amber-300'
+                    : 'bg-white ring-slate-200'
+                }`}
               >
                 <div>
                   <p className="font-medium text-slate-900">{b.title}</p>
@@ -373,25 +458,27 @@ export default function ImportarLotePage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-1">
+                  {isDraft ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void batchAction(b.id, 'publish')}
+                      className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-bold text-white"
+                    >
+                      Publicar lote
+                    </button>
+                  ) : null}
                   <Link
                     href={`/admin/importar/lote/${b.id}`}
-                    className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white"
+                    className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white"
                   >
-                    Revisar lote
+                    Revisar
                   </Link>
                   <button
                     type="button"
                     disabled={busy}
-                    onClick={() => void batchAction(b.id, 'publish')}
-                    className="rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white"
-                  >
-                    Publicar lote
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
                     onClick={() => void batchAction(b.id, 'suspend')}
-                    className="rounded-lg bg-amber-700 px-3 py-1.5 text-xs font-semibold text-white"
+                    className="rounded-lg bg-amber-700 px-3 py-2 text-xs font-semibold text-white"
                   >
                     Suspender
                   </button>
@@ -399,13 +486,14 @@ export default function ImportarLotePage() {
                     type="button"
                     disabled={busy}
                     onClick={() => void batchAction(b.id, 'delete')}
-                    className="rounded-lg bg-red-700 px-3 py-1.5 text-xs font-semibold text-white"
+                    className="rounded-lg bg-red-700 px-3 py-2 text-xs font-semibold text-white"
                   >
-                    Excluir lote
+                    Excluir
                   </button>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
         </div>
       </section>
