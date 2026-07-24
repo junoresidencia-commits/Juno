@@ -74,6 +74,44 @@
     touch-action: manipulation;
   }
 
+  /* Texto da prova: quebra só em palavras, sem coluna estreita estranha */
+  .exam-stem {
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: pretty;
+    max-width: 100%;
+  }
+
+  .exam-shell {
+    min-height: 100dvh;
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(1200px 400px at 10% -10%, rgb(167 243 208 / 0.35), transparent 55%),
+      radial-gradient(900px 360px at 100% 0%, rgb(153 246 228 / 0.25), transparent 50%),
+      #f8fafc;
+  }
+
+  .exam-sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+    padding: 0.35rem 0.25rem 0.5rem;
+    background: linear-gradient(to bottom, #f8fafc 70%, rgb(248 250 252 / 0));
+  }
+
+  .exam-sticky-bottom {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding: 0.75rem 0.5rem max(0.75rem, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, #f8fafc 75%, rgb(248 250 252 / 0));
+  }
+
   /* Botões da prova: alvo grande no celular, clique no desktop */
   .exam-tap {
     touch-action: manipulation;
