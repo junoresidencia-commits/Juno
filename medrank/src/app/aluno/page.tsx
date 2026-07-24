@@ -25,7 +25,9 @@ async function loadDisputeCard(
 ): Promise<HomeDisputeCard> {
   const { data: todayExam } = await supabase
     .from('exams')
-    .select('*')
+    .select(
+      'id, title, date_available, duration_minutes, total_questions, status, audience, quality_status, quality_summary, window_start_hour, window_end_hour, date_closes, ranking_visible_to_students, ranking_release'
+    )
     .eq('date_available', today)
     .eq('audience', audience)
     .eq('status', 'published')
@@ -58,10 +60,10 @@ async function loadDisputeCard(
     attempt = refreshed;
   }
 
-  const trackLabel =
-    audience === 'nephrology'
-      ? shortTrackLabel(trackForDate(today))
-      : 'Residência (USP/ENARE)';
+      const trackLabel =
+        audience === 'nephrology'
+          ? shortTrackLabel(trackForDate(today), today)
+          : 'Residência Geral';
 
   const inProgress = Boolean(exam && attempt && !attempt.finished_at && windowPhase === 'open');
 
@@ -117,8 +119,8 @@ export default async function AlunoDashboard() {
             exam: todayExam,
             trackLabel:
               ctx.audience === 'nephrology'
-                ? shortTrackLabel(trackForDate(today))
-                : 'Residência (USP/ENARE)',
+                ? shortTrackLabel(trackForDate(today), today)
+                : 'Residência Geral',
             leagueLabel: ctx.leagueName ?? audienceLabel(ctx.audience),
             windowPhase,
             canStart,

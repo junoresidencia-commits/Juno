@@ -19,21 +19,22 @@ export type AppTrackDef = {
 
 export const APP_TRACKS: AppTrackDef[] = [
   {
-    id: 'nephrology',
-    label: 'Nefrologia (Liga / título SBN)',
-    shortLabel: 'Nefrologia',
-    description:
-      'Disputa diária nefro/nefroped + treinos livres (adulto, pediátrica, tema, simulados).',
-    dailyAudience: 'nephrology',
-    unlocksNephrologyTreino: true,
-  },
-  {
     id: 'general',
-    label: 'Residência / Clínica Médica',
-    shortLabel: 'Residência',
-    description: 'Disputa diária geral — padrão USP/ENARE, cinco grandes áreas.',
+    label: 'Residência Geral (acesso padrão)',
+    shortLabel: 'Residência Geral',
+    description:
+      'Prova diária padrão de todo aluno — 20 questões, 30 min, banco aprovado. Sempre ligada.',
     dailyAudience: 'general',
     unlocksNephrologyTreino: false,
+  },
+  {
+    id: 'nephrology',
+    label: 'Nefrologia (acesso exclusivo)',
+    shortLabel: 'Nefrologia',
+    description:
+      'Só com autorização do admin. Libera disputa diária nefro/nefroped + treinos. Grupo social NÃO libera.',
+    dailyAudience: 'nephrology',
+    unlocksNephrologyTreino: true,
   },
   {
     id: 'mri',

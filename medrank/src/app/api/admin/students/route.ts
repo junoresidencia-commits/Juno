@@ -5,7 +5,7 @@ import { requireAdminApi } from '@/lib/api-auth';
 import { getRequestOrigin } from '@/lib/app-url';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ACTIVE_TRACK_IDS, normalizeTracks, type AppTrackId } from '@/lib/tracks/config';
-import { syncTrackGroupMembership } from '@/lib/exams/audience';
+import { ensureGeneralTrack, syncTrackGroupMembership } from '@/lib/exams/audience';
 
 function redirectAlunos(request: Request, params: Record<string, string>) {
   const url = new URL('/admin/alunos', getRequestOrigin(request));
@@ -65,6 +65,9 @@ export async function POST(request: Request) {
     if (formSubmit) return redirectAlunos(request, { error: message });
     return NextResponse.json({ error: message }, { status: 400 });
   }
+
+  // Spec: Residência Geral é acesso padrão de todo aluno.
+  tracks = ensureGeneralTrack(tracks);
 
   if (isDemoMode() || auth.demo) {
     const result = createDemoStudentByAdmin(name, email, password, tracks);

@@ -2,6 +2,7 @@ import type { Question } from '@/types/database';
 import { classifyQuestionArea } from '@/lib/question-bank/classify';
 import { ENARE_AREA_WEIGHTS, type ResidencyArea } from '@/lib/question-bank/areas';
 import { getQuestionPoolKey } from '@/lib/question-bank/presentation';
+import { yearPreferenceRank } from '@/lib/question-bank/provenance';
 
 /** Embaralhamento determinístico por semente (mesma prova = mesmas questões) */
 export function seededShuffle<T>(items: T[], seed: number): T[] {
@@ -35,7 +36,10 @@ function groupBy<T>(items: T[], keyFn: (item: T) => string): Map<string, T[]> {
   return map;
 }
 
-/** Garante variedade de anos e “pools” de prova na disputa diária. */
+/**
+ * Diversifica por ano/pool, mas prioriza 2026 → 2025 → 2024.
+ * Anos antigos só entram se faltar volume.
+ */
 function diversifyByYearAndPool(
   pool: Question[],
   count: number,
@@ -46,7 +50,12 @@ function diversifyByYearAndPool(
   if (available.length === 0) return [];
 
   const byYear = groupBy(available, (q) => String(q.year ?? 'sem-ano'));
-  const years = seededShuffle([...byYear.keys()], seed + 11);
+  const years = [...byYear.keys()].sort((a, b) => {
+    const ya = a === 'sem-ano' ? null : Number(a);
+    const yb = b === 'sem-ano' ? null : Number(b);
+    return yearPreferenceRank(ya) - yearPreferenceRank(yb);
+  });
+
   const picked: Question[] = [];
   let yearIndex = 0;
 
@@ -71,13 +80,19 @@ function diversifyByYearAndPool(
       if (years.length === 0) break;
       continue;
     }
-    yearIndex++;
+
+    // ~70% da prova concentra nos anos mais novos (início da lista ordenada)
+    if (picked.length < Math.ceil(count * 0.7) && years.length > 1) {
+      yearIndex = (yearIndex + 1) % Math.min(3, years.length);
+    } else {
+      yearIndex++;
+    }
   }
 
   return picked;
 }
 
-/** Sorteio diário equilibrado por área, com mistura de provas e anos. */
+/** Sorteio diário equilibrado por área, com preferência por provas 2025/2026. */
 export function pickDailyExamQuestions(pool: Question[], count: number, seed: number): Question[] {
   if (pool.length === 0) return [];
   if (pool.length <= count) {

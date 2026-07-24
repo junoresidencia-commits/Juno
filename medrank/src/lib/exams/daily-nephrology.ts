@@ -21,10 +21,15 @@ import {
   DAILY_EXAM_DURATION_MINUTES,
   DAILY_EXAM_HORIZON_DAYS,
   DAILY_EXAM_QUESTION_COUNT,
+  nephrologyPlanForDate,
   titleForDailyTrack,
   trackForDate,
   type DailyExamTrack,
 } from '@/lib/exams/daily-schedule';
+import {
+  NEFROLOGIA_AVANCADA_TRACK,
+  NEFROPEDIATRIA_TRACK,
+} from '@/lib/treino/config';
 
 export {
   shortTrackLabel,
@@ -116,18 +121,31 @@ async function pickTrackQuestions(
   mode: 'ai' | 'bank' = 'bank'
 ) {
   const tag = TRACK_CONFIG[track].tag;
+  const columns =
+    'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, created_at';
   const allTagged: Question[] = [];
-  const pageSize = 1000;
-  for (let page = 0; page < 10; page++) {
+  const pageSize = 500;
+  for (let page = 0; page < 6; page++) {
     const from = page * pageSize;
     const to = from + pageSize - 1;
-    const { data, error } = await admin
+    let query = admin
       .from('questions')
-      .select('*')
+      .select(columns)
       .contains('tags', [tag])
+      .eq('bank_status', 'approved')
       .range(from, to);
+    let { data, error } = await query;
+    if (error && /bank_status|schema cache/i.test(error.message)) {
+      const retry = await admin
+        .from('questions')
+        .select(columns.replace(', bank_status', ''))
+        .contains('tags', [tag])
+        .range(from, to);
+      data = retry.data as typeof data;
+      error = retry.error;
+    }
     if (error) throw new Error(error.message);
-    const rows = (data ?? []) as Question[];
+    const rows = (data ?? []) as unknown as Question[];
     allTagged.push(...rows);
     if (rows.length < pageSize) break;
   }
@@ -140,7 +158,6 @@ async function pickTrackQuestions(
   if (fresh.length >= count) pool = fresh;
 
   if (pool.length < count) {
-    // Em modo banco, ainda tenta o pool cru da tag (só aprovadas)
     if (mode === 'bank' && approvedTagged.length >= count) {
       pool = sortByBankPriority(approvedTagged);
     } else {
@@ -228,9 +245,60 @@ export async function ensureDailyNephrologyExam(
   let selected: Question[] = [];
   let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
   const mode = opts?.mode ?? 'bank';
+  const plan = nephrologyPlanForDate(dateStr);
   try {
-    builtMeta = await pickTrackQuestions(admin, track, DAILY_EXAM_QUESTION_COUNT, dateStr, mode);
-    selected = builtMeta.questions;
+    if (plan.mode === 'mixed') {
+      const adult = await pickTrackQuestions(
+        admin,
+        NEFROLOGIA_AVANCADA_TRACK,
+        plan.adultCount,
+        dateStr,
+        mode
+      );
+      const ped = await pickTrackQuestions(
+        admin,
+        NEFROPEDIATRIA_TRACK,
+        plan.pediatricCount,
+        dateStr,
+        mode
+      );
+      const merged = [...adult.questions, ...ped.questions];
+      // Embaralha ordem final para não ficar bloco adulto/ped previsível
+      for (let i = merged.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [merged[i], merged[j]] = [merged[j], merged[i]];
+      }
+      builtMeta = {
+        questions: merged,
+        reviews: [...(adult.reviews ?? []), ...(ped.reviews ?? [])],
+        replaced: (adult.replaced ?? 0) + (ped.replaced ?? 0),
+        polished: (adult.polished ?? 0) + (ped.polished ?? 0),
+        secondPassNotes: [adult.secondPassNotes, ped.secondPassNotes]
+          .filter(Boolean)
+          .join(' · '),
+        progress: {
+          poolSize: (adult.progress?.poolSize ?? 0) + (ped.progress?.poolSize ?? 0),
+          selected: merged.length,
+          approved:
+            (adult.progress?.approved ?? 0) + (ped.progress?.approved ?? 0),
+          rejected:
+            (adult.progress?.rejected ?? 0) + (ped.progress?.rejected ?? 0),
+          target: DAILY_EXAM_QUESTION_COUNT,
+        },
+      };
+      selected = merged;
+    } else {
+      const onlyTrack =
+        plan.mode === 'pediatric' ? NEFROPEDIATRIA_TRACK : NEFROLOGIA_AVANCADA_TRACK;
+      builtMeta = await pickTrackQuestions(
+        admin,
+        onlyTrack,
+        DAILY_EXAM_QUESTION_COUNT,
+        dateStr,
+        mode
+      );
+      selected = builtMeta.questions;
+    }
   } catch (err) {
     return {
       date: dateStr,

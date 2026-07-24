@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getWeekEnd, getWeekStart, getPeriodBounds } from '@/lib/periods';
 import { GroupDetailManager } from '@/components/admin/GroupDetailManager';
+import { AdminGroupJoinRequests } from '@/components/admin/AdminGroupJoinRequests';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
 export default async function AdminGrupoDetailPage({
@@ -74,7 +75,8 @@ export default async function AdminGrupoDetailPage({
   }
   if (!group) notFound();
 
-  const [{ data: members }, { data: students }, { data: challenges }] = await Promise.all([
+  const [{ data: members }, { data: students }, { data: challenges }, { data: joinRequests }] =
+    await Promise.all([
     supabase
       .from('study_group_members')
       .select('group_id, user_id, joined_at, profiles(name, email)')
@@ -91,6 +93,12 @@ export default async function AdminGrupoDetailPage({
       .eq('group_id', id)
       .eq('week_start', weekStart)
       .order('created_at', { ascending: false }),
+    supabase
+      .from('study_group_join_requests')
+      .select('id, user_id, created_at, profiles(name, email)')
+      .eq('group_id', id)
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true }),
   ]);
 
   const today = todayDateStringBrazil();
@@ -141,7 +149,16 @@ export default async function AdminGrupoDetailPage({
       <Link href="/admin/grupos" className="text-sm text-emerald-700 hover:underline">
         ← Grupos
       </Link>
-      <div className="mt-4">
+      <div className="mt-4 space-y-4">
+        <AdminGroupJoinRequests
+          groupId={group.id}
+          initialRequests={(joinRequests ?? []).map((r) => ({
+            id: r.id,
+            user_id: r.user_id,
+            created_at: r.created_at,
+            profiles: r.profiles as { name?: string; email?: string } | null,
+          }))}
+        />
         <GroupDetailManager
           groupId={group.id}
           groupName={group.name}

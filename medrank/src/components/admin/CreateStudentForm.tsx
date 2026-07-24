@@ -87,14 +87,14 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
             Módulos liberados
           </legend>
           <p className="mt-1 text-xs text-slate-600">
-            Marque o que este aluno vai ver (disputa diária e treinos). Pode mudar depois.
+            Residência Geral já vem ligada. Marque Nefrologia só se o aluno estiver autorizado.
           </p>
           <div className="mt-3 space-y-3">
             {APP_TRACKS.map((t) => (
               <label
                 key={t.id}
                 className={`flex cursor-pointer items-start gap-3 rounded-lg bg-white p-3 ring-1 ring-slate-200 ${
-                  t.comingSoon ? 'opacity-60' : ''
+                  t.comingSoon || t.id === 'general' ? 'opacity-90' : ''
                 }`}
               >
                 <input
@@ -102,12 +102,17 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
                   name={`track_${t.id}`}
                   value="on"
                   defaultChecked={t.id === 'general'}
-                  disabled={t.comingSoon}
+                  disabled={t.comingSoon || t.id === 'general'}
                   className="mt-1 h-4 w-4 rounded border-slate-300 text-emerald-700"
                 />
+                {/* hidden garante que Residência Geral sempre é enviada no POST */}
+                {t.id === 'general' ? (
+                  <input type="hidden" name="track_general" value="on" />
+                ) : null}
                 <span>
                   <span className="block text-sm font-medium text-slate-900">
                     {t.label}
+                    {t.id === 'general' ? ' · obrigatório' : ''}
                     {t.comingSoon ? ' · em breve' : ''}
                   </span>
                   <span className="mt-0.5 block text-xs text-slate-600">{t.description}</span>

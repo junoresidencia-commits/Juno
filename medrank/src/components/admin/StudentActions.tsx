@@ -24,7 +24,11 @@ export function StudentActions({
 }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
-  const [tracks, setTracks] = useState<AppTrackId[]>(enabledTracks);
+  const [tracks, setTracks] = useState<AppTrackId[]>(
+    enabledTracks.includes('general')
+      ? enabledTracks
+      : (['general', ...enabledTracks] as AppTrackId[])
+  );
 
   async function apiCall(method: string, body?: object) {
     try {
@@ -82,10 +86,16 @@ export function StudentActions({
       alert('Este módulo ainda não está disponível. Quando estiver pronto, você liga aqui.');
       return;
     }
+    // Residência Geral é acesso padrão — não pode desligar.
+    if (id === 'general' && tracks.includes('general')) {
+      alert('Residência Geral é o acesso padrão de todo aluno e não pode ser desligada.');
+      return;
+    }
     const next = tracks.includes(id) ? tracks.filter((t) => t !== id) : [...tracks, id];
-    setTracks(next);
+    const withGeneral = next.includes('general') ? next : (['general', ...next] as AppTrackId[]);
+    setTracks(withGeneral);
     setLoading(`track-${id}`);
-    const ok = await apiCall('PATCH', { action: 'set_tracks', tracks: next });
+    const ok = await apiCall('PATCH', { action: 'set_tracks', tracks: withGeneral });
     if (!ok) setTracks(tracks);
     setLoading(null);
   }

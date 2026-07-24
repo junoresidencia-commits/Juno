@@ -9,6 +9,9 @@ import { mixDifficulty } from '@/lib/treino/progress';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   filterApprovedBank,
+  isMedRankLotQuestion,
+  isOfficialOrigin,
+  isStaleOfficial,
   sortByBankPriority,
 } from '@/lib/question-bank/provenance';
 import {
@@ -59,13 +62,9 @@ function isResidenciaExpert(q: Question): boolean {
   return tags.includes('banco-expert') && tags.includes('residencia-expert') && !isNephrologyTagged(q);
 }
 
-/** Prova real (ENARE/Revalida/import oficial) — prioridade na disputa. */
+/** Prova real (ENARE/Revalida/USP/import oficial) — prioridade na disputa. */
 function isOfficialExamQuestion(q: Question): boolean {
-  if (q.question_origin === 'official') return true;
-  const tags = q.tags ?? [];
-  if (tags.includes('official') || tags.includes('real')) return true;
-  const src = String(q.source || '').toLowerCase();
-  return src === 'enare' || src === 'revalida';
+  return isOfficialOrigin(q);
 }
 
 /** Expert MedRank curto/óvio — só fallback se faltar prova real. */
@@ -100,11 +99,15 @@ async function recentGeneralQuestionIds(
   return (eqs ?? []).map((row) => String(row.question_id));
 }
 
-async function fetchQuestionsByTag(
+/** Colunas necessárias para montar a disputa — evita select('*') em milhares de linhas. */
+const DAILY_QUESTION_COLUMNS =
+  'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, created_at';
+
+async function fetchApprovedQuestionsByTag(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   tag: string,
-  pageSize = 1000,
-  maxPages = 10
+  pageSize = 500,
+  maxPages = 6
 ): Promise<Question[]> {
   const out: Question[] = [];
   for (let page = 0; page < maxPages; page++) {
@@ -112,29 +115,52 @@ async function fetchQuestionsByTag(
     const to = from + pageSize - 1;
     const { data, error } = await admin
       .from('questions')
-      .select('*')
+      .select(DAILY_QUESTION_COLUMNS)
       .contains('tags', [tag])
+      .eq('bank_status', 'approved')
       .range(from, to);
-    if (error) throw new Error(error.message);
-    const rows = (data ?? []) as Question[];
+    if (error) {
+      // Fallback se bank_status ainda não existir no schema cache
+      if (/bank_status|schema cache/i.test(error.message)) {
+        const retry = await admin
+          .from('questions')
+          .select(DAILY_QUESTION_COLUMNS.replace(', bank_status', ''))
+          .contains('tags', [tag])
+          .range(from, to);
+        if (retry.error) throw new Error(retry.error.message);
+        const rows = (retry.data ?? []) as unknown as Question[];
+        out.push(...rows);
+        if (rows.length < pageSize) break;
+        continue;
+      }
+      throw new Error(error.message);
+    }
+    const rows = (data ?? []) as unknown as Question[];
     out.push(...rows);
     if (rows.length < pageSize) break;
   }
   return out;
 }
 
-async function fetchAllQuestionsPaged(
+async function fetchApprovedOfficialRecent(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
-  pageSize = 1000,
-  maxPages = 20
+  pageSize = 500,
+  maxPages = 4
 ): Promise<Question[]> {
   const out: Question[] = [];
   for (let page = 0; page < maxPages; page++) {
     const from = page * pageSize;
     const to = from + pageSize - 1;
-    const { data, error } = await admin.from('questions').select('*').range(from, to);
-    if (error) throw new Error(error.message);
-    const rows = (data ?? []) as Question[];
+    const { data, error } = await admin
+      .from('questions')
+      .select(DAILY_QUESTION_COLUMNS)
+      .eq('question_origin', 'official')
+      .eq('bank_status', 'approved')
+      .gte('year', 2024)
+      .order('year', { ascending: false })
+      .range(from, to);
+    if (error) break;
+    const rows = (data ?? []) as unknown as Question[];
     out.push(...rows);
     if (rows.length < pageSize) break;
   }
@@ -147,72 +173,60 @@ async function pickGeneralQuestions(
   dateStr: string,
   mode: 'ai' | 'bank' = 'bank'
 ) {
-  // Busca por tag + paginação completa (evita teto ~1000 do PostgREST).
-  let pool = (await fetchQuestionsByTag(admin, 'residencia-expert')).filter(
-    (q) => !isNephrologyTagged(q)
-  );
+  // 1) Oficiais/universidade 2024+ (preferência 2026/2025 no sort)
+  // 2) Lotes MedRank novos (residencia-expert)
+  // Nunca varre o banco inteiro com select('*').
+  const [officialRecent, residencia] = await Promise.all([
+    fetchApprovedOfficialRecent(admin),
+    fetchApprovedQuestionsByTag(admin, 'residencia-expert'),
+  ]);
 
-  if (pool.length < count) {
-    const expert = (await fetchQuestionsByTag(admin, 'banco-expert')).filter(
-      (q) => !isNephrologyTagged(q)
-    );
-    const byId = new Map(pool.map((q) => [q.id, q]));
-    for (const q of expert) byId.set(q.id, q);
-    pool = [...byId.values()];
+  const byId = new Map<string, Question>();
+  for (const q of officialRecent) {
+    if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
+  }
+  for (const q of residencia) {
+    if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
   }
 
+  let pool = [...byId.values()];
+
   if (pool.length < count) {
-    // Último recurso: varrer o banco todo (paginado) e tirar Nefro
-    const all = await fetchAllQuestionsPaged(admin);
-    const byId = new Map(pool.map((q) => [q.id, q]));
-    for (const q of all) {
-      if (!isNephrologyTagged(q)) byId.set(q.id, q);
+    const expert = await fetchApprovedQuestionsByTag(admin, 'banco-expert');
+    for (const q of expert) {
+      if (!isNephrologyTagged(q) && !isStaleOfficial(q)) byId.set(q.id, q);
     }
     pool = [...byId.values()];
   }
 
-  // Só questões aprovadas (importações ficam em pending_review até conferência)
-  pool = filterApprovedBank(pool);
+  pool = filterApprovedBank(pool).filter((q) => !isStaleOfficial(q));
 
-  // Preferir lotes MedRank (01–27) se houver volume suficiente
-  const fromLots = pool.filter((q) => {
-    const c = String((q as { lote_importacao?: string | null }).lote_importacao || '');
-    return (
-      c.startsWith('MEDRANK_AUTORAL_2026_LOTE_') ||
-      c.startsWith('MEDRANK_NEFRO_NEFROPED_2026_LOTE_') ||
-      c.startsWith('MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_')
-    );
-  });
-  if (fromLots.length >= count) {
-    pool = fromLots;
-  }
-
-  // Oficiais só 2024+ (ENARE/Revalida/USP recentes); antigas ficam de fora
-  const recentOfficial = pool.filter(
-    (q) => isOfficialExamQuestion(q) && typeof q.year === 'number' && q.year >= 2024
-  );
-  const nonOfficial = pool.filter((q) => !isOfficialExamQuestion(q));
-  if (recentOfficial.length + nonOfficial.length >= count) {
-    pool = [...recentOfficial, ...nonOfficial];
-  }
-
-  // 1) Preferir oficiais recentes se der volume
-  const official = pool.filter(isOfficialExamQuestion);
-  if (official.length >= count) {
-    pool = official;
+  // Preferir oficiais 2025/2026 se houver volume; senão oficiais 2024+ + lotes MedRank
+  const y2026 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2026);
+  const y2025 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2025);
+  const y2024 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2024);
+  const lots = pool.filter((q) => isMedRankLotQuestion(q) && !isOfficialExamQuestion(q));
+  const preferred = [...y2026, ...y2025, ...y2024, ...lots];
+  if (preferred.length >= count) {
+    pool = preferred;
   } else {
-    // 2) Remover sintéticas fracas/óbvias quando houver alternativas melhores
-    const strong = pool.filter((q) => !isWeakSynthetic(q));
-    if (strong.length >= count) pool = strong;
+    const official = pool.filter(isOfficialExamQuestion);
+    if (official.length >= count) {
+      pool = official;
+    } else {
+      const strong = pool.filter((q) => !isWeakSynthetic(q));
+      if (strong.length >= count) pool = strong;
+    }
   }
 
   const sound = pool.filter((q) => isOfficialExamQuestion(q) || isStructurallySound(q));
   if (sound.length >= count) pool = sound;
 
-  const prefer = pool.filter((q) => isOfficialExamQuestion(q) || isResidenciaExpert(q));
+  const prefer = pool.filter(
+    (q) => isOfficialExamQuestion(q) || isResidenciaExpert(q) || isMedRankLotQuestion(q)
+  );
   if (prefer.length >= count) pool = prefer;
 
-  // Prioridade: oficiais > baseadas em prova > originais > diretrizes
   pool = sortByBankPriority(pool);
 
   const avoid = new Set(await recentGeneralQuestionIds(admin, dateStr));
