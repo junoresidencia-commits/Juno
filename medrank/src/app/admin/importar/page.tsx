@@ -1,133 +1,36 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
+import { requireRole } from '@/lib/auth';
 
-export default function ImportarPage() {
-  const isTestMode = process.env.NEXT_PUBLIC_SITE_URL?.includes('trycloudflare') ?? false;
-  const [loading, setLoading] = useState(false);
-  const [autoApprove, setAutoApprove] = useState(false);
-  const [result, setResult] = useState<{
-    imported: number;
-    errors: string[];
-    message?: string;
-    pending_review?: boolean;
-  } | null>(null);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setResult(null);
-
-    const form = new FormData(e.currentTarget);
-    const file = form.get('file') as File;
-
-    const body = new FormData();
-    body.append('file', file);
-    if (autoApprove) body.append('auto_approve', 'true');
-
-    const res = await fetch('/api/admin/import', { method: 'POST', body });
-    const data = await res.json();
-
-    if (!res.ok) {
-      setResult({ imported: 0, errors: [data.error ?? 'Erro na importação'] });
-    } else {
-      setResult(data);
-    }
-    setLoading(false);
-  }
+export default async function ImportarPage() {
+  await requireRole('admin');
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-lg px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
         ← Painel
       </Link>
-      <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar questões</h1>
-      <p className="mt-2 text-sm text-slate-600">
-        CSV/Excel entram em <strong>revisão</strong> antes da disputa. Para provas oficiais em texto/JSON,
-        use o fluxo dedicado.
-      </p>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar</h1>
+      <p className="mt-2 text-sm text-slate-600">Escolha uma opção. A disputa puxa dos lotes/provas publicados.</p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-8 space-y-4">
         <Link
           href="/admin/importar/lote"
-          className="rounded-lg bg-teal-800 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-900"
+          className="block rounded-2xl bg-teal-800 px-5 py-6 text-center shadow-sm"
         >
-          Importar lote de questões
+          <span className="block text-lg font-bold text-white">Importar lote</span>
+          <span className="mt-1 block text-sm text-teal-100">
+            Lotes JSON 20–27 · publicar todos
+          </span>
         </Link>
+
         <Link
           href="/admin/importar/prova"
-          className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+          className="block rounded-2xl bg-teal-700 px-5 py-6 text-center shadow-sm"
         >
-          Importar prova oficial
-        </Link>
-        <Link
-          href="/admin/questoes/revisao"
-          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800"
-        >
-          Fila de revisão
+          <span className="block text-lg font-bold text-white">Importar prova</span>
+          <span className="mt-1 block text-sm text-teal-100">Prova oficial (texto/JSON)</span>
         </Link>
       </div>
-
-      {isTestMode && (
-        <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-          No modo teste, o app já vem preenchido com um banco demo autoral para 5 meses de provas.
-        </p>
-      )}
-      <a
-        href="/templates/importacao-questoes.csv"
-        className="mt-2 inline-block text-sm text-emerald-700 hover:underline"
-      >
-        Baixar template CSV
-      </a>
-
-      <form
-        onSubmit={handleSubmit}
-        className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200"
-      >
-        <input name="file" type="file" accept=".csv,.xlsx,.xls" required className="text-sm" />
-        <label className="mt-3 flex items-start gap-2 text-sm text-slate-700">
-          <input
-            type="checkbox"
-            checked={autoApprove}
-            onChange={(e) => setAutoApprove(e.target.checked)}
-            className="mt-1"
-          />
-          <span>
-            Publicar sem revisão (não recomendado). Padrão: enviar para a fila de conferência.
-          </span>
-        </label>
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
-        >
-          {loading ? 'Importando...' : 'Importar'}
-        </button>
-      </form>
-
-      {result && (
-        <div className="mt-6 rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
-          <p className="font-medium text-emerald-700">
-            {result.message || `${result.imported} questões importadas`}
-          </p>
-          {result.pending_review && (
-            <p className="mt-2 text-sm text-slate-600">
-              Próximo passo:{' '}
-              <Link href="/admin/questoes/revisao" className="font-semibold text-emerald-700 underline">
-                aprovar na fila de revisão
-              </Link>
-            </p>
-          )}
-          {result.errors.length > 0 && (
-            <ul className="mt-2 list-inside list-disc text-sm text-red-600">
-              {result.errors.map((e, i) => (
-                <li key={i}>{e}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
     </div>
   );
 }
