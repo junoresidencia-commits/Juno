@@ -316,8 +316,8 @@ export default function ImportarLotePage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <Link href="/admin/importar" className="text-sm text-emerald-700 hover:underline">
-        ← Importar
+      <Link href="/admin/questoes" className="text-sm text-emerald-700 hover:underline">
+        ← Questões
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar lote de questões</h1>
 
