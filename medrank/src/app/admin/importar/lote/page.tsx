@@ -188,16 +188,6 @@ export default function ImportarLotePage() {
   }
 
   async function publishAllDrafts() {
-    const drafts = batches.filter((b) =>
-      ['draft', 'pending_review', 'partially_approved'].includes(b.status)
-    );
-    if (drafts.length === 0) {
-      window.alert('Nenhum lote em rascunho.');
-      return;
-    }
-    if (!window.confirm(`Publicar TODOS os ${drafts.length} lote(s) em rascunho de uma vez?`)) {
-      return;
-    }
     setBusy(true);
     setMsg(null);
     setErr(null);
@@ -217,7 +207,56 @@ export default function ImportarLotePage() {
       setMsg(data.message || 'Ok');
       setLastPublishedOk(true);
       setLastImportedBatchId(null);
-      window.alert(data.message || 'Publicado.');
+      await loadBatches();
+    } catch (e) {
+      const m = e instanceof Error ? e.message : 'Falha de rede';
+      setErr(m);
+      window.alert(m);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Depois de validar: importa o lote atual e publica todos os rascunhos. */
+  async function confirmAndPublishAll() {
+    if (!content.trim() || !preview) return;
+    setBusy(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      const res = await fetch('/api/admin/batches/authorial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ format, content, commit: true, title: title || undefined }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(data.error || 'Falha ao importar');
+        if (data.preview) setPreview(data.preview);
+        if (data.summary) setSummary(data.summary);
+        window.alert(data.error || 'Falha ao importar');
+        return;
+      }
+      setPreview(data.preview || null);
+      setSummary(data.summary || null);
+      setContent('');
+      setMsg(data.message || 'Importado.');
+      await loadBatches();
+
+      const pub = await fetch('/api/admin/batches/authorial/publish-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
+      });
+      const pubData = await pub.json().catch(() => ({}));
+      if (!pub.ok) {
+        setErr(pubData.error || 'Importou, mas publicar falhou');
+        window.alert(pubData.error || 'Importou, mas publicar falhou — use Publicar TODOS.');
+        return;
+      }
+      setMsg(pubData.message || 'Publicado.');
+      setLastPublishedOk(true);
+      setLastImportedBatchId(null);
       await loadBatches();
     } catch (e) {
       const m = e instanceof Error ? e.message : 'Falha de rede';
@@ -259,52 +298,44 @@ export default function ImportarLotePage() {
 
       <ol className="mt-4 space-y-2 rounded-xl bg-amber-50 p-4 text-sm text-amber-950 ring-1 ring-amber-200">
         <li>
-          <strong>1.</strong> Carregar lote → <strong>Validar</strong> → <strong>Confirmar</strong>{' '}
-          (vira rascunho)
+          <strong>1.</strong> Carregar → Validar → <strong>Confirmar e publicar todos</strong>
         </li>
         <li>
-          <strong>2.</strong> Toque <strong>Publicar TODOS</strong> (ou Publicar lote um a um)
+          <strong>2.</strong> Ou, se já importou vários: <strong>Publicar TODOS</strong> (rápido)
         </li>
         <li>
-          <strong>3.</strong> Vá em{' '}
+          <strong>3.</strong>{' '}
           <Link href="/admin/provas" className="font-semibold underline">
             Provas
           </Link>{' '}
-          → <strong>Forçar regenerar (banco)</strong>
+          → Forçar regenerar (banco)
         </li>
       </ol>
 
-      {lastImportedBatchId && (
-        <div className="mt-4 rounded-xl bg-emerald-100 p-4 ring-1 ring-emerald-300">
-          <p className="text-sm font-bold text-emerald-950">Importado! Próximo passo:</p>
-          <p className="mt-1 text-sm text-emerald-900">
-            Publique o lote agora — ainda está só em rascunho.
+      {(draftBatches.length > 0 || lastImportedBatchId) && (
+        <div className="sticky top-0 z-20 mt-4 rounded-xl bg-emerald-700 p-4 text-white shadow-lg">
+          <p className="text-sm font-bold">
+            {draftBatches.length > 0
+              ? `${draftBatches.length} lote(s) em rascunho`
+              : 'Lote importado — publique agora'}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void batchAction(lastImportedBatchId, 'publish')}
-              className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white"
-            >
-              Publicar este lote agora
-            </button>
-            <Link
-              href={`/admin/importar/lote/${lastImportedBatchId}`}
-              className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-300"
-            >
-              Revisar antes
-            </Link>
-          </div>
+          <p className="mt-1 text-xs text-emerald-100">
+            Um toque publica tudo. Depois regenere a prova.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void publishAllDrafts()}
+            className="mt-3 w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-emerald-900 disabled:opacity-50"
+          >
+            {busy ? 'Publicando…' : 'Publicar TODOS agora'}
+          </button>
         </div>
       )}
 
       {lastPublishedOk && (
         <div className="mt-4 rounded-xl bg-teal-100 p-4 ring-1 ring-teal-300">
-          <p className="text-sm font-bold text-teal-950">Lote publicado.</p>
-          <p className="mt-1 text-sm text-teal-900">
-            Agora regenera a disputa do dia com o banco (grátis).
-          </p>
+          <p className="text-sm font-bold text-teal-950">Publicado.</p>
           <Link
             href="/admin/provas"
             className="mt-3 inline-flex rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-bold text-white"
@@ -428,6 +459,14 @@ export default function ImportarLotePage() {
             className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           >
             Confirmar importação (rascunho)
+          </button>
+          <button
+            type="button"
+            disabled={busy || !content.trim() || !preview}
+            onClick={() => void confirmAndPublishAll()}
+            className="rounded-lg bg-teal-900 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+          >
+            {busy ? 'Processando…' : 'Confirmar e publicar TODOS'}
           </button>
           <button
             type="button"
