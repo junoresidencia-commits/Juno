@@ -2,13 +2,22 @@
 
 ## Fluxo
 
-1. Você gera 50 questões no ChatGPT (externo) → arquivo JSON  
+1. Gerar 50 questões (Cursor/ChatGPT externo) → arquivo JSON no schema MedRank  
 2. Admin → **Importar lote de questões**  
 3. Validar e prévia → Confirmar importação (**rascunho**)  
 4. Revisar lote (aprovar/recusar individual ou publicar lote)  
 5. Disputa usa só `bank_status=approved`
 
 **Sem API paga** no app.
+
+## Lotes no repositório (`data/batches/`)
+
+| Arquivo | Qs | Notas |
+|---------|----|-------|
+| `MEDRANK_AUTORAL_2026_LOTE_01.json` | 50 | Nefro/CM foco inicial |
+| `MEDRANK_AUTORAL_2026_LOTE_04.json` … `_11.json` | 50×8 | Pacote multiespecialidades 400 Qs (CM, Cirurgia, Ped, GO, Psiquiatria, Ortopedia, Preventiva, etc.) |
+
+Importar **um arquivo por vez** na UI (cada um vira um `lote_importacao` distinto). Lotes 02–03 entram por PR separado, se ainda não mergeados.
 
 ## Tipos (`tipo_da_questao`)
 
