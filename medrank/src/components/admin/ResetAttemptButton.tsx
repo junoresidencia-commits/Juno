@@ -63,7 +63,7 @@ export function ResetAttemptButton({ examId }: { examId: string }) {
         onClick={() => void load()}
         className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-red-800 ring-1 ring-red-200 hover:bg-red-50 disabled:opacity-50"
       >
-        {busy === 'load' ? '…' : 'Resetar tentativa (bug)'}
+        {busy === 'load' ? '…' : 'Ver quem encerrou / Liberar'}
       </button>
       {msg && <p className="mt-2 text-xs font-medium text-slate-700">{msg}</p>}
       {open && (
@@ -80,7 +80,7 @@ export function ResetAttemptButton({ examId }: { examId: string }) {
                   onClick={() => void reset(r.id, r.name)}
                   className="font-semibold text-emerald-700 hover:underline disabled:opacity-50"
                 >
-                  Liberar
+                  Liberar prova
                 </button>
               </li>
             ))

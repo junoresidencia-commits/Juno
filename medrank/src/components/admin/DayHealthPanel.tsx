@@ -82,7 +82,10 @@ export async function DayHealthPanel() {
               </div>
             )}
             {exam.forfeitedCount > 0 && (
-              <div className="mt-3">
+              <div className="mt-3 space-y-2">
+                <p className="text-xs font-semibold text-red-800">
+                  {exam.forfeitedCount} aluno(s) com prova encerrada — liberar se foi erro técnico:
+                </p>
                 <ResetAttemptButton examId={exam.id} />
               </div>
             )}
