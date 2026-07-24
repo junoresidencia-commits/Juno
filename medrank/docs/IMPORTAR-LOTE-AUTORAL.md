@@ -18,7 +18,10 @@
 | `MEDRANK_NEFRO_NEFROPED_2026_LOTE_12` … `_19` | 50×8 | Nefro / nefropediatria |
 | `MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20` … `_27` | 50×8 | Diretrizes atuais |
 
-**Banco ativo = só esses lotes.** Limpar o resto: botão **Apagar antigas — deixar só lotes 01–27** ou SQL `docs/BANCO-SO-LOTES-MEDRANK.sql`.
+**Banco ativo = lotes MedRank 01–27 + oficiais ENARE/Revalida/USP com year ≥ 2024.**  
+Oficiais &lt;2024 e sintéticas sem lote saem. Limpar: botão **Limpar antigas** ou SQL `docs/BANCO-SO-LOTES-MEDRANK.sql`.
+
+Nota: o pacote CC-BY atual traz ENARE/Revalida; USP só entra via **Importar prova** com autorização.
 
 Importar um a um ou **Confirmar e publicar TODOS** / **Publicar TODOS agora**.
 

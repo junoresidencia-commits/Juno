@@ -187,7 +187,16 @@ async function pickGeneralQuestions(
     pool = fromLots;
   }
 
-  // 1) Preferir provas oficiais reais (ENARE/Revalida CC-BY ou import autorizado)
+  // Oficiais só 2024+ (ENARE/Revalida/USP recentes); antigas ficam de fora
+  const recentOfficial = pool.filter(
+    (q) => isOfficialExamQuestion(q) && typeof q.year === 'number' && q.year >= 2024
+  );
+  const nonOfficial = pool.filter((q) => !isOfficialExamQuestion(q));
+  if (recentOfficial.length + nonOfficial.length >= count) {
+    pool = [...recentOfficial, ...nonOfficial];
+  }
+
+  // 1) Preferir oficiais recentes se der volume
   const official = pool.filter(isOfficialExamQuestion);
   if (official.length >= count) {
     pool = official;

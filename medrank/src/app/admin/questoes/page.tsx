@@ -12,14 +12,21 @@ export default async function QuestoesPage() {
 
   let approvedLots = 0;
   let draftLotsQs = 0;
+  let officialRecent = 0;
   let draftBatches = 0;
 
   if (!usesDemoStore()) {
     const admin = createAdminClient();
     const client = admin ?? (await createClient());
-    const [approvedRes, draftRes, batchesRes] = await Promise.all([
+    const [approvedRes, draftRes, officialRes, batchesRes] = await Promise.all([
       client.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'approved').or(LOT_OR),
       client.from('questions').select('*', { count: 'exact', head: true }).eq('bank_status', 'draft').or(LOT_OR),
+      client
+        .from('questions')
+        .select('*', { count: 'exact', head: true })
+        .eq('bank_status', 'approved')
+        .eq('question_origin', 'official')
+        .gte('year', 2024),
       client
         .from('question_import_batches')
         .select('*', { count: 'exact', head: true })
@@ -28,8 +35,11 @@ export default async function QuestoesPage() {
     ]);
     approvedLots = approvedRes.count ?? 0;
     draftLotsQs = draftRes.count ?? 0;
+    officialRecent = officialRes.count ?? 0;
     draftBatches = batchesRes.count ?? 0;
   }
+
+  const totalActive = approvedLots + officialRecent;
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
@@ -38,16 +48,28 @@ export default async function QuestoesPage() {
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Questões</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Banco ativo = <strong>só os lotes MedRank (01–27)</strong> que você importou. A disputa
-        sorteia daqui.
+        Banco ativo = <strong>lotes MedRank (01–27)</strong> +{' '}
+        <strong>oficiais ENARE/USP 2024+</strong>. Antigas e desatualizadas ficam fora.
       </p>
 
-      <div className="mt-4 rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-200">
-        <p className="text-3xl font-bold text-emerald-900">{approvedLots}</p>
-        <p className="text-sm text-emerald-800">questões publicadas nos lotes</p>
-        <p className="mt-2 text-xs text-emerald-700">
-          {draftLotsQs} em rascunho
-          {draftBatches > 0 ? ` · ${draftBatches} lote(s) ainda não publicados` : ''}
+      <div className="mt-4 space-y-3">
+        <div className="rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-200">
+          <p className="text-3xl font-bold text-emerald-900">{totalActive}</p>
+          <p className="text-sm text-emerald-800">no banco ativo (disputa)</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-center">
+          <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+            <p className="text-xl font-bold text-slate-900">{approvedLots}</p>
+            <p className="text-xs text-slate-600">lotes publicadas</p>
+          </div>
+          <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+            <p className="text-xl font-bold text-slate-900">{officialRecent}</p>
+            <p className="text-xs text-slate-600">oficiais 2024+</p>
+          </div>
+        </div>
+        <p className="text-xs text-slate-500">
+          {draftLotsQs} em rascunho nos lotes
+          {draftBatches > 0 ? ` · ${draftBatches} lote(s) não publicados` : ''}
         </p>
       </div>
 
@@ -58,7 +80,7 @@ export default async function QuestoesPage() {
         >
           <span className="block text-lg font-bold text-white">Importar lote</span>
           <span className="mt-1 block text-sm text-teal-100">
-            Lotes 01–27 · carregar · publicar todos · limpar antigas
+            Lotes 01–27 · publicar · limpar antigas
           </span>
         </Link>
 
@@ -67,7 +89,9 @@ export default async function QuestoesPage() {
           className="block rounded-2xl bg-teal-700 px-5 py-6 text-center shadow-sm"
         >
           <span className="block text-lg font-bold text-white">Importar prova</span>
-          <span className="mt-1 block text-sm text-teal-100">Prova oficial (se precisar)</span>
+          <span className="mt-1 block text-sm text-teal-100">
+            Oficial ENARE/USP (prefira 2024+)
+          </span>
         </Link>
       </div>
 

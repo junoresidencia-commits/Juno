@@ -279,12 +279,12 @@ export default function ImportarLotePage() {
   async function purgeOldAuthorial() {
     if (
       !window.confirm(
-        'Apagar TUDO que não for dos lotes MedRank 01–27?\n\nOficiais ENARE e sintéticas antigas saem do banco ativo. Só ficam os lotes que você importou.'
+        'Limpar banco?\n\nFICA: lotes MedRank 01–27 + oficiais ENARE/USP/Revalida de 2024 em diante.\nSAI: oficiais antigas (<2024) e questões ruins sem lote.'
       )
     ) {
       return;
     }
-    if (!window.confirm('Confirma: banco ativo = só lotes 01–27?')) {
+    if (!window.confirm('Confirma limpeza: lotes + oficiais 2024+?')) {
       return;
     }
     setBusy(true);
@@ -401,8 +401,8 @@ export default function ImportarLotePage() {
           Só lotes MedRank 01–27 (os que você importou)
         </p>
         <p className="mt-1 text-xs text-teal-900">
-          Carregar → Validar → Confirmar e publicar. Depois use o botão vermelho para tirar as
-          questões antigas ruins do banco ativo.
+          Carregar → Validar → Confirmar e publicar. Depois limpe oficiais antigas (&lt;2024) e
+          lixo sem lote — oficiais 2024+ (ENARE/USP) ficam.
         </p>
         <button
           type="button"
@@ -410,7 +410,7 @@ export default function ImportarLotePage() {
           onClick={() => void purgeOldAuthorial()}
           className="mt-3 rounded-lg bg-red-800 px-4 py-2.5 text-xs font-bold text-white disabled:opacity-50"
         >
-          Apagar antigas — deixar só lotes 01–27
+          Limpar antigas — lotes + oficiais 2024+
         </button>
         <ul className="mt-3 space-y-2">
           {REPO_LOTES.map((lote) => {
