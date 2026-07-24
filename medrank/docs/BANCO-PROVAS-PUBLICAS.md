@@ -72,9 +72,13 @@ Configuração em `app_settings` chave `ai_paid` (padrão `enabled: false`):
 Uso excepcional permitido (quando toggle on): revisar questão sinalizada, gerar explicação
 faltante, classificar temas, corrigir formatação, criar questões só se o banco for insuficiente.
 
-## Fase 2 (depois da estrutura)
+## Fase 2 — banco oficial (parcialmente concluída)
 
-Busca e cadastro em lote das fontes públicas disponíveis — sempre com revisão humana.
+- [x] ENARE + Revalida via Zenodo + HealthQA-BR (CC-BY) → `data/official-residency-questions.json`
+- [x] Seed marca `question_origin=official` e disputa prioriza oficiais
+- [ ] Importação manual de USP/UNIFESP/etc. quando houver liberação oficial
+- Ver `docs/BANCO-OFICIAL-RESIDENCIA.md`
+
 Não automatizar download de PDFs protegidos.
 
 ## Referências internas

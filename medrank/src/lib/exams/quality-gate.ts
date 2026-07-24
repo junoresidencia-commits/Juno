@@ -334,7 +334,15 @@ export async function buildBankOnlyExamSet(
   let polished = 0;
   let rejected = 0;
 
+  const isOfficial = (q: Question) =>
+    q.question_origin === 'official' ||
+    (q.tags ?? []).includes('official') ||
+    (q.tags ?? []).includes('real') ||
+    ['enare', 'revalida'].includes(String(q.source || '').toLowerCase());
+
+  // Oficiais: NÃO polir/reescrever alternativas — manter texto da prova
   const prepared = pool.map((q) => {
+    if (isOfficial(q)) return q;
     if (needsOptionPolish(q)) {
       polished += 1;
       return polishQuestionOptions(q);
@@ -343,6 +351,13 @@ export async function buildBankOnlyExamSet(
   });
 
   const eligible = prepared.filter((q) => {
+    if (isOfficial(q)) {
+      // Gabarito oficial basta; explicação curta ("Gabarito oficial…") é aceitável
+      return (
+        String(q.statement || '').trim().length >= 40 &&
+        Boolean(q.option_a && q.option_b && q.option_c && q.option_d && q.option_e)
+      );
+    }
     const local = evaluateQuestionQualityLocal(q);
     return (
       local.noAbsurdDistractors &&
@@ -366,9 +381,21 @@ export async function buildBankOnlyExamSet(
   const tryAdd = (cand: Question) => {
     if (selected.some((s) => s.id === cand.id)) return false;
     let q = cand;
-    if (needsOptionPolish(q)) {
+    if (!isOfficial(q) && needsOptionPolish(q)) {
       q = polishQuestionOptions(q);
       polished += 1;
+    }
+    if (isOfficial(q)) {
+      selected.push(q);
+      reviews.push({
+        questionId: q.id,
+        severity: 'ok',
+        codes: ['bank_only_official'],
+        message: 'Questao oficial da prova (texto preservado, sem OpenAI)',
+        issues: [],
+        approved: true,
+      });
+      return true;
     }
     const local = evaluateQuestionQualityLocal(q);
     const ok =

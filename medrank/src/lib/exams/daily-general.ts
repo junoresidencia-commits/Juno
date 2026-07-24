@@ -59,6 +59,22 @@ function isResidenciaExpert(q: Question): boolean {
   return tags.includes('banco-expert') && tags.includes('residencia-expert') && !isNephrologyTagged(q);
 }
 
+/** Prova real (ENARE/Revalida/import oficial) — prioridade na disputa. */
+function isOfficialExamQuestion(q: Question): boolean {
+  if (q.question_origin === 'official') return true;
+  const tags = q.tags ?? [];
+  if (tags.includes('official') || tags.includes('real')) return true;
+  const src = String(q.source || '').toLowerCase();
+  return src === 'enare' || src === 'revalida';
+}
+
+/** Expert MedRank curto/óvio — só fallback se faltar prova real. */
+function isWeakSynthetic(q: Question): boolean {
+  if (isOfficialExamQuestion(q)) return false;
+  const stem = String(q.statement || '').trim();
+  return stem.length < 180 || /qual prioridade na 1ª hora\?/i.test(stem);
+}
+
 async function recentGeneralQuestionIds(
   admin: NonNullable<ReturnType<typeof createAdminClient>>,
   beforeDate: string,
@@ -158,10 +174,20 @@ async function pickGeneralQuestions(
   // Só questões aprovadas (importações ficam em pending_review até conferência)
   pool = filterApprovedBank(pool);
 
-  const sound = pool.filter((q) => isStructurallySound(q));
+  // 1) Preferir provas oficiais reais (ENARE/Revalida CC-BY ou import autorizado)
+  const official = pool.filter(isOfficialExamQuestion);
+  if (official.length >= count) {
+    pool = official;
+  } else {
+    // 2) Remover sintéticas fracas/óbvias quando houver alternativas melhores
+    const strong = pool.filter((q) => !isWeakSynthetic(q));
+    if (strong.length >= count) pool = strong;
+  }
+
+  const sound = pool.filter((q) => isOfficialExamQuestion(q) || isStructurallySound(q));
   if (sound.length >= count) pool = sound;
 
-  const prefer = pool.filter(isResidenciaExpert);
+  const prefer = pool.filter((q) => isOfficialExamQuestion(q) || isResidenciaExpert(q));
   if (prefer.length >= count) pool = prefer;
 
   // Prioridade: oficiais > baseadas em prova > originais > diretrizes

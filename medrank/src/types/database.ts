@@ -77,6 +77,21 @@ export interface Question {
   reviewed_by?: string | null;
   import_batch_id?: string | null;
   appears_in_exams?: string[] | null;
+  /** Classificação pedagógica (auditoria do banco). */
+  quality_label?:
+    | 'aprovada'
+    | 'precisa_de_correcao'
+    | 'muito_facil'
+    | 'enunciado_mal_construido'
+    | 'alternativa_ambigua'
+    | 'gabarito_duvidoso'
+    | 'questao_repetida'
+    | 'deve_ser_excluida'
+    | 'anulada'
+    | null;
+  quality_notes?: string | null;
+  quality_reviewed_at?: string | null;
+  quality_reviewed_by?: string | null;
 }
 
 export interface Exam {
