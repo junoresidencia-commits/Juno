@@ -239,7 +239,7 @@ export async function POST(request: Request) {
       ? (await auth.supabase.auth.getUser()).data.user?.id ?? null
       : null;
 
-  const loteCodigo = parsed.loteHint || `lote-${Date.now()}`;
+  const loteCodigo = parsed.loteHint || validItems[0]?.lote_importacao || `lote-${Date.now()}`;
   const { data: batch, error: batchErr } = await admin
     .from('question_import_batches')
     .insert({

@@ -1,0 +1,1990 @@
+{
+  "metadados": {
+    "nome_lote": "MedRank — Lote Autoral 01/2026",
+    "quantidade_questoes": 50,
+    "idioma": "pt-BR",
+    "distribuicao": {
+      "Clínica Médica": 20,
+      "Cirurgia": 10,
+      "Pediatria": 10,
+      "Ginecologia e Obstetrícia": 5,
+      "Medicina Preventiva/Emergência/Mistas": 5
+    },
+    "observacao": "Questões originais para treinamento. Devem passar por revisão médica e editorial antes da publicação. Não são questões oficiais de USP, ENARE ou outras instituições.",
+    "schema_version": "1.0"
+  },
+  "questoes": [
+    {
+      "id_externo": "MR26-CM-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefropatia por IgA",
+      "subtema": "Indicação de biópsia",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 29 anos apresenta dois episódios de hematúria macroscópica associados a infecções de vias aéreas superiores. Fora dos episódios, mantém hematúria microscópica, relação proteína/creatinina urinária de 0,72 g/g, pressão arterial de 126/78 mmHg e TFGe de 96 mL/min/1,73 m². Complemento, FAN, ANCA e sorologias virais são negativos. Qual é a conduta mais adequada para estabelecer o diagnóstico e orientar a estratificação prognóstica?",
+      "alternativas": {
+        "A": "Acompanhar sem biópsia, pois a função renal está preservada.",
+        "B": "Iniciar prednisona empírica e avaliar a resposta da proteinúria.",
+        "C": "Realizar biópsia renal, se não houver contraindicação.",
+        "D": "Solicitar dosagem sérica de IgA e considerar o diagnóstico confirmado se estiver elevada.",
+        "E": "Iniciar micofenolato de mofetila antes da confirmação histológica."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A nefropatia por IgA somente pode ser confirmada por biópsia renal. A KDIGO 2025 recomenda considerar biópsia em adultos com suspeita de nefropatia por IgA e proteinúria igual ou superior a 0,5 g/dia ou equivalente.",
+      "justificativas": {
+        "A": "Incorreta. TFGe normal não exclui risco de progressão quando há proteinúria persistente.",
+        "B": "Incorreta. Imunossupressão não deve ser iniciada sem confirmação diagnóstica e avaliação do risco.",
+        "C": "Correta. A proteinúria persistente acima de 0,5 g/dia justifica considerar biópsia.",
+        "D": "Incorreta. IgA sérica elevada não confirma nefropatia por IgA.",
+        "E": "Incorreta. Micofenolato não é terapia empírica para esse cenário."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of IgA Nephropathy and IgA Vasculitis. Kidney Int. 2025;108(4S):S1-S71.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "IgAN",
+        "biópsia renal",
+        "proteinúria",
+        "hematúria sinfaringítica"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefropatia por IgA",
+      "subtema": "Meta terapêutica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 35 anos com nefropatia por IgA comprovada por biópsia apresenta TFGe de 58 mL/min/1,73 m² e proteinúria de 1,1 g/dia após otimização do bloqueio do sistema renina-angiotensina, controle pressórico e redução de sódio. Em relação à meta de proteinúria proposta pela KDIGO 2025, qual alternativa está correta?",
+      "alternativas": {
+        "A": "A meta é manter proteinúria abaixo de 1,0 g/dia, sem necessidade de redução adicional.",
+        "B": "A meta mínima é inferior a 0,5 g/dia, idealmente inferior a 0,3 g/dia.",
+        "C": "A meta é negativar a hematúria, independentemente da proteinúria.",
+        "D": "A meta é reduzir a proteinúria em pelo menos 10% do valor basal.",
+        "E": "A meta só se aplica quando a TFGe é inferior a 30 mL/min/1,73 m²."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na nefropatia por IgA com risco de progressão, a proteinúria deve ser mantida abaixo de 0,5 g/dia e, idealmente, abaixo de 0,3 g/dia. A meta de longo prazo também inclui aproximar o declínio da TFGe do ritmo fisiológico.",
+      "justificativas": {
+        "A": "Incorreta. Proteinúria persistente de 1 g/dia ainda representa risco relevante.",
+        "B": "Correta. Esse é o alvo explicitado pela KDIGO 2025.",
+        "C": "Incorreta. Hematúria pode ter valor clínico, mas a proteinúria é o biomarcador modificável validado.",
+        "D": "Incorreta. Uma redução relativa pequena não substitui o alvo absoluto.",
+        "E": "Incorreta. O alvo é aplicável antes da doença renal avançada."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of IgA Nephropathy and IgA Vasculitis. Kidney Int. 2025;108(4S):S1-S71.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "IgAN",
+        "meta de proteinúria",
+        "progressão renal"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefropatia por IgA",
+      "subtema": "Sparsentana",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 41 anos com nefropatia por IgA, proteinúria de 1,4 g/dia e TFGe de 52 mL/min/1,73 m² utiliza losartana em dose máxima tolerada. Decide-se iniciar sparsentana, disponível conforme regulamentação local. Qual ajuste é obrigatório?",
+      "alternativas": {
+        "A": "Manter a losartana e associar a sparsentana para bloqueio duplo.",
+        "B": "Suspender a losartana antes de iniciar a sparsentana.",
+        "C": "Associar alisquireno para reduzir a proteinúria residual.",
+        "D": "Suspender qualquer inibidor de SGLT2 que esteja em uso.",
+        "E": "Associar espironolactona obrigatoriamente."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A sparsentana combina antagonismo dos receptores de endotelina e angiotensina. Por já conter ação de bloqueio do sistema renina-angiotensina, não deve ser prescrita simultaneamente com IECA ou BRA.",
+      "justificativas": {
+        "A": "Incorreta. A associação aumenta o risco de hipotensão, hipercalemia e lesão renal sem indicação.",
+        "B": "Correta. O BRA deve ser retirado ao iniciar sparsentana.",
+        "C": "Incorreta. Bloqueio triplo do sistema renina-angiotensina é inadequado.",
+        "D": "Incorreta. A diretriz não exige suspensão automática do inibidor de SGLT2.",
+        "E": "Incorreta. Antagonista mineralocorticoide não é associação obrigatória."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of IgA Nephropathy and IgA Vasculitis. Kidney Int. 2025;108(4S):S1-S71.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "IgAN",
+        "sparsentana",
+        "BRA",
+        "interação medicamentosa"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefropatia por IgA",
+      "subtema": "Glicocorticoide sistêmico",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com nefropatia por IgA apresenta proteinúria persistente de 1,6 g/dia e queda progressiva da TFGe apesar do tratamento de suporte. A formulação de budesonida de liberação direcionada não está disponível. Após avaliação individual, opta-se por glicocorticoide sistêmico em dose reduzida. Qual medida deve fazer parte do planejamento terapêutico?",
+      "alternativas": {
+        "A": "Evitar qualquer profilaxia antimicrobiana para não selecionar resistência.",
+        "B": "Associar profilaxia contra Pneumocystis jirovecii e avaliar profilaxia para reativação de hepatite B.",
+        "C": "Utilizar pulsoterapia mensal como regime padrão obrigatório.",
+        "D": "Manter o glicocorticoide em dose plena por pelo menos 24 meses.",
+        "E": "Associar ciclofosfamida em todos os pacientes."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Quando se usa glicocorticoide sistêmico em nefropatia por IgA, a KDIGO 2025 destaca a necessidade de medidas de redução de toxicidade, incluindo profilaxia contra Pneumocystis e avaliação de profilaxia antiviral em portadores de hepatite B.",
+      "justificativas": {
+        "A": "Incorreta. A imunossupressão aumenta risco de infecções oportunistas.",
+        "B": "Correta. A prevenção infecciosa é parte do regime recomendado.",
+        "C": "Incorreta. Pulsoterapia mensal não é o padrão obrigatório.",
+        "D": "Incorreta. O regime sugerido é limitado e progressivamente reduzido.",
+        "E": "Incorreta. Ciclofosfamida não é indicada rotineiramente na IgAN não rapidamente progressiva."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of IgA Nephropathy and IgA Vasculitis. Kidney Int. 2025;108(4S):S1-S71.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "IgAN",
+        "glicocorticoide",
+        "Pneumocystis",
+        "hepatite B"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefrite lúpica",
+      "subtema": "Indicação de biópsia",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 24 anos com lúpus eritematoso sistêmico apresenta creatinina de 0,8 mg/dL, proteinúria de 760 mg/24 h, hematúria dismórfica e consumo de complemento. Qual é a próxima conduta mais adequada?",
+      "alternativas": {
+        "A": "Observar, pois a creatinina é normal.",
+        "B": "Realizar biópsia renal para classificar a lesão e orientar o tratamento.",
+        "C": "Iniciar apenas hidroxicloroquina e repetir exames em um ano.",
+        "D": "Diagnosticar nefrite classe V pela presença de proteinúria.",
+        "E": "Iniciar ciclofosfamida sem biópsia."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Em paciente com lúpus, proteinúria igual ou superior a aproximadamente 500 mg/dia, sedimento ativo ou alteração da função renal deve levar à consideração de biópsia renal.",
+      "justificativas": {
+        "A": "Incorreta. Creatinina normal não exclui nefrite lúpica relevante.",
+        "B": "Correta. A classe histológica define prognóstico e tratamento.",
+        "C": "Incorreta. A investigação não deve ser postergada.",
+        "D": "Incorreta. A classe não pode ser definida apenas pela quantidade de proteína.",
+        "E": "Incorreta. A histologia deve orientar a imunossupressão quando possível."
+      },
+      "referencia_principal": "KDIGO 2024 Clinical Practice Guideline for the Management of Lupus Nephritis. Kidney Int. 2024;105(Suppl 1S):S1-S69.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "lúpus",
+        "nefrite lúpica",
+        "biópsia renal"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-006",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Nefrologia",
+      "tema": "Diabetes e doença renal crônica",
+      "subtema": "Inibidor de SGLT2",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem de 67 anos com diabetes tipo 2, relação albumina/creatinina urinária de 680 mg/g e TFGe de 24 mL/min/1,73 m² usa losartana na dose máxima tolerada. Não há cetoacidose prévia nem doença aguda. Qual intervenção possui benefício cardiorrenal e ainda pode ser iniciada nesse nível de TFGe?",
+      "alternativas": {
+        "A": "Dapagliflozina ou outro inibidor de SGLT2 apropriado.",
+        "B": "Metformina em dose plena.",
+        "C": "Glibenclamida.",
+        "D": "Pioglitazona como única terapia renal protetora.",
+        "E": "Suspender o bloqueio do sistema renina-angiotensina."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Os Standards of Care da ADA 2026 recomendam iniciar inibidor de SGLT2 em pessoas com diabetes e DRC com TFGe igual ou superior a 20 mL/min/1,73 m², quando não houver contraindicação.",
+      "justificativas": {
+        "A": "Correta. A TFGe de 24 mL/min/1,73 m² ainda permite início para proteção cardiorrenal.",
+        "B": "Incorreta. Metformina não deve ser iniciada em TFGe tão baixa.",
+        "C": "Incorreta. A glibenclamida aumenta risco de hipoglicemia e não confere proteção renal comparável.",
+        "D": "Incorreta. Pioglitazona não substitui terapia cardiorrenal comprovada.",
+        "E": "Incorreta. O bloqueio deve ser mantido se tolerado."
+      },
+      "referencia_principal": "American Diabetes Association. Standards of Care in Diabetes—2026. Section 11: Chronic Kidney Disease and Risk Management. Diabetes Care. 2026;49(Suppl 1).",
+      "instituicao_responsavel": "American Diabetes Association",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "diabetes",
+        "DRC",
+        "SGLT2",
+        "albuminúria"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-007",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Nefrologia",
+      "tema": "Diabetes e doença renal crônica",
+      "subtema": "Finerenona",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 61 anos com diabetes tipo 2, TFGe de 38 mL/min/1,73 m², albuminúria de 510 mg/g e potássio de 4,5 mEq/L permanece albuminúrica apesar de enalapril em dose máxima tolerada e empagliflozina. Qual fármaco pode ser acrescentado para reduzir risco de progressão renal e eventos cardiovasculares, com monitorização do potássio?",
+      "alternativas": {
+        "A": "Finerenona.",
+        "B": "Espironolactona obrigatoriamente em dose alta.",
+        "C": "Alisquireno.",
+        "D": "Acetazolamida.",
+        "E": "Indometacina."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A finerenona, antagonista não esteroidal do receptor mineralocorticoide, é indicada em pacientes selecionados com diabetes tipo 2, DRC albuminúrica, TFGe adequada e potássio normal, apesar de bloqueio do sistema renina-angiotensina.",
+      "justificativas": {
+        "A": "Correta. O caso apresenta perfil típico para consideração de finerenona.",
+        "B": "Incorreta. Espironolactona pode ser usada em outras indicações, mas não é equivalente em evidência e risco de hipercalemia.",
+        "C": "Incorreta. A associação com IECA/BRA não é recomendada.",
+        "D": "Incorreta. Não reduz progressão da DRC diabética.",
+        "E": "Incorreta. AINE pode piorar função renal."
+      },
+      "referencia_principal": "American Diabetes Association. Standards of Care in Diabetes—2026. Section 11: Chronic Kidney Disease and Risk Management. Diabetes Care. 2026;49(Suppl 1).",
+      "instituicao_responsavel": "American Diabetes Association",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "finerenona",
+        "diabetes",
+        "albuminúria",
+        "hipercalemia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-008",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Terapia Intensiva",
+      "tema": "Diabetes no hospital",
+      "subtema": "Meta glicêmica",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente de 58 anos com choque séptico está em ventilação mecânica e recebe insulina intravenosa. Após estabilização inicial, qual faixa glicêmica é recomendada para a maioria dos pacientes criticamente enfermos?",
+      "alternativas": {
+        "A": "60–90 mg/dL.",
+        "B": "80–110 mg/dL.",
+        "C": "100–120 mg/dL.",
+        "D": "140–180 mg/dL.",
+        "E": "200–250 mg/dL."
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "Para a maioria dos pacientes críticos, a ADA 2026 recomenda alvo glicêmico de 140–180 mg/dL, evitando controle excessivamente intensivo e hipoglicemia.",
+      "justificativas": {
+        "A": "Incorreta. Implica elevado risco de hipoglicemia.",
+        "B": "Incorreta. Controle intensivo não é recomendado de rotina.",
+        "C": "Incorreta. Também é mais estrito que o recomendado para a maioria.",
+        "D": "Correta. É a faixa usual para pacientes críticos.",
+        "E": "Incorreta. Hiperglicemia persistente nessa faixa deve ser tratada."
+      },
+      "referencia_principal": "American Diabetes Association. Standards of Care in Diabetes—2026. Section 16: Diabetes Care in the Hospital. Diabetes Care. 2026;49(Suppl 1).",
+      "instituicao_responsavel": "American Diabetes Association",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "UTI",
+        "insulina",
+        "meta glicêmica",
+        "hipoglicemia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-009",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia",
+      "tema": "Asma",
+      "subtema": "Tratamento inicial",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 22 anos apresenta sintomas de asma cerca de duas vezes ao mês, sem despertares noturnos e com espirometria normal entre as crises. Nunca foi hospitalizada. Qual é o tratamento preferencial de alívio e controle segundo a estratégia GINA atual?",
+      "alternativas": {
+        "A": "Salbutamol isolado sob demanda.",
+        "B": "Budesonida-formoterol em baixa dose sob demanda.",
+        "C": "Corticoide oral em dias alternados.",
+        "D": "Tiotrópio isolado diariamente.",
+        "E": "Montelucaste isolado associado a salbutamol sob demanda."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A estratégia preferencial para adultos e adolescentes com sintomas infrequentes é corticoide inalatório-formoterol em baixa dose sob demanda. O uso isolado de SABA não é recomendado por segurança.",
+      "justificativas": {
+        "A": "Incorreta. SABA isolado se associa a maior risco de exacerbações.",
+        "B": "Correta. Oferece alívio rápido e tratamento anti-inflamatório concomitante.",
+        "C": "Incorreta. Corticoide sistêmico não é controle crônico de primeira linha.",
+        "D": "Incorreta. LAMA não é monoterapia inicial.",
+        "E": "Incorreta. É alternativa inferior à estratégia preferencial com ICS-formoterol."
+      },
+      "referencia_principal": "Global Initiative for Asthma. Global Strategy for Asthma Management and Prevention, 2026.",
+      "instituicao_responsavel": "GINA",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "asma leve",
+        "ICS-formoterol",
+        "SABA",
+        "tratamento sob demanda"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-010",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia/Terapia Intensiva",
+      "tema": "DPOC",
+      "subtema": "Exacerbação hipercápnica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 70 anos com DPOC chega com dispneia intensa. Gasometria após tratamento inicial: pH 7,27, PaCO₂ 68 mmHg, PaO₂ 54 mmHg. Está consciente, colaborativo e sem choque. Qual estratégia é mais adequada?",
+      "alternativas": {
+        "A": "Oxigênio em alto fluxo visando saturação de 100% e intubação imediata.",
+        "B": "Ventilação não invasiva e oxigênio titulado para saturação de 88–92%.",
+        "C": "Apenas broncodilatador, pois a hipercapnia é permissiva.",
+        "D": "Bicarbonato intravenoso para corrigir a acidemia.",
+        "E": "Morfina para reduzir o trabalho respiratório."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na exacerbação de DPOC com acidose respiratória e paciente cooperativo, a ventilação não invasiva é a estratégia inicial preferida. O oxigênio deve ser titulado, usualmente para 88–92%, evitando hiperóxia.",
+      "justificativas": {
+        "A": "Incorreta. Hiperóxia pode agravar retenção de CO₂; intubação não é automática se há indicação e possibilidade de VNI.",
+        "B": "Correta. Trata a falência ventilatória e limita hiperóxia.",
+        "C": "Incorreta. A acidose indica insuficiência ventilatória aguda.",
+        "D": "Incorreta. Bicarbonato não corrige a causa respiratória.",
+        "E": "Incorreta. Pode piorar depressão ventilatória."
+      },
+      "referencia_principal": "Global Initiative for Chronic Obstructive Lung Disease. GOLD Report 2026.",
+      "instituicao_responsavel": "GOLD",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "DPOC",
+        "VNI",
+        "hipercapnia",
+        "oxigenoterapia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-011",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia/Emergência",
+      "tema": "Fibrilação atrial",
+      "subtema": "Instabilidade hemodinâmica",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente de 74 anos apresenta fibrilação atrial com resposta ventricular de 170 bpm, dor torácica, edema agudo de pulmão e pressão arterial de 78/46 mmHg. Qual é a intervenção imediata?",
+      "alternativas": {
+        "A": "Metoprolol intravenoso em bolus repetidos.",
+        "B": "Amiodarona oral.",
+        "C": "Cardioversão elétrica sincronizada.",
+        "D": "Digoxina e observação por seis horas.",
+        "E": "Adenosina em bolus."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Taquiarritmia associada a hipotensão, isquemia, alteração de consciência ou insuficiência cardíaca aguda exige cardioversão elétrica sincronizada imediata.",
+      "justificativas": {
+        "A": "Incorreta. Pode agravar hipotensão e retardar a terapia definitiva.",
+        "B": "Incorreta. Via oral é inadequada na instabilidade.",
+        "C": "Correta. É a conduta de escolha.",
+        "D": "Incorreta. Tem início lento e não resolve a instabilidade.",
+        "E": "Incorreta. Adenosina não trata fibrilação atrial."
+      },
+      "referencia_principal": "American Heart Association. 2025 Guidelines for CPR and Emergency Cardiovascular Care: Adult Advanced Life Support.",
+      "instituicao_responsavel": "American Heart Association",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "fibrilação atrial",
+        "cardioversão",
+        "instabilidade"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-012",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Síndrome coronariana aguda",
+      "subtema": "Reperfusão",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem de 56 anos apresenta dor torácica há 90 minutos e supradesnivelamento de ST em parede anterior. O hospital possui hemodinâmica disponível e a angioplastia pode ser iniciada em 70 minutos. Qual estratégia de reperfusão deve ser escolhida?",
+      "alternativas": {
+        "A": "Fibrinólise imediata, pois toda dor com menos de 3 horas deve ser trombolisada.",
+        "B": "Intervenção coronária percutânea primária.",
+        "C": "Aguardar troponina antes de decidir.",
+        "D": "Anticoagulação isolada.",
+        "E": "Teste ergométrico de urgência."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Quando a intervenção coronária percutânea primária pode ser realizada em tempo adequado, ela é preferida à fibrinólise no infarto com supradesnivelamento.",
+      "justificativas": {
+        "A": "Incorreta. A fibrinólise é alternativa quando a angioplastia não pode ser realizada oportunamente.",
+        "B": "Correta. O tempo estimado é compatível com estratégia invasiva primária.",
+        "C": "Incorreta. O ECG e o quadro clínico já indicam reperfusão.",
+        "D": "Incorreta. Não substitui reperfusão.",
+        "E": "Incorreta. É contraindicado no evento agudo."
+      },
+      "referencia_principal": "European Society of Cardiology. 2023 Guidelines for the Management of Acute Coronary Syndromes.",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "IAM com supra",
+        "angioplastia primária",
+        "reperfusão"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-013",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Terapia Intensiva",
+      "tema": "Sepse",
+      "subtema": "Vasopressor",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com pneumonia e choque séptico recebeu cristaloide balanceado e permanece com pressão arterial média de 54 mmHg, lactato de 4,2 mmol/L e sinais de hipoperfusão. Qual vasopressor deve ser iniciado como primeira escolha?",
+      "alternativas": {
+        "A": "Dopamina.",
+        "B": "Noradrenalina.",
+        "C": "Fenilefrina.",
+        "D": "Dobutamina isolada.",
+        "E": "Vasopressina isolada como primeira droga."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A noradrenalina é o vasopressor de primeira linha no choque séptico. Vasopressina pode ser associada quando a dose de noradrenalina aumenta; dobutamina é reservada para disfunção cardíaca com hipoperfusão persistente.",
+      "justificativas": {
+        "A": "Incorreta. Dopamina causa mais arritmias e tem indicações restritas.",
+        "B": "Correta. É o agente inicial preferencial.",
+        "C": "Incorreta. Não é primeira escolha rotineira.",
+        "D": "Incorreta. Inotrópico isolado não corrige vasoplegia.",
+        "E": "Incorreta. Geralmente é adjuvante, não monoterapia inicial."
+      },
+      "referencia_principal": "Surviving Sepsis Campaign. International Guidelines for Management of Sepsis and Septic Shock 2021.",
+      "instituicao_responsavel": "Society of Critical Care Medicine/ESICM",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "sepse",
+        "choque séptico",
+        "noradrenalina"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-014",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia/Emergência",
+      "tema": "Hipercalemia",
+      "subtema": "Estabilização de membrana",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente dialítico apresenta potássio de 7,9 mEq/L, fraqueza e eletrocardiograma com alargamento do QRS e ondas T apiculadas. Qual medida deve ser administrada imediatamente para reduzir o risco de arritmia fatal?",
+      "alternativas": {
+        "A": "Gluconato de cálcio intravenoso.",
+        "B": "Resina trocadora de potássio oral.",
+        "C": "Furosemida oral.",
+        "D": "Bicarbonato oral.",
+        "E": "Restrição dietética de potássio."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Na hipercalemia com alterações eletrocardiográficas, o cálcio intravenoso deve ser administrado imediatamente para estabilizar a membrana miocárdica, enquanto medidas de deslocamento e remoção do potássio são organizadas.",
+      "justificativas": {
+        "A": "Correta. Atua rapidamente na estabilização cardíaca.",
+        "B": "Incorreta. Tem ação lenta e não protege o miocárdio imediatamente.",
+        "C": "Incorreta. Não é medida inicial suficiente e pode ser ineficaz em anúria.",
+        "D": "Incorreta. Via oral não é apropriada e o efeito é incerto.",
+        "E": "Incorreta. É medida preventiva, não tratamento de emergência."
+      },
+      "referencia_principal": "UK Kidney Association. Clinical Practice Guideline: Treatment of Acute Hyperkalaemia in Adults, 2023.",
+      "instituicao_responsavel": "UK Kidney Association",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "hipercalemia",
+        "gluconato de cálcio",
+        "ECG",
+        "diálise"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-015",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia/Emergência",
+      "tema": "Hiponatremia",
+      "subtema": "Sintomas graves",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 63 anos em uso de tiazídico apresenta sódio de 112 mEq/L, crise convulsiva e rebaixamento do nível de consciência. Qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Restrição hídrica isolada.",
+        "B": "Solução salina a 0,9% em infusão lenta por 24 horas.",
+        "C": "Bolus de solução salina hipertônica a 3%, com reavaliação clínica e do sódio.",
+        "D": "Tolvaptana oral imediatamente.",
+        "E": "Correção do sódio até 140 mEq/L nas primeiras seis horas."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Hiponatremia com convulsão ou rebaixamento importante é emergência neurológica. Deve-se usar salina hipertônica em bolus, buscando elevação inicial limitada do sódio suficiente para reverter sintomas e evitando correção excessiva.",
+      "justificativas": {
+        "A": "Incorreta. É insuficiente diante de sintomas graves.",
+        "B": "Incorreta. Pode não elevar o sódio com rapidez suficiente.",
+        "C": "Correta. É a estratégia inicial para sintomas neurológicos graves.",
+        "D": "Incorreta. Vaptanos não são terapia de resgate para convulsão por hiponatremia.",
+        "E": "Incorreta. Correção rápida e ampla aumenta risco de desmielinização osmótica."
+      },
+      "referencia_principal": "European Clinical Practice Guideline on Diagnosis and Treatment of Hyponatraemia. Eur J Endocrinol. 2014;170:G1-G47.",
+      "instituicao_responsavel": "European Society of Endocrinology",
+      "ano_da_diretriz": 2014,
+      "tags": [
+        "hiponatremia",
+        "salina hipertônica",
+        "convulsão"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-016",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Tempestade tireotóxica",
+      "subtema": "Sequência terapêutica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 39 anos com doença de Graves apresenta febre de 40 °C, agitação, fibrilação atrial, insuficiência cardíaca e vômitos. Após suporte inicial e controle adrenérgico, qual sequência farmacológica é correta?",
+      "alternativas": {
+        "A": "Iodo antes do tionamida, seguido de levotiroxina.",
+        "B": "Tionamida, depois iodo após intervalo adequado, além de glicocorticoide.",
+        "C": "Levotiroxina, seguida de propranolol.",
+        "D": "Apenas corticoide e observação.",
+        "E": "Radioiodo como primeira medida na sala de emergência."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na tempestade tireotóxica, utiliza-se betabloqueio quando tolerado, tionamida para bloquear síntese hormonal, iodo administrado depois da tionamida para bloquear liberação e glicocorticoide para reduzir conversão periférica e tratar possível insuficiência adrenal relativa.",
+      "justificativas": {
+        "A": "Incorreta. Iodo antes do bloqueio da síntese pode fornecer substrato para nova produção hormonal.",
+        "B": "Correta. Respeita a sequência fisiopatológica.",
+        "C": "Incorreta. Levotiroxina agravaria o quadro.",
+        "D": "Incorreta. Tratamento multimodal é necessário.",
+        "E": "Incorreta. Radioiodo não tem ação imediata e não é terapia aguda."
+      },
+      "referencia_principal": "American Thyroid Association. 2016 Guidelines for Diagnosis and Management of Hyperthyroidism and Other Causes of Thyrotoxicosis.",
+      "instituicao_responsavel": "American Thyroid Association",
+      "ano_da_diretriz": 2016,
+      "tags": [
+        "tempestade tireotóxica",
+        "tionamida",
+        "iodo",
+        "corticoide"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-017",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Cetoacidose diabética euglicêmica",
+      "subtema": "Inibidor de SGLT2",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 48 anos com diabetes tipo 2 em uso de empagliflozina, após cirurgia, apresenta náuseas, taquipneia e dor abdominal. Glicemia 184 mg/dL, pH 7,18, bicarbonato 10 mEq/L, ânion gap elevado e beta-hidroxibutirato aumentado. Qual é a conduta correta?",
+      "alternativas": {
+        "A": "Excluir cetoacidose porque a glicemia é inferior a 250 mg/dL.",
+        "B": "Tratar com insulina intravenosa, reposição volêmica e glicose conforme necessário, suspendendo o SGLT2.",
+        "C": "Administrar apenas bicarbonato até normalizar o pH.",
+        "D": "Manter a empagliflozina para aumentar a excreção de glicose.",
+        "E": "Usar sulfonilureia e liberar após melhora da náusea."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "O quadro é cetoacidose diabética euglicêmica associada a inibidor de SGLT2. O tratamento exige insulina, fluidos, correção de eletrólitos e oferta de glicose para permitir continuidade da insulina, além da suspensão do fármaco precipitante.",
+      "justificativas": {
+        "A": "Incorreta. A glicemia pode ser normal ou discretamente elevada na CAD euglicêmica.",
+        "B": "Correta. Trata a cetogênese e a depleção volêmica.",
+        "C": "Incorreta. Bicarbonato não substitui insulina e geralmente é reservado para acidemia extrema.",
+        "D": "Incorreta. O medicamento deve ser suspenso.",
+        "E": "Incorreta. Sulfonilureia não trata cetose."
+      },
+      "referencia_principal": "American Diabetes Association. Standards of Care in Diabetes—2026. Sections 9 and 16.",
+      "instituicao_responsavel": "American Diabetes Association",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "CAD euglicêmica",
+        "SGLT2",
+        "ânion gap",
+        "cetose"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-018",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Infecção por enterobactéria produtora de ESBL",
+      "subtema": "Bacteremia",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com pielonefrite complicada evolui com bacteremia por Escherichia coli produtora de ESBL. O antibiograma mostra sensibilidade in vitro a piperacilina-tazobactam, cefepime e meropenem. Está hemodinamicamente estável após ressuscitação. Qual tratamento definitivo é mais apropriado para a bacteremia?",
+      "alternativas": {
+        "A": "Piperacilina-tazobactam.",
+        "B": "Cefepime.",
+        "C": "Meropenem.",
+        "D": "Cefazolina.",
+        "E": "Azitromicina."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Para infecções invasivas e bacteremia por enterobactéria produtora de ESBL, carbapenêmico é a opção preferida. Sensibilidade in vitro a piperacilina-tazobactam ou cefepime não garante equivalência clínica nesse cenário.",
+      "justificativas": {
+        "A": "Incorreta. Não é preferida para bacteremia por ESBL.",
+        "B": "Incorreta. Pode haver falha clínica mesmo com teste de sensibilidade.",
+        "C": "Correta. Carbapenêmico é o tratamento preferencial.",
+        "D": "Incorreta. Não tem atividade confiável contra ESBL.",
+        "E": "Incorreta. Não cobre adequadamente enterobactéria invasiva."
+      },
+      "referencia_principal": "Infectious Diseases Society of America. 2024 Guidance on the Treatment of Antimicrobial-Resistant Gram-Negative Infections.",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "ESBL",
+        "bacteremia",
+        "carbapenêmico",
+        "meropenem"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-019",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia/Reumatologia",
+      "tema": "Vasculite associada a ANCA",
+      "subtema": "Síndrome pulmão-rim",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 58 anos apresenta hemoptise, infiltrados alveolares difusos, queda de hemoglobina, creatinina de 4,1 mg/dL, hematúria glomerular e PR3-ANCA positivo. Biópsia renal mostra glomerulonefrite necrosante pauci-imune. Qual é a estratégia de indução mais adequada?",
+      "alternativas": {
+        "A": "Prednisona isolada em baixa dose.",
+        "B": "Rituximabe ou ciclofosfamida associado a glicocorticoide, com suporte intensivo.",
+        "C": "Micofenolato isolado.",
+        "D": "Azatioprina como indução.",
+        "E": "Apenas plasmaférese, sem imunossupressão."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Doença grave com hemorragia alveolar e glomerulonefrite rapidamente progressiva requer indução com rituximabe ou ciclofosfamida associada a glicocorticoide. Plasmaférese não substitui a imunossupressão e deve ser individualizada.",
+      "justificativas": {
+        "A": "Incorreta. É insuficiente para doença ameaçadora à vida e ao órgão.",
+        "B": "Correta. É a base da indução em vasculite grave.",
+        "C": "Incorreta. Não é preferido para doença grave.",
+        "D": "Incorreta. Azatioprina é mais utilizada em manutenção.",
+        "E": "Incorreta. Plasmaférese isolada não controla a doença autoimune."
+      },
+      "referencia_principal": "KDIGO 2024 Clinical Practice Guideline for the Management of ANCA-Associated Vasculitis. Kidney Int. 2024;105(Suppl):S71-S116.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "ANCA",
+        "hemorragia alveolar",
+        "glomerulonefrite rapidamente progressiva"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CM-020",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Doença renal policística autossômica dominante",
+      "subtema": "Tolvaptana",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 38 anos com doença renal policística autossômica dominante apresenta TFGe de 68 mL/min/1,73 m², classificação de imagem de Mayo 1D e queda documentada da TFGe de 4,2 mL/min/1,73 m² ao ano. Não possui hepatopatia. Qual terapia modificadora da doença deve ser considerada?",
+      "alternativas": {
+        "A": "Tolvaptana.",
+        "B": "Octreotida.",
+        "C": "Micofenolato de mofetila.",
+        "D": "Prednisona.",
+        "E": "Hidroclorotiazida como única terapia modificadora."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Em adulto com DRPAD e sinais de rápida progressão, a tolvaptana pode ser considerada para reduzir a velocidade de crescimento renal e de perda da função, com monitorização hepática e aconselhamento sobre aquarese.",
+      "justificativas": {
+        "A": "Correta. O paciente tem perfil de rápida progressão.",
+        "B": "Incorreta. Não é terapia padrão modificadora da DRPAD.",
+        "C": "Incorreta. Não há indicação imunossupressora.",
+        "D": "Incorreta. Não modifica a doença e causa toxicidade.",
+        "E": "Incorreta. Pode tratar pressão, mas não substitui terapia específica."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Evaluation, Management, and Treatment of Autosomal Dominant Polycystic Kidney Disease.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "DRPAD",
+        "tolvaptana",
+        "Mayo 1D",
+        "progressão rápida"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Apendicite aguda",
+      "subtema": "Tratamento não operatório",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 27 anos apresenta apendicite aguda não complicada confirmada por tomografia. Está estável, sem abscesso e deseja evitar cirurgia. Qual achado torna a estratégia inicial apenas com antibióticos significativamente menos apropriada?",
+      "alternativas": {
+        "A": "Leucocitose de 13.000/mm³.",
+        "B": "Dor com 18 horas de evolução.",
+        "C": "Apendicolito identificado na tomografia.",
+        "D": "Idade inferior a 30 anos.",
+        "E": "Ausência de febre."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O tratamento não operatório pode ser discutido em adultos selecionados com apendicite não complicada, mas a presença de apendicolito aumenta falha, recorrência e complicações, favorecendo apendicectomia.",
+      "justificativas": {
+        "A": "Incorreta. Leucocitose moderada isolada não é contraindicação absoluta.",
+        "B": "Incorreta. A duração descrita não define falha por si só.",
+        "C": "Correta. É um marcador relevante de maior risco no manejo não operatório.",
+        "D": "Incorreta. A idade jovem não impede discussão compartilhada.",
+        "E": "Incorreta. Ausência de febre não muda esse ponto central."
+      },
+      "referencia_principal": "Di Saverio S, et al. Diagnosis and Treatment of Acute Appendicitis: 2020 Update of the WSES Jerusalem Guidelines. World J Emerg Surg. 2020;15:27.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "apendicite",
+        "apendicolito",
+        "antibiótico",
+        "apendicectomia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Colecistite aguda",
+      "subtema": "Momento da cirurgia",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 52 anos, sem choque ou falência orgânica, apresenta colecistite aguda calculosa com 48 horas de sintomas. Qual é a estratégia preferencial?",
+      "alternativas": {
+        "A": "Antibiótico e colecistectomia eletiva após seis meses.",
+        "B": "Colecistectomia laparoscópica precoce durante a mesma internação.",
+        "C": "Colecistostomia percutânea em todos os casos.",
+        "D": "CPRE antes da cirurgia, mesmo sem sinais de coledocolitíase.",
+        "E": "Tratamento clínico definitivo."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na colecistite aguda em paciente operável, a colecistectomia laparoscópica precoce é o tratamento padrão, preferencialmente durante a mesma internação.",
+      "justificativas": {
+        "A": "Incorreta. Adiamento rotineiro aumenta recorrência e novas internações.",
+        "B": "Correta. É a abordagem preferencial.",
+        "C": "Incorreta. Colecistostomia é reservada a pacientes selecionados de alto risco.",
+        "D": "Incorreta. CPRE depende de evidência de obstrução biliar/coledocolitíase.",
+        "E": "Incorreta. Tratamento clínico isolado não é definitivo para a maioria dos operáveis."
+      },
+      "referencia_principal": "Pisano M, et al. 2020 WSES Updated Guidelines for the Diagnosis and Treatment of Acute Calculous Cholecystitis. World J Emerg Surg. 2020;15:61.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "colecistite",
+        "colecistectomia precoce",
+        "laparoscopia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Colecistite aguda",
+      "subtema": "Antibiótico pós-operatório",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente foi submetido a colecistectomia laparoscópica por colecistite aguda não complicada. Houve controle adequado da fonte, sem perfuração, abscesso ou bacteremia. Qual é a conduta em relação ao antibiótico após a cirurgia?",
+      "alternativas": {
+        "A": "Manter por 14 dias.",
+        "B": "Manter até normalizar leucócitos.",
+        "C": "Suspender, pois não é necessário curso pós-operatório prolongado.",
+        "D": "Trocar obrigatoriamente para carbapenêmico.",
+        "E": "Manter profilaxia por 30 dias."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Com controle adequado da fonte em colecistite não complicada, antibiótico pós-operatório prolongado não é necessário.",
+      "justificativas": {
+        "A": "Incorreta. Exposição prolongada aumenta eventos adversos e resistência.",
+        "B": "Incorreta. Leucocitose isolada não justifica duração indefinida.",
+        "C": "Correta. O controle da fonte foi obtido.",
+        "D": "Incorreta. Não há indicação de ampliar espectro.",
+        "E": "Incorreta. Não há benefício."
+      },
+      "referencia_principal": "Sartelli M, et al. Intra-Abdominal Infections Survival Guide: WSES Position Statement. World J Emerg Surg. 2024.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "colecistite",
+        "controle de fonte",
+        "antibiótico"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Pancreatite aguda biliar",
+      "subtema": "Indicação de CPRE",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 63 anos apresenta pancreatite aguda biliar, febre, icterícia, hipotensão e dilatação do colédoco, com bilirrubina em ascensão. Qual intervenção deve ser priorizada após estabilização inicial?",
+      "alternativas": {
+        "A": "CPRE urgente para descompressão biliar.",
+        "B": "Colecistectomia imediata antes de qualquer descompressão.",
+        "C": "Antibiótico profilático e observação por sete dias.",
+        "D": "Punção percutânea do pâncreas.",
+        "E": "Nutrição parenteral total e nenhuma intervenção biliar."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Pancreatite biliar associada a colangite ou obstrução biliar persistente exige CPRE urgente para drenagem. CPRE não é indicada rotineiramente na pancreatite biliar sem esses achados.",
+      "justificativas": {
+        "A": "Correta. O quadro sugere colangite com obstrução.",
+        "B": "Incorreta. A descompressão biliar urgente precede a cirurgia definitiva nesse cenário.",
+        "C": "Incorreta. Antibiótico sem drenagem é insuficiente.",
+        "D": "Incorreta. Não trata a causa obstrutiva.",
+        "E": "Incorreta. Nutrição enteral é preferível quando possível, e há indicação de drenagem."
+      },
+      "referencia_principal": "American College of Gastroenterology. Guideline: Management of Acute Pancreatitis, 2024.",
+      "instituicao_responsavel": "American College of Gastroenterology",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "pancreatite biliar",
+        "colangite",
+        "CPRE"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Pancreatite necrosante",
+      "subtema": "Antibiótico profilático",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com pancreatite aguda grave apresenta necrose pancreática em 40% do parênquima na tomografia, sem gás na coleção, culturas negativas e sem sinais clínicos de infecção. Qual é a conduta em relação a antibióticos?",
+      "alternativas": {
+        "A": "Iniciar meropenem profilático por 14 dias.",
+        "B": "Iniciar vancomicina e piperacilina-tazobactam.",
+        "C": "Não usar antibiótico profilático para necrose estéril.",
+        "D": "Iniciar antifúngico profilático.",
+        "E": "Realizar necrosectomia imediata."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Antibiótico profilático não reduz mortalidade nem infecção em necrose pancreática estéril. Intervenções devem ser reservadas para infecção, complicações ou deterioração selecionada.",
+      "justificativas": {
+        "A": "Incorreta. Carbapenêmico profilático não é recomendado.",
+        "B": "Incorreta. Amplo espectro sem infecção comprovada causa dano.",
+        "C": "Correta. A necrose é estéril no cenário descrito.",
+        "D": "Incorreta. Não há indicação de antifúngico profilático.",
+        "E": "Incorreta. A abordagem step-up e o adiamento são preferidos quando intervenção é necessária."
+      },
+      "referencia_principal": "American College of Gastroenterology. Guideline: Management of Acute Pancreatitis, 2024.",
+      "instituicao_responsavel": "American College of Gastroenterology",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "pancreatite necrosante",
+        "antibiótico",
+        "necrose estéril"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-006",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Trauma",
+      "tema": "Pneumotórax hipertensivo",
+      "subtema": "Conduta imediata",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Vítima de trauma torácico chega com dispneia extrema, hipotensão, turgência jugular, ausência de murmúrio vesicular à direita e desvio traqueal. Qual é a conduta imediata?",
+      "alternativas": {
+        "A": "Aguardar radiografia de tórax.",
+        "B": "Realizar descompressão torácica imediata, seguida de drenagem.",
+        "C": "Solicitar tomografia de tórax.",
+        "D": "Administrar diurético.",
+        "E": "Realizar pericardiocentese."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Pneumotórax hipertensivo é diagnóstico clínico em paciente instável. A descompressão deve ocorrer imediatamente, sem aguardar imagem, seguida de drenagem torácica.",
+      "justificativas": {
+        "A": "Incorreta. O atraso pode ser fatal.",
+        "B": "Correta. Trata a causa obstrutiva imediatamente.",
+        "C": "Incorreta. Tomografia é inadequada na instabilidade.",
+        "D": "Incorreta. Não trata o choque obstrutivo.",
+        "E": "Incorreta. Os achados são mais compatíveis com pneumotórax hipertensivo."
+      },
+      "referencia_principal": "American College of Surgeons. Advanced Trauma Life Support, 11th edition.",
+      "instituicao_responsavel": "American College of Surgeons",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "trauma torácico",
+        "pneumotórax hipertensivo",
+        "descompressão"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-007",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Trauma",
+      "tema": "Trauma esplênico",
+      "subtema": "Manejo não operatório",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 32 anos com trauma abdominal fechado está hemodinamicamente estável após pequena reposição volêmica. Tomografia mostra lesão esplênica grau IV com extravasamento arterial de contraste. Não há peritonite. Qual é a melhor conduta em centro com radiologia intervencionista disponível?",
+      "alternativas": {
+        "A": "Laparotomia e esplenectomia obrigatórias.",
+        "B": "Observação sem monitorização.",
+        "C": "Manejo não operatório com angioembolização e vigilância intensiva.",
+        "D": "Alta com retorno em 48 horas.",
+        "E": "Punção esplênica guiada por ultrassom."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Em paciente estável, mesmo lesões esplênicas de alto grau podem ser tratadas sem cirurgia. Extravasamento arterial favorece angioembolização quando disponível, com monitorização adequada.",
+      "justificativas": {
+        "A": "Incorreta. A estabilidade permite estratégia conservadora selecionada.",
+        "B": "Incorreta. Lesão de alto grau exige vigilância estruturada.",
+        "C": "Correta. Combina preservação esplênica e controle do sangramento arterial.",
+        "D": "Incorreta. Há alto risco de sangramento tardio.",
+        "E": "Incorreta. Não é método terapêutico."
+      },
+      "referencia_principal": "WSES Guidelines on Splenic Trauma in Adult and Pediatric Patients. World J Emerg Surg. 2017;12:40.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "trauma esplênico",
+        "angioembolização",
+        "manejo não operatório"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-008",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Vascular",
+      "tema": "Isquemia mesentérica aguda",
+      "subtema": "Diagnóstico e tratamento",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Idosa de 79 anos com fibrilação atrial sem anticoagulação apresenta dor abdominal súbita intensa, desproporcional ao exame físico, lactato elevado e acidose metabólica. Está sem peritonite, mas com dor persistente. Qual é a melhor sequência de conduta?",
+      "alternativas": {
+        "A": "Colonoscopia e alta se normal.",
+        "B": "Angiotomografia de abdome urgente e avaliação imediata para revascularização/intervenção.",
+        "C": "Ultrassonografia abdominal eletiva.",
+        "D": "Antibiótico oral e observação domiciliar.",
+        "E": "Aguardar aparecimento de peritonite para operar."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A suspeita de isquemia mesentérica aguda exige angiotomografia imediata e acionamento precoce da equipe cirúrgica/vascular. A demora até peritonite aumenta necrose intestinal e mortalidade.",
+      "justificativas": {
+        "A": "Incorreta. Colonoscopia não é exame inicial e pode atrasar tratamento.",
+        "B": "Correta. Permite diagnóstico rápido e planejamento de reperfusão.",
+        "C": "Incorreta. Tem sensibilidade insuficiente para esse cenário.",
+        "D": "Incorreta. É uma emergência vascular.",
+        "E": "Incorreta. Esperar peritonite significa perder a janela de salvamento intestinal."
+      },
+      "referencia_principal": "World Society of Emergency Surgery. Acute Mesenteric Ischemia: Updated Guidelines. World J Emerg Surg. 2022.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "isquemia mesentérica",
+        "angiotomografia",
+        "fibrilação atrial"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-009",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Obstrução intestinal",
+      "subtema": "Sinais de estrangulamento",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com antecedente de laparotomia apresenta obstrução de intestino delgado. Tomografia mostra alça fechada, redução do realce da parede, edema mesentérico e líquido livre. Qual é a conduta mais adequada?",
+      "alternativas": {
+        "A": "Tratamento conservador por 72 horas, independentemente da evolução.",
+        "B": "Laparotomia ou laparoscopia urgente por suspeita de estrangulamento.",
+        "C": "Colonoscopia descompressiva.",
+        "D": "Apenas laxativo osmótico.",
+        "E": "Alta com dieta líquida."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Alça fechada e sinais de hipoperfusão sugerem estrangulamento e isquemia. A cirurgia não deve ser adiada para tentativa prolongada de tratamento conservador.",
+      "justificativas": {
+        "A": "Incorreta. A espera pode resultar em necrose e perfuração.",
+        "B": "Correta. Há sinais radiológicos de isquemia.",
+        "C": "Incorreta. Colonoscopia é útil em situações específicas de obstrução colônica, não nesse quadro.",
+        "D": "Incorreta. Pode piorar distensão e não resolve a causa mecânica.",
+        "E": "Incorreta. Há risco imediato."
+      },
+      "referencia_principal": "Bologna Guidelines for Diagnosis and Management of Adhesive Small Bowel Obstruction. World J Emerg Surg. 2018;13:24.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2018,
+      "tags": [
+        "obstrução intestinal",
+        "alça fechada",
+        "estrangulamento"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-CG-010",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Úlcera péptica perfurada",
+      "subtema": "Controle de fonte",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem de 46 anos apresenta dor epigástrica súbita, rigidez abdominal difusa, taquicardia e pneumoperitônio subdiafragmático. Qual é a estratégia principal?",
+      "alternativas": {
+        "A": "Inibidor de bomba de prótons oral e alta.",
+        "B": "Endoscopia diagnóstica imediata antes de qualquer medida.",
+        "C": "Ressuscitação, antibiótico e tratamento cirúrgico urgente para controle da perfuração.",
+        "D": "Aguardar 24 horas para repetir radiografia.",
+        "E": "Nutrição enteral e observação."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Perfuração de úlcera com peritonite exige ressuscitação, antibiótico e controle cirúrgico urgente da fonte. Tratamento não operatório é excepcional e restrito a casos muito selecionados com perfuração selada e estabilidade.",
+      "justificativas": {
+        "A": "Incorreta. Não trata perfuração e peritonite.",
+        "B": "Incorreta. Pode atrasar o controle da fonte e insuflar o peritônio.",
+        "C": "Correta. É a abordagem padrão.",
+        "D": "Incorreta. A demora aumenta sepse e mortalidade.",
+        "E": "Incorreta. Não há espaço para observação simples."
+      },
+      "referencia_principal": "WSES Guidelines: Perforated and Bleeding Peptic Ulcer. World J Emerg Surg. 2020;15:3.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "úlcera perfurada",
+        "pneumoperitônio",
+        "peritonite"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Pneumologia Pediátrica",
+      "tema": "Bronquiolite viral aguda",
+      "subtema": "Tratamento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Lactente de 5 meses apresenta primeiro episódio de sibilância, coriza, taquipneia leve e saturação de 94% em ar ambiente. Alimenta-se com pequenas pausas, sem apneia ou toxemia. Qual é a conduta mais adequada?",
+      "alternativas": {
+        "A": "Salbutamol nebulizado de horário por sete dias.",
+        "B": "Prednisolona oral.",
+        "C": "Cuidados de suporte, higiene nasal, orientação e reavaliação conforme sinais de alarme.",
+        "D": "Antibiótico de amplo espectro.",
+        "E": "Fisioterapia respiratória obrigatória."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Bronquiolite típica é diagnóstico clínico e o tratamento é predominantemente de suporte. Broncodilatadores, corticoides, antibióticos e fisioterapia não são usados rotineiramente.",
+      "justificativas": {
+        "A": "Incorreta. Broncodilatador não é recomendado de rotina.",
+        "B": "Incorreta. Corticoide sistêmico não melhora desfechos na bronquiolite típica.",
+        "C": "Correta. O lactente não apresenta critério atual de internação ou oxigênio.",
+        "D": "Incorreta. O quadro é viral sem evidência bacteriana.",
+        "E": "Incorreta. Fisioterapia não é rotina."
+      },
+      "referencia_principal": "American Academy of Pediatrics. Clinical Practice Guideline: Diagnosis, Management, and Prevention of Bronchiolitis. Pediatrics. 2014;134:e1474-e1502.",
+      "instituicao_responsavel": "American Academy of Pediatrics",
+      "ano_da_diretriz": 2014,
+      "tags": [
+        "bronquiolite",
+        "lactente",
+        "tratamento de suporte"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Infectologia Pediátrica",
+      "tema": "Lactente febril",
+      "subtema": "Faixa de 8 a 21 dias",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Recém-nascido de 18 dias, nascido a termo, apresenta febre de 38,1 °C aferida em casa. Está ativo e com exame físico sem foco. Qual é a conduta mais adequada?",
+      "alternativas": {
+        "A": "Alta sem exames porque está em bom estado geral.",
+        "B": "Urina tipo I isolada e retorno se piorar.",
+        "C": "Investigação completa para infecção bacteriana invasiva, incluindo culturas e punção lombar, antibiótico parenteral e internação.",
+        "D": "Amoxicilina oral e acompanhamento ambulatorial.",
+        "E": "Solicitar apenas procalcitonina."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Lactentes febris de 8 a 21 dias apresentam risco suficiente para investigação completa, antibiótico parenteral empírico e internação, mesmo quando parecem bem.",
+      "justificativas": {
+        "A": "Incorreta. Aparência clínica isolada não exclui infecção invasiva.",
+        "B": "Incorreta. A avaliação deve ser mais ampla nessa faixa etária.",
+        "C": "Correta. Corresponde à estratégia recomendada.",
+        "D": "Incorreta. Tratamento oral ambulatorial é inadequado.",
+        "E": "Incorreta. Um único biomarcador não substitui culturas e líquor."
+      },
+      "referencia_principal": "American Academy of Pediatrics. Evaluation and Management of Well-Appearing Febrile Infants 8 to 60 Days Old. Pediatrics. 2021;148:e2021052228.",
+      "instituicao_responsavel": "American Academy of Pediatrics",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "lactente febril",
+        "punção lombar",
+        "sepse neonatal"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Neonatologia",
+      "tema": "Reanimação neonatal",
+      "subtema": "Compressões torácicas",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Recém-nascido permanece com frequência cardíaca de 50 bpm após ventilação com pressão positiva efetiva e via aérea otimizada. Qual é o próximo passo?",
+      "alternativas": {
+        "A": "Iniciar compressões na relação 15:2 com ar ambiente.",
+        "B": "Iniciar compressões coordenadas 3:1 com ventilação e aumentar oxigênio para 100%.",
+        "C": "Administrar bicarbonato antes das compressões.",
+        "D": "Apenas observar por mais dois minutos.",
+        "E": "Administrar atropina."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Após ventilação efetiva, frequência cardíaca inferior a 60 bpm indica compressões torácicas coordenadas em relação 3:1 com ventilação. Durante compressões, utiliza-se oxigênio a 100%, titulando após retorno da circulação.",
+      "justificativas": {
+        "A": "Incorreta. A relação neonatal é 3:1, não 15:2.",
+        "B": "Correta. É o algoritmo neonatal atual.",
+        "C": "Incorreta. Não é medida inicial de rotina.",
+        "D": "Incorreta. O atraso reduz chance de recuperação.",
+        "E": "Incorreta. Atropina não faz parte do manejo padrão dessa bradicardia neonatal."
+      },
+      "referencia_principal": "American Heart Association and American Academy of Pediatrics. 2025 Guidelines for Neonatal Resuscitation.",
+      "instituicao_responsavel": "AHA/AAP",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "reanimação neonatal",
+        "compressões",
+        "3:1",
+        "oxigênio"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Nefrologia Pediátrica",
+      "tema": "Síndrome nefrótica",
+      "subtema": "Primeiro episódio",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Menino de 4 anos apresenta edema, albumina de 1,9 g/dL, relação proteína/creatinina urinária de 5,2 g/g, creatinina normal, complemento normal e ausência de hematúria macroscópica ou sinais sistêmicos. Qual é a melhor conduta inicial?",
+      "alternativas": {
+        "A": "Biópsia renal obrigatória antes de qualquer tratamento.",
+        "B": "Prednisona/prednisolona oral em esquema de 8 ou 12 semanas, sem biópsia inicial rotineira.",
+        "C": "Ciclofosfamida como primeira linha.",
+        "D": "Rituximabe antes de testar resposta a corticoide.",
+        "E": "Apenas albumina intravenosa semanal."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "No quadro típico de síndrome nefrótica infantil, a resposta ao corticoide é o principal marcador prognóstico e a biópsia não é necessária de rotina no início. A KDIGO 2025 aceita esquemas totais de 8 ou 12 semanas.",
+      "justificativas": {
+        "A": "Incorreta. Biópsia é reservada a resistência ou apresentação atípica.",
+        "B": "Correta. É o tratamento inicial padrão.",
+        "C": "Incorreta. É agente poupador em situações selecionadas, não primeira linha.",
+        "D": "Incorreta. Rituximabe não precede avaliação de sensibilidade ao corticoide.",
+        "E": "Incorreta. Albumina é medida pontual para indicações específicas, não terapia definitiva."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of Nephrotic Syndrome in Children. Kidney Int. 2025;107(5S):S241-S289.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "síndrome nefrótica infantil",
+        "prednisona",
+        "biópsia renal"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Nefrologia Pediátrica",
+      "tema": "Síndrome nefrótica resistente a esteroide",
+      "subtema": "Segunda linha",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Menina de 7 anos com síndrome nefrótica não alcança remissão após quatro semanas de prednisona diária em dose padrão. Após confirmar adesão e excluir causas secundárias, qual abordagem é mais apropriada?",
+      "alternativas": {
+        "A": "Continuar prednisona isolada indefinidamente.",
+        "B": "Realizar avaliação genética e/ou biópsia conforme o caso e iniciar inibidor de calcineurina como terapia de segunda linha.",
+        "C": "Iniciar azatioprina isolada.",
+        "D": "Administrar antibiótico profilático como tratamento da proteinúria.",
+        "E": "Suspender toda terapia e observar."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na síndrome nefrótica resistente a esteroide, a investigação histológica/genética deve ser considerada, e ciclosporina ou tacrolimo são recomendados como terapia inicial de segunda linha.",
+      "justificativas": {
+        "A": "Incorreta. Exposição prolongada aumenta toxicidade sem benefício.",
+        "B": "Correta. Corresponde à estratégia KDIGO 2025.",
+        "C": "Incorreta. Azatioprina não é a opção preferencial de indução.",
+        "D": "Incorreta. Não trata a podocitopatia.",
+        "E": "Incorreta. Há risco de progressão e complicações."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for the Management of Nephrotic Syndrome in Children. Kidney Int. 2025;107(5S):S241-S289.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "síndrome nefrótica resistente",
+        "tacrolimo",
+        "ciclosporina",
+        "genética"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-006",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Cardiologia Pediátrica",
+      "tema": "Doença de Kawasaki",
+      "subtema": "Tratamento agudo",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Menino de 3 anos apresenta febre há seis dias, conjuntivite bilateral não purulenta, alterações orais, exantema, edema de mãos e linfonodo cervical. Qual é o tratamento inicial para reduzir o risco de aneurisma coronariano?",
+      "alternativas": {
+        "A": "Penicilina benzatina.",
+        "B": "Imunoglobulina intravenosa e ácido acetilsalicílico, com avaliação ecocardiográfica.",
+        "C": "Corticoide inalatório.",
+        "D": "Apenas antitérmico e retorno em 30 dias.",
+        "E": "Heparina plena em todos os casos."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "O tratamento padrão da doença de Kawasaki inclui imunoglobulina intravenosa, idealmente nos primeiros dez dias, associada a ácido acetilsalicílico e avaliação coronariana por ecocardiograma.",
+      "justificativas": {
+        "A": "Incorreta. Não é doença estreptocócica.",
+        "B": "Correta. Reduz risco de complicações coronarianas.",
+        "C": "Incorreta. Não tem papel.",
+        "D": "Incorreta. A demora aumenta risco de aneurisma.",
+        "E": "Incorreta. Anticoagulação é reservada a situações coronarianas específicas."
+      },
+      "referencia_principal": "American Heart Association. Diagnosis, Treatment, and Long-Term Management of Kawasaki Disease: Scientific Statement.",
+      "instituicao_responsavel": "American Heart Association",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "Kawasaki",
+        "IVIG",
+        "aneurisma coronariano"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-007",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Emergência Pediátrica",
+      "tema": "Crupe",
+      "subtema": "Estridor em repouso",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança de 2 anos apresenta tosse metálica, rouquidão e estridor em repouso, com retrações moderadas, mas sem exaustão. Qual é a melhor conduta inicial?",
+      "alternativas": {
+        "A": "Dexametasona e adrenalina nebulizada, com observação após a melhora.",
+        "B": "Salbutamol nebulizado isolado.",
+        "C": "Antibiótico intravenoso em todos os casos.",
+        "D": "Fisioterapia respiratória vigorosa.",
+        "E": "Codeína para suprimir a tosse."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Crupe moderado ou grave deve ser tratado com corticoide e adrenalina nebulizada. A criança precisa ser observada após a adrenalina pelo risco de recorrência dos sintomas.",
+      "justificativas": {
+        "A": "Correta. Combina tratamento anti-inflamatório e alívio rápido da obstrução.",
+        "B": "Incorreta. A obstrução é de via aérea superior.",
+        "C": "Incorreta. Crupe é geralmente viral.",
+        "D": "Incorreta. Pode agitar a criança e piorar obstrução.",
+        "E": "Incorreta. Opioides podem deprimir respiração."
+      },
+      "referencia_principal": "Canadian Paediatric Society. Acute Management of Croup in the Emergency Department, reaffirmed guidance.",
+      "instituicao_responsavel": "Canadian Paediatric Society",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "crupe",
+        "dexametasona",
+        "adrenalina nebulizada"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-008",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Endocrinologia Pediátrica",
+      "tema": "Cetoacidose diabética",
+      "subtema": "Insulina e fluidos",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Adolescente de 13 anos com diabetes tipo 1 apresenta cetoacidose moderada, desidratação e potássio inicial de 4,8 mEq/L. Não está em choque. Qual esquema inicial é mais adequado?",
+      "alternativas": {
+        "A": "Bolus de insulina regular seguido de infusão e restrição de fluidos.",
+        "B": "Cristaloide isotônico, início de insulina intravenosa contínua após a expansão inicial, sem bolus, com reposição de potássio conforme diurese e níveis séricos.",
+        "C": "Bicarbonato para todos os pacientes com pH inferior a 7,30.",
+        "D": "Insulina subcutânea de ação longa como única terapia.",
+        "E": "Suspender líquidos para prevenir edema cerebral."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na CAD pediátrica, utiliza-se reposição volêmica cuidadosa e insulina contínua sem bolus. O potássio deve ser monitorado e reposto conforme função renal e valores, e glicose é adicionada quando a glicemia cai para manter a insulina até resolução da cetose.",
+      "justificativas": {
+        "A": "Incorreta. Bolus de insulina não é recomendado.",
+        "B": "Correta. É a abordagem padrão.",
+        "C": "Incorreta. Bicarbonato é reservado a situações extremas.",
+        "D": "Incorreta. Não controla rapidamente cetogênese e acidose.",
+        "E": "Incorreta. A desidratação precisa ser tratada; o risco é manejado com protocolo adequado."
+      },
+      "referencia_principal": "International Society for Pediatric and Adolescent Diabetes. Clinical Practice Consensus Guidelines: Diabetic Ketoacidosis and Hyperglycemic Hyperosmolar State.",
+      "instituicao_responsavel": "ISPAD",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "CAD pediátrica",
+        "insulina",
+        "potássio",
+        "edema cerebral"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-009",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Neurologia Pediátrica",
+      "tema": "Estado de mal epiléptico",
+      "subtema": "Primeira linha",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança de 6 anos apresenta crise tônico-clônica contínua há sete minutos. Não há acesso venoso imediato. Qual é a melhor terapia de primeira linha?",
+      "alternativas": {
+        "A": "Midazolam intranasal ou intramuscular em dose apropriada.",
+        "B": "Fenitoína oral.",
+        "C": "Carbamazepina oral.",
+        "D": "Haloperidol intramuscular.",
+        "E": "Aguardar 20 minutos antes de medicar."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Benzodiazepínico deve ser administrado precocemente. Na ausência de acesso venoso, midazolam intranasal, bucal ou intramuscular é opção eficaz.",
+      "justificativas": {
+        "A": "Correta. Oferece ação rápida sem necessidade de acesso venoso.",
+        "B": "Incorreta. Via oral é inadequada e não é primeira linha.",
+        "C": "Incorreta. Não é tratamento de resgate.",
+        "D": "Incorreta. Não é anticonvulsivante e pode reduzir limiar convulsivo.",
+        "E": "Incorreta. Crises com cinco minutos ou mais devem ser tratadas como estado de mal."
+      },
+      "referencia_principal": "American Epilepsy Society. Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults. Epilepsy Curr. 2016.",
+      "instituicao_responsavel": "American Epilepsy Society",
+      "ano_da_diretriz": 2016,
+      "tags": [
+        "estado de mal",
+        "midazolam",
+        "benzodiazepínico"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PED-010",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Alergia/Emergência Pediátrica",
+      "tema": "Anafilaxia",
+      "subtema": "Adrenalina intramuscular",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Menino de 9 anos desenvolve urticária difusa, sibilância, vômitos e hipotensão minutos após ingerir amendoim. Qual é a primeira medicação?",
+      "alternativas": {
+        "A": "Adrenalina intramuscular na face anterolateral da coxa.",
+        "B": "Hidrocortisona intravenosa isolada.",
+        "C": "Anti-histamínico oral isolado.",
+        "D": "Salbutamol isolado.",
+        "E": "Adrenalina subcutânea."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Adrenalina intramuscular é a terapia de primeira linha da anafilaxia e não deve ser atrasada por anti-histamínicos, corticoides ou broncodilatadores.",
+      "justificativas": {
+        "A": "Correta. É a via e o local preferenciais.",
+        "B": "Incorreta. Corticoide tem início lento e não reverte choque rapidamente.",
+        "C": "Incorreta. Trata pele, não obstrução de via aérea ou choque.",
+        "D": "Incorreta. Pode ser adjuvante para broncoespasmo, mas não substitui adrenalina.",
+        "E": "Incorreta. A absorção subcutânea é mais lenta e imprevisível."
+      },
+      "referencia_principal": "World Allergy Organization. Anaphylaxis Guidance 2020.",
+      "instituicao_responsavel": "World Allergy Organization",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "anafilaxia",
+        "adrenalina IM",
+        "alergia alimentar"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-GO-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Hemorragia pós-parto",
+      "subtema": "Manejo inicial em pacote",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Puérpera após parto vaginal apresenta sangramento estimado em 900 mL, útero amolecido, taquicardia e queda da pressão arterial. Qual abordagem inicial é mais adequada?",
+      "alternativas": {
+        "A": "Esperar o resultado do hemograma antes de tratar.",
+        "B": "Massagem uterina, uterotônico, ácido tranexâmico precoce, acesso venoso e reposição conforme necessidade, investigando simultaneamente a causa.",
+        "C": "Administrar apenas ferro intravenoso.",
+        "D": "Realizar histerectomia antes de medidas clínicas.",
+        "E": "Usar ácido tranexâmico isolado e aguardar."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A hemorragia pós-parto deve ser reconhecida e tratada precocemente com intervenções simultâneas, não sequenciais: avaliação da causa, uterotônico, ácido tranexâmico, fluidos e escalonamento conforme resposta.",
+      "justificativas": {
+        "A": "Incorreta. O tratamento não pode aguardar exames.",
+        "B": "Correta. Corresponde ao manejo em pacote e à provável atonia uterina.",
+        "C": "Incorreta. Ferro não trata hemorragia aguda.",
+        "D": "Incorreta. Cirurgia radical é reservada à falha de medidas menos invasivas ou hemorragia incontrolável.",
+        "E": "Incorreta. TXA é adjuvante, não substitui uterotônico e ressuscitação."
+      },
+      "referencia_principal": "WHO/FIGO/ICM. Consolidated Guidelines for the Prevention, Diagnosis and Treatment of Postpartum Haemorrhage, 2025.",
+      "instituicao_responsavel": "WHO/FIGO/ICM",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "hemorragia pós-parto",
+        "atonia uterina",
+        "ácido tranexâmico",
+        "oxitocina"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-GO-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Hemorragia pós-parto",
+      "subtema": "Contraindicação de uterotônico",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Puérpera com atonia uterina e hemorragia pós-parto possui asma grave e hipertensão arterial. Após oxitocina, ainda há sangramento. Qual fármaco deve ser evitado por risco de broncoespasmo?",
+      "alternativas": {
+        "A": "Carboprost.",
+        "B": "Ácido tranexâmico.",
+        "C": "Oxitocina.",
+        "D": "Misoprostol.",
+        "E": "Cristaloide balanceado."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Carboprost, análogo da prostaglandina F2-alfa, pode causar broncoespasmo e deve ser evitado em pacientes com asma. A hipertensão também exige cautela com metilergometrina.",
+      "justificativas": {
+        "A": "Correta. É contraindicação clássica em asma.",
+        "B": "Incorreta. Não causa broncoespasmo como efeito principal.",
+        "C": "Incorreta. É uterotônico de primeira linha.",
+        "D": "Incorreta. Pode ser alternativa conforme protocolo.",
+        "E": "Incorreta. É parte da reposição volêmica."
+      },
+      "referencia_principal": "WHO/FIGO/ICM. Consolidated Guidelines for the Prevention, Diagnosis and Treatment of Postpartum Haemorrhage, 2025.",
+      "instituicao_responsavel": "WHO/FIGO/ICM",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "hemorragia pós-parto",
+        "carboprost",
+        "asma",
+        "uterotônico"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-GO-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Pré-eclâmpsia com sinais de gravidade",
+      "subtema": "Momento do parto",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Gestante de 35 semanas apresenta pressão arterial de 172/112 mmHg persistente, cefaleia intensa, escotomas e proteinúria. Feto vivo, sem contraindicação ao parto vaginal. Qual é a conduta?",
+      "alternativas": {
+        "A": "Alta com metildopa e retorno em sete dias.",
+        "B": "Estabilização materna com anti-hipertensivo de ação rápida, sulfato de magnésio e interrupção da gestação.",
+        "C": "Aguardar obrigatoriamente até 39 semanas.",
+        "D": "Administrar apenas corticoide antenatal e observar por duas semanas.",
+        "E": "Iniciar IECA e manter a gestação."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Pré-eclâmpsia com sinais de gravidade após 34 semanas indica estabilização materna, prevenção de eclâmpsia com magnésio e parto. Hipertensão grave aguda exige tratamento rápido.",
+      "justificativas": {
+        "A": "Incorreta. Há risco materno-fetal imediato.",
+        "B": "Correta. Trata a emergência e remove a placenta, origem da doença.",
+        "C": "Incorreta. A presença de gravidade contraindica aguardar.",
+        "D": "Incorreta. Corticoide não deve atrasar parto indicado.",
+        "E": "Incorreta. IECA é contraindicado na gestação."
+      },
+      "referencia_principal": "American College of Obstetricians and Gynecologists. Practice Bulletin: Gestational Hypertension and Preeclampsia.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "pré-eclâmpsia",
+        "sulfato de magnésio",
+        "hipertensão grave",
+        "parto"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-GO-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Ginecologia/Obstetrícia",
+      "tema": "Gestação ectópica",
+      "subtema": "Instabilidade hemodinâmica",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 31 anos, com atraso menstrual e teste de gravidez positivo, apresenta dor abdominal súbita, síncope, pressão de 76/42 mmHg e líquido livre abundante na pelve. Qual é a conduta?",
+      "alternativas": {
+        "A": "Metotrexato intramuscular e alta.",
+        "B": "Repetir beta-hCG em 48 horas.",
+        "C": "Tratamento cirúrgico imediato após ressuscitação inicial.",
+        "D": "Ultrassonografia de controle em uma semana.",
+        "E": "Misoprostol vaginal."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Gestação ectópica rota com instabilidade exige ressuscitação e cirurgia imediata. Metotrexato é reservado a pacientes estáveis e criteriosamente selecionadas.",
+      "justificativas": {
+        "A": "Incorreta. A instabilidade contraindica manejo medicamentoso.",
+        "B": "Incorreta. Não se deve atrasar o controle da hemorragia.",
+        "C": "Correta. É uma emergência hemorrágica.",
+        "D": "Incorreta. A paciente pode morrer durante a espera.",
+        "E": "Incorreta. Não trata implantação ectópica rota."
+      },
+      "referencia_principal": "ACOG Practice Bulletin: Tubal Ectopic Pregnancy.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2018,
+      "tags": [
+        "gestação ectópica",
+        "choque hemorrágico",
+        "cirurgia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-GO-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia/Endocrinologia",
+      "tema": "Diabetes gestacional",
+      "subtema": "Tratamento farmacológico",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Gestante de 29 semanas com diabetes gestacional mantém glicemias de jejum entre 103 e 110 mg/dL apesar de plano alimentar e atividade física adequados. Qual é a terapia farmacológica preferencial?",
+      "alternativas": {
+        "A": "Insulina.",
+        "B": "Inibidor de SGLT2.",
+        "C": "Semaglutida.",
+        "D": "Glibenclamida obrigatoriamente.",
+        "E": "Acarbose como primeira escolha universal."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A insulina permanece o tratamento farmacológico preferencial na gestação quando metas não são alcançadas com mudanças de estilo de vida, por eficácia e ausência de passagem placentária clinicamente relevante.",
+      "justificativas": {
+        "A": "Correta. É a terapia padrão preferida.",
+        "B": "Incorreta. Inibidores de SGLT2 não são recomendados na gestação.",
+        "C": "Incorreta. Agonistas de GLP-1 não são recomendados.",
+        "D": "Incorreta. Não é obrigatória nem preferida universalmente.",
+        "E": "Incorreta. Não é primeira escolha padrão."
+      },
+      "referencia_principal": "American Diabetes Association. Standards of Care in Diabetes—2026. Section 15: Management of Diabetes in Pregnancy.",
+      "instituicao_responsavel": "American Diabetes Association",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "diabetes gestacional",
+        "insulina",
+        "gestação"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PREV-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Epidemiologia",
+      "tema": "Medidas de efeito",
+      "subtema": "Número necessário para tratar",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Em ensaio clínico, um medicamento reduziu a incidência de um desfecho de 10% no grupo controle para 6% no grupo tratado ao longo de dois anos. Qual é o número necessário para tratar para evitar um evento nesse período?",
+      "alternativas": {
+        "A": "4.",
+        "B": "10.",
+        "C": "20.",
+        "D": "25.",
+        "E": "40."
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "A redução absoluta do risco é 10% − 6% = 4%, ou 0,04. O NNT é 1/0,04 = 25.",
+      "justificativas": {
+        "A": "Incorreta. Corresponderia a redução absoluta de 25%.",
+        "B": "Incorreta. Corresponderia a redução absoluta de 10%.",
+        "C": "Incorreta. Corresponderia a redução absoluta de 5%.",
+        "D": "Correta. NNT = 25.",
+        "E": "Incorreta. Corresponderia a redução absoluta de 2,5%."
+      },
+      "referencia_principal": "Conceitos fundamentais de epidemiologia clínica e medicina baseada em evidências.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "NNT",
+        "redução absoluta do risco",
+        "ensaio clínico"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PREV-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Epidemiologia",
+      "tema": "Estudos observacionais",
+      "subtema": "Caso-controle",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Pesquisadores selecionam 400 pessoas com câncer pancreático e 400 sem a doença, investigando retrospectivamente exposição prévia a determinado pesticida. Qual medida de associação é a mais apropriada?",
+      "alternativas": {
+        "A": "Risco relativo calculado diretamente.",
+        "B": "Odds ratio.",
+        "C": "Incidência acumulada.",
+        "D": "Número necessário para tratar.",
+        "E": "Hazard ratio obrigatoriamente."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Em estudo caso-controle, os participantes são selecionados pelo desfecho e não é possível estimar diretamente incidência. A medida clássica de associação é o odds ratio.",
+      "justificativas": {
+        "A": "Incorreta. O risco absoluto não é diretamente estimável pelo desenho.",
+        "B": "Correta. É a medida apropriada.",
+        "C": "Incorreta. A amostra não representa a população sob risco no início.",
+        "D": "Incorreta. Aplica-se a comparação de intervenções.",
+        "E": "Incorreta. Requer análise de tempo até evento, não é obrigatória nesse desenho."
+      },
+      "referencia_principal": "Conceitos fundamentais de epidemiologia clínica.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "caso-controle",
+        "odds ratio",
+        "epidemiologia"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PREV-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Rastreamento",
+      "tema": "Vieses",
+      "subtema": "Lead-time bias",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Após implantação de rastreamento de um câncer, a sobrevida média medida a partir do diagnóstico aumentou de três para cinco anos, mas a mortalidade populacional pela doença permaneceu inalterada. Qual viés explica melhor esse resultado?",
+      "alternativas": {
+        "A": "Viés de memória.",
+        "B": "Viés de aferição.",
+        "C": "Viés de antecipação diagnóstica (lead-time).",
+        "D": "Confusão por indicação.",
+        "E": "Efeito Hawthorne."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O rastreamento antecipa o momento do diagnóstico sem necessariamente adiar a morte. Assim, a sobrevida desde o diagnóstico parece aumentar, embora a mortalidade populacional não se modifique.",
+      "justificativas": {
+        "A": "Incorreta. Relaciona-se à recordação diferencial de exposições.",
+        "B": "Incorreta. Não é o mecanismo principal descrito.",
+        "C": "Correta. É a definição de lead-time bias.",
+        "D": "Incorreta. Ocorre em comparações terapêuticas influenciadas pela indicação.",
+        "E": "Incorreta. Refere-se à mudança de comportamento por observação."
+      },
+      "referencia_principal": "Conceitos fundamentais de avaliação de programas de rastreamento.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "rastreamento",
+        "lead-time bias",
+        "mortalidade"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PREV-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Infectologia/Saúde Pública",
+      "tema": "Profilaxia pós-exposição ao HIV",
+      "subtema": "Janela de início",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Profissional de saúde sofre acidente percutâneo com agulha oca utilizada em paciente com HIV e carga viral detectável. Procura atendimento duas horas depois. Qual é a conduta correta em relação à PEP?",
+      "alternativas": {
+        "A": "Aguardar o teste do profissional tornar-se positivo.",
+        "B": "Iniciar o mais rapidamente possível, no máximo até 72 horas, e manter por 28 dias.",
+        "C": "Iniciar somente após sete dias.",
+        "D": "Usar apenas uma dose de antirretroviral.",
+        "E": "Não indicar PEP em acidente ocupacional."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A PEP é uma medida de urgência. Deve ser iniciada o mais cedo possível, até 72 horas após exposição de risco, e o esquema é mantido por 28 dias.",
+      "justificativas": {
+        "A": "Incorreta. A PEP deve prevenir a infecção antes da soroconversão.",
+        "B": "Correta. Corresponde ao PCDT brasileiro.",
+        "C": "Incorreta. Após 72 horas, a eficácia esperada é insuficiente para indicação rotineira.",
+        "D": "Incorreta. O esquema completo dura 28 dias.",
+        "E": "Incorreta. Acidente percutâneo é indicação clássica quando há risco relevante."
+      },
+      "referencia_principal": "Ministério da Saúde do Brasil. Protocolo Clínico e Diretrizes Terapêuticas para Profilaxia Pós-Exposição de Risco à Infecção pelo HIV, IST e Hepatites Virais.",
+      "instituicao_responsavel": "Ministério da Saúde",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "PEP",
+        "HIV",
+        "acidente ocupacional",
+        "72 horas"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-PREV-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_01",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Toxicologia/Emergência",
+      "tema": "Intoxicação por organofosforado",
+      "subtema": "Antídotos",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Trabalhador rural chega com miose, broncorreia intensa, bradicardia, fasciculações e sudorese após exposição a inseticida. Qual é o tratamento específico mais adequado?",
+      "alternativas": {
+        "A": "Naloxona.",
+        "B": "Atropina titulada até controle das secreções e pralidoxima precoce.",
+        "C": "Flumazenil.",
+        "D": "Azul de metileno.",
+        "E": "Bicarbonato de sódio isolado."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A síndrome colinérgica por organofosforado é tratada com atropina em doses repetidas, guiada principalmente pela secagem das secreções e melhora ventilatória, associada a pralidoxima precoce para reativar a acetilcolinesterase antes do envelhecimento da ligação.",
+      "justificativas": {
+        "A": "Incorreta. É antídoto para opioides.",
+        "B": "Correta. Trata manifestações muscarínicas e a inibição enzimática.",
+        "C": "Incorreta. É antídoto para benzodiazepínicos em situações selecionadas.",
+        "D": "Incorreta. É usado em meta-hemoglobinemia.",
+        "E": "Incorreta. Não é tratamento específico."
+      },
+      "referencia_principal": "World Health Organization and standard toxicology guidance on organophosphate poisoning.",
+      "instituicao_responsavel": "WHO/Referência toxicológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "organofosforado",
+        "atropina",
+        "pralidoxima",
+        "síndrome colinérgica"
+      ],
+      "data_criacao": "2026-07-24",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento, elaborada com base em diretrizes atuais. Não corresponde a questão oficial de prova."
+    }
+  ]
+}

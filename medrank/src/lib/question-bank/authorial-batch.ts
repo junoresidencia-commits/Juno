@@ -52,18 +52,26 @@ const KIND_MAP: Record<string, AuthorialQuestionKind> = {
   '1': 'official_residency',
   oficial: 'official_residency',
   official: 'official_residency',
+  questao_oficial_de_prova_de_residencia: 'official_residency',
+  'questão_oficial_de_prova_de_residência': 'official_residency',
   authorial_guideline: 'authorial_guideline',
   '2': 'authorial_guideline',
   autoral_diretriz: 'authorial_guideline',
   guideline: 'authorial_guideline',
+  questao_autoral_baseada_em_diretriz: 'authorial_guideline',
+  'questão_autoral_baseada_em_diretriz': 'authorial_guideline',
   authorial_prediction: 'authorial_prediction',
   '3': 'authorial_prediction',
   autoral_previsao: 'authorial_prediction',
   prediction: 'authorial_prediction',
+  questao_autoral_de_previsao_para_residencia: 'authorial_prediction',
+  'questão_autoral_de_previsão_para_residência': 'authorial_prediction',
   in_review: 'in_review',
   '4': 'in_review',
   revisao: 'in_review',
   em_revisao: 'in_review',
+  questao_em_revisao: 'in_review',
+  'questão_em_revisão': 'in_review',
 };
 
 const DIFF_MAP: Record<string, Difficulty> = {
@@ -72,6 +80,8 @@ const DIFF_MAP: Record<string, Difficulty> = {
   easy: 'facil',
   medio: 'medio',
   médio: 'medio',
+  media: 'medio',
+  média: 'medio',
   medium: 'medio',
   dificil: 'dificil',
   difícil: 'dificil',
@@ -92,8 +102,52 @@ function asStr(v: unknown): string {
 }
 
 function normalizeKind(raw: string): AuthorialQuestionKind | null {
-  const key = raw.trim().toLowerCase().replace(/\s+/g, '_');
+  const key = raw
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '_');
+  // match with and without accents in map keys
+  for (const [k, v] of Object.entries(KIND_MAP)) {
+    const nk = k
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '_');
+    if (nk === key) return v;
+  }
   return KIND_MAP[key] || KIND_MAP[raw.trim()] || null;
+}
+
+/** Aceita alternativas/justificativas aninhadas do lote MedRank. */
+function flattenAuthorialRow(row: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...row };
+  const alts = row.alternativas;
+  if (alts && typeof alts === 'object' && !Array.isArray(alts)) {
+    const a = alts as Record<string, unknown>;
+    out.alternativa_A = a.A ?? a.a ?? out.alternativa_A;
+    out.alternativa_B = a.B ?? a.b ?? out.alternativa_B;
+    out.alternativa_C = a.C ?? a.c ?? out.alternativa_C;
+    out.alternativa_D = a.D ?? a.d ?? out.alternativa_D;
+    out.alternativa_E = a.E ?? a.e ?? out.alternativa_E;
+  }
+  const just = row.justificativas;
+  if (just && typeof just === 'object' && !Array.isArray(just)) {
+    const j = just as Record<string, unknown>;
+    out.justificativa_da_alternativa_A = j.A ?? j.a ?? out.justificativa_da_alternativa_A;
+    out.justificativa_da_alternativa_B = j.B ?? j.b ?? out.justificativa_da_alternativa_B;
+    out.justificativa_da_alternativa_C = j.C ?? j.c ?? out.justificativa_da_alternativa_C;
+    out.justificativa_da_alternativa_D = j.D ?? j.d ?? out.justificativa_da_alternativa_D;
+    out.justificativa_da_alternativa_E = j.E ?? j.e ?? out.justificativa_da_alternativa_E;
+  }
+  if (out.instituicao_responsavel && !out.instituicao_responsavel_pela_diretriz) {
+    out.instituicao_responsavel_pela_diretriz = out.instituicao_responsavel;
+  }
+  if (out.versao != null && out.versao_da_questao == null) {
+    out.versao_da_questao = String(out.versao);
+  }
+  return out;
 }
 
 function parseTags(v: unknown): string[] {
@@ -122,18 +176,33 @@ export function parseAuthorialBatchJson(raw: string): {
     return { items: [], issues: [{ index: -1, severity: 'error', code: 'json', message: 'JSON inválido' }], loteHint: null };
   }
 
+  const obj = data as {
+    questions?: unknown[];
+    questoes?: unknown[];
+    itens?: unknown[];
+    metadados?: { nome_lote?: string };
+  };
   const list = Array.isArray(data)
     ? data
-    : Array.isArray((data as { questions?: unknown[] })?.questions)
-      ? (data as { questions: unknown[] }).questions
-      : Array.isArray((data as { itens?: unknown[] })?.itens)
-        ? (data as { itens: unknown[] }).itens
-        : null;
+    : Array.isArray(obj.questions)
+      ? obj.questions
+      : Array.isArray(obj.questoes)
+        ? obj.questoes
+        : Array.isArray(obj.itens)
+          ? obj.itens
+          : null;
 
   if (!list) {
     return {
       items: [],
-      issues: [{ index: -1, severity: 'error', code: 'shape', message: 'JSON deve ser array ou { questions: [] }' }],
+      issues: [
+        {
+          index: -1,
+          severity: 'error',
+          code: 'shape',
+          message: 'JSON deve ser array ou { questions|questoes: [] }',
+        },
+      ],
       loteHint: null,
     };
   }
@@ -142,13 +211,18 @@ export function parseAuthorialBatchJson(raw: string): {
   let loteHint: string | null = null;
 
   for (let i = 0; i < list.length; i++) {
-    const row = list[i] as Record<string, unknown>;
+    const row = flattenAuthorialRow(list[i] as Record<string, unknown>);
     const parsed = mapAuthorialRow(row, i);
     if (parsed.item) {
       items.push(parsed.item);
       loteHint = loteHint || parsed.item.lote_importacao;
     }
     issues.push(...parsed.issues);
+  }
+
+  // nome amigável do metadados só como fallback se o arquivo não trouxer lote_importacao
+  if (!loteHint && typeof obj?.metadados?.nome_lote === 'string') {
+    loteHint = obj.metadados.nome_lote;
   }
 
   return { items, issues, loteHint };
@@ -341,8 +415,12 @@ function mapAuthorialRow(
   const hasError = issues.some((x) => x.severity === 'error' && x.index === index);
   if (hasError || !kind) return { item: null, issues };
 
-  const diffRaw = asStr(pick(row, 'nivel_dificuldade', 'dificuldade', 'difficulty')).toLowerCase();
+  const diffRaw = asStr(pick(row, 'nivel_dificuldade', 'dificuldade', 'difficulty'))
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   const yearRaw = pick(row, 'ano_da_diretriz', 'guideline_year', 'ano');
+  const diffKey = diffRaw.replace(/\s+/g, '');
 
   const item: AuthorialBatchItem = {
     id_externo: idExterno,
@@ -352,7 +430,7 @@ function mapAuthorialRow(
     area: asStr(pick(row, 'area', 'área')) || null,
     tema: asStr(pick(row, 'tema', 'topic')) || null,
     subtema: asStr(pick(row, 'subtema', 'subtopic')) || null,
-    nivel_dificuldade: DIFF_MAP[diffRaw] || null,
+    nivel_dificuldade: DIFF_MAP[diffRaw] || DIFF_MAP[diffKey] || null,
     enunciado,
     alternativa_A: A,
     alternativa_B: B,
@@ -374,13 +452,20 @@ function mapAuthorialRow(
     referencia_principal: referencia,
     instituicao_responsavel_pela_diretriz:
       asStr(
-        pick(row, 'instituicao_responsavel_pela_diretriz', 'guideline_institution', 'instituicao')
+        pick(
+          row,
+          'instituicao_responsavel_pela_diretriz',
+          'instituicao_responsavel',
+          'guideline_institution',
+          'instituicao'
+        )
       ) || null,
     ano_da_diretriz: yearRaw != null && String(yearRaw).trim() !== '' ? Number(yearRaw) : null,
     tags: parseTags(pick(row, 'tags')),
     data_criacao: asStr(pick(row, 'data_criacao', 'created_at')) || null,
     status: asStr(pick(row, 'status')) || 'rascunho',
     versao_da_questao: asStr(pick(row, 'versao_da_questao', 'version', 'versao')) || '1',
+    // aviso do arquivo é preservado nas tags quando presente
     statement_fingerprint: statementFingerprint(enunciado),
   };
 
