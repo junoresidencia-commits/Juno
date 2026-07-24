@@ -87,8 +87,12 @@ function buildContext(
 /**
  * Resolve disputas diárias a partir dos tracks que o admin ligou no aluno.
  * Grupos continuam para ranking interno — sem liberar Nefro sozinhos.
+ * Passe `knownTracks` para evitar 2ª leitura de profiles (home mais rápida).
  */
-export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
+export async function resolveUserExamAudience(
+  userId: string,
+  knownTracks?: unknown
+): Promise<UserExamContext> {
   if (usesDemoStore()) {
     const { getDemoGroupsForUser } = await import('@/lib/groups/demo');
     const { readDemoStore } = await import('@/lib/demo-store');
@@ -100,7 +104,8 @@ export async function resolveUserExamAudience(userId: string): Promise<UserExamC
     }));
     const student = readDemoStore().students.find((s) => s.id === userId);
     const tracks = normalizeTracks(
-      (student as { enabled_tracks?: string[] } | undefined)?.enabled_tracks
+      knownTracks ??
+        (student as { enabled_tracks?: string[] } | undefined)?.enabled_tracks
     );
     return buildContext(tracks, groups);
   }
@@ -110,15 +115,17 @@ export async function resolveUserExamAudience(userId: string): Promise<UserExamC
     return buildContext(['general'], []);
   }
 
-  const { data: profile } = await admin
-    .from('profiles')
-    .select('enabled_tracks')
-    .eq('id', userId)
-    .maybeSingle();
-
-  const tracks = normalizeTracks(
-    (profile as { enabled_tracks?: string[] } | null)?.enabled_tracks
-  );
+  let tracks = normalizeTracks(knownTracks);
+  if (knownTracks === undefined) {
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('enabled_tracks')
+      .eq('id', userId)
+      .maybeSingle();
+    tracks = normalizeTracks(
+      (profile as { enabled_tracks?: string[] } | null)?.enabled_tracks
+    );
+  }
 
   const { data } = await admin
     .from('study_group_members')

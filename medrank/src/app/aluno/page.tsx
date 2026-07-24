@@ -4,7 +4,6 @@ import { requireAuth } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData } from '@/lib/demo/presenters';
 import { ensureDemoSeedUsers } from '@/lib/demo/seed-users';
-import { mapRankingPreviewRows } from '@/components/ranking/RankingPreviewList';
 import { AlunoHomeSimple, type HomeDisputeCard } from '@/components/aluno/AlunoHomeSimple';
 import {
   canStudentSeeTodayRanking,
@@ -45,8 +44,6 @@ async function loadDisputeCard(
         .maybeSingle()
     : { data: null };
 
-  // Tentativa aberta com janela ainda aberta = permitir continuar (não zerar por refresh).
-  // Só auto-envia quando o prazo do dia já passou.
   if (attempt && !attempt.finished_at && windowPhase === 'after') {
     await supabase.rpc('submit_attempt', {
       p_attempt_id: attempt.id,
@@ -60,10 +57,10 @@ async function loadDisputeCard(
     attempt = refreshed;
   }
 
-      const trackLabel =
-        audience === 'nephrology'
-          ? shortTrackLabel(trackForDate(today), today)
-          : 'Residência Geral';
+  const trackLabel =
+    audience === 'nephrology'
+      ? shortTrackLabel(trackForDate(today), today)
+      : 'Residência Geral';
 
   const inProgress = Boolean(exam && attempt && !attempt.finished_at && windowPhase === 'open');
 
@@ -89,7 +86,11 @@ export default async function AlunoDashboard() {
   if (!session.profile.active) redirect('/login?blocked=1');
 
   const today = todayDateStringBrazil();
-  const ctx = await resolveUserExamAudience(session.userId);
+  // Reusa tracks do profile da sessão — evita query extra
+  const ctx = await resolveUserExamAudience(
+    session.userId,
+    session.profile.enabled_tracks
+  );
   const showNephrologyTreino = await canAccessNephrologyTreino(
     session.userId,
     session.profile
@@ -98,7 +99,7 @@ export default async function AlunoDashboard() {
   if (usesDemoStore()) {
     ensureDemoSeedUsers();
     const { userId } = session;
-    const { todayExam, attempt, todayRankings, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
+    const { todayExam, attempt, windowPhase, showRanking, rankingDate, finishedToday, streakDays } =
       getDemoDashboardData(userId);
 
     const canStart = Boolean(todayExam && windowPhase === 'open' && !attempt);
@@ -132,7 +133,7 @@ export default async function AlunoDashboard() {
           },
         ]}
         showRanking={showRanking}
-        todayRankings={todayRankings}
+        todayRankings={[]}
         rankingDate={rankingDate}
         finishedToday={finishedToday}
         streakDays={streakDays}
@@ -145,10 +146,10 @@ export default async function AlunoDashboard() {
   const supabase = await createClient();
   const userId = session.userId;
 
-  const disputes: HomeDisputeCard[] = [];
-  for (const audience of ctx.audiences) {
-    disputes.push(await loadDisputeCard(supabase, userId, today, audience));
-  }
+  // Paralelo: mais rápido que serial
+  const disputes = await Promise.all(
+    ctx.audiences.map((audience) => loadDisputeCard(supabase, userId, today, audience))
+  );
 
   const rankingDate = getTodayRankingDate();
   const primary = disputes[0] ?? null;
@@ -158,26 +159,14 @@ export default async function AlunoDashboard() {
     canStudentSeeTodayRanking(primary?.exam ?? null, hasFinishedAny) &&
     Boolean(ctx.rankingGroupId);
 
-  let todayRankings = null;
-  if (showRanking && ctx.rankingGroupId) {
-    const { data } = await supabase
-      .from('study_group_rankings')
-      .select('id, position, total_score, user_id, profiles(name)')
-      .eq('group_id', ctx.rankingGroupId)
-      .eq('period_type', 'daily')
-      .eq('period_start', rankingDate)
-      .order('position', { ascending: true })
-      .limit(15);
-    todayRankings = data;
-  }
-
+  // Ranking completo fica em /aluno/ranking — home só indica status (menos carga)
   return (
     <AlunoHomeSimple
       name={session.profile.name ?? 'Aluno'}
       userId={userId}
       disputes={disputes}
       showRanking={showRanking}
-      todayRankings={mapRankingPreviewRows(todayRankings)}
+      todayRankings={[]}
       rankingDate={rankingDate}
       rankingGroupName={ctx.rankingGroupName ?? undefined}
       showNephrologyTreino={showNephrologyTreino}

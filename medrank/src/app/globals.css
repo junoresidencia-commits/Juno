@@ -34,6 +34,14 @@
 
 /* Readable text on every white surface (mobile dark-mode was washing out labels) */
 @layer components {
+  .aluno-shell {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(15, 118, 110, 0.12), transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, rgba(19, 78, 74, 0.08), transparent 50%),
+      linear-gradient(180deg, #f3f7f5 0%, #eef3f1 40%, #f8faf9 100%);
+    color: #0f172a;
+  }
+
   .surface-card {
     @apply rounded-xl bg-white text-slate-900 shadow-sm ring-1 ring-slate-200;
   }
