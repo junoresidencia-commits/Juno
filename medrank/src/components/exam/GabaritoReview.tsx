@@ -2,6 +2,7 @@
 
 import type { Question, OptionLetter } from '@/types/database';
 import { formatQuestionExplanation } from '@/lib/question-bank/quality';
+import { formatStudentSourceLabel } from '@/lib/question-bank/presentation';
 
 export type GabaritoRow = {
   id: string;
@@ -19,6 +20,7 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
           const q = a.questions;
           const unanswered = !a.selected_option;
           const wrong = a.selected_option && !a.is_correct;
+          const attribution = formatStudentSourceLabel(q);
 
           return (
             <div
@@ -69,6 +71,9 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
                 <strong className="text-slate-900">Comentário:</strong>
                 <p className="mt-1 whitespace-pre-wrap">{formatQuestionExplanation(q)}</p>
               </div>
+              {attribution && (
+                <p className="mt-3 text-xs font-medium text-slate-600">{attribution}</p>
+              )}
             </div>
           );
         })}

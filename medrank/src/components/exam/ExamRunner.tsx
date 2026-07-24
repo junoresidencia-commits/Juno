@@ -9,6 +9,7 @@ import { formatDuration } from '@/lib/format';
 import { useExamAntiFraud } from '@/hooks/useExamAntiFraud';
 import { ExamTerminatedOverlay } from '@/components/exam/ExamTerminatedOverlay';
 import type { ViolationType } from '@/lib/exams/anti-fraud';
+import { formatStudentSourceLabel } from '@/lib/question-bank/presentation';
 
 interface ExamQuestion extends Question {
   order_number: number;
@@ -398,6 +399,11 @@ export function ExamRunner({
         {current.image_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={current.image_url} alt="Imagem da questão" className="mt-4 max-h-64 rounded-lg" />
+        )}
+        {formatStudentSourceLabel(current) && (
+          <p className="exam-no-select mt-4 text-xs font-medium text-slate-500">
+            {formatStudentSourceLabel(current)}
+          </p>
         )}
       </div>
 
