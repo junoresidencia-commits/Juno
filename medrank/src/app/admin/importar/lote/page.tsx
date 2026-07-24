@@ -15,7 +15,21 @@ const REPO_LOTES = [
   'MEDRANK_AUTORAL_2026_LOTE_09',
   'MEDRANK_AUTORAL_2026_LOTE_10',
   'MEDRANK_AUTORAL_2026_LOTE_11',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_12',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_13',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_14',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_15',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_16',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_17',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_18',
+  'MEDRANK_NEFRO_NEFROPED_2026_LOTE_19',
 ] as const;
+
+function loteLabel(lote: string): string {
+  return lote
+    .replace('MEDRANK_AUTORAL_2026_', '')
+    .replace('MEDRANK_NEFRO_NEFROPED_2026_', 'NEFRO_');
+}
 
 type PreviewRow = {
   index: number;
@@ -119,9 +133,9 @@ export default function ImportarLotePage() {
       const text = await res.text();
       setFormat('json');
       setContent(text);
-      setTitle(`MedRank — ${loteCodigo.replace('MEDRANK_AUTORAL_2026_', '')}`);
+      setTitle(`MedRank — ${loteLabel(loteCodigo)}`);
       setLoadedLote(loteCodigo);
-      setMsg(`Lote ${loteCodigo} carregado. Clique em Validar e prévia.`);
+      setMsg(`Lote ${loteLabel(loteCodigo)} carregado. Clique em Validar e prévia.`);
     } catch {
       setErr('Falha ao carregar o lote do app.');
     } finally {
@@ -181,31 +195,51 @@ export default function ImportarLotePage() {
       </p>
 
       <div className="mt-4 rounded-xl bg-teal-50 p-4 ring-1 ring-teal-200">
-        <p className="text-sm font-semibold text-teal-950">Lotes prontos no app (50 questões cada)</p>
-        <p className="mt-1 text-xs text-teal-900">
-          Toque no lote → Validar e prévia → Confirmar importação. Um por vez.
+        <p className="text-sm font-semibold text-teal-950">
+          Lotes autorais prontos (JSON) — 50 questões cada
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <p className="mt-1 text-xs text-teal-900">
+          <strong>Carregar aqui</strong> ou <strong>Baixar JSON</strong> + Escolher arquivo. Depois:
+          Validar → Confirmar. Um por vez. Autoral (rascunho), não ENARE.
+        </p>
+        <ul className="mt-3 space-y-2">
           {REPO_LOTES.map((lote) => {
-            const label = lote.replace('MEDRANK_AUTORAL_2026_', '');
+            const label = loteLabel(lote);
+            const href = `/templates/${lote}.json`;
             const active = loadedLote === lote;
+            const nefro = lote.includes('NEFRO');
             return (
-              <button
+              <li
                 key={lote}
-                type="button"
-                disabled={busy}
-                onClick={() => void loadRepoLote(lote)}
-                className={`rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${
-                  active
-                    ? 'bg-teal-800 text-white'
-                    : 'bg-white text-teal-900 ring-1 ring-teal-300'
-                }`}
+                className="flex flex-wrap items-center gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-teal-200"
               >
-                {label}
-              </button>
+                <span className="min-w-[6.5rem] text-xs font-bold text-teal-950">
+                  {label}
+                  {nefro ? (
+                    <span className="ml-1 font-medium text-teal-700">nefro</span>
+                  ) : null}
+                </span>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void loadRepoLote(lote)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50 ${
+                    active ? 'bg-teal-900' : 'bg-teal-700'
+                  }`}
+                >
+                  Carregar aqui
+                </button>
+                <a
+                  href={href}
+                  download={`${lote}.json`}
+                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-teal-900 ring-1 ring-teal-300"
+                >
+                  Baixar JSON
+                </a>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
 
       <div className="mt-6 space-y-3 rounded-xl bg-white p-5 ring-1 ring-slate-200">
