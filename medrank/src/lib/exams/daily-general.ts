@@ -174,7 +174,29 @@ async function pickGeneralQuestions(
   // Só questões aprovadas (importações ficam em pending_review até conferência)
   pool = filterApprovedBank(pool);
 
-  // 1) Preferir provas oficiais reais (ENARE/Revalida CC-BY ou import autorizado)
+  // Preferir lotes MedRank (01–27) se houver volume suficiente
+  const fromLots = pool.filter((q) => {
+    const c = String((q as { lote_importacao?: string | null }).lote_importacao || '');
+    return (
+      c.startsWith('MEDRANK_AUTORAL_2026_LOTE_') ||
+      c.startsWith('MEDRANK_NEFRO_NEFROPED_2026_LOTE_') ||
+      c.startsWith('MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_')
+    );
+  });
+  if (fromLots.length >= count) {
+    pool = fromLots;
+  }
+
+  // Oficiais só 2024+ (ENARE/Revalida/USP recentes); antigas ficam de fora
+  const recentOfficial = pool.filter(
+    (q) => isOfficialExamQuestion(q) && typeof q.year === 'number' && q.year >= 2024
+  );
+  const nonOfficial = pool.filter((q) => !isOfficialExamQuestion(q));
+  if (recentOfficial.length + nonOfficial.length >= count) {
+    pool = [...recentOfficial, ...nonOfficial];
+  }
+
+  // 1) Preferir oficiais recentes se der volume
   const official = pool.filter(isOfficialExamQuestion);
   if (official.length >= count) {
     pool = official;

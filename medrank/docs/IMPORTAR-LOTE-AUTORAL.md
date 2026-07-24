@@ -14,11 +14,16 @@
 
 | Arquivo | Qs | Notas |
 |---------|----|-------|
-| `MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20.json` … `_27.json` | 50×8 | **Ativos** — diretrizes atuais (400 Qs) |
+| `MEDRANK_AUTORAL_2026_LOTE_01` … `_11` | 50×11 | Multiespecialidades |
+| `MEDRANK_NEFRO_NEFROPED_2026_LOTE_12` … `_19` | 50×8 | Nefro / nefropediatria |
+| `MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20` … `_27` | 50×8 | Diretrizes atuais |
 
-Lotes 01–19 foram retirados da UI. Para limpar o banco: botão **Apagar autorais antigos** ou SQL `035_purge_old_authorial_keep_diretrizes.sql`.
+**Banco ativo = lotes MedRank 01–27 + oficiais ENARE/Revalida/USP com year ≥ 2024.**  
+Oficiais &lt;2024 e sintéticas sem lote saem. Limpar: botão **Limpar antigas** ou SQL `docs/BANCO-SO-LOTES-MEDRANK.sql`.
 
-Importar **um arquivo por vez** na UI. Ou use **Confirmar e publicar TODOS** / **Publicar TODOS agora**.
+Nota: o pacote CC-BY atual traz ENARE/Revalida; USP só entra via **Importar prova** com autorização.
+
+Importar um a um ou **Confirmar e publicar TODOS** / **Publicar TODOS agora**.
 
 ## Tipos (`tipo_da_questao`)
 
