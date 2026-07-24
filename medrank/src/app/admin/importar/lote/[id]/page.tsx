@@ -99,7 +99,10 @@ export default function RevisarLotePage() {
       });
       const data = await res.json();
       if (!res.ok) setErr(data.error);
-      else setMsg(data.message);
+      else
+        setMsg(
+          `${data.message || 'Publicado.'} Próximo: Provas → Forçar regenerar (banco).`
+        );
       await load();
     } finally {
       setBusy(false);
@@ -118,12 +121,20 @@ export default function RevisarLotePage() {
         {batch?.lote_codigo} · {batch?.status} · {questions.length} questões
       </p>
 
+      <div className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-950 ring-1 ring-amber-200">
+        <p className="font-bold">Depois de importar: publique o lote.</p>
+        <p className="mt-1">
+          Rascunho não entra na disputa. Toque em <strong>Publicar lote inteiro</strong>, depois vá
+          em Provas → Forçar regenerar (banco).
+        </p>
+      </div>
+
       <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
           disabled={busy}
           onClick={() => void publishBatch()}
-          className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white"
+          className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white"
         >
           Publicar lote inteiro
         </button>
