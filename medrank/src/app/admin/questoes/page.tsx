@@ -1,140 +1,84 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
-import { getDemoQuestions } from '@/lib/demo/content';
-import { SeedQuestionBankButton } from '@/components/admin/SeedQuestionBankButton';
-import { RebuildOfficialBankButton } from '@/components/admin/RebuildOfficialBankButton';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function QuestoesPage() {
   await requireRole('admin');
 
-  let questions:
-    | {
-        id: string;
-        statement: string;
-        source: string | null;
-        year: number | null;
-        institution?: string | null;
-        bank_status?: string | null;
-      }[]
-    | null = null;
-  let totalCount = 0;
   let activeOfficial = 0;
+  let authorialApproved = 0;
+  let draftLots = 0;
 
-  if (usesDemoStore()) {
-    const demo = getDemoQuestions();
-    questions = demo.slice(0, 120);
-    totalCount = demo.length;
-    activeOfficial = demo.length;
-  } else {
+  if (!usesDemoStore()) {
     const admin = createAdminClient();
     const client = admin ?? (await createClient());
-    const [{ data }, countRes, officialRes] = await Promise.all([
-      client
-        .from('questions')
-        .select('id, statement, source, year, institution, bank_status')
-        .eq('bank_status', 'approved')
-        .eq('question_origin', 'official')
-        .order('year', { ascending: false })
-        .limit(100),
-      client.from('questions').select('*', { count: 'exact', head: true }),
+    const [officialRes, authorialRes, draftsRes] = await Promise.all([
       client
         .from('questions')
         .select('*', { count: 'exact', head: true })
         .eq('bank_status', 'approved')
         .eq('question_origin', 'official'),
+      client
+        .from('questions')
+        .select('*', { count: 'exact', head: true })
+        .eq('bank_status', 'approved')
+        .in('question_kind', ['authorial_guideline', 'authorial_prediction']),
+      client
+        .from('question_import_batches')
+        .select('*', { count: 'exact', head: true })
+        .eq('batch_kind', 'authorial')
+        .in('status', ['draft', 'pending_review', 'partially_approved']),
     ]);
-    questions = data;
-    totalCount = countRes.count ?? data?.length ?? 0;
     activeOfficial = officialRes.count ?? 0;
+    authorialApproved = authorialRes.count ?? 0;
+    draftLots = draftsRes.count ?? 0;
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
-            ← Painel
-          </Link>
-          <h1 className="mt-2 text-2xl font-bold text-slate-900">Banco de questões</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            {activeOfficial} oficiais ativas · {totalCount} registros totais (inclui arquivo/suspensas)
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/admin/importar/lote"
-            className="rounded-lg bg-teal-800 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-900"
-          >
-            Importar lote (JSON)
-          </Link>
-          <Link
-            href="/admin/importar/prova"
-            className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-          >
-            Importar prova
-          </Link>
-          <Link
-            href="/admin/questoes/revisao"
-            className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
-          >
-            Revisão de importação
-          </Link>
-          <Link
-            href="/admin/questoes/comentarios"
-            className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
-          >
-            Fila de comentários
-          </Link>
-          <Link
-            href="/admin/questoes/nova"
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-          >
-            Nova questão
-          </Link>
-          <Link
-            href="/admin/questoes/auditoria"
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
-          >
-            Auditoria do banco
-          </Link>
-        </div>
+    <div className="mx-auto max-w-lg px-4 py-8">
+      <Link href="/admin" className="text-sm text-emerald-700 hover:underline">
+        ← Painel
+      </Link>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Questões</h1>
+      <p className="mt-2 text-sm text-slate-600">
+        A disputa sorteia do banco (oficiais + lotes publicados). Escolha só o que quer
+        importar:
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        {activeOfficial} oficiais · {authorialApproved} autorais publicadas
+        {draftLots > 0 ? ` · ${draftLots} lote(s) em rascunho` : ''}
+      </p>
+
+      <div className="mt-8 space-y-4">
+        <Link
+          href="/admin/importar/lote"
+          className="block rounded-2xl bg-teal-800 px-5 py-6 text-center shadow-sm"
+        >
+          <span className="block text-lg font-bold text-white">Importar lote</span>
+          <span className="mt-1 block text-sm text-teal-100">
+            JSON dos lotes 20–27 · carregar / baixar / publicar todos
+          </span>
+        </Link>
+
+        <Link
+          href="/admin/importar/prova"
+          className="block rounded-2xl bg-teal-700 px-5 py-6 text-center shadow-sm"
+        >
+          <span className="block text-lg font-bold text-white">Importar prova</span>
+          <span className="mt-1 block text-sm text-teal-100">
+            Prova oficial (texto/JSON) com autorização
+          </span>
+        </Link>
       </div>
 
-      {!usesDemoStore() ? (
-        <div className="mb-6 space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-sm text-emerald-950">
-            Banco ativo = <strong>somente provas oficiais públicas</strong> (ENARE/Revalida CC-BY,
-            2020–2026). Sem IA. USP/UNIFESP/etc. só via Importar prova com autorização. Ver{' '}
-            docs/REFAZER-BANCO-OFICIAL.md.
-          </p>
-          <RebuildOfficialBankButton />
-          <SeedQuestionBankButton />
-          <p className="text-xs text-emerald-900">
-            Depois do rebuild: Auditoria → Provas → Forçar regenerar (banco).
-          </p>
-        </div>
-      ) : null}
-
-      <div className="space-y-3">
-        {(questions ?? []).map((q) => (
-          <div key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="line-clamp-2 text-sm text-slate-900">{q.statement}</p>
-            <p className="mt-2 text-xs text-slate-500">
-              {[q.institution || q.source, q.year, q.bank_status].filter(Boolean).join(' · ')}
-              {' · '}
-              <Link href={`/admin/questoes/${q.id}`} className="text-emerald-700 underline">
-                auditar
-              </Link>
-            </p>
-          </div>
-        ))}
-        {(questions ?? []).length === 0 ? (
-          <p className="text-sm text-slate-500">Nenhuma questão ainda.</p>
-        ) : null}
-      </div>
+      <p className="mt-8 text-center text-sm text-slate-500">
+        Depois de publicar lotes →{' '}
+        <Link href="/admin/provas" className="font-semibold text-emerald-700 underline">
+          Provas → Forçar regenerar
+        </Link>
+      </p>
     </div>
   );
 }
