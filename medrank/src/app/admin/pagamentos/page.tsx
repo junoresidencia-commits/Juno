@@ -118,9 +118,8 @@ export default async function PagamentosPage({
       </section>
 
       <p className="mt-8 text-xs text-slate-500">
-        Fluxo sem gateway automático: confira o PIX no extrato do banco e use{' '}
-        <strong>Liberar acesso</strong> em Alunos. Depois use <strong>Renovar mês</strong> a cada
-        pagamento.
+        Pagou → Liberar / Renovar (+30 dias). Não pagou ou venceu → conta bloqueada no login e
+        pelo cron diário. Confira o PIX no extrato do banco antes de liberar.
       </p>
     </div>
   );

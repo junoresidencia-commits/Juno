@@ -56,7 +56,8 @@ export function GeneratePaidInviteForm() {
       <h2 className="font-semibold text-slate-900">Gerar link de pagamento</h2>
       <p className="mt-1 text-sm text-slate-600">
         O aluno abre o link, cria e-mail/senha, vê o PIX de {formatPriceBrl()}/mês. A conta só
-        libera depois que você confirmar o pagamento.
+        libera depois que você confirmar o pagamento. Sem renovar no mês seguinte, a conta
+        bloqueia sozinha.
       </p>
       <form onSubmit={(e) => void submit(e)} className="mt-4 space-y-3">
         <div>

@@ -10,15 +10,28 @@ function StudentStatus({
   active,
   approvedAt,
   leagueAdmin,
+  subscriptionExpiresAt,
 }: {
   active: boolean;
   approvedAt: string | null;
   leagueAdmin?: boolean;
+  subscriptionExpiresAt?: string | null;
 }) {
+  const expired =
+    Boolean(subscriptionExpiresAt) &&
+    new Date(subscriptionExpiresAt as string).getTime() < Date.now();
+
   if (!active && !approvedAt) {
     return (
       <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-        Aguardando PIX
+        Aguardando 1º PIX
+      </span>
+    );
+  }
+  if (expired || (!active && approvedAt)) {
+    return (
+      <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+        {expired ? 'Mês vencido — renovar' : 'Bloqueado'}
       </span>
     );
   }
@@ -114,7 +127,15 @@ export default async function AlunosPage({
   }
 
   const pending = students.filter((s) => !s.active && !s.approved_at);
-  const others = students.filter((s) => s.active || s.approved_at);
+  const expired = students.filter(
+    (s) =>
+      s.approved_at &&
+      s.subscription_expires_at &&
+      new Date(s.subscription_expires_at).getTime() < Date.now()
+  );
+  const others = students.filter(
+    (s) => (s.active || s.approved_at) && !expired.some((e) => e.id === s.id)
+  );
   const activeCount = students.filter((s) => s.active).length;
 
   const initialSuccess =
@@ -162,6 +183,7 @@ export default async function AlunosPage({
                     active={s.active}
                     approvedAt={s.approved_at}
                     leagueAdmin={s.league_admin}
+                    subscriptionExpiresAt={s.subscription_expires_at}
                   />
                   <StudentActions
                     studentId={s.id}
@@ -177,14 +199,55 @@ export default async function AlunosPage({
         </section>
       )}
 
+      {expired.length > 0 && (
+        <section className="mt-8">
+          <h2 className="font-semibold text-red-800">
+            Assinatura vencida — precisa renovar ({expired.length})
+          </h2>
+          <p className="mt-1 text-sm text-red-900/80">
+            Conta bloqueada automaticamente. Confirme o PIX do mês e toque em Renovar mês.
+          </p>
+          <div className="mt-4 space-y-3">
+            {expired.map((s) => (
+              <div
+                key={s.id}
+                className="flex flex-col gap-3 rounded-xl border border-red-200 bg-red-50 p-4 sm:flex-row sm:items-start sm:justify-between"
+              >
+                <div>
+                  <p className="font-medium">{s.name}</p>
+                  <p className="text-sm text-slate-600">{s.email}</p>
+                  <div className="mt-2">
+                    <StudentStatus
+                      active={s.active}
+                      approvedAt={s.approved_at}
+                      leagueAdmin={s.league_admin}
+                      subscriptionExpiresAt={s.subscription_expires_at}
+                    />
+                  </div>
+                </div>
+                <StudentActions
+                  studentId={s.id}
+                  name={s.name}
+                  active={s.active}
+                  pending={false}
+                  leagueAdmin={s.league_admin}
+                  enabledTracks={s.enabled_tracks as import('@/lib/tracks/config').AppTrackId[]}
+                  subscriptionExpiresAt={s.subscription_expires_at}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="mt-8">
         <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
         <p className="mt-1 text-sm text-slate-600">
           Em cada aluno, ligue ou desligue os módulos (Nefrologia, Residência, RM…). Isso define
-          quais disputas e treinos aparecem para ele.
+          quais disputas e treinos aparecem para ele. Todo mês: confirmar PIX → Renovar.
         </p>
         <div className="mt-4 space-y-3">
-          {others.length === 0 && pending.length === 0 ? (
+          {others.length === 0 && pending.length === 0 && expired.length === 0 ? (
             <p className="text-slate-600">Nenhum aluno ainda. Crie o primeiro login acima.</p>
           ) : (
             others.map((s) => (
@@ -200,6 +263,7 @@ export default async function AlunosPage({
                       active={s.active}
                       approvedAt={s.approved_at}
                       leagueAdmin={s.league_admin}
+                      subscriptionExpiresAt={s.subscription_expires_at}
                     />
                   </div>
                 </div>
