@@ -21,10 +21,15 @@ import {
   DAILY_EXAM_DURATION_MINUTES,
   DAILY_EXAM_HORIZON_DAYS,
   DAILY_EXAM_QUESTION_COUNT,
+  nephrologyPlanForDate,
   titleForDailyTrack,
   trackForDate,
   type DailyExamTrack,
 } from '@/lib/exams/daily-schedule';
+import {
+  NEFROLOGIA_AVANCADA_TRACK,
+  NEFROPEDIATRIA_TRACK,
+} from '@/lib/treino/config';
 
 export {
   shortTrackLabel,
@@ -228,9 +233,60 @@ export async function ensureDailyNephrologyExam(
   let selected: Question[] = [];
   let builtMeta: Awaited<ReturnType<typeof buildAiApprovedExamSet>>;
   const mode = opts?.mode ?? 'bank';
+  const plan = nephrologyPlanForDate(dateStr);
   try {
-    builtMeta = await pickTrackQuestions(admin, track, DAILY_EXAM_QUESTION_COUNT, dateStr, mode);
-    selected = builtMeta.questions;
+    if (plan.mode === 'mixed') {
+      const adult = await pickTrackQuestions(
+        admin,
+        NEFROLOGIA_AVANCADA_TRACK,
+        plan.adultCount,
+        dateStr,
+        mode
+      );
+      const ped = await pickTrackQuestions(
+        admin,
+        NEFROPEDIATRIA_TRACK,
+        plan.pediatricCount,
+        dateStr,
+        mode
+      );
+      const merged = [...adult.questions, ...ped.questions];
+      // Embaralha ordem final para não ficar bloco adulto/ped previsível
+      for (let i = merged.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [merged[i], merged[j]] = [merged[j], merged[i]];
+      }
+      builtMeta = {
+        questions: merged,
+        reviews: [...(adult.reviews ?? []), ...(ped.reviews ?? [])],
+        replaced: (adult.replaced ?? 0) + (ped.replaced ?? 0),
+        polished: (adult.polished ?? 0) + (ped.polished ?? 0),
+        secondPassNotes: [adult.secondPassNotes, ped.secondPassNotes]
+          .filter(Boolean)
+          .join(' · '),
+        progress: {
+          poolSize: (adult.progress?.poolSize ?? 0) + (ped.progress?.poolSize ?? 0),
+          selected: merged.length,
+          approved:
+            (adult.progress?.approved ?? 0) + (ped.progress?.approved ?? 0),
+          rejected:
+            (adult.progress?.rejected ?? 0) + (ped.progress?.rejected ?? 0),
+          target: DAILY_EXAM_QUESTION_COUNT,
+        },
+      };
+      selected = merged;
+    } else {
+      const onlyTrack =
+        plan.mode === 'pediatric' ? NEFROPEDIATRIA_TRACK : NEFROLOGIA_AVANCADA_TRACK;
+      builtMeta = await pickTrackQuestions(
+        admin,
+        onlyTrack,
+        DAILY_EXAM_QUESTION_COUNT,
+        dateStr,
+        mode
+      );
+      selected = builtMeta.questions;
+    }
   } catch (err) {
     return {
       date: dateStr,

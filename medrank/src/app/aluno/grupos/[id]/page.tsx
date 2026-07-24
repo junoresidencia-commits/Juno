@@ -14,6 +14,8 @@ import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 import { CHALLENGE_TYPE_LABELS } from '@/lib/challenges';
 import { DeleteOwnGroupButton } from '@/components/aluno/DeleteOwnGroupButton';
+import { GroupJoinRequestsPanel } from '@/components/aluno/GroupJoinRequestsPanel';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function AlunoGrupoDetailPage({
   params,
@@ -110,7 +112,8 @@ export default async function AlunoGrupoDetailPage({
   const today = todayDateStringBrazil();
   const bounds = getPeriodBounds(period, new Date(`${today}T12:00:00`));
 
-  const [{ data: rankings }, { data: challenges }] = await Promise.all([
+  const admin = createAdminClient();
+  const [{ data: rankings }, { data: challenges }, joinRequestsRes] = await Promise.all([
     supabase
       .from('study_group_rankings')
       .select('id, user_id, position, total_score, profiles(name)')
@@ -125,9 +128,23 @@ export default async function AlunoGrupoDetailPage({
       .eq('active', true)
       .order('created_at', { ascending: false })
       .limit(8),
+    isCreator && admin
+      ? admin
+          .from('study_group_join_requests')
+          .select('id, user_id, created_at, profiles(name, email)')
+          .eq('group_id', id)
+          .eq('status', 'pending')
+          .order('created_at', { ascending: true })
+      : Promise.resolve({ data: [] as { id: string; user_id: string; created_at: string; profiles: unknown }[] }),
   ]);
 
   const mineRow = (rankings ?? []).find((r) => r.user_id === userId);
+  const joinRequests = (joinRequestsRes.data ?? []).map((r) => ({
+    id: r.id,
+    user_id: r.user_id,
+    created_at: r.created_at,
+    profiles: r.profiles as { name?: string; email?: string } | null,
+  }));
 
   return (
     <div className="mx-auto w-full px-4 py-6 md:px-6">
@@ -143,6 +160,12 @@ export default async function AlunoGrupoDetailPage({
           <DeleteOwnGroupButton groupId={id} groupName={group.name} />
         ) : null}
       </div>
+
+      {isCreator && joinRequests.length > 0 ? (
+        <div className="mt-4">
+          <GroupJoinRequestsPanel groupId={id} initialRequests={joinRequests} />
+        </div>
+      ) : null}
 
       <RankingPeriodNav
         basePath={`/aluno/grupos/${id}`}

@@ -262,3 +262,32 @@ export interface StudyGroupRanking {
   total_time_seconds: number;
   position: number | null;
 }
+
+export interface StudyGroupJoinRequest {
+  id: string;
+  group_id: string;
+  user_id: string;
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  message?: string | null;
+  created_at: string;
+  resolved_at?: string | null;
+  resolved_by?: string | null;
+}
+
+export interface StudyGroupCollectiveRanking {
+  id: string;
+  group_id: string;
+  period_type: 'weekly' | 'monthly';
+  period_start: string;
+  period_end: string;
+  active_members: number;
+  exams_completed: number;
+  exams_expected: number;
+  average_percentage: number;
+  average_score_per_member: number;
+  participation_rate: number;
+  regularity_score: number;
+  collective_score: number;
+  average_time_seconds: number;
+  position: number | null;
+}

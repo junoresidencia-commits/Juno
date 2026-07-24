@@ -1,32 +1,25 @@
 # Grupos MedRank
 
-## Link do PR
-https://github.com/junoresidencia-commits/Juno/pull/18
+## Organização definitiva
+Ver **[ORGANIZACAO-ALUNOS-GRUPOS-PROVAS.md](./ORGANIZACAO-ALUNOS-GRUPOS-PROVAS.md)** — Residência Geral padrão, Nefrologia exclusiva, solicitação de entrada e disputa entre grupos.
 
 ## Ativar em produção
-Siga o checklist completo: **[PASSO-A-PASSO-GRUPOS.md](./PASSO-A-PASSO-GRUPOS.md)**
-
-Resumo:
-1. Merge do PR #18
-2. Deploy Vercel
-3. Rodar `supabase/migrations/019_study_groups.sql` no Supabase
-4. Admin → Grupos → criar → adicionar membros
+1. Deploy desta branch
+2. Rodar no Supabase SQL: `supabase/migrations/037_organizacao_grupos_coletivo.sql`
+3. Admin → Alunos: Residência Geral já vem ligada; Nefrologia só sob autorização
+4. Admin → Grupos: aceitar solicitações ou adicionar direto
 
 ## O que é
-Grupos personalizados (ligas, turmas, cohorts) com:
-- membros (um aluno pode estar em vários grupos);
-- ranking interno diário / semanal / mensal;
-- desafios exclusivos do grupo.
+- **Grupos sociais/equipes** (faculdade, turma, liga, hospital, amigos): ranking interno + disputa coletiva semanal/mensal
+- **Permissão de Nefrologia**: módulo exclusivo — não é liberada por entrar em grupo social
 
 ## Tabelas
-- `study_groups`
-- `study_group_members`
-- `study_group_rankings`
-- `weekly_challenges.group_id` (null = desafio global)
+- `study_groups` / `study_group_members` / `study_group_rankings`
+- `study_group_join_requests` (solicitação → aprovação)
+- `study_group_collective_rankings` / `study_group_collective_winners`
 
-## Uso
-**Professor:** Admin → Grupos → criar → adicionar alunos → ver ranking → criar desafio do grupo.
-
-**Aluno:** Menu Grupos → abrir o grupo → ranking (Diário/Semanal/Mensal) e desafios.
-
-Rankings de grupo são recalculados automaticamente ao finalizar uma disputa e ao adicionar/remover membros.
+## Fluxo do aluno
+1. Já tem Residência Geral ao ser cadastrado
+2. Grupos → Solicitar entrada → admin aceita
+3. Ranking do grupo + Ranking entre grupos
+4. Nefrologia só se o admin ligar o módulo

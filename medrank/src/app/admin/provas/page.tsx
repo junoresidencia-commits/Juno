@@ -15,7 +15,7 @@ import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 export default async function ProvasPage() {
   await requireRole('admin');
   const today = todayDateString();
-  const todayTrack = shortTrackLabel(trackForDate(today));
+  const todayTrack = shortTrackLabel(trackForDate(today), today);
 
   if (usesDemoStore()) {
     const exams = getDemoExams().slice().reverse();

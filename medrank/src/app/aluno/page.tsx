@@ -58,10 +58,10 @@ async function loadDisputeCard(
     attempt = refreshed;
   }
 
-  const trackLabel =
-    audience === 'nephrology'
-      ? shortTrackLabel(trackForDate(today))
-      : 'Residência (USP/ENARE)';
+      const trackLabel =
+        audience === 'nephrology'
+          ? shortTrackLabel(trackForDate(today), today)
+          : 'Residência Geral';
 
   const inProgress = Boolean(exam && attempt && !attempt.finished_at && windowPhase === 'open');
 
@@ -117,8 +117,8 @@ export default async function AlunoDashboard() {
             exam: todayExam,
             trackLabel:
               ctx.audience === 'nephrology'
-                ? shortTrackLabel(trackForDate(today))
-                : 'Residência (USP/ENARE)',
+                ? shortTrackLabel(trackForDate(today), today)
+                : 'Residência Geral',
             leagueLabel: ctx.leagueName ?? audienceLabel(ctx.audience),
             windowPhase,
             canStart,

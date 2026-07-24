@@ -196,8 +196,8 @@ export function AlunoHomeSimple({
         </h2>
         {disputes.length === 0 ? (
           <div className="rounded-2xl bg-amber-50 px-5 py-6 text-sm text-amber-950 ring-1 ring-amber-200">
-            Nenhum módulo liberado. Peça ao professor para ligar <strong>Nefrologia</strong> e/ou{' '}
-            <strong>Residência</strong> no seu cadastro.
+            A prova diária de Residência Geral ainda não foi publicada para hoje. A de Nefrologia
+            só aparece se o administrador autorizar.
           </div>
         ) : (
           disputes.map((card) => <DisputeBlock key={card.key} card={card} />)
@@ -217,8 +217,11 @@ export function AlunoHomeSimple({
           )}
         </div>
         <p className="mt-1 text-xs text-slate-500">
-          Só quem está no mesmo grupo vê este ranking. O ranking geral entre ligas é só do
-          professor.
+          Ranking do seu grupo. Também há{' '}
+          <Link href="/aluno/ranking/grupos" className="font-medium text-emerald-700">
+            disputa entre grupos
+          </Link>
+          .
         </p>
         <div className="mt-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
           {!rankingGroupName ? (

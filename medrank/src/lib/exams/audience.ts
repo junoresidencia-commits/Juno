@@ -13,7 +13,7 @@ export interface UserExamContext {
    * Audiência “principal” (compat): nefro se liberado; senão geral.
    */
   audience: ExamAudience;
-  /** Disputas do dia liberadas pelos tracks do admin. */
+  /** Disputas do dia liberadas. Residência Geral é sempre padrão. */
   audiences: ExamAudience[];
   hasNephrology: boolean;
   hasGeneral: boolean;
@@ -34,39 +34,39 @@ type GroupRow = {
   exam_audience?: string;
 };
 
-function isNephrologyGroup(g: GroupRow): boolean {
+/** Grupo oficial da disputa de Nefrologia (não confundir com grupo social). */
+function isOfficialNephrologyLeague(g: GroupRow): boolean {
   return (
     g.exam_audience === 'nephrology' ||
-    g.name.toLowerCase() === 'liga de nefrologia' ||
-    g.name.toLowerCase().includes('nefrologia')
+    g.name.toLowerCase() === 'liga de nefrologia'
   );
 }
 
+/**
+ * Resolve disputas a partir dos tracks do admin.
+ * - Residência Geral: sempre liberada (padrão da plataforma).
+ * - Nefrologia: SOMENTE se `enabled_tracks` incluir `nephrology`.
+ *   Grupo social (mesmo com “Nefrologia” no nome) NÃO libera a prova.
+ */
 function buildContext(
   enabledTracks: AppTrackId[],
   activeGroups: GroupRow[]
 ): UserExamContext {
   const tracks = normalizeTracks(enabledTracks);
-  // Fallback legado: se ainda não tem tracks, deriva dos grupos
-  const inferred: AppTrackId[] =
-    tracks.length > 0
-      ? tracks
-      : [
-          ...(activeGroups.some(isNephrologyGroup) ? (['nephrology'] as AppTrackId[]) : []),
-          ...(activeGroups.some((g) => !isNephrologyGroup)
-            ? (['general'] as AppTrackId[])
-            : []),
-        ];
+  const hasNephrology = tracks.includes('nephrology');
+  // Spec: todo aluno tem Residência Geral — inclusive sem track explícito.
+  const hasGeneral = true;
+  const inferred: AppTrackId[] = [
+    'general',
+    ...(hasNephrology ? (['nephrology'] as AppTrackId[]) : []),
+    ...tracks.filter((t) => t !== 'general' && t !== 'nephrology'),
+  ];
 
-  const hasNephrology = inferred.includes('nephrology');
-  const hasGeneral = inferred.includes('general');
-
-  const audiences: ExamAudience[] = [];
+  const audiences: ExamAudience[] = ['general'];
   if (hasNephrology) audiences.push('nephrology');
-  if (hasGeneral) audiences.push('general');
 
-  const nefro = activeGroups.find(isNephrologyGroup) ?? null;
-  const general = activeGroups.find((g) => !isNephrologyGroup) ?? null;
+  const nefro = activeGroups.find(isOfficialNephrologyLeague) ?? null;
+  const general = activeGroups.find((g) => !isOfficialNephrologyLeague(g)) ?? null;
   const ranking = nefro ?? general;
 
   return {
@@ -86,7 +86,7 @@ function buildContext(
 
 /**
  * Resolve disputas diárias a partir dos tracks que o admin ligou no aluno.
- * Grupos continuam para ranking interno.
+ * Grupos continuam para ranking interno — sem liberar Nefro sozinhos.
  */
 export async function resolveUserExamAudience(userId: string): Promise<UserExamContext> {
   if (usesDemoStore()) {
@@ -107,7 +107,7 @@ export async function resolveUserExamAudience(userId: string): Promise<UserExamC
 
   const admin = createAdminClient();
   if (!admin) {
-    return buildContext([], []);
+    return buildContext(['general'], []);
   }
 
   const { data: profile } = await admin
@@ -143,7 +143,7 @@ export function userCanAccessExamAudience(
   return ctx.audiences.includes(a);
 }
 
-/** Ao ligar Nefrologia, garante membro da Liga (ranking + disputa). */
+/** Ao ligar Nefrologia, garante membro da Liga oficial (ranking + conteúdo). */
 export async function syncTrackGroupMembership(
   userId: string,
   tracks: AppTrackId[],
@@ -183,7 +183,7 @@ export async function ensureNephrologyLeague(
         exam_audience: 'nephrology',
         active: true,
         description:
-          'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia.',
+          'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia. Entrada somente com autorização do admin.',
       })
       .eq('id', existing.id);
     return { id: existing.id, name: existing.name, created: false };
@@ -194,7 +194,7 @@ export async function ensureNephrologyLeague(
     .insert({
       name: NEPHROLOGY_LEAGUE_NAME,
       description:
-        'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia.',
+        'Disputa diária da liga + treinos livres. Quem faz a disputa ganha pontos; quem não faz, fica sem pontos no dia. Entrada somente com autorização do admin.',
       active: true,
       exam_audience: 'nephrology',
     })
@@ -206,5 +206,12 @@ export async function ensureNephrologyLeague(
 }
 
 export function audienceLabel(audience: ExamAudience): string {
-  return audience === 'nephrology' ? 'Liga de Nefrologia' : 'Residência médica geral';
+  return audience === 'nephrology' ? 'Nefrologia' : 'Residência Geral';
+}
+
+/** Garante Residência Geral no array de tracks (não removível). */
+export function ensureGeneralTrack(tracks: AppTrackId[]): AppTrackId[] {
+  const normalized = normalizeTracks(tracks);
+  if (normalized.includes('general')) return normalized;
+  return ['general', ...normalized];
 }

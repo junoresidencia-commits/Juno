@@ -9,7 +9,7 @@ import {
 } from '@/lib/demo-store';
 import { requireAdminApi } from '@/lib/api-auth';
 import { normalizeTracks } from '@/lib/tracks/config';
-import { syncTrackGroupMembership } from '@/lib/exams/audience';
+import { ensureGeneralTrack, syncTrackGroupMembership } from '@/lib/exams/audience';
 
 export async function PATCH(
   request: Request,
@@ -59,7 +59,9 @@ export async function PATCH(
     }
 
     if (action === 'set_tracks') {
-      const tracks = normalizeTracks((body as { tracks?: string[] }).tracks);
+      const tracks = ensureGeneralTrack(
+        normalizeTracks((body as { tracks?: string[] }).tracks)
+      );
       (student as { enabled_tracks?: string[] }).enabled_tracks = tracks;
       writeDemoStore(store);
       return NextResponse.json({ ok: true, enabled_tracks: tracks });
@@ -114,7 +116,9 @@ export async function PATCH(
   }
 
   if (action === 'set_tracks') {
-    const tracks = normalizeTracks((body as { tracks?: string[] }).tracks);
+    const tracks = ensureGeneralTrack(
+      normalizeTracks((body as { tracks?: string[] }).tracks)
+    );
     const { error } = await admin
       .from('profiles')
       .update({ enabled_tracks: tracks })
