@@ -92,6 +92,8 @@ export interface Question {
   quality_notes?: string | null;
   quality_reviewed_at?: string | null;
   quality_reviewed_by?: string | null;
+  /** acesso_direto | pre_requisito | titulo | revalida | outro */
+  exam_track?: string | null;
 }
 
 export interface Exam {

@@ -1,4 +1,6 @@
 import type { Question } from '@/types/database';
+import { formatOriginalAttribution } from '@/lib/question-bank/official-validate';
+import { isOfficialQuestion } from '@/lib/question-bank/quality-classify';
 
 /** Instituições usadas só para variar o sorteio interno — não exibidas ao aluno. */
 export const MIXED_EXAM_POOLS = [
@@ -53,18 +55,28 @@ export function getMixedDisputeDescription(): string {
   return '20 questões novas misturando todas as áreas e provas de residência.';
 }
 
-/** Questão pronta para prova/simulado: sem branding ENARE no comentário. */
+/**
+ * Questão pronta para prova/simulado.
+ * Oficiais: preserva institution/year/origin para atribuição ao aluno.
+ * Comentário: remove meta-texto genérico, mas a linha de atribuição é separada.
+ */
 export function normalizeQuestionForDispute(question: Question): Question {
-  const explanation = sanitizeExplanation(question.explanation);
+  const official = isOfficialQuestion(question);
+  const explanation = official
+    ? question.explanation
+    : sanitizeExplanation(question.explanation);
   return {
     ...question,
     explanation,
-    source: null,
+    // Mantém source em oficiais (atribuição); limpa em sintéticas
+    source: official ? question.source : null,
   };
 }
 
-export function formatStudentSourceLabel(): null {
-  return null;
+/** Rodapé exigido: "Questão original — Instituição — Ano da prova". */
+export function formatStudentSourceLabel(question: Question): string | null {
+  if (!isOfficialQuestion(question)) return null;
+  return formatOriginalAttribution(question);
 }
 
 export function formatBankSourcesLabel(sources: string[]): string {
