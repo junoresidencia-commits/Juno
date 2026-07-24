@@ -1,0 +1,1979 @@
+{
+  "metadados": {
+    "nome_lote": "MedRank — Lote Autoral 02/2026",
+    "quantidade_questoes": 50,
+    "idioma": "pt-BR",
+    "distribuicao": {
+      "Clínica Médica": 20,
+      "Cirurgia": 10,
+      "Pediatria": 10,
+      "Ginecologia e Obstetrícia": 5,
+      "Medicina Preventiva": 5
+    },
+    "schema_version": "1.0",
+    "observacao": "Conteúdo autoral para revisão médica/editorial antes da publicação."
+  },
+  "questoes": [
+    {
+      "id_externo": "MR26-L2-001",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefropatia por IgA",
+      "subtema": "Forma rapidamente progressiva",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 33 anos com nefropatia por IgA comprovada por biópsia apresenta queda de 42% da TFGe em oito semanas, sedimento glomerular ativo e crescentes em 55% dos glomérulos. Foram excluídas infecção, obstrução e toxicidade medicamentosa. Qual é a melhor estratégia?",
+      "alternativas": {
+        "A": "Apenas intensificar losartana e reavaliar em seis meses.",
+        "B": "Budesonida de liberação direcionada isoladamente.",
+        "C": "Ciclofosfamida associada a glicocorticoide, seguindo abordagem semelhante à vasculite ANCA.",
+        "D": "Micofenolato isolado em baixa dose.",
+        "E": "Plasmaférese isolada."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A forma rapidamente progressiva da nefropatia por IgA é rara e deve ser tratada com ciclofosfamida e glicocorticoide; crescents isolados, sem perda rápida da função, não bastam para essa definição.",
+      "justificativas": {
+        "A": "Insuficiente diante de perda renal rápida.",
+        "B": "Não é terapia de resgate para glomerulonefrite rapidamente progressiva.",
+        "C": "É a abordagem recomendada nesse fenótipo grave.",
+        "D": "Não é o regime padrão para essa apresentação.",
+        "E": "Não substitui imunossupressão e não é rotina."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for IgA Nephropathy and IgA Vasculitis.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "IgAN",
+        "crescentes",
+        "GNRP",
+        "ciclofosfamida"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-002",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Nefrite lúpica",
+      "subtema": "Indução de classe proliferativa",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 27 anos com lúpus apresenta biópsia renal classe IV, proteinúria de 3,8 g/dia e TFGe de 72 mL/min/1,73 m². Qual opção representa um regime inicial recomendado?",
+      "alternativas": {
+        "A": "Hidroxicloroquina isolada.",
+        "B": "Glicocorticoide associado a micofenolato de mofetila.",
+        "C": "Azatioprina isolada.",
+        "D": "Rituximabe isolado como padrão universal.",
+        "E": "Prednisona em baixa dose sem outro imunossupressor."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na nefrite lúpica proliferativa, a indução utiliza glicocorticoide associado a micofenolato ou ciclofosfamida em esquema apropriado; terapias combinadas adicionais podem ser selecionadas conforme perfil.",
+      "justificativas": {
+        "A": "Não controla nefrite proliferativa ativa.",
+        "B": "É uma das combinações fundamentais recomendadas.",
+        "C": "É mais usada em manutenção ou situações específicas.",
+        "D": "Pode ser usado em refratariedade, não como padrão isolado universal.",
+        "E": "É tratamento insuficiente."
+      },
+      "referencia_principal": "KDIGO 2024 Clinical Practice Guideline for Lupus Nephritis.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "nefrite lúpica",
+        "classe IV",
+        "micofenolato",
+        "indução"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-003",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia/Reumatologia",
+      "tema": "Vasculite associada a ANCA",
+      "subtema": "Avacopan",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente de 64 anos com granulomatose com poliangiite e glomerulonefrite grave receberá rituximabe. Há alto risco de toxicidade por glicocorticoide. Qual afirmação sobre avacopan é correta?",
+      "alternativas": {
+        "A": "Substitui rituximabe e ciclofosfamida na indução.",
+        "B": "Pode ser usado como alternativa poupadora de glicocorticoide junto à imunossupressão de indução.",
+        "C": "É indicado apenas para manutenção após cinco anos.",
+        "D": "Deve ser combinado obrigatoriamente com plasmaférese.",
+        "E": "É contraindicado em toda doença renal."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Avacopan bloqueia o receptor C5a e pode reduzir a exposição a glicocorticoides, mas não substitui rituximabe ou ciclofosfamida.",
+      "justificativas": {
+        "A": "Não fornece a imunossupressão de indução necessária.",
+        "B": "Correta: é estratégia poupadora de corticoide em pacientes selecionados.",
+        "C": "Não se restringe a manutenção tardia.",
+        "D": "Plasmaférese é individualizada, não obrigatória.",
+        "E": "Doença renal é justamente manifestação frequente nos estudos."
+      },
+      "referencia_principal": "KDIGO 2024 Clinical Practice Guideline for ANCA-Associated Vasculitis.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "ANCA",
+        "avacopan",
+        "rituximabe",
+        "corticoide"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-004",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Doença renal policística autossômica dominante",
+      "subtema": "Classificação de Mayo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 36 anos com DRPAD apresenta rins assimétricos, múltiplos cistos grandes predominantemente unilaterais e atrofia segmentar. Qual é a interpretação mais adequada?",
+      "alternativas": {
+        "A": "A classificação de Mayo 1A-1E deve ser aplicada diretamente.",
+        "B": "A morfologia é atípica; a classificação de Mayo para doença típica não deve ser aplicada mecanicamente.",
+        "C": "A paciente é necessariamente de rápida progressão.",
+        "D": "Tolvaptana é obrigatória independentemente da TFGe.",
+        "E": "A assimetria exclui doença genética."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A classificação de imagem de Mayo 1A-1E foi desenvolvida para morfologia típica; formas atípicas exigem avaliação individual e investigação de diagnósticos alternativos.",
+      "justificativas": {
+        "A": "A ferramenta pode classificar incorretamente formas atípicas.",
+        "B": "Correta.",
+        "C": "Morfologia atípica não prova rápida progressão.",
+        "D": "A indicação depende de risco, idade, TFGe e segurança.",
+        "E": "Assimetria não exclui doença genética, mas pede revisão diagnóstica."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for ADPKD.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "DRPAD",
+        "Mayo",
+        "imagem atípica",
+        "tolvaptana"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-005",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Nefrologia",
+      "tema": "Doença renal crônica",
+      "subtema": "Acidose metabólica",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem com DRC G4 apresenta bicarbonato sérico repetidamente entre 16 e 17 mEq/L, sem sobrecarga volêmica descompensada. Qual conduta deve ser considerada?",
+      "alternativas": {
+        "A": "Ignorar, pois a acidose é esperada na DRC.",
+        "B": "Terapia alcalina e correção de causas contribuintes, com monitorização de pressão e volume.",
+        "C": "Hemodiálise imediata apenas pelo bicarbonato de 17 mEq/L.",
+        "D": "Acetazolamida para elevar o bicarbonato.",
+        "E": "Restrição completa de frutas e vegetais."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Acidose clinicamente relevante na DRC deve ser avaliada e pode ser tratada com álcali, evitando piora de hipertensão, potássio ou sobrecarga.",
+      "justificativas": {
+        "A": "A acidose tem consequências ósseas, musculares e metabólicas.",
+        "B": "Correta.",
+        "C": "Diálise depende do conjunto clínico, não desse valor isolado.",
+        "D": "Acetazolamida reduz bicarbonato.",
+        "E": "A dieta deve ser individualizada; restrição indiscriminada é inadequada."
+      },
+      "referencia_principal": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "DRC",
+        "acidose metabólica",
+        "bicarbonato"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-006",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Insuficiência cardíaca com fração reduzida",
+      "subtema": "Terapia fundacional",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem de 59 anos com fração de ejeção de 30%, euvolêmico, pressão de 118/72 mmHg e TFGe de 54 mL/min/1,73 m² não tem diabetes. Qual conjunto compõe a terapia fundacional modificadora de prognóstico?",
+      "alternativas": {
+        "A": "Diurético de alça, digoxina, nitrato e aspirina.",
+        "B": "ARNI ou IECA/BRA, betabloqueador específico, antagonista mineralocorticoide e inibidor de SGLT2.",
+        "C": "Verapamil, tiazídico, estatina e clopidogrel.",
+        "D": "Ivabradina, amiodarona e furosemida para todos.",
+        "E": "Apenas sacubitril-valsartana."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Os quatro pilares da ICFEr são bloqueio neuro-hormonal com ARNI/IECA/BRA, betabloqueador com evidência, antagonista mineralocorticoide e SGLT2, independentemente de diabetes.",
+      "justificativas": {
+        "A": "Inclui drogas sintomáticas sem formar os quatro pilares.",
+        "B": "Correta.",
+        "C": "Verapamil pode piorar ICFEr.",
+        "D": "Esses fármacos têm indicações selecionadas, não universais.",
+        "E": "Monoterapia é insuficiente."
+      },
+      "referencia_principal": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure, with focused updates.",
+      "instituicao_responsavel": "AHA/ACC/HFSA",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "ICFEr",
+        "quatro pilares",
+        "SGLT2",
+        "ARNI"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-007",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Insuficiência cardíaca com fração preservada",
+      "subtema": "Inibidor de SGLT2",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 73 anos com insuficiência cardíaca, fração de ejeção de 58%, congestões recorrentes e diabetes bem controlado pergunta qual medicamento reduz hospitalizações por insuficiência cardíaca. Qual opção tem evidência consistente?",
+      "alternativas": {
+        "A": "Empagliflozina ou dapagliflozina.",
+        "B": "Digoxina obrigatória.",
+        "C": "Verapamil para todos.",
+        "D": "Nitrato de longa ação como terapia modificadora universal.",
+        "E": "Flecainida."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Inibidores de SGLT2 reduzem eventos de insuficiência cardíaca em pacientes com fração preservada, com ou sem diabetes.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Não é terapia universal e pode causar toxicidade.",
+        "C": "Não tem benefício prognóstico universal nesse contexto.",
+        "D": "Não mostrou benefício universal e pode limitar atividade.",
+        "E": "É antiarrítmico sem papel no tratamento da síndrome."
+      },
+      "referencia_principal": "American Diabetes Association Standards of Care in Diabetes—2026; contemporary heart failure guidelines.",
+      "instituicao_responsavel": "ADA/AHA/ACC/HFSA",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "ICFEp",
+        "SGLT2",
+        "hospitalização"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-008",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia/Neurologia",
+      "tema": "Meningite bacteriana",
+      "subtema": "Tratamento empírico",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem de 68 anos chega com febre, rigidez de nuca e alteração de consciência. Não há alergias conhecidas. Qual esquema empírico inicial é mais adequado após coleta de culturas, sem atrasar o tratamento?",
+      "alternativas": {
+        "A": "Ceftriaxona e vancomicina, acrescentando ampicilina.",
+        "B": "Azitromicina isolada.",
+        "C": "Cefazolina isolada.",
+        "D": "Aciclovir isolado.",
+        "E": "Metronidazol e gentamicina."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Em adultos mais velhos, o esquema deve cobrir pneumococo resistente e Listeria, com cefalosporina de terceira geração, vancomicina e ampicilina.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Cobertura inadequada.",
+        "C": "Não cobre os principais agentes.",
+        "D": "Pode ser associado se encefalite herpética for hipótese, mas não substitui antibióticos.",
+        "E": "Esquema inadequado para meningite comunitária."
+      },
+      "referencia_principal": "IDSA Practice Guidelines for Bacterial Meningitis and standard contemporary recommendations.",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2004,
+      "tags": [
+        "meningite",
+        "Listeria",
+        "ceftriaxona",
+        "ampicilina"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-009",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Terapia Intensiva",
+      "tema": "Choque séptico",
+      "subtema": "Corticosteroide",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com choque séptico permanece dependente de noradrenalina em dose crescente apesar de ressuscitação adequada e controle da fonte. Qual intervenção pode ser acrescentada?",
+      "alternativas": {
+        "A": "Hidrocortisona intravenosa em dose de estresse.",
+        "B": "Dexametasona oral uma vez por semana.",
+        "C": "Fludrocortisona isolada por via oral como resgate imediato.",
+        "D": "Suspender vasopressor e iniciar diurético.",
+        "E": "Metilprednisolona em pulso de 1 g por três dias para todos."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Hidrocortisona intravenosa pode ser usada no choque séptico com necessidade persistente de vasopressor, reduzindo tempo até reversão do choque.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Via e esquema inadequados.",
+        "C": "Não é resgate isolado padrão.",
+        "D": "Agrava hipoperfusão.",
+        "E": "Pulso não é o regime recomendado."
+      },
+      "referencia_principal": "Surviving Sepsis Campaign International Guidelines 2021.",
+      "instituicao_responsavel": "SCCM/ESICM",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "choque séptico",
+        "hidrocortisona",
+        "vasopressor"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-010",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia",
+      "tema": "DPOC",
+      "subtema": "Indicação de corticoide inalatório",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem com DPOC usa LABA/LAMA, teve três exacerbações no último ano e possui eosinófilos de 360 células/µL. Qual mudança deve ser considerada?",
+      "alternativas": {
+        "A": "Retirar todos os broncodilatadores.",
+        "B": "Adicionar corticoide inalatório, formando terapia tripla.",
+        "C": "Usar corticoide oral contínuo.",
+        "D": "Trocar por salbutamol isolado.",
+        "E": "Iniciar antibiótico contínuo obrigatoriamente."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Em paciente com exacerbações apesar de LABA/LAMA, eosinófilos elevados aumentam a probabilidade de benefício do corticoide inalatório.",
+      "justificativas": {
+        "A": "Inadequado.",
+        "B": "Correta.",
+        "C": "Toxicidade supera benefício no uso crônico rotineiro.",
+        "D": "Tratamento insuficiente.",
+        "E": "Macrolídeo crônico é opção selecionada, não obrigatória."
+      },
+      "referencia_principal": "GOLD 2026 Global Strategy for COPD.",
+      "instituicao_responsavel": "GOLD",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "DPOC",
+        "eosinófilos",
+        "terapia tripla",
+        "ICS"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-011",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia",
+      "tema": "Asma",
+      "subtema": "MART",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher de 31 anos tem asma com sintomas na maioria dos dias e duas exacerbações no último ano. Qual estratégia preferencial permite usar o mesmo inalador para manutenção e alívio?",
+      "alternativas": {
+        "A": "Budesonida-formoterol em manutenção e sob demanda.",
+        "B": "Fluticasona isolada apenas quando houver sintomas.",
+        "C": "Salmeterol isolado em manutenção.",
+        "D": "Salbutamol isolado como controle.",
+        "E": "Tiotrópio isolado."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "O regime MART utiliza ICS-formoterol tanto diariamente quanto para alívio, reduzindo exacerbações em comparação a esquemas baseados em SABA.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "ICS isolado sob demanda não é o regime MART.",
+        "C": "LABA nunca deve ser usado isoladamente na asma.",
+        "D": "SABA isolado é inseguro.",
+        "E": "LAMA isolado não é controle inicial."
+      },
+      "referencia_principal": "GINA 2026 Global Strategy for Asthma Management and Prevention.",
+      "instituicao_responsavel": "GINA",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "asma",
+        "MART",
+        "ICS-formoterol"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-012",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Emergência/Cardiologia",
+      "tema": "Embolia pulmonar",
+      "subtema": "Choque obstrutivo",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com embolia pulmonar confirmada apresenta choque, hipoxemia e disfunção de ventrículo direito. Não há contraindicação hemorrágica. Qual tratamento deve ser priorizado?",
+      "alternativas": {
+        "A": "Anticoagulação oral e alta.",
+        "B": "Trombólise sistêmica.",
+        "C": "Filtro de veia cava isolado.",
+        "D": "Aspirina.",
+        "E": "Observação por 24 horas."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Embolia pulmonar de alto risco com instabilidade hemodinâmica exige reperfusão, geralmente trombólise sistêmica quando não há contraindicação.",
+      "justificativas": {
+        "A": "Insuficiente e inseguro.",
+        "B": "Correta.",
+        "C": "Filtro não reperfunde e tem indicações específicas.",
+        "D": "Não trata tromboembolismo venoso.",
+        "E": "Atraso aumenta mortalidade."
+      },
+      "referencia_principal": "2019 ESC Guidelines for Acute Pulmonary Embolism; contemporary consensus updates.",
+      "instituicao_responsavel": "ESC",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "embolia pulmonar",
+        "trombólise",
+        "choque"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-013",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Neurologia/Emergência",
+      "tema": "Acidente vascular cerebral isquêmico",
+      "subtema": "Trombectomia mecânica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 66 anos chega 10 horas após ter sido visto bem, com síndrome de artéria cerebral média. Angiotomografia mostra oclusão de M1 e imagem de perfusão revela pequeno núcleo isquêmico com grande penumbra. Qual conduta é apropriada?",
+      "alternativas": {
+        "A": "Excluir reperfusão porque passaram mais de 4,5 horas.",
+        "B": "Avaliar trombectomia mecânica em centro habilitado.",
+        "C": "Administrar heparina plena como reperfusão.",
+        "D": "Aguardar 24 horas para repetir tomografia.",
+        "E": "Realizar endarterectomia carotídea imediata."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Pacientes selecionados por imagem com oclusão de grande vaso podem se beneficiar de trombectomia até 24 horas do último momento bem.",
+      "justificativas": {
+        "A": "A janela da trombólise venosa não define a janela da trombectomia.",
+        "B": "Correta.",
+        "C": "Heparina não recanaliza de forma segura nesse contexto.",
+        "D": "A demora perde tecido salvável.",
+        "E": "Não trata oclusão intracraniana aguda."
+      },
+      "referencia_principal": "AHA/ASA Guidelines for Early Management of Acute Ischemic Stroke and thrombectomy updates.",
+      "instituicao_responsavel": "AHA/ASA",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "AVC",
+        "trombectomia",
+        "penumbra",
+        "grande vaso"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-014",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia",
+      "tema": "Hipertireoidismo",
+      "subtema": "Gestação",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Gestante com doença de Graves está na 8ª semana e necessita de tionamida. Qual medicamento é preferido neste período?",
+      "alternativas": {
+        "A": "Metimazol.",
+        "B": "Propiltiouracil.",
+        "C": "Iodo radioativo.",
+        "D": "Levotiroxina.",
+        "E": "Amiodarona."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "No primeiro trimestre, propiltiouracil é preferido por menor risco do padrão específico de embriopatia associado ao metimazol; depois, costuma-se considerar troca.",
+      "justificativas": {
+        "A": "Tem risco teratogênico específico no primeiro trimestre.",
+        "B": "Correta.",
+        "C": "É contraindicado na gestação.",
+        "D": "Agravaria hipertireoidismo.",
+        "E": "Não é tratamento de rotina e pode causar disfunção tireoidiana fetal."
+      },
+      "referencia_principal": "American Thyroid Association Guidelines for Thyroid Disease During Pregnancy and Hyperthyroidism.",
+      "instituicao_responsavel": "ATA",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "Graves",
+        "gestação",
+        "propiltiouracil"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-015",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Hipercalcemia",
+      "subtema": "Tratamento inicial",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com mieloma apresenta cálcio corrigido de 15,8 mg/dL, desidratação e confusão. Qual abordagem inicial é mais adequada?",
+      "alternativas": {
+        "A": "Soro fisiológico, calcitonina para efeito rápido e agente antirreabsortivo conforme função renal.",
+        "B": "Tiazídico e restrição hídrica.",
+        "C": "Cálcio intravenoso.",
+        "D": "Vitamina D em alta dose.",
+        "E": "Aguardar resultado do PTH antes de hidratar."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Na hipercalcemia grave sintomática, hidratação é imediata; calcitonina atua rapidamente e bisfosfonato ou denosumabe produz controle sustentado.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Tiazídico pode elevar cálcio.",
+        "C": "Agravaria o quadro.",
+        "D": "Aumentaria absorção de cálcio.",
+        "E": "O tratamento de emergência não deve aguardar."
+      },
+      "referencia_principal": "Endocrine Society Clinical Practice Guideline: Treatment of Hypercalcemia of Malignancy, 2022.",
+      "instituicao_responsavel": "Endocrine Society",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "hipercalcemia",
+        "mieloma",
+        "calcitonina",
+        "bisfosfonato"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-016",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Crise adrenal",
+      "subtema": "Tratamento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher com doença de Addison apresenta vômitos, hipotensão, hiponatremia, hipercalemia e hipoglicemia. Qual conduta imediata?",
+      "alternativas": {
+        "A": "Hidrocortisona intravenosa e solução salina, com glicose quando indicada.",
+        "B": "Fludrocortisona oral isolada.",
+        "C": "Insulina intravenosa contínua.",
+        "D": "Restrição de sódio.",
+        "E": "Aguardar cortisol sérico antes de tratar."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Crise adrenal é emergência: colha exames se isso não atrasar, mas administre hidrocortisona e reposição volêmica imediatamente.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Inadequada como tratamento isolado agudo.",
+        "C": "Pode piorar hipoglicemia.",
+        "D": "A paciente necessita sódio e volume.",
+        "E": "O atraso pode ser fatal."
+      },
+      "referencia_principal": "Endocrine Society Clinical Practice Guideline: Primary Adrenal Insufficiency.",
+      "instituicao_responsavel": "Endocrine Society",
+      "ano_da_diretriz": 2016,
+      "tags": [
+        "crise adrenal",
+        "hidrocortisona",
+        "choque"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-017",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Cetoacidose diabética",
+      "subtema": "Hipocalemia",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com cetoacidose diabética apresenta potássio de 2,9 mEq/L na admissão. Qual é a conduta correta?",
+      "alternativas": {
+        "A": "Iniciar insulina imediatamente e não repor potássio.",
+        "B": "Repor potássio e adiar insulina até que o nível seja seguro.",
+        "C": "Administrar bicarbonato como única terapia.",
+        "D": "Fazer hemodiálise obrigatória.",
+        "E": "Usar diurético poupador de potássio."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Insulina desloca potássio para o intracelular e pode causar arritmia fatal quando o potássio inicial está baixo; deve-se repor antes de iniciar insulina.",
+      "justificativas": {
+        "A": "Perigoso.",
+        "B": "Correta.",
+        "C": "Não corrige cetogênese e pode piorar potássio.",
+        "D": "Não é indicada apenas por CAD.",
+        "E": "Ação lenta e imprevisível no cenário agudo."
+      },
+      "referencia_principal": "American Diabetes Association Standards of Care in Diabetes—2026: Hyperglycemic Crises.",
+      "instituicao_responsavel": "ADA",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "CAD",
+        "hipocalemia",
+        "insulina"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-018",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Pneumonia adquirida na comunidade",
+      "subtema": "Pneumonia grave",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Adulto com pneumonia comunitária grave necessita de UTI, sem fatores de risco para MRSA ou Pseudomonas. Qual esquema empírico é adequado?",
+      "alternativas": {
+        "A": "Ceftriaxona associada a azitromicina.",
+        "B": "Amoxicilina oral isolada.",
+        "C": "Vancomicina isolada.",
+        "D": "Metronidazol isolado.",
+        "E": "Cefalexina oral."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Pneumonia grave sem fatores específicos deve receber beta-lactâmico associado a macrolídeo ou fluoroquinolona respiratória.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Insuficiente para pneumonia grave.",
+        "C": "Não cobre adequadamente agentes típicos e atípicos.",
+        "D": "Cobertura inadequada.",
+        "E": "Cobertura e via inadequadas."
+      },
+      "referencia_principal": "ATS/IDSA Clinical Practice Guideline for Community-Acquired Pneumonia.",
+      "instituicao_responsavel": "ATS/IDSA",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "pneumonia grave",
+        "UTI",
+        "ceftriaxona",
+        "azitromicina"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-019",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Infecção por Clostridioides difficile",
+      "subtema": "Episódio inicial",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com primeiro episódio de infecção por Clostridioides difficile, sem megacólon ou choque, tem acesso a todas as opções. Qual tratamento oral é preferido pelas diretrizes atuais?",
+      "alternativas": {
+        "A": "Fidaxomicina.",
+        "B": "Metronidazol obrigatório.",
+        "C": "Ciprofloxacino.",
+        "D": "Ceftriaxona.",
+        "E": "Rifaximina isolada como primeira escolha."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Fidaxomicina é preferida para episódio inicial quando disponível; vancomicina oral é alternativa aceitável.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Não é preferido quando fidaxomicina ou vancomicina estão disponíveis.",
+        "C": "Pode precipitar ou agravar C. difficile.",
+        "D": "Não trata a infecção luminal.",
+        "E": "Não é primeira escolha isolada."
+      },
+      "referencia_principal": "IDSA/SHEA Focused Update for Management of Clostridioides difficile Infection, 2021.",
+      "instituicao_responsavel": "IDSA/SHEA",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "C. difficile",
+        "fidaxomicina",
+        "diarreia"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-020",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Bacteremia por Staphylococcus aureus",
+      "subtema": "Controle de foco",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente em hemodiálise apresenta bacteremia por Staphylococcus aureus associada a cateter, com culturas persistentes após 48 horas. Qual conduta é essencial além do antibiótico dirigido?",
+      "alternativas": {
+        "A": "Manter o cateter até completar 14 dias.",
+        "B": "Remover o cateter infectado, repetir hemoculturas e investigar endocardite e focos metastáticos.",
+        "C": "Trocar apenas o curativo.",
+        "D": "Adicionar antifúngico.",
+        "E": "Suspender coleta de culturas após a primeira positividade."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Bacteremia por S. aureus exige controle de foco, documentação de negativação e avaliação de complicações; cateter infectado deve ser removido sempre que possível.",
+      "justificativas": {
+        "A": "Favorece persistência e complicações.",
+        "B": "Correta.",
+        "C": "É insuficiente.",
+        "D": "Não há indicação sem evidência fúngica.",
+        "E": "Culturas de controle são fundamentais."
+      },
+      "referencia_principal": "IDSA Clinical Practice Guidelines for Intravascular Catheter-Related Infection and S. aureus bacteremia standards.",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2009,
+      "tags": [
+        "S. aureus",
+        "cateter",
+        "hemodiálise",
+        "endocardite"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-021",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Colangite aguda",
+      "subtema": "Drenagem biliar",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com colangite aguda apresenta febre, icterícia, hipotensão e alteração de consciência. Após antibiótico e ressuscitação, qual é a prioridade?",
+      "alternativas": {
+        "A": "Drenagem biliar endoscópica urgente.",
+        "B": "Colecistectomia eletiva em seis meses sem drenagem.",
+        "C": "Apenas observação.",
+        "D": "Biópsia hepática.",
+        "E": "Nutrição parenteral."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Colangite grave exige controle da obstrução com drenagem biliar urgente, preferencialmente endoscópica.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Não controla a sepse obstrutiva.",
+        "C": "Inseguro.",
+        "D": "Não trata a causa.",
+        "E": "Não substitui drenagem."
+      },
+      "referencia_principal": "Tokyo Guidelines 2018 for Acute Cholangitis and Cholecystitis.",
+      "instituicao_responsavel": "Tokyo Guidelines",
+      "ano_da_diretriz": 2018,
+      "tags": [
+        "colangite",
+        "CPRE",
+        "drenagem biliar"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-022",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Diverticulite aguda",
+      "subtema": "Abscesso",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem estável com diverticulite de sigmoide apresenta abscesso pericólico de 5,5 cm acessível por imagem, sem peritonite difusa. Qual é a conduta preferencial?",
+      "alternativas": {
+        "A": "Antibiótico e drenagem percutânea.",
+        "B": "Colectomia total obrigatória imediata.",
+        "C": "Alta sem antibiótico.",
+        "D": "Colonoscopia durante a fase aguda.",
+        "E": "Laxativo e observação."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Abscessos maiores e acessíveis costumam ser tratados com antibiótico e drenagem percutânea, reservando cirurgia para falha ou peritonite.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Cirurgia pode ser necessária, mas não é obrigatória na estabilidade.",
+        "C": "Inadequado.",
+        "D": "Aumenta risco de perfuração na fase aguda.",
+        "E": "Não controla abscesso."
+      },
+      "referencia_principal": "WSES Guidelines for Acute Colonic Diverticulitis, 2020.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "diverticulite",
+        "abscesso",
+        "drenagem percutânea"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-023",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Diverticulite perfurada",
+      "subtema": "Peritonite",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com diverticulite apresenta choque séptico, pneumoperitônio e peritonite fecal difusa. Qual princípio define a conduta?",
+      "alternativas": {
+        "A": "Controle cirúrgico urgente da fonte após ressuscitação simultânea.",
+        "B": "Tratamento ambulatorial.",
+        "C": "Colonoscopia imediata.",
+        "D": "Drenagem de um único abscesso e alta.",
+        "E": "Aguardar 72 horas de antibiótico."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Peritonite difusa com instabilidade exige cirurgia urgente e ressuscitação, escolhendo a técnica conforme condição fisiológica e achados.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Inseguro.",
+        "C": "Contraindicada no abdome agudo perfurativo.",
+        "D": "Insuficiente.",
+        "E": "Atraso aumenta mortalidade."
+      },
+      "referencia_principal": "WSES Guidelines for Acute Colonic Diverticulitis, 2020.",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "diverticulite perfurada",
+        "peritonite",
+        "controle de fonte"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-024",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Vascular",
+      "tema": "Isquemia aguda de membro",
+      "subtema": "Anticoagulação inicial",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Homem com fibrilação atrial apresenta dor súbita, palidez, ausência de pulso e parestesia em membro inferior há duas horas. Enquanto a equipe vascular organiza revascularização, qual medida deve ser iniciada?",
+      "alternativas": {
+        "A": "Heparina não fracionada intravenosa, se não houver contraindicação.",
+        "B": "Varfarina oral e alta.",
+        "C": "Aspirina isolada.",
+        "D": "Compressa quente e observação.",
+        "E": "Trombólise nunca pode ser usada."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Heparina sistêmica imediata reduz propagação do trombo; a estratégia de revascularização depende da viabilidade do membro.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Início lento e inadequado.",
+        "C": "Insuficiente.",
+        "D": "Atraso ameaça o membro.",
+        "E": "Trombólise por cateter pode ser opção selecionada."
+      },
+      "referencia_principal": "ESVS Clinical Practice Guidelines on Acute Limb Ischaemia, 2020.",
+      "instituicao_responsavel": "ESVS",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "isquemia aguda",
+        "heparina",
+        "revascularização"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-025",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Vascular/Trauma",
+      "tema": "Aneurisma de aorta abdominal roto",
+      "subtema": "Ressuscitação",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 72 anos com suspeita de aneurisma de aorta abdominal roto está consciente, com pressão sistólica de 78 mmHg e dor abdominal. Antes do controle aórtico, qual estratégia é geralmente apropriada?",
+      "alternativas": {
+        "A": "Reposição maciça até pressão sistólica de 160 mmHg.",
+        "B": "Hipotensão permissiva com reposição balanceada, evitando elevar excessivamente a pressão antes do controle do sangramento.",
+        "C": "Diurético intravenoso.",
+        "D": "Aguardar normalizar o lactato antes de operar.",
+        "E": "Anticoagulação plena."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Em hemorragia não controlada, ressuscitação excessiva pode aumentar sangramento; busca-se perfusão mínima adequada até reparo, sem atrasar cirurgia.",
+      "justificativas": {
+        "A": "Pode romper coágulos e aumentar hemorragia.",
+        "B": "Correta.",
+        "C": "Agrava hipovolemia.",
+        "D": "O controle da fonte é urgente.",
+        "E": "Aumenta sangramento."
+      },
+      "referencia_principal": "ESVS Clinical Practice Guidelines on Abdominal Aorto-Iliac Aneurysms, 2024.",
+      "instituicao_responsavel": "ESVS",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "AAA roto",
+        "hipotensão permissiva",
+        "choque hemorrágico"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-026",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Trauma/Queimados",
+      "tema": "Queimadura",
+      "subtema": "Fórmula de Parkland",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Adulto de 70 kg apresenta queimadura de espessura parcial e total em 30% da superfície corporal. Pela fórmula de Parkland, qual volume inicial de Ringer lactato nas primeiras 24 horas?",
+      "alternativas": {
+        "A": "2.100 mL.",
+        "B": "4.200 mL.",
+        "C": "8.400 mL.",
+        "D": "12.000 mL.",
+        "E": "16.800 mL."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A fórmula é 4 mL × peso em kg × percentual queimado: 4 × 70 × 30 = 8.400 mL; metade nas primeiras oito horas a partir da queimadura.",
+      "justificativas": {
+        "A": "Valor quatro vezes menor.",
+        "B": "Metade do total de 24 horas.",
+        "C": "Correta.",
+        "D": "Não corresponde à fórmula.",
+        "E": "Dobro do cálculo."
+      },
+      "referencia_principal": "American Burn Association burn resuscitation principles.",
+      "instituicao_responsavel": "American Burn Association",
+      "ano_da_diretriz": 2018,
+      "tags": [
+        "queimadura",
+        "Parkland",
+        "ressuscitação"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-027",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Neurocirurgia/Trauma",
+      "tema": "Hematoma epidural",
+      "subtema": "Herniação",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Jovem após trauma craniano apresenta intervalo lúcido, anisocoria progressiva e tomografia com coleção biconvexa volumosa e desvio da linha média. Qual conduta?",
+      "alternativas": {
+        "A": "Evacuação neurocirúrgica emergencial.",
+        "B": "Observação domiciliar.",
+        "C": "Punção lombar.",
+        "D": "Anticoagulação.",
+        "E": "Aguardar ressonância."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Hematoma epidural com deterioração neurológica e efeito de massa requer descompressão imediata.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Risco de herniação.",
+        "C": "Pode precipitar herniação e não trata a lesão.",
+        "D": "Aumenta sangramento.",
+        "E": "Não deve atrasar cirurgia."
+      },
+      "referencia_principal": "Brain Trauma Foundation surgical management principles.",
+      "instituicao_responsavel": "Brain Trauma Foundation",
+      "ano_da_diretriz": 2006,
+      "tags": [
+        "hematoma epidural",
+        "anisocoria",
+        "craniotomia"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-028",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Mastologia",
+      "tema": "Câncer de mama",
+      "subtema": "Linfonodo sentinela",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher com carcinoma invasivo de mama inicial, axila clinicamente negativa e cirurgia conservadora programada. Qual é a abordagem axilar padrão?",
+      "alternativas": {
+        "A": "Biópsia do linfonodo sentinela.",
+        "B": "Esvaziamento axilar completo obrigatório.",
+        "C": "Nenhuma avaliação axilar em qualquer idade.",
+        "D": "Radioterapia axilar antes do diagnóstico.",
+        "E": "Punção de todos os linfonodos normais."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A biópsia do linfonodo sentinela estagia a axila com menor morbidade em doença inicial clinicamente N0.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Aumenta linfedema e não é obrigatório em N0.",
+        "C": "Há exceções selecionadas, mas não é regra universal.",
+        "D": "Não é o passo padrão.",
+        "E": "Desnecessário."
+      },
+      "referencia_principal": "ASCO Guideline Update: Sentinel Lymph Node Biopsy in Early-Stage Breast Cancer.",
+      "instituicao_responsavel": "ASCO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "câncer de mama",
+        "linfonodo sentinela",
+        "axila"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-029",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia de Cabeça e Pescoço",
+      "tema": "Nódulo tireoidiano",
+      "subtema": "Bethesda VI",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 45 anos possui nódulo de 2,4 cm, ultrassom suspeito e citologia Bethesda VI. Qual é a interpretação?",
+      "alternativas": {
+        "A": "Citologia maligna, exigindo planejamento cirúrgico conforme extensão e risco.",
+        "B": "Resultado benigno, apenas repetir em cinco anos.",
+        "C": "Material insuficiente.",
+        "D": "Lesão folicular indeterminada.",
+        "E": "Indicação de radioiodo antes de qualquer cirurgia."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Bethesda VI corresponde a malignidade citológica com risco muito alto; o tratamento cirúrgico é planejado conforme tamanho, linfonodos e características.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Bethesda II é benigno.",
+        "C": "Bethesda I é não diagnóstico.",
+        "D": "Bethesda III/IV são indeterminados.",
+        "E": "Radioiodo não precede cirurgia rotineiramente."
+      },
+      "referencia_principal": "American Thyroid Association Management Guidelines for Thyroid Nodules and Differentiated Thyroid Cancer.",
+      "instituicao_responsavel": "ATA",
+      "ano_da_diretriz": 2015,
+      "tags": [
+        "tireoide",
+        "Bethesda VI",
+        "câncer"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-030",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Recuperação pós-operatória",
+      "subtema": "Alimentação precoce",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Após colectomia laparoscópica sem complicações, paciente está desperto e sem contraindicação gastrointestinal. Qual medida está alinhada a protocolos de recuperação acelerada?",
+      "alternativas": {
+        "A": "Manter jejum até eliminar flatos obrigatoriamente.",
+        "B": "Iniciar alimentação oral precoce conforme tolerância e mobilização precoce.",
+        "C": "Manter sonda nasogástrica por sete dias.",
+        "D": "Prescrever opioide em horário fixo como única analgesia.",
+        "E": "Repouso absoluto."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Protocolos ERAS favorecem alimentação e mobilização precoces, analgesia multimodal e retirada de dispositivos desnecessários.",
+      "justificativas": {
+        "A": "Jejum prolongado não é necessário de rotina.",
+        "B": "Correta.",
+        "C": "Sonda prolongada aumenta complicações.",
+        "D": "Analgesia deve poupar opioide.",
+        "E": "Imobilidade aumenta trombose e perda funcional."
+      },
+      "referencia_principal": "Enhanced Recovery After Surgery Society recommendations for colorectal surgery.",
+      "instituicao_responsavel": "ERAS Society",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "ERAS",
+        "alimentação precoce",
+        "colectomia"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-031",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Infectologia Pediátrica",
+      "tema": "Lactente febril",
+      "subtema": "29 a 60 dias",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Lactente de 42 dias, previamente saudável, apresenta febre de 38,2 °C, bom estado geral, urina normal e marcadores inflamatórios de baixo risco. Qual afirmação é correta?",
+      "alternativas": {
+        "A": "Todos necessitam obrigatoriamente de punção lombar e UTI.",
+        "B": "Pode ser candidato a manejo seletivo sem punção lombar, com cultura de sangue e urina, critérios rigorosos e seguimento confiável.",
+        "C": "Deve receber amoxicilina oral sem culturas.",
+        "D": "Não precisa de cultura de urina.",
+        "E": "A aparência elimina totalmente o risco de bacteremia."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na faixa de 29-60 dias, biomarcadores, urina, confiabilidade do seguimento e decisão compartilhada permitem manejo mais seletivo que em neonatos jovens.",
+      "justificativas": {
+        "A": "Exagera a necessidade em todos os casos.",
+        "B": "Correta.",
+        "C": "Antibiótico empírico sem investigação não é adequado.",
+        "D": "ITU é infecção bacteriana frequente nessa idade.",
+        "E": "O risco é reduzido, não zero."
+      },
+      "referencia_principal": "AAP Clinical Practice Guideline: Well-Appearing Febrile Infants 8 to 60 Days Old, 2021.",
+      "instituicao_responsavel": "AAP",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "lactente febril",
+        "29-60 dias",
+        "procalcitonina"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-032",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Terapia Intensiva Pediátrica",
+      "tema": "Choque séptico",
+      "subtema": "Reposição volêmica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança com choque séptico em hospital com UTI recebe bolus de cristaloide. Após 20 mL/kg, surge hepatomegalia e estertores, mas persiste hipoperfusão. Qual é a melhor conduta?",
+      "alternativas": {
+        "A": "Continuar bolus rápidos sem reavaliação até 100 mL/kg.",
+        "B": "Interromper bolus, iniciar suporte vasoativo e reavaliar função cardíaca e sobrecarga.",
+        "C": "Administrar diurético e dar alta.",
+        "D": "Usar apenas albumina até normalizar pressão.",
+        "E": "Aguardar parada cardíaca."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Fluidos devem ser administrados em bolus com reavaliação frequente; sinais de sobrecarga indicam parar e iniciar vasoativo precocemente.",
+      "justificativas": {
+        "A": "Aumenta risco de edema e falência respiratória.",
+        "B": "Correta.",
+        "C": "Alta é insegura.",
+        "D": "Albumina não resolve choque com sobrecarga e não é obrigatória.",
+        "E": "Atraso é perigoso."
+      },
+      "referencia_principal": "Surviving Sepsis Campaign International Guidelines for Children, 2020.",
+      "instituicao_responsavel": "SCCM/ESICM",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "sepse pediátrica",
+        "fluido",
+        "vasoativo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-033",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Pneumologia Pediátrica",
+      "tema": "Asma aguda",
+      "subtema": "Exacerbação grave",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança de 8 anos apresenta exacerbação grave de asma, fala entrecortada, saturação de 89% e uso de musculatura acessória. Qual tratamento inicial é adequado?",
+      "alternativas": {
+        "A": "Oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce.",
+        "B": "Antibiótico isolado.",
+        "C": "Xarope antitussígeno.",
+        "D": "Salmeterol isolado.",
+        "E": "Sedação para reduzir ansiedade."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Exacerbação grave exige oxigênio, broncodilatador de curta ação repetido, ipratrópio nas crises graves e corticoide precoce.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Não há evidência bacteriana.",
+        "C": "Pode deprimir respiração.",
+        "D": "LABA não é resgate isolado.",
+        "E": "Sedação pode piorar ventilação."
+      },
+      "referencia_principal": "GINA 2026 Global Strategy for Asthma Management and Prevention.",
+      "instituicao_responsavel": "GINA",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "asma pediátrica",
+        "exacerbação",
+        "salbutamol",
+        "ipratrópio"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-034",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Nefrologia Pediátrica",
+      "tema": "Síndrome nefrótica",
+      "subtema": "Recidivas frequentes",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Menino de 6 anos com síndrome nefrótica sensível a esteroide apresenta quatro recidivas em 12 meses e toxicidade cushingoide. Qual princípio terapêutico é adequado?",
+      "alternativas": {
+        "A": "Manter prednisona diária em alta dose indefinidamente.",
+        "B": "Considerar agente poupador de esteroide, individualizado conforme adesão, toxicidade e perfil familiar.",
+        "C": "Realizar nefrectomia.",
+        "D": "Suspender todo tratamento.",
+        "E": "Usar antibiótico como imunossupressor."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Recidivas frequentes ou dependência de esteroide com toxicidade justificam terapia poupadora, como levamisol, micofenolato, inibidor de calcineurina, ciclofosfamida ou rituximabe em cenários selecionados.",
+      "justificativas": {
+        "A": "Aumenta toxicidade.",
+        "B": "Correta.",
+        "C": "Sem indicação.",
+        "D": "Leva a recidivas e complicações.",
+        "E": "Não trata a doença."
+      },
+      "referencia_principal": "KDIGO 2025 Clinical Practice Guideline for Nephrotic Syndrome in Children.",
+      "instituicao_responsavel": "KDIGO",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "síndrome nefrótica",
+        "recidiva frequente",
+        "poupador de esteroide"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-035",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Nefrologia Pediátrica",
+      "tema": "Síndrome hemolítico-urêmica",
+      "subtema": "Diarreia por STEC",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança de 4 anos apresenta diarreia sanguinolenta seguida de anemia hemolítica microangiopática, plaquetopenia e lesão renal aguda. Qual conduta é mais apropriada?",
+      "alternativas": {
+        "A": "Suporte clínico cuidadoso, evitando antimotilidade e antibiótico rotineiro contra STEC.",
+        "B": "Loperamida em alta dose.",
+        "C": "Antibiótico obrigatório para eliminar toxina.",
+        "D": "Plasmaférese para todos.",
+        "E": "Corticoide como primeira linha."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Na SHU típica associada a toxina Shiga, o manejo é principalmente de suporte; antimotilidade e antibióticos rotineiros podem ser prejudiciais.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Pode aumentar complicações.",
+        "C": "Não é recomendado rotineiramente e pode elevar liberação de toxina.",
+        "D": "Reservada a diagnósticos específicos, não SHU típica universal.",
+        "E": "Sem benefício padrão."
+      },
+      "referencia_principal": "CDC and pediatric nephrology guidance for Shiga toxin-associated HUS.",
+      "instituicao_responsavel": "CDC",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "SHU",
+        "STEC",
+        "diarreia sanguinolenta",
+        "LRA"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-036",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Nefrologia Pediátrica",
+      "tema": "Infecção urinária febril",
+      "subtema": "Imagem",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Lactente de 7 meses apresenta primeira ITU febril confirmada e melhora com antibiótico. Qual exame de imagem é geralmente recomendado após o episódio?",
+      "alternativas": {
+        "A": "Ultrassonografia de rins e vias urinárias.",
+        "B": "Uretrocistografia miccional obrigatória para todos.",
+        "C": "Tomografia com contraste.",
+        "D": "Cintilografia DMSA durante a febre para todos.",
+        "E": "Nenhum exame em qualquer situação."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Após primeira ITU febril em lactentes, ultrassonografia avalia anomalias estruturais; uretrocistografia é reservada a ultrassom anormal, recorrência ou situações selecionadas.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Não é universal após o primeiro episódio.",
+        "C": "Exposição desnecessária.",
+        "D": "Não é exame rotineiro agudo para todos.",
+        "E": "O ultrassom costuma ser indicado nessa idade."
+      },
+      "referencia_principal": "AAP Clinical Practice Guideline and pediatric UTI consensus recommendations.",
+      "instituicao_responsavel": "AAP",
+      "ano_da_diretriz": 2011,
+      "tags": [
+        "ITU febril",
+        "ultrassom",
+        "lactente"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-037",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Cardiologia Pediátrica/Neonatologia",
+      "tema": "Cardiopatia ducto-dependente",
+      "subtema": "Prostaglandina E1",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Recém-nascido com cianose intensa, pulsos fracos e suspeita de cardiopatia congênita ducto-dependente piora após 24 horas de vida. Qual medida deve ser iniciada enquanto aguarda ecocardiograma e transferência?",
+      "alternativas": {
+        "A": "Prostaglandina E1.",
+        "B": "Indometacina.",
+        "C": "Diurético isolado.",
+        "D": "Adenosina.",
+        "E": "Surfactante."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Prostaglandina E1 mantém ou reabre o canal arterial, preservando fluxo pulmonar ou sistêmico em lesões ducto-dependentes.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Fecha o canal arterial.",
+        "C": "Pode ter papel adjuvante, mas não restaura fluxo ductal.",
+        "D": "Trata algumas taquicardias.",
+        "E": "Não trata cardiopatia estrutural."
+      },
+      "referencia_principal": "American Heart Association pediatric congenital heart disease emergency principles.",
+      "instituicao_responsavel": "AHA",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "cardiopatia congênita",
+        "ducto-dependente",
+        "prostaglandina"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-038",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Cardiologia Pediátrica",
+      "tema": "Doença de Kawasaki",
+      "subtema": "Resistência à IVIG",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança com Kawasaki permanece febril 40 horas após término da primeira dose de imunoglobulina intravenosa. Qual afirmação é correta?",
+      "alternativas": {
+        "A": "Isso define resposta adequada e não exige avaliação.",
+        "B": "Deve ser avaliada como Kawasaki resistente à IVIG e receber terapia adicional, frequentemente nova IVIG ou corticoide conforme risco e protocolo.",
+        "C": "AAS deve ser suspenso imediatamente em todos.",
+        "D": "Antibiótico é a terapia principal.",
+        "E": "Não é necessário repetir ecocardiograma."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Febre persistente ou recorrente após IVIG sugere resistência e maior risco coronariano, exigindo reavaliação e tratamento adicional.",
+      "justificativas": {
+        "A": "Incorreta.",
+        "B": "Correta.",
+        "C": "AAS é manejado conforme fase e risco, não suspenso automaticamente.",
+        "D": "Kawasaki não é infecção bacteriana.",
+        "E": "Vigilância coronariana continua necessária."
+      },
+      "referencia_principal": "American Heart Association Scientific Statement on Kawasaki Disease.",
+      "instituicao_responsavel": "AHA",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "Kawasaki",
+        "resistência IVIG",
+        "corticoide"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-039",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Emergência Pediátrica",
+      "tema": "Anafilaxia",
+      "subtema": "Dose repetida de adrenalina",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança com anafilaxia recebeu adrenalina intramuscular, mas mantém hipotensão e sibilância após cinco minutos. Qual é o próximo passo?",
+      "alternativas": {
+        "A": "Repetir adrenalina intramuscular e intensificar suporte de via aérea e circulação.",
+        "B": "Aguardar corticoide agir por uma hora.",
+        "C": "Dar apenas anti-histamínico.",
+        "D": "Trocar para adrenalina subcutânea.",
+        "E": "Liberar porque já recebeu uma dose."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Adrenalina IM pode ser repetida em intervalos curtos se os sintomas persistirem, junto a oxigênio, fluidos e preparação para infusão em choque refratário.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Corticoide não atua rápido.",
+        "C": "Insuficiente.",
+        "D": "Via subcutânea é inferior.",
+        "E": "Persistência exige escalonamento."
+      },
+      "referencia_principal": "World Allergy Organization Anaphylaxis Guidance 2020.",
+      "instituicao_responsavel": "WAO",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "anafilaxia",
+        "adrenalina",
+        "choque"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-040",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Pediatria",
+      "area": "Neurologia Pediátrica/Emergência",
+      "tema": "Meningite bacteriana",
+      "subtema": "Punção lombar e estabilização",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança com febre, petéquias, choque e suspeita de meningococcemia chega instável. Qual conduta é correta?",
+      "alternativas": {
+        "A": "Aguardar punção lombar antes de antibiótico.",
+        "B": "Iniciar antibiótico e ressuscitação imediatamente; punção lombar pode ser adiada até estabilização.",
+        "C": "Realizar tomografia antes de qualquer tratamento.",
+        "D": "Administrar apenas corticoide.",
+        "E": "Observar evolução por duas horas."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Em paciente instável, tratamento antimicrobiano e ressuscitação não devem ser atrasados por punção lombar ou imagem.",
+      "justificativas": {
+        "A": "Atraso aumenta mortalidade.",
+        "B": "Correta.",
+        "C": "Imagem não deve atrasar antibiótico.",
+        "D": "Insuficiente.",
+        "E": "Inseguro."
+      },
+      "referencia_principal": "AAP/IDSA principles for bacterial meningitis and meningococcal disease.",
+      "instituicao_responsavel": "AAP/IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "meningococcemia",
+        "antibiótico",
+        "punção lombar"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-041",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Distócia de ombro",
+      "subtema": "Manobras iniciais",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Após saída da cabeça fetal, ocorre retração contra o períneo e os ombros não desprendem. Qual é a primeira sequência de manobras?",
+      "alternativas": {
+        "A": "Pressão fúndica vigorosa.",
+        "B": "McRoberts e pressão suprapúbica, com solicitação de ajuda.",
+        "C": "Tração intensa da cabeça fetal.",
+        "D": "Cesárea após saída da cabeça.",
+        "E": "Aguardar contração espontânea."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Na distócia de ombro, chama-se ajuda, evita-se pressão fúndica e inicia-se McRoberts com pressão suprapúbica.",
+      "justificativas": {
+        "A": "Pode impactar mais o ombro e romper útero.",
+        "B": "Correta.",
+        "C": "Aumenta lesão de plexo braquial.",
+        "D": "Não é factível como primeira medida após saída da cabeça.",
+        "E": "Atraso aumenta hipóxia."
+      },
+      "referencia_principal": "ACOG Practice Bulletin: Shoulder Dystocia.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "distócia de ombro",
+        "McRoberts",
+        "pressão suprapúbica"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-042",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Placenta prévia",
+      "subtema": "Exame vaginal",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Gestante de 32 semanas apresenta sangramento vaginal vermelho vivo, indolor, com feto estável. Ainda não foi definida a localização placentária. Qual conduta deve ser evitada inicialmente?",
+      "alternativas": {
+        "A": "Ultrassonografia.",
+        "B": "Acesso venoso e avaliação hemodinâmica.",
+        "C": "Toque vaginal digital.",
+        "D": "Monitorização fetal.",
+        "E": "Tipagem sanguínea."
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "Na suspeita de placenta prévia, toque digital pode provocar hemorragia intensa e deve ser evitado até excluir placenta sobre o colo.",
+      "justificativas": {
+        "A": "É o exame para localização.",
+        "B": "Adequado.",
+        "C": "Correta: deve ser evitado.",
+        "D": "Adequado.",
+        "E": "Adequado."
+      },
+      "referencia_principal": "ACOG Practice Bulletin: Placenta Previa and related obstetric hemorrhage guidance.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "placenta prévia",
+        "sangramento",
+        "toque vaginal"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-043",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Descolamento prematuro de placenta",
+      "subtema": "Emergência obstétrica",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Gestante de 37 semanas apresenta dor abdominal súbita, hipertonia uterina, sangramento escuro e bradicardia fetal persistente. Qual é a conduta?",
+      "alternativas": {
+        "A": "Alta com repouso.",
+        "B": "Estabilização materna e parto imediato, geralmente cesariana diante de sofrimento fetal e parto vaginal não iminente.",
+        "C": "Tocolítico e observação por 48 horas.",
+        "D": "Toque repetido a cada 15 minutos.",
+        "E": "Aguardar ultrassom confirmar, pois o diagnóstico nunca é clínico."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "DPP é diagnóstico predominantemente clínico; sofrimento fetal persistente exige parto imediato após estabilização.",
+      "justificativas": {
+        "A": "Inseguro.",
+        "B": "Correta.",
+        "C": "Tocolítico é inadequado a termo com sofrimento fetal.",
+        "D": "Não resolve a emergência.",
+        "E": "Ultrassom normal não exclui DPP."
+      },
+      "referencia_principal": "ACOG guidance on Placental Abruption and Antepartum Hemorrhage.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "DPP",
+        "sofrimento fetal",
+        "cesárea"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-044",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Infecção intra-amniótica",
+      "subtema": "Via de parto",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Gestante em trabalho de parto apresenta febre, taquicardia fetal, leucocitose e líquido amniótico fétido. Qual conduta é correta?",
+      "alternativas": {
+        "A": "Antibiótico intravenoso e condução do parto; corioamnionite isoladamente não obriga cesariana.",
+        "B": "Aguardar cultura por 48 horas.",
+        "C": "Suspender o trabalho de parto.",
+        "D": "Cesárea obrigatória em todos os casos.",
+        "E": "Antibiótico oral após alta."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Infecção intra-amniótica requer antibiótico e parto; a via depende de indicações obstétricas, não da infecção isoladamente.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "O tratamento não deve aguardar.",
+        "C": "O parto deve ser conduzido.",
+        "D": "Cesárea não é obrigatória e aumenta morbidade infecciosa quando sem indicação.",
+        "E": "Inadequado."
+      },
+      "referencia_principal": "ACOG Committee Opinion: Intrapartum Management of Intraamniotic Infection.",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2017,
+      "tags": [
+        "corioamnionite",
+        "antibiótico",
+        "via de parto"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-045",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Hemorragia pós-parto",
+      "subtema": "Ácido tranexâmico",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Puérpera com hemorragia pós-parto ativa é atendida 50 minutos após o nascimento. Qual afirmação sobre ácido tranexâmico é correta?",
+      "alternativas": {
+        "A": "Deve ser administrado precocemente, idealmente dentro de três horas do parto, associado ao pacote de tratamento.",
+        "B": "Só pode ser usado após 24 horas.",
+        "C": "Substitui uterotônicos e controle da fonte.",
+        "D": "É contraindicado em toda cesariana.",
+        "E": "Deve aguardar coagulograma normal."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "O TXA reduz morte por sangramento quando usado precocemente e deve integrar o tratamento, não substituir outras medidas.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Benefício é maior com uso precoce.",
+        "C": "É adjuvante.",
+        "D": "Não há contraindicação universal por cesariana.",
+        "E": "Não se deve atrasar por exames."
+      },
+      "referencia_principal": "WHO/FIGO/ICM Consolidated Guidelines for Postpartum Haemorrhage, 2025.",
+      "instituicao_responsavel": "WHO/FIGO/ICM",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "hemorragia pós-parto",
+        "ácido tranexâmico",
+        "3 horas"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-046",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Epidemiologia",
+      "tema": "Teste diagnóstico",
+      "subtema": "Sensibilidade",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Um teste de triagem possui sensibilidade de 95%. O que isso significa?",
+      "alternativas": {
+        "A": "Entre pessoas com a doença, 95% terão teste positivo.",
+        "B": "Entre pessoas sem a doença, 95% terão teste negativo.",
+        "C": "A probabilidade pós-teste positivo é 95%.",
+        "D": "A prevalência é 95%.",
+        "E": "O teste tem 5% de falsos positivos."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "Sensibilidade é a proporção de verdadeiros positivos entre todos os doentes.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Define especificidade.",
+        "C": "Valor preditivo depende da prevalência.",
+        "D": "Não informa prevalência.",
+        "E": "A taxa citada seria de falsos negativos, não positivos."
+      },
+      "referencia_principal": "Fundamentos de epidemiologia clínica e avaliação de testes diagnósticos.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "sensibilidade",
+        "teste diagnóstico"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-047",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Epidemiologia",
+      "tema": "Teste diagnóstico",
+      "subtema": "Valor preditivo positivo",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Um mesmo teste é aplicado em duas populações, mantendo sensibilidade e especificidade. Na população B, a prevalência da doença é muito maior. O que ocorre com o valor preditivo positivo?",
+      "alternativas": {
+        "A": "Diminui obrigatoriamente.",
+        "B": "Aumenta.",
+        "C": "Permanece sempre idêntico.",
+        "D": "Torna-se igual à sensibilidade.",
+        "E": "Torna-se igual à especificidade."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Com maior prevalência, uma proporção maior dos resultados positivos corresponde a verdadeiros positivos.",
+      "justificativas": {
+        "A": "Ocorre o oposto.",
+        "B": "Correta.",
+        "C": "Valores preditivos dependem da prevalência.",
+        "D": "São conceitos distintos.",
+        "E": "São conceitos distintos."
+      },
+      "referencia_principal": "Fundamentos de epidemiologia clínica.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "prevalência",
+        "valor preditivo positivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-048",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Medicina baseada em evidências",
+      "tema": "Ensaio clínico",
+      "subtema": "Intenção de tratar",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Em ensaio randomizado, 18% dos participantes trocam de grupo ou interrompem a intervenção. Qual análise preserva melhor os benefícios da randomização?",
+      "alternativas": {
+        "A": "Analisar conforme o tratamento inicialmente atribuído.",
+        "B": "Excluir todos os não aderentes.",
+        "C": "Analisar apenas quem concluiu perfeitamente.",
+        "D": "Mover participantes para o grupo que efetivamente escolheram.",
+        "E": "Excluir eventos adversos."
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A análise por intenção de tratar mantém os participantes no grupo original, reduzindo viés introduzido após a randomização.",
+      "justificativas": {
+        "A": "Correta.",
+        "B": "Pode quebrar comparabilidade.",
+        "C": "Análise per protocol é mais sujeita a viés.",
+        "D": "Desfaz a randomização.",
+        "E": "Manipula desfechos."
+      },
+      "referencia_principal": "CONSORT and fundamental clinical trial methodology.",
+      "instituicao_responsavel": "CONSORT",
+      "ano_da_diretriz": 2010,
+      "tags": [
+        "intenção de tratar",
+        "ensaio clínico",
+        "randomização"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-049",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Imunizações",
+      "tema": "Vacinas vivas",
+      "subtema": "Imunossupressão",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente receberá imunossupressão intensa com rituximabe e altas doses de corticoide. Qual princípio sobre vacinas é correto?",
+      "alternativas": {
+        "A": "Vacinas vivas podem ser aplicadas durante imunossupressão intensa sem restrição.",
+        "B": "Vacinas vivas devem ser evitadas durante imunossupressão importante; o planejamento ideal ocorre antes do tratamento.",
+        "C": "Todas as vacinas inativadas são proibidas.",
+        "D": "Vacinação nunca é necessária em imunossuprimidos.",
+        "E": "Rituximabe aumenta a resposta humoral às vacinas."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Vacinas vivas podem causar doença em imunossuprimidos; vacinas indicadas devem ser planejadas antes, reconhecendo que rituximabe reduz resposta humoral.",
+      "justificativas": {
+        "A": "Incorreta e perigosa.",
+        "B": "Correta.",
+        "C": "Vacinas inativadas geralmente são seguras, embora possam ser menos imunogênicas.",
+        "D": "Esses pacientes têm risco aumentado de infecção.",
+        "E": "Rituximabe reduz resposta de células B."
+      },
+      "referencia_principal": "CDC General Best Practice Guidelines for Immunization: Altered Immunocompetence.",
+      "instituicao_responsavel": "CDC",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "vacina viva",
+        "rituximabe",
+        "imunossupressão"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    },
+    {
+      "id_externo": "MR26-L2-050",
+      "lote_importacao": "MEDRANK_AUTORAL_2026_LOTE_02",
+      "tipo_da_questao": "Questão autoral de previsão para residência",
+      "especialidade": "Medicina Preventiva",
+      "area": "Epidemiologia",
+      "tema": "Rastreamento",
+      "subtema": "Sobrediagnóstico",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Um programa detecta muitos tumores indolentes que jamais causariam sintomas ou morte, aumentando a incidência registrada e os tratamentos, sem reduzir mortalidade. Qual fenômeno está ocorrendo?",
+      "alternativas": {
+        "A": "Viés de memória.",
+        "B": "Sobrediagnóstico.",
+        "C": "Erro aleatório.",
+        "D": "Confusão negativa.",
+        "E": "Efeito placebo."
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "Sobrediagnóstico é a identificação de doença real que não se manifestaria clinicamente durante a vida, gerando tratamento sem benefício.",
+      "justificativas": {
+        "A": "Não se refere à detecção de doença indolente.",
+        "B": "Correta.",
+        "C": "Não explica o padrão sistemático.",
+        "D": "Não é a descrição.",
+        "E": "Não se aplica."
+      },
+      "referencia_principal": "Fundamentos de avaliação de programas de rastreamento.",
+      "instituicao_responsavel": "Referência metodológica",
+      "ano_da_diretriz": 2026,
+      "tags": [
+        "sobrediagnóstico",
+        "rastreamento",
+        "mortalidade"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento. Não corresponde a questão oficial de prova."
+    }
+  ]
+}
