@@ -10,6 +10,7 @@ import { EnsureDailyExamsButton } from '@/components/admin/EnsureDailyExamsButto
 import { ExamQualityAdminCard } from '@/components/admin/ExamQualityAdminCard';
 import { DayHealthPanel } from '@/components/admin/DayHealthPanel';
 import { AiPaidSettingsCard } from '@/components/admin/AiPaidSettingsCard';
+import { BankInventoryPanel } from '@/components/admin/BankInventoryPanel';
 import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 
 export default async function ProvasPage() {
@@ -137,6 +138,8 @@ export default async function ProvasPage() {
           Nova prova
         </Link>
       </div>
+
+      <BankInventoryPanel />
 
       <section className="mb-6 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
         <h2 className="font-semibold text-slate-900">Geração automática</h2>

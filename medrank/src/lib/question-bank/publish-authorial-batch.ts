@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { buildPublishedAuthorialTags } from '@/lib/question-bank/track-tags';
 
 type PublishArgs = {
   batchId: string;
@@ -33,7 +34,6 @@ async function updateApproved(
 ) {
   if (ids.length === 0) return { count: 0, error: null as string | null };
 
-  // Chunk para limites do PostgREST (.in)
   let count = 0;
   for (let i = 0; i < ids.length; i += 200) {
     const chunk = ids.slice(i, i + 200);
@@ -50,6 +50,39 @@ async function updateApproved(
   return { count, error: null };
 }
 
+type TagSourceRow = {
+  id: string;
+  question_kind?: string | null;
+  import_batch_id?: string | null;
+  lote_importacao?: string | null;
+  specialty?: string | null;
+  area?: string | null;
+  topic?: string | null;
+  subtopic?: string | null;
+  tags?: string[] | null;
+};
+
+async function applyTrackTags(admin: SupabaseClient, rows: TagSourceRow[]) {
+  // Agrupa por assinatura de tags para menos updates
+  const groups = new Map<string, string[]>();
+  for (const q of rows) {
+    const tags = buildPublishedAuthorialTags(q);
+    const key = tags.slice().sort().join('|');
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(q.id);
+  }
+
+  for (const [key, ids] of groups) {
+    const tags = key.split('|').filter(Boolean);
+    for (let i = 0; i < ids.length; i += 200) {
+      const chunk = ids.slice(i, i + 200);
+      const { error } = await admin.from('questions').update({ tags }).in('id', chunk);
+      if (error) return error.message;
+    }
+  }
+  return null as string | null;
+}
+
 /**
  * Aprova questões autorais de UM lote (1–2 queries).
  */
@@ -62,22 +95,26 @@ export async function publishAuthorialBatch(
 
   let { data: drafts, error: loadErr } = await admin
     .from('questions')
-    .select('id, question_kind')
+    .select('id, question_kind, import_batch_id, lote_importacao, specialty, area, topic, subtopic, tags')
     .eq('import_batch_id', args.batchId)
     .in('bank_status', [...DRAFT_STATUSES]);
 
   if (loadErr) return { published: 0, error: loadErr.message };
 
-  let rows = (drafts || []).filter((q) => q.question_kind !== 'official_residency');
+  let rows = ((drafts || []) as TagSourceRow[]).filter(
+    (q) => q.question_kind !== 'official_residency'
+  );
 
   if (rows.length === 0 && args.loteCodigo) {
     const fb = await admin
       .from('questions')
-      .select('id, question_kind')
+      .select('id, question_kind, import_batch_id, lote_importacao, specialty, area, topic, subtopic, tags')
       .eq('lote_importacao', args.loteCodigo)
       .in('bank_status', [...DRAFT_STATUSES]);
     if (fb.error) return { published: 0, error: fb.error.message };
-    rows = (fb.data || []).filter((q) => q.question_kind !== 'official_residency');
+    rows = ((fb.data || []) as TagSourceRow[]).filter(
+      (q) => q.question_kind !== 'official_residency'
+    );
   }
 
   if (rows.length === 0) {
@@ -88,15 +125,20 @@ export async function publishAuthorialBatch(
   }
 
   const ids = rows.map((q) => q.id);
-  const { count, error } = await updateApproved(admin, ids, payload);
+  const { count, error } = await updateApproved(admin, ids, {
+    ...payload,
+    import_batch_id: args.batchId,
+  });
   if (error) return { published: 0, error };
   if (count === 0) return { published: 0, error: 'Update não alterou nenhuma questão.' };
 
-  // Reatacha batch + remove tag rascunho em um único update (tags fixas ok para disputa)
-  await updateApproved(admin, ids, {
-    import_batch_id: args.batchId,
-    tags: ['authorial-batch', 'authorial-published', 'residencia-expert', 'banco-expert'],
-  });
+  const tagErr = await applyTrackTags(admin, rows);
+  if (tagErr) {
+    return {
+      published: count,
+      error: `Questões aprovadas (${count}), falha ao etiquetar trilha: ${tagErr}`,
+    };
+  }
 
   const { error: batchErr } = await admin
     .from('question_import_batches')
@@ -148,10 +190,9 @@ export async function publishAllAuthorialDrafts(
   const batchIds = draftBatches.map((b) => b.id);
   const loteCodes = draftBatches.map((b) => b.lote_codigo).filter(Boolean) as string[];
 
-  // Busca todas as questões draft ligadas a esses lotes
   const { data: byBatch, error: q1 } = await admin
     .from('questions')
-    .select('id, question_kind, import_batch_id, lote_importacao')
+    .select('id, question_kind, import_batch_id, lote_importacao, specialty, area, topic, subtopic, tags')
     .in('import_batch_id', batchIds)
     .in('bank_status', [...DRAFT_STATUSES]);
 
@@ -159,19 +200,21 @@ export async function publishAllAuthorialDrafts(
     return { batches: draftBatches.length, published: 0, error: q1.message, message: q1.message };
   }
 
-  let rows = (byBatch || []).filter((q) => q.question_kind !== 'official_residency');
+  let rows = ((byBatch || []) as TagSourceRow[]).filter(
+    (q) => q.question_kind !== 'official_residency'
+  );
 
   if (loteCodes.length > 0) {
     const { data: byLote, error: q2 } = await admin
       .from('questions')
-      .select('id, question_kind, import_batch_id, lote_importacao')
+      .select('id, question_kind, import_batch_id, lote_importacao, specialty, area, topic, subtopic, tags')
       .in('lote_importacao', loteCodes)
       .in('bank_status', [...DRAFT_STATUSES]);
     if (q2) {
       return { batches: draftBatches.length, published: 0, error: q2.message, message: q2.message };
     }
     const seen = new Set(rows.map((r) => r.id));
-    for (const q of byLote || []) {
+    for (const q of (byLote || []) as TagSourceRow[]) {
       if (q.question_kind === 'official_residency') continue;
       if (!seen.has(q.id)) {
         seen.add(q.id);
@@ -190,31 +233,36 @@ export async function publishAllAuthorialDrafts(
   }
 
   const ids = rows.map((r) => r.id);
-  const { count, error } = await updateApproved(admin, ids, {
-    ...payload,
-    tags: ['authorial-batch', 'authorial-published', 'residencia-expert', 'banco-expert'],
-  });
+  const { count, error } = await updateApproved(admin, ids, payload);
   if (error) {
     return { batches: draftBatches.length, published: 0, error, message: error };
   }
 
-  // Marca todos os lotes como published
+  const tagErr = await applyTrackTags(admin, rows);
+  if (tagErr) {
+    return {
+      batches: draftBatches.length,
+      published: count,
+      error: tagErr,
+      message: `Aprovadas ${count}, mas falhou etiquetar: ${tagErr}`,
+    };
+  }
+
   await admin
     .from('question_import_batches')
     .update({ status: 'published', approved_count: Math.floor(count / Math.max(draftBatches.length, 1)) })
     .in('id', batchIds);
 
-  // Ajusta approved_count por lote (rápido, paralelo)
   await Promise.all(
     draftBatches.map(async (b) => {
       const n = rows.filter(
         (r) =>
           r.import_batch_id === b.id ||
-          (r as { lote_importacao?: string }).lote_importacao === b.lote_codigo
+          r.lote_importacao === b.lote_codigo
       ).length;
       await admin
         .from('question_import_batches')
-        .update({ status: 'published', approved_count: n || count })
+        .update({ approved_count: n })
         .eq('id', b.id);
     })
   );
@@ -222,6 +270,32 @@ export async function publishAllAuthorialDrafts(
   return {
     batches: draftBatches.length,
     published: count,
-    message: `${count} questões publicadas em ${draftBatches.length} lote(s). Vá em Provas → Forçar regenerar (banco).`,
+    message: `Publicados ${count} questões em ${draftBatches.length} lote(s).`,
   };
+}
+
+/**
+ * Reetiqueta questões já publicadas dos lotes MedRank (corrige tags apagadas).
+ * Resolve o erro "Banco expert insuficiente (0/10)" na disputa de Nefrologia.
+ */
+export async function repairAuthorialTrackTags(
+  admin: SupabaseClient
+): Promise<{ updated: number; error?: string }> {
+  const { data, error } = await admin
+    .from('questions')
+    .select('id, lote_importacao, specialty, area, topic, subtopic, tags, bank_status')
+    .eq('bank_status', 'approved')
+    .or(
+      'lote_importacao.like.MEDRANK_AUTORAL_2026_LOTE_%,lote_importacao.like.MEDRANK_NEFRO_NEFROPED_2026_LOTE_%,lote_importacao.like.MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_%'
+    )
+    .limit(5000);
+
+  if (error) return { updated: 0, error: error.message };
+
+  const rows = (data || []) as TagSourceRow[];
+  if (rows.length === 0) return { updated: 0 };
+
+  const tagErr = await applyTrackTags(admin, rows);
+  if (tagErr) return { updated: 0, error: tagErr };
+  return { updated: rows.length };
 }
