@@ -121,18 +121,31 @@ async function pickTrackQuestions(
   mode: 'ai' | 'bank' = 'bank'
 ) {
   const tag = TRACK_CONFIG[track].tag;
+  const columns =
+    'id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, source, year, specialty, topic, subtopic, difficulty, tags, bank_status, question_origin, institution, exam_name, lote_importacao, created_at';
   const allTagged: Question[] = [];
-  const pageSize = 1000;
-  for (let page = 0; page < 10; page++) {
+  const pageSize = 500;
+  for (let page = 0; page < 6; page++) {
     const from = page * pageSize;
     const to = from + pageSize - 1;
-    const { data, error } = await admin
+    let query = admin
       .from('questions')
-      .select('*')
+      .select(columns)
       .contains('tags', [tag])
+      .eq('bank_status', 'approved')
       .range(from, to);
+    let { data, error } = await query;
+    if (error && /bank_status|schema cache/i.test(error.message)) {
+      const retry = await admin
+        .from('questions')
+        .select(columns.replace(', bank_status', ''))
+        .contains('tags', [tag])
+        .range(from, to);
+      data = retry.data as typeof data;
+      error = retry.error;
+    }
     if (error) throw new Error(error.message);
-    const rows = (data ?? []) as Question[];
+    const rows = (data ?? []) as unknown as Question[];
     allTagged.push(...rows);
     if (rows.length < pageSize) break;
   }
@@ -145,7 +158,6 @@ async function pickTrackQuestions(
   if (fresh.length >= count) pool = fresh;
 
   if (pool.length < count) {
-    // Em modo banco, ainda tenta o pool cru da tag (só aprovadas)
     if (mode === 'bank' && approvedTagged.length >= count) {
       pool = sortByBankPriority(approvedTagged);
     } else {

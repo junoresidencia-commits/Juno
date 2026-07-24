@@ -39,11 +39,7 @@ export default async function RankingEntreGruposPage({
 
   if (!usesDemoStore()) {
     const client = createAdminClient() ?? (await createClient());
-    // Garante ranking atualizado (idempotente)
-    await client.rpc('recalculate_collective_rankings_for_date', { p_date: today }).then(
-      () => undefined,
-      () => undefined
-    );
+    // Não recalcula no page load (pesado). O score já roda ao finalizar provas.
 
     const [{ data }, { data: hist }] = await Promise.all([
       client

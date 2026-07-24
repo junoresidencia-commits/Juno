@@ -25,7 +25,9 @@ async function loadDisputeCard(
 ): Promise<HomeDisputeCard> {
   const { data: todayExam } = await supabase
     .from('exams')
-    .select('*')
+    .select(
+      'id, title, date_available, duration_minutes, total_questions, status, audience, quality_status, quality_summary, window_start_hour, window_end_hour, date_closes, ranking_visible_to_students, ranking_release'
+    )
     .eq('date_available', today)
     .eq('audience', audience)
     .eq('status', 'published')

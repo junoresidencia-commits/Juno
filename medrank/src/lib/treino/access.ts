@@ -13,7 +13,8 @@ export async function canAccessNephrologyTreino(
 ): Promise<boolean> {
   if (profile?.role === 'admin') return true;
   const tracks = profile?.enabled_tracks;
-  if (Array.isArray(tracks) && tracks.includes('nephrology')) return true;
+  // Caminho rápido: sem query extra se o profile já trouxe os tracks
+  if (Array.isArray(tracks)) return tracks.includes('nephrology');
   const ctx = await resolveUserExamAudience(userId);
   return ctx.hasNephrology;
 }

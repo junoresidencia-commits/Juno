@@ -190,3 +190,15 @@ A entrada continuará dependendo de solicitação e aprovação do administrador
 10. Somente depois ampliar novamente o banco de questões.
 
 **Não reconstruir o banco de questões agora.** Primeiro finalize este fluxo.
+
+---
+
+## Preferência nas provas criadas (banco)
+
+Manter os lotes MedRank novos. Nas disputas diárias, priorizar provas de universidade/oficiais mais atualizadas:
+
+1. Oficiais / universidade **2026**
+2. Oficiais / universidade **2025**
+3. Oficiais / universidade **2024**
+4. Lotes MedRank (autorais / diretrizes)
+5. Oficiais anteriores a 2024 **fora** da disputa
