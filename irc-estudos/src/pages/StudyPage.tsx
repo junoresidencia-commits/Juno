@@ -1,6 +1,8 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { BlueprintPreview } from '../components/BlueprintPreview'
 import { useData } from '../hooks/useData'
+import { generateBlueprint } from '../lib/blueprint'
 import {
   calculateCkdEpi2021,
   hasCkdByEgfr,
@@ -11,6 +13,7 @@ import {
   CKD_STAGE_LABELS,
   STUDY_TEMPLATE_LABELS,
   UNDERLYING_DISEASE_LABELS,
+  WORK_KIND_LABELS,
   type CkdStage,
   type Patient,
   type Sex,
@@ -23,16 +26,27 @@ const DISEASE_OPTIONS = Object.entries(UNDERLYING_DISEASE_LABELS) as [
   string,
 ][]
 
+type Tab = 'dados' | 'artigo' | 'excel'
+
 export function StudyPage() {
   const { studyId = '' } = useParams()
   const navigate = useNavigate()
-  const { studyOf, patientsOf, savePatient, removePatient, updateStudy, removeStudy } =
-    useData()
+  const {
+    studyOf,
+    patientsOf,
+    savePatient,
+    importPatients,
+    removePatient,
+    updateStudy,
+    removeStudy,
+  } = useData()
   const study = studyOf(studyId)
   const patients = patientsOf(studyId)
   const stats = useMemo(() => computeStudyStats(patients), [patients])
   const [editing, setEditing] = useState<Patient | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [tab, setTab] = useState<Tab>('dados')
+  const [importMsg, setImportMsg] = useState<string | null>(null)
 
   if (!study) {
     return (
@@ -42,6 +56,8 @@ export function StudyPage() {
       </div>
     )
   }
+
+  const collectsPatients = study.template !== 'none'
 
   function exportCsv() {
     const csv = patientsToCsv(patients)
@@ -54,12 +70,41 @@ export function StudyPage() {
     URL.revokeObjectURL(url)
   }
 
+  async function onExportExcel() {
+    const { downloadPatientsExcel } = await import('../lib/excel')
+    downloadPatientsExcel(patients, study!.title)
+  }
+
+  async function onTemplateExcel() {
+    const { downloadPatientsTemplate } = await import('../lib/excel')
+    downloadPatientsTemplate(study!.title)
+  }
+
+  async function onImportExcel(file: File) {
+    const { parsePatientsExcel } = await import('../lib/excel')
+    const rows = await parsePatientsExcel(file, study!.id)
+    return importPatients(rows)
+  }
+
+  function ensureBlueprint() {
+    if (study!.blueprint) return study!.blueprint
+    const bp = generateBlueprint({
+      title: study!.title,
+      idea: study!.idea || study!.objective,
+      kind: study!.kind,
+      region: study!.region,
+    })
+    updateStudy({ ...study!, blueprint: bp })
+    return bp
+  }
+
   return (
     <div className="page">
       <header className="page-header study-header">
         <div>
           <p className="eyebrow">
-            {study.region} · {STUDY_TEMPLATE_LABELS[study.template]}
+            {study.region} · {WORK_KIND_LABELS[study.kind]} ·{' '}
+            {STUDY_TEMPLATE_LABELS[study.template]}
           </p>
           <h1>{study.title}</h1>
           <p className="lede compact">{study.objective}</p>
@@ -81,19 +126,18 @@ export function StudyPage() {
               <option value="completed">Concluído</option>
             </select>
           </label>
-          <button
-            type="button"
-            className="btn secondary"
-            onClick={() => {
-              setEditing(null)
-              setShowForm(true)
-            }}
-          >
-            Cadastrar paciente
-          </button>
-          <button type="button" className="btn ghost" onClick={exportCsv}>
-            Exportar CSV
-          </button>
+          {collectsPatients ? (
+            <button
+              type="button"
+              className="btn secondary"
+              onClick={() => {
+                setEditing(null)
+                setShowForm(true)
+              }}
+            >
+              Cadastrar paciente
+            </button>
+          ) : null}
           <button
             type="button"
             className="btn danger ghost"
@@ -113,117 +157,360 @@ export function StudyPage() {
         </div>
       </header>
 
-      <section className="stats-grid" aria-label="Resumo epidemiológico">
-        <article className="stat">
-          <span>Pacientes</span>
-          <strong>{stats.totalPatients}</strong>
-        </article>
-        <article className="stat accent">
-          <span>Prevalência de DRC (TFG &lt; 60)</span>
-          <strong>{stats.ckdPrevalence.toFixed(1)}%</strong>
-          <small>{stats.ckdCount} casos</small>
-        </article>
-        <article className="stat">
-          <span>TFG média</span>
-          <strong>{stats.meanEgfr ? stats.meanEgfr.toFixed(1) : '—'}</strong>
-          <small>mL/min/1.73 m²</small>
-        </article>
-        <article className="stat">
-          <span>Em estatina</span>
-          <strong>{stats.statinRate.toFixed(0)}%</strong>
-          <small>{stats.statinCount} pacientes</small>
-        </article>
-      </section>
-
-      <div className="split">
-        <section className="section panel">
-          <div className="section-head tight">
-            <h2>Estágios CKD-EPI</h2>
-            <p>Distribuição por TFG estimada.</p>
-          </div>
-          <ul className="bar-list">
-            {(Object.keys(CKD_STAGE_LABELS) as CkdStage[]).map((stage) => {
-              const count = stats.byStage[stage]
-              const pct = stats.totalPatients
-                ? (count / stats.totalPatients) * 100
-                : 0
-              return (
-                <li key={stage}>
-                  <div className="bar-label">
-                    <span>{CKD_STAGE_LABELS[stage]}</span>
-                    <span>
-                      {count} ({pct.toFixed(0)}%)
-                    </span>
-                  </div>
-                  <div className="bar-track">
-                    <div
-                      className={`bar-fill stage-${stage}`}
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
-
-        <section className="section panel">
-          <div className="section-head tight">
-            <h2>Doença de base</h2>
-            <p>Diabetes, hipertensão e demais causas secundárias.</p>
-          </div>
-          <ul className="bar-list">
-            {DISEASE_OPTIONS.filter(([key]) => stats.byDisease[key] > 0).map(
-              ([key, label]) => {
-                const count = stats.byDisease[key]
-                const pct = stats.totalPatients
-                  ? (count / stats.totalPatients) * 100
-                  : 0
-                return (
-                  <li key={key}>
-                    <div className="bar-label">
-                      <span>{label}</span>
-                      <span>
-                        {count} ({pct.toFixed(0)}%)
-                      </span>
-                    </div>
-                    <div className="bar-track">
-                      <div className="bar-fill disease" style={{ width: `${pct}%` }} />
-                    </div>
-                  </li>
-                )
-              },
-            )}
-            {stats.totalPatients === 0 ? (
-              <li className="muted">Cadastre pacientes para ver o perfil.</li>
-            ) : null}
-          </ul>
-        </section>
+      <div className="tabs" role="tablist" aria-label="Áreas do trabalho">
+        <button
+          type="button"
+          role="tab"
+          className={tab === 'dados' ? 'active' : ''}
+          aria-selected={tab === 'dados'}
+          onClick={() => setTab('dados')}
+        >
+          Dados
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={tab === 'artigo' ? 'active' : ''}
+          aria-selected={tab === 'artigo'}
+          onClick={() => {
+            ensureBlueprint()
+            setTab('artigo')
+          }}
+        >
+          Artigo / revisão
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={tab === 'excel' ? 'active' : ''}
+          aria-selected={tab === 'excel'}
+          onClick={() => setTab('excel')}
+        >
+          Excel
+        </button>
       </div>
 
-      <section className="section panel">
-        <div className="section-head tight">
-          <h2>DRC por faixa etária</h2>
-          <p>Prevalência estratificada — útil para relatórios em 6 meses.</p>
-        </div>
-        <div className="age-grid">
-          {stats.ageBands.map((band) => (
-            <div key={band.label} className="age-cell">
-              <span>{band.label} anos</span>
-              <strong>
-                {band.total
-                  ? `${((band.ckd / band.total) * 100).toFixed(0)}%`
-                  : '—'}
-              </strong>
-              <small>
-                {band.ckd}/{band.total} com DRC
-              </small>
-            </div>
-          ))}
-        </div>
-      </section>
+      {tab === 'dados' && collectsPatients ? (
+        <>
+          <section className="stats-grid" aria-label="Resumo epidemiológico">
+            <article className="stat">
+              <span>Pacientes</span>
+              <strong>{stats.totalPatients}</strong>
+            </article>
+            <article className="stat accent">
+              <span>Prevalência de DRC (TFG &lt; 60)</span>
+              <strong>{stats.ckdPrevalence.toFixed(1)}%</strong>
+              <small>{stats.ckdCount} casos</small>
+            </article>
+            <article className="stat">
+              <span>TFG média</span>
+              <strong>{stats.meanEgfr ? stats.meanEgfr.toFixed(1) : '—'}</strong>
+              <small>mL/min/1.73 m²</small>
+            </article>
+            <article className="stat">
+              <span>Em estatina</span>
+              <strong>{stats.statinRate.toFixed(0)}%</strong>
+              <small>{stats.statinCount} pacientes</small>
+            </article>
+          </section>
 
-      {(showForm || editing) && (
+          <div className="split">
+            <section className="section panel">
+              <div className="section-head tight">
+                <h2>Estágios CKD-EPI</h2>
+                <p>Distribuição por TFG estimada.</p>
+              </div>
+              <ul className="bar-list">
+                {(Object.keys(CKD_STAGE_LABELS) as CkdStage[]).map((stage) => {
+                  const count = stats.byStage[stage]
+                  const pct = stats.totalPatients
+                    ? (count / stats.totalPatients) * 100
+                    : 0
+                  return (
+                    <li key={stage}>
+                      <div className="bar-label">
+                        <span>{CKD_STAGE_LABELS[stage]}</span>
+                        <span>
+                          {count} ({pct.toFixed(0)}%)
+                        </span>
+                      </div>
+                      <div className="bar-track">
+                        <div
+                          className={`bar-fill stage-${stage}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+
+            <section className="section panel">
+              <div className="section-head tight">
+                <h2>Doença de base</h2>
+                <p>Diabetes, hipertensão e demais causas secundárias.</p>
+              </div>
+              <ul className="bar-list">
+                {DISEASE_OPTIONS.filter(([key]) => stats.byDisease[key] > 0).map(
+                  ([key, label]) => {
+                    const count = stats.byDisease[key]
+                    const pct = stats.totalPatients
+                      ? (count / stats.totalPatients) * 100
+                      : 0
+                    return (
+                      <li key={key}>
+                        <div className="bar-label">
+                          <span>{label}</span>
+                          <span>
+                            {count} ({pct.toFixed(0)}%)
+                          </span>
+                        </div>
+                        <div className="bar-track">
+                          <div
+                            className="bar-fill disease"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </li>
+                    )
+                  },
+                )}
+                {stats.totalPatients === 0 ? (
+                  <li className="muted">Cadastre pacientes para ver o perfil.</li>
+                ) : null}
+              </ul>
+            </section>
+          </div>
+
+          <section className="section panel">
+            <div className="section-head tight">
+              <h2>DRC por faixa etária</h2>
+              <p>Prevalência estratificada — útil para relatórios em 6 meses.</p>
+            </div>
+            <div className="age-grid">
+              {stats.ageBands.map((band) => (
+                <div key={band.label} className="age-cell">
+                  <span>{band.label} anos</span>
+                  <strong>
+                    {band.total
+                      ? `${((band.ckd / band.total) * 100).toFixed(0)}%`
+                      : '—'}
+                  </strong>
+                  <small>
+                    {band.ckd}/{band.total} com DRC
+                  </small>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section-head">
+              <h2>Pacientes cadastrados</h2>
+              <p>
+                Informe nome, idade, sexo e creatinina — a CKD-EPI e o estágio
+                saem prontos.
+              </p>
+            </div>
+
+            {patients.length === 0 ? (
+              <div className="empty">
+                <p>Nenhum paciente neste trabalho.</p>
+                <button
+                  type="button"
+                  className="btn primary"
+                  onClick={() => {
+                    setEditing(null)
+                    setShowForm(true)
+                  }}
+                >
+                  Cadastrar o primeiro
+                </button>
+              </div>
+            ) : (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Idade</th>
+                      <th>Sexo</th>
+                      <th>Creatinina</th>
+                      <th>TFG</th>
+                      <th>Estágio</th>
+                      <th>Doença de base</th>
+                      <th>Estatina</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {patients.map((p) => (
+                      <tr key={p.id} className={p.hasCkd ? 'row-ckd' : undefined}>
+                        <td>{p.name}</td>
+                        <td>{p.age}</td>
+                        <td>{p.sex === 'F' ? 'F' : 'M'}</td>
+                        <td>{p.creatinineMgDl.toFixed(2)}</td>
+                        <td>{p.egfr.toFixed(1)}</td>
+                        <td>
+                          <span className={`stage-chip stage-${p.ckdStage}`}>
+                            {p.ckdStage}
+                          </span>
+                        </td>
+                        <td>{UNDERLYING_DISEASE_LABELS[p.underlyingDisease]}</td>
+                        <td>{p.onStatin ? 'Sim' : 'Não'}</td>
+                        <td className="row-actions">
+                          <button
+                            type="button"
+                            className="linkish"
+                            onClick={() => {
+                              setEditing(p)
+                              setShowForm(true)
+                            }}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            type="button"
+                            className="linkish danger"
+                            onClick={() => {
+                              if (window.confirm(`Remover ${p.name}?`)) {
+                                removePatient(p.id)
+                              }
+                            }}
+                          >
+                            Remover
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        </>
+      ) : null}
+
+      {tab === 'dados' && !collectsPatients ? (
+        <div className="empty">
+          <p>
+            Este tipo de trabalho não usa ficha de pacientes. Use a aba{' '}
+            <strong>Artigo / revisão</strong> para o roteiro científico.
+          </p>
+          <button type="button" className="btn primary" onClick={() => setTab('artigo')}>
+            Abrir produtor
+          </button>
+        </div>
+      ) : null}
+
+      {tab === 'artigo' ? (
+        <section className="panel">
+          {study.blueprint ? (
+            <BlueprintPreview
+              blueprint={study.blueprint}
+              onToggleSection={(sectionId) => {
+                const sections = study.blueprint!.articleSections.map((s) =>
+                  s.id === sectionId ? { ...s, done: !s.done } : s,
+                )
+                updateStudy({
+                  ...study,
+                  blueprint: { ...study.blueprint!, articleSections: sections },
+                })
+              }}
+            />
+          ) : (
+            <div className="empty">
+              <p>Ainda sem estrutura. Gere agora a partir da ideia salva.</p>
+              <button
+                type="button"
+                className="btn primary"
+                onClick={() => ensureBlueprint()}
+              >
+                Gerar estrutura
+              </button>
+            </div>
+          )}
+          {study.idea ? (
+            <details className="idea-box">
+              <summary>Ideia original</summary>
+              <p>{study.idea}</p>
+            </details>
+          ) : null}
+        </section>
+      ) : null}
+
+      {tab === 'excel' ? (
+        <section className="panel form">
+          <div className="section-head tight">
+            <h2>Excel</h2>
+            <p>
+              Exporte a base, baixe o modelo ou importe planilha. Na importação a
+              TFG CKD-EPI é recalculada.
+            </p>
+          </div>
+          <div className="form-actions left wrap">
+            <button
+              type="button"
+              className="btn primary"
+              disabled={!collectsPatients || patients.length === 0}
+              onClick={() => void onExportExcel()}
+            >
+              Exportar Excel
+            </button>
+            <button
+              type="button"
+              className="btn ghost"
+              disabled={!collectsPatients}
+              onClick={exportCsv}
+            >
+              Exportar CSV
+            </button>
+            <button
+              type="button"
+              className="btn secondary"
+              disabled={!collectsPatients}
+              onClick={() => void onTemplateExcel()}
+            >
+              Baixar modelo
+            </button>
+            <label className={`btn ghost file-btn ${!collectsPatients ? 'disabled' : ''}`}>
+              Importar Excel
+              <input
+                type="file"
+                accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                hidden
+                disabled={!collectsPatients}
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  setImportMsg(null)
+                  void onImportExcel(file)
+                    .then((n) => {
+                      setImportMsg(`${n} paciente(s) importado(s)/atualizado(s).`)
+                    })
+                    .catch((err: Error) => {
+                      setImportMsg(err.message || 'Falha na importação.')
+                    })
+                  e.target.value = ''
+                }}
+              />
+            </label>
+          </div>
+          {importMsg ? <p className="sync-msg">{importMsg}</p> : null}
+          {!collectsPatients ? (
+            <p className="hint">
+              Revisão de literatura não usa ficha de pacientes — use o Excel só
+              se mudar o tipo do trabalho depois.
+            </p>
+          ) : null}
+          <p className="hint">
+            Supabase e backup JSON geral: <Link to="/integracoes">Integrações</Link>
+          </p>
+        </section>
+      ) : null}
+
+      {(showForm || editing) && collectsPatients ? (
         <PatientForm
           initial={editing}
           studyId={study.id}
@@ -237,92 +524,7 @@ export function StudyPage() {
             setEditing(null)
           }}
         />
-      )}
-
-      <section className="section">
-        <div className="section-head">
-          <h2>Pacientes cadastrados</h2>
-          <p>
-            Informe nome, idade, sexo e creatinina — a CKD-EPI e o estágio saem
-            prontos.
-          </p>
-        </div>
-
-        {patients.length === 0 ? (
-          <div className="empty">
-            <p>Nenhum paciente neste trabalho.</p>
-            <button
-              type="button"
-              className="btn primary"
-              onClick={() => {
-                setEditing(null)
-                setShowForm(true)
-              }}
-            >
-              Cadastrar o primeiro
-            </button>
-          </div>
-        ) : (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Idade</th>
-                  <th>Sexo</th>
-                  <th>Creatinina</th>
-                  <th>TFG</th>
-                  <th>Estágio</th>
-                  <th>Doença de base</th>
-                  <th>Estatina</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {patients.map((p) => (
-                  <tr key={p.id} className={p.hasCkd ? 'row-ckd' : undefined}>
-                    <td>{p.name}</td>
-                    <td>{p.age}</td>
-                    <td>{p.sex === 'F' ? 'F' : 'M'}</td>
-                    <td>{p.creatinineMgDl.toFixed(2)}</td>
-                    <td>{p.egfr.toFixed(1)}</td>
-                    <td>
-                      <span className={`stage-chip stage-${p.ckdStage}`}>
-                        {p.ckdStage}
-                      </span>
-                    </td>
-                    <td>{UNDERLYING_DISEASE_LABELS[p.underlyingDisease]}</td>
-                    <td>{p.onStatin ? 'Sim' : 'Não'}</td>
-                    <td className="row-actions">
-                      <button
-                        type="button"
-                        className="linkish"
-                        onClick={() => {
-                          setEditing(p)
-                          setShowForm(true)
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        className="linkish danger"
-                        onClick={() => {
-                          if (window.confirm(`Remover ${p.name}?`)) {
-                            removePatient(p.id)
-                          }
-                        }}
-                      >
-                        Remover
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+      ) : null}
     </div>
   )
 }
@@ -486,7 +688,11 @@ function PatientForm({
           <button type="button" className="btn ghost" onClick={onCancel}>
             Cancelar
           </button>
-          <button type="submit" className="btn primary" disabled={!Number.isFinite(egfr)}>
+          <button
+            type="submit"
+            className="btn primary"
+            disabled={!Number.isFinite(egfr)}
+          >
             Salvar paciente
           </button>
         </div>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useData } from '../hooks/useData'
-import { STUDY_TEMPLATE_LABELS } from '../types'
+import { WORK_KIND_LABELS } from '../types'
 import { computeStudyStats } from '../lib/stats'
 
 export function HomePage() {
@@ -10,33 +10,31 @@ export function HomePage() {
     <div className="page">
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">Região IRC · pesquisa e emprego em saúde</p>
+          <p className="eyebrow">Região IRC · produtor de ciência e emprego</p>
           <h1>
             <span className="hero-brand">Meu Rim</span>
             <span className="hero-sub">Estudos</span>
           </h1>
           <p className="lede">
-            Crie vários trabalhos de pesquisa: cadastre pacientes, calcule a TFG
-            pela CKD-EPI e acompanhe prevalência de DRC, doença de base e uso de
-            estatina — tudo pronto para relatórios daqui a meses.
+            Ideia → estrutura → dados → artigo. Gere trabalhos (DRC, transversal,
+            revisão de literatura), calcule CKD-EPI, exporte Excel e sincronize
+            com Supabase quando quiser.
           </p>
           <div className="cta-row">
             <Link className="btn primary" to="/novo-trabalho">
-              Criar novo trabalho
+              Nova ideia de trabalho
             </Link>
-            {studies[0] ? (
-              <Link className="btn secondary" to={`/trabalho/${studies[0].id}`}>
-                Abrir estudo de DRC
-              </Link>
-            ) : null}
+            <Link className="btn secondary" to="/integracoes">
+              Excel · Supabase
+            </Link>
           </div>
         </div>
         <div className="hero-visual" aria-hidden>
           <div className="hero-orb" />
           <div className="hero-panel">
-            <span>CKD-EPI 2021</span>
-            <strong>TFG automática</strong>
-            <p>Creatinina · idade · sexo → estágio G1–G5</p>
+            <span>Da ideia ao manuscrito</span>
+            <strong>PICO · seções · prompt</strong>
+            <p>CKD-EPI · Excel · Supabase · revisão</p>
           </div>
         </div>
       </section>
@@ -45,9 +43,8 @@ export function HomePage() {
         <div className="section-head">
           <h2>Trabalhos na IRC</h2>
           <p>
-            Cada trabalho é um estudo independente. O primeiro modelo cobre
-            epidemiologia de doença renal; outros podem ser abertos conforme a
-            demanda da região.
+            Cada item é um produto científico independente — artigo, revisão ou
+            estudo com coleta.
           </p>
         </div>
 
@@ -62,6 +59,9 @@ export function HomePage() {
           <ul className="study-list">
             {studies.map((study) => {
               const stats = computeStudyStats(patientsOf(study.id))
+              const doneSections =
+                study.blueprint?.articleSections.filter((s) => s.done).length ?? 0
+              const totalSections = study.blueprint?.articleSections.length ?? 0
               return (
                 <li key={study.id}>
                   <Link to={`/trabalho/${study.id}`} className="study-row">
@@ -73,15 +73,24 @@ export function HomePage() {
                       <p>{study.objective}</p>
                       <div className="meta">
                         <span>{study.region}</span>
-                        <span>{STUDY_TEMPLATE_LABELS[study.template]}</span>
-                        <span>
-                          {stats.totalPatients} paciente
-                          {stats.totalPatients === 1 ? '' : 's'}
-                        </span>
-                        <span>
-                          DRC {stats.ckdPrevalence.toFixed(0)}%
-                          {stats.totalPatients ? ` (${stats.ckdCount})` : ''}
-                        </span>
+                        <span>{WORK_KIND_LABELS[study.kind]}</span>
+                        {study.template !== 'none' ? (
+                          <>
+                            <span>
+                              {stats.totalPatients} paciente
+                              {stats.totalPatients === 1 ? '' : 's'}
+                            </span>
+                            <span>
+                              DRC {stats.ckdPrevalence.toFixed(0)}%
+                              {stats.totalPatients ? ` (${stats.ckdCount})` : ''}
+                            </span>
+                          </>
+                        ) : null}
+                        {totalSections ? (
+                          <span>
+                            Manuscrito {doneSections}/{totalSections}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                     <span className="chevron" aria-hidden>

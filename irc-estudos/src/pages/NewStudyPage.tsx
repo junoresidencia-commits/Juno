@@ -1,114 +1,156 @@
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../hooks/useData'
-import type { StudyStatus, StudyTemplate } from '../types'
-import { STUDY_TEMPLATE_LABELS } from '../types'
+import { generateBlueprint, templateForKind } from '../lib/blueprint'
+import type { WorkBlueprint, WorkKind } from '../types'
+import { WORK_KIND_HINTS, WORK_KIND_LABELS } from '../types'
+import { BlueprintPreview } from '../components/BlueprintPreview'
 
 export function NewStudyPage() {
   const { createStudy } = useData()
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
-  const [objective, setObjective] = useState('')
+  const [idea, setIdea] = useState('')
   const [region, setRegion] = useState('IRC')
-  const [template, setTemplate] = useState<StudyTemplate>('ckd_epidemiology')
-  const [status, setStatus] = useState<StudyStatus>('active')
+  const [kind, setKind] = useState<WorkKind>('ckd_epidemiology')
+  const [blueprint, setBlueprint] = useState<WorkBlueprint | null>(null)
 
-  function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!title.trim() || !objective.trim()) return
+  const canGenerate = title.trim().length > 2 && idea.trim().length > 8
+
+  const preview = useMemo(() => blueprint, [blueprint])
+
+  function onGenerate(e?: FormEvent) {
+    e?.preventDefault()
+    if (!canGenerate) return
+    setBlueprint(
+      generateBlueprint({
+        title: title.trim(),
+        idea: idea.trim(),
+        kind,
+        region: region.trim() || 'IRC',
+      }),
+    )
+  }
+
+  function onCreate() {
+    if (!title.trim() || !idea.trim()) return
+    const bp =
+      blueprint ??
+      generateBlueprint({
+        title: title.trim(),
+        idea: idea.trim(),
+        kind,
+        region: region.trim() || 'IRC',
+      })
     const study = createStudy({
       title: title.trim(),
-      objective: objective.trim(),
+      objective: bp.specificObjectives[0] || idea.trim(),
       region: region.trim() || 'IRC',
-      template,
-      status,
+      template: templateForKind(kind),
+      kind,
+      idea: idea.trim(),
+      blueprint: bp,
+      status: 'active',
     })
     navigate(`/trabalho/${study.id}`)
   }
 
   return (
-    <div className="page narrow">
+    <div className="page">
       <header className="page-header">
-        <p className="eyebrow">Novo trabalho</p>
-        <h1>Abrir mais um estudo na IRC</h1>
+        <p className="eyebrow">Produtor de trabalhos científicos</p>
+        <h1>Da ideia ao artigo</h1>
         <p className="lede compact">
-          Não precisa ser só DRC. Use o modelo de epidemiologia renal ou um
-          estudo geral — a plataforma cresce com os trabalhos da região.
+          Coloque o nome do trabalho e a ideia (ou cole o que o ChatGPT sugeriu).
+          O app gera o que você precisa: pergunta, PICO, variáveis, seções do
+          manuscrito, plano de revisão e prompt para aprofundar.
         </p>
       </header>
 
-      <form className="form panel" onSubmit={onSubmit}>
-        <label>
-          Título do trabalho
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex.: Prevalência de DRC na unidade X"
-            required
-          />
-        </label>
-
-        <label>
-          Objetivo
-          <textarea
-            value={objective}
-            onChange={(e) => setObjective(e.target.value)}
-            rows={4}
-            placeholder="O que este trabalho pretende medir ou descrever?"
-            required
-          />
-        </label>
-
-        <div className="grid-2">
+      <div className="split idea-split">
+        <form className="form panel" onSubmit={onGenerate}>
           <label>
-            Região
+            Nome / título do trabalho
             <input
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ex.: Prevalência de DRC e uso de estatina na IRC"
               required
             />
           </label>
+
           <label>
-            Status
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as StudyStatus)}
-            >
-              <option value="active">Ativo</option>
-              <option value="paused">Pausado</option>
-              <option value="completed">Concluído</option>
-            </select>
+            Ideia (pode colar do ChatGPT)
+            <textarea
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+              rows={7}
+              placeholder="Ex.: Quero um estudo transversal na região IRC medindo creatinina, CKD-EPI, diabetes/HAS e estatina, e depois escrever o artigo…"
+              required
+            />
           </label>
-        </div>
 
-        <fieldset>
-          <legend>Modelo do trabalho</legend>
-          {(Object.keys(STUDY_TEMPLATE_LABELS) as StudyTemplate[]).map((key) => (
-            <label key={key} className="radio-row">
+          <div className="grid-2">
+            <label>
+              Região
               <input
-                type="radio"
-                name="template"
-                checked={template === key}
-                onChange={() => setTemplate(key)}
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                required
               />
-              <span>
-                <strong>{STUDY_TEMPLATE_LABELS[key]}</strong>
-                <small>
-                  {key === 'ckd_epidemiology'
-                    ? 'Nome, idade, sexo, creatinina, doença de base, estatina + CKD-EPI.'
-                    : 'Mesma ficha clínica básica, para outros recortes na IRC.'}
-                </small>
-              </span>
             </label>
-          ))}
-        </fieldset>
+            <label>
+              Tipo de produto
+              <select
+                value={kind}
+                onChange={(e) => {
+                  setKind(e.target.value as WorkKind)
+                  setBlueprint(null)
+                }}
+              >
+                {(Object.keys(WORK_KIND_LABELS) as WorkKind[]).map((key) => (
+                  <option key={key} value={key}>
+                    {WORK_KIND_LABELS[key]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-        <div className="form-actions">
-          <button type="submit" className="btn primary">
-            Criar trabalho
-          </button>
+          <p className="hint">{WORK_KIND_HINTS[kind]}</p>
+
+          <div className="form-actions">
+            <button
+              type="submit"
+              className="btn secondary"
+              disabled={!canGenerate}
+            >
+              Gerar estrutura
+            </button>
+            <button
+              type="button"
+              className="btn primary"
+              disabled={!canGenerate}
+              onClick={onCreate}
+            >
+              Criar trabalho
+            </button>
+          </div>
+        </form>
+
+        <div className="panel">
+          {preview ? (
+            <BlueprintPreview blueprint={preview} />
+          ) : (
+            <div className="empty soft">
+              <p>
+                Gere a estrutura para ver objetivos, variáveis, seções do artigo
+                e o prompt pronto para o ChatGPT.
+              </p>
+            </div>
+          )}
         </div>
-      </form>
+      </div>
     </div>
   )
 }

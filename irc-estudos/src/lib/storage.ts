@@ -1,11 +1,39 @@
-import type { AppData, Patient, Study } from '../types'
+import type {
+  AppData,
+  Patient,
+  Study,
+  StudyTemplate,
+  WorkKind,
+} from '../types'
 import { createId } from './id'
 import { seedData } from '../data/seed'
 
 const STORAGE_KEY = 'meu-rim-irc-estudos-v1'
 
 function emptyData(): AppData {
-  return { version: 1, studies: [], patients: [] }
+  return { version: 2, studies: [], patients: [] }
+}
+
+function normalizeStudy(raw: Partial<Study> & { title?: string }): Study {
+  const template = (raw.template ?? 'general') as StudyTemplate
+  const kind = (raw.kind ??
+    (template === 'ckd_epidemiology'
+      ? 'ckd_epidemiology'
+      : 'cross_sectional')) as WorkKind
+  const now = new Date().toISOString()
+  return {
+    id: raw.id || createId('study'),
+    title: raw.title || 'Trabalho sem título',
+    objective: raw.objective || '',
+    region: raw.region || 'IRC',
+    template,
+    kind,
+    idea: raw.idea || raw.objective || '',
+    blueprint: raw.blueprint,
+    status: raw.status || 'active',
+    createdAt: raw.createdAt || now,
+    updatedAt: raw.updatedAt || now,
+  }
 }
 
 export function loadData(): AppData {
@@ -16,53 +44,65 @@ export function loadData(): AppData {
       saveData(seeded)
       return seeded
     }
-    const parsed = JSON.parse(raw) as AppData
-    if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.studies)) {
+    const parsed = JSON.parse(raw) as Partial<AppData> & { version?: number }
+    if (!parsed || !Array.isArray(parsed.studies)) {
       return emptyData()
     }
-    return {
-      version: 1,
-      studies: parsed.studies,
-      patients: Array.isArray(parsed.patients) ? parsed.patients : [],
+    const data: AppData = {
+      version: 2,
+      studies: parsed.studies.map((s) => normalizeStudy(s as Study)),
+      patients: Array.isArray(parsed.patients) ? (parsed.patients as Patient[]) : [],
     }
+    if (parsed.version !== 2) {
+      saveData(data)
+    }
+    return data
   } catch {
     return emptyData()
   }
 }
 
 export function saveData(data: AppData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  const payload: AppData = {
+    version: 2,
+    studies: data.studies.map((s) => normalizeStudy(s)),
+    patients: data.patients,
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }
 
-export function upsertStudy(study: Omit<Study, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): Study {
+export function replaceAllData(data: AppData): AppData {
+  saveData(data)
+  return loadData()
+}
+
+export function upsertStudy(
+  study: Omit<Study, 'id' | 'createdAt' | 'updatedAt'> & { id?: string },
+): Study {
   const data = loadData()
   const now = new Date().toISOString()
 
   if (study.id) {
     const index = data.studies.findIndex((s) => s.id === study.id)
     if (index >= 0) {
-      const updated: Study = {
+      const updated = normalizeStudy({
         ...data.studies[index],
         ...study,
         id: study.id,
         updatedAt: now,
-      }
+      })
       data.studies[index] = updated
       saveData(data)
       return updated
     }
   }
 
-  const created: Study = {
+  const created = normalizeStudy({
+    ...study,
     id: createId('study'),
-    title: study.title,
-    objective: study.objective,
-    region: study.region,
-    template: study.template,
-    status: study.status,
     createdAt: now,
     updatedAt: now,
-  }
+  })
   data.studies.unshift(created)
   saveData(data)
   return created
@@ -117,6 +157,22 @@ export function upsertPatient(
   return created
 }
 
+export function upsertPatientsBulk(patients: Patient[]): number {
+  const data = loadData()
+  let count = 0
+  for (const patient of patients) {
+    const index = data.patients.findIndex((p) => p.id === patient.id)
+    if (index >= 0) {
+      data.patients[index] = { ...patient, updatedAt: new Date().toISOString() }
+    } else {
+      data.patients.unshift(patient)
+    }
+    count += 1
+  }
+  saveData(data)
+  return count
+}
+
 export function deletePatient(patientId: string): void {
   const data = loadData()
   data.patients = data.patients.filter((p) => p.id !== patientId)
@@ -128,16 +184,13 @@ export function exportBackup(): string {
 }
 
 export function importBackup(json: string): AppData {
-  const parsed = JSON.parse(json) as AppData
-  if (!parsed || parsed.version !== 1) {
-    throw new Error('Arquivo inválido: versão não suportada.')
-  }
-  if (!Array.isArray(parsed.studies) || !Array.isArray(parsed.patients)) {
+  const parsed = JSON.parse(json) as Partial<AppData>
+  if (!parsed || !Array.isArray(parsed.studies) || !Array.isArray(parsed.patients)) {
     throw new Error('Arquivo inválido: faltam estudos ou pacientes.')
   }
   saveData({
-    version: 1,
-    studies: parsed.studies,
+    version: 2,
+    studies: parsed.studies.map((s) => normalizeStudy(s)),
     patients: parsed.patients,
   })
   return loadData()

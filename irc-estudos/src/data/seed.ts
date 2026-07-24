@@ -1,4 +1,5 @@
 import type { AppData, Patient, Study } from '../types'
+import { generateBlueprint } from '../lib/blueprint'
 import { calculateCkdEpi2021, hasCkdByEgfr, stageFromEgfr } from '../lib/ckd-epi'
 import { createId } from '../lib/id'
 
@@ -38,14 +39,26 @@ function makePatient(
 export function seedData(): AppData {
   const now = new Date().toISOString()
   const studyId = createId('study')
+  const title = 'Prevalência de DRC na região IRC'
+  const idea =
+    'Quero estimar prevalência de doença renal crônica na região IRC, com creatinina, CKD-EPI, doença de base e estatina, e transformar isso em artigo.'
+  const kind = 'ckd_epidemiology' as const
+  const blueprint = generateBlueprint({
+    title,
+    idea,
+    kind,
+    region: 'IRC',
+  })
 
   const study: Study = {
     id: studyId,
-    title: 'Prevalência de DRC na região IRC',
-    objective:
-      'Estimar prevalência e perfil clínico de doença renal crônica (DRC) na região IRC, com cálculo automático de TFG pela equação CKD-EPI 2021.',
+    title,
+    objective: blueprint.specificObjectives[0] ?? idea,
     region: 'IRC',
     template: 'ckd_epidemiology',
+    kind,
+    idea,
+    blueprint,
     status: 'active',
     createdAt: now,
     updatedAt: now,
@@ -99,5 +112,5 @@ export function seedData(): AppData {
     }),
   ]
 
-  return { version: 1, studies: [study], patients }
+  return { version: 2, studies: [study], patients }
 }

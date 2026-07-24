@@ -1,40 +1,33 @@
 # Especificação — Meu Rim · Estudos IRC
 
-## Problema
+## Visão (Tulin)
 
-Na região IRC há demanda por trabalhos de pesquisa em saúde (começar por doença renal) e poucas ferramentas locais para coletar, calcular e acompanhar dados ao longo do tempo.
+Plataforma que **produz trabalhos científicos** na região IRC: artigos, revisões de literatura, estudos transversais e epidemiologia de DRC. A pessoa entra com uma **ideia / nome do trabalho** (ou texto gerado no ChatGPT) e o sistema monta o que falta para o trabalho ficar bom.
 
-## Solução
+## Fluxo
 
-Plataforma **multi-trabalho**: cada estudo é independente. O modelo inicial cobre epidemiologia de DRC; novos trabalhos podem ser abertos sem refazer o sistema.
+1. Ideia + tipo de produto → **blueprint** (pergunta, PICO, objetivos, variáveis, métodos, seções, literatura, prompt ChatGPT)
+2. Coleta de dados (quando aplicável) + CKD-EPI
+3. Excel import/export
+4. Checklist do manuscrito
+5. Backup JSON e sync Supabase (opcional)
 
-## Dados do paciente (modelo DRC)
+## Tipos de trabalho (`WorkKind`)
 
-| Campo | Uso |
-|-------|-----|
-| Nome | Identificação no estudo |
-| Idade | Entrada da CKD-EPI e estratificação |
-| Sexo | Entrada da CKD-EPI |
-| Creatinina (mg/dL) | Entrada da CKD-EPI |
-| Doença de base | Diabetes, HAS, ambas, glomerulopatia, etc. |
-| Estatina | Sim/não |
-| Observações | Texto livre |
+| Tipo | Coleta |
+|------|--------|
+| `ckd_epidemiology` | Ficha DRC + CKD-EPI |
+| `cross_sectional` | Ficha geral |
+| `original_article` | Ficha geral |
+| `literature_review` | Sem pacientes |
+| `case_series` | Ficha geral |
 
-**Calculados automaticamente:** TFG (CKD-EPI 2021, sem raça), estágio G1–G5, flag DRC (TFG &lt; 60).
+## Integrações
 
-## Relatórios
+- **Excel** (`xlsx`): exportar pacientes, modelo, importar com recálculo de TFG
+- **Supabase**: tabelas `irc_studies` e `irc_patients` — ver `docs/SUPABASE.md`
+- **ChatGPT**: prompt copiável gerado no blueprint (sem API key no app)
 
-- Contagem de pacientes
-- Prevalência de DRC
-- Distribuição por estágio e por doença de base
-- DRC por faixa etária
-- Taxa de uso de estatina
-- Exportação CSV e backup JSON
+## Persistência
 
-## Persistência (fase atual)
-
-Armazenamento no navegador + backup/restauração. Próximo passo natural: backend compartilhado (ex.: Supabase) quando houver servidor/credenciais.
-
-## Extensão
-
-Novos trabalhos na IRC reutilizam a mesma ficha ou evoluem com campos extras por template (`ckd_epidemiology` | `general` hoje).
+Local-first (`localStorage`, versão 2 do schema). Migração automática a partir da v1.

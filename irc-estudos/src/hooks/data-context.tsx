@@ -15,10 +15,13 @@ import {
   getStudy,
   importBackup,
   loadData,
+  replaceAllData,
   resetToSeed,
   upsertPatient as storageUpsertPatient,
+  upsertPatientsBulk,
   upsertStudy as storageUpsertStudy,
 } from '../lib/storage'
+import { pullFromSupabase, pushToSupabase } from '../lib/supabase'
 
 type Listener = () => void
 
@@ -52,10 +55,13 @@ export interface DataApi {
   savePatient: (
     input: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'> & { id?: string },
   ) => Patient
+  importPatients: (patients: Patient[]) => number
   removePatient: (patientId: string) => void
   downloadBackup: () => void
   uploadBackup: (file: File) => Promise<void>
   restoreDemo: () => void
+  pushCloud: () => Promise<{ studiesUpserted: number; patientsUpserted: number }>
+  pullCloud: () => Promise<void>
 }
 
 export const DataContext = createContext<DataApi | null>(null)
@@ -94,6 +100,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
         sync()
         return patient
       },
+      importPatients: (patients) => {
+        const count = upsertPatientsBulk(patients)
+        sync()
+        return count
+      },
       removePatient: (patientId) => {
         storageDeletePatient(patientId)
         sync()
@@ -116,6 +127,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
       },
       restoreDemo: () => {
         resetToSeed()
+        sync()
+      },
+      pushCloud: async () => {
+        const result = await pushToSupabase(loadData())
+        return result
+      },
+      pullCloud: async () => {
+        const remote = await pullFromSupabase()
+        replaceAllData(remote)
         sync()
       },
     }),

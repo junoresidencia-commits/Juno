@@ -19,7 +19,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <NavLink to="/" end>
             Trabalhos
           </NavLink>
-          <NavLink to="/novo-trabalho">Novo trabalho</NavLink>
+          <NavLink to="/novo-trabalho">Nova ideia</NavLink>
+          <NavLink to="/integracoes">Integrações</NavLink>
         </nav>
         <div className="top-actions">
           <button type="button" className="btn ghost" onClick={downloadBackup}>
@@ -47,9 +48,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="main">{children}</main>
       <footer className="footer">
         <p>
-          Plataforma local para estudos clínicos na região IRC. Dados ficam neste
-          navegador — use Backup regularmente. CKD-EPI 2021 (sem raça). Não
-          substitui julgamento clínico.
+          Produtor de trabalhos científicos na região IRC: ideia → estrutura →
+          dados → artigo. Excel e Supabase opcionais. CKD-EPI 2021 (sem raça).
+          Não substitui julgamento clínico nem revisão editorial.
         </p>
       </footer>
     </div>
