@@ -1,0 +1,2017 @@
+{
+  "metadados": {
+    "nome_lote": "MedRank — Diretrizes Atuais LOTE_22/2026",
+    "quantidade_questoes": 50,
+    "idioma": "pt-BR",
+    "distribuicao": {
+      "Pediatria": 5,
+      "Anestesiologia": 1,
+      "Clínica Médica": 36,
+      "Ginecologia e Obstetrícia": 2,
+      "Cirurgia": 4,
+      "Psiquiatria": 1,
+      "Ortopedia": 1
+    },
+    "observacao": "Questões autorais baseadas em diretrizes atuais. Revisar antes de publicar. Não são oficiais ENARE/USP.",
+    "schema_version": "1.1",
+    "pacote_origem": "medrank_400_questoes_diretrizes_atuais_multiespecialidades_2026"
+  },
+  "questoes": [
+    {
+      "id_externo": "MR26-DIR-ATUAL-0004",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Fibrilação atrial recém-diagnosticada",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Mulher de 76 anos com hipertensão e diabetes apresenta fibrilação atrial não valvar persistente, sem prótese mecânica ou estenose mitral reumática. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Temperatura, rigidez, alimentação, trombose e resposta",
+        "B": "Recorrência, tromboembolismo, insuficiência cardíaca e causa precipitante",
+        "C": "Ácido úrico, crises, tofos, função renal e toxicidade",
+        "D": "Sangramento, adesão, função renal, frequência, sintomas e recorrência",
+        "E": "Saturação, esforço respiratório, apneia e aceitação alimentar"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Sangramento, adesão, função renal, frequência, sintomas e recorrência. A prevenção de AVC é central; aspirina não substitui anticoagulação em paciente elegível.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Temperatura, rigidez, alimentação, trombose e resposta",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Recorrência, tromboembolismo, insuficiência cardíaca e causa precipitante",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ácido úrico, crises, tofos, função renal e toxicidade",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Sangramento, adesão, função renal, frequência, sintomas e recorrência.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Saturação, esforço respiratório, apneia e aceitação alimentar"
+      },
+      "referencia_principal": "2024 ESC Guidelines for the Management of Atrial Fibrillation",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "fibrilação atrial",
+        "anticoagulação",
+        "AF-CARE",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0007",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia/Emergência",
+      "tema": "Fibrilação atrial instável",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Homem de 69 anos apresenta fibrilação atrial a 180 bpm, edema agudo de pulmão, dor torácica e pressão de 78/46 mmHg. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Avaliar transplante hepático e manter terapia até resposta ou decisão definitiva",
+        "B": "Após estabilização, tratar o precipitante e definir anticoagulação e estratégia de ritmo",
+        "C": "Realizar destorção e orquidopexia bilateral, com orquiectomia se inviável",
+        "D": "Usar imunoglobulina intravenosa ou plasmaférese e ajustar imunoterapia",
+        "E": "Tratar em UTI e oferecer quimioprofilaxia aos contatos próximos"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A estratégia recomendada é: Após estabilização, tratar o precipitante e definir anticoagulação e estratégia de ritmo.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Avaliar transplante hepático e manter terapia até resposta ou decisão definitiva",
+        "B": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Após estabilização, tratar o precipitante e definir anticoagulação e estratégia de ritmo.",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar destorção e orquidopexia bilateral, com orquiectomia se inviável",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Usar imunoglobulina intravenosa ou plasmaférese e ajustar imunoterapia",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Tratar em UTI e oferecer quimioprofilaxia aos contatos próximos"
+      },
+      "referencia_principal": "2025 AHA Guidelines for CPR and Emergency Cardiovascular Care",
+      "instituicao_responsavel": "American Heart Association",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "fibrilação atrial",
+        "cardioversão",
+        "instabilidade",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0009",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Hipertensão arterial tratada",
+      "subtema": "Diagnóstico e reconhecimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Adulto de 58 anos em uso regular de anti-hipertensivos apresenta pressão sistólica média de 136 mmHg, sem hipotensão ortostática ou fragilidade. Qual é o diagnóstico ou enquadramento clínico mais provável?",
+      "alternativas": {
+        "A": "Bradicardia neonatal persistente após ventilação efetiva",
+        "B": "Púrpura trombótica trombocitopênica imune",
+        "C": "Glaucoma agudo de ângulo fechado",
+        "D": "Hipertensão arterial acima da meta terapêutica preferencial",
+        "E": "Cirrose compensada com hipertensão portal clinicamente significativa"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O quadro corresponde a Hipertensão arterial acima da meta terapêutica preferencial. A ESC 2024 propõe alvo sistólico de 120–129 mmHg para a maioria dos tratados, desde que tolerado.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Bradicardia neonatal persistente após ventilação efetiva",
+        "B": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Púrpura trombótica trombocitopênica imune",
+        "C": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Glaucoma agudo de ângulo fechado",
+        "D": "Correta. Os dados apresentados sustentam Hipertensão arterial acima da meta terapêutica preferencial.",
+        "E": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Cirrose compensada com hipertensão portal clinicamente significativa"
+      },
+      "referencia_principal": "2024 ESC Guidelines for the Management of Elevated Blood Pressure and Hypertension",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "hipertensão",
+        "meta pressórica",
+        "MAPA",
+        "diagnóstico e reconhecimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0011",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia",
+      "tema": "Hipertensão arterial tratada",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Adulto de 58 anos em uso regular de anti-hipertensivos apresenta pressão sistólica média de 136 mmHg, sem hipotensão ortostática ou fragilidade. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada",
+        "B": "Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "C": "Iniciar inibidor de SGLT2 para reduzir eventos de insuficiência cardíaca",
+        "D": "Usar infliximabe ou ciclosporina como resgate; indicar colectomia se falha ou complicação",
+        "E": "Completar esquema recomendado e realizar investigação de contatos"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A estratégia recomendada é: Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada.",
+      "justificativas": {
+        "A": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada.",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Iniciar inibidor de SGLT2 para reduzir eventos de insuficiência cardíaca",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Usar infliximabe ou ciclosporina como resgate; indicar colectomia se falha ou complicação",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar esquema recomendado e realizar investigação de contatos"
+      },
+      "referencia_principal": "2024 ESC Guidelines for the Management of Elevated Blood Pressure and Hypertension",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "hipertensão",
+        "meta pressórica",
+        "MAPA",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0035",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Cardiologia/Infectologia",
+      "tema": "Endocardite por Staphylococcus aureus",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta bacteremia persistente por Staphylococcus aureus, febre e vegetação mitral com regurgitação importante. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar hemostasia endoscópica combinada e manter supressão ácida em alta dose",
+        "B": "Realizar CPRE urgente para descompressão biliar",
+        "C": "Completar esquema recomendado e realizar investigação de contatos",
+        "D": "Se persistir, usar levetiracetam, valproato ou fosfenitoína e escalar para anestesia se refratário",
+        "E": "Controlar o foco e realizar avaliação cirúrgica precoce por insuficiência valvar e infecção persistente"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A estratégia recomendada é: Controlar o foco e realizar avaliação cirúrgica precoce por insuficiência valvar e infecção persistente.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar hemostasia endoscópica combinada e manter supressão ácida em alta dose",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar CPRE urgente para descompressão biliar",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar esquema recomendado e realizar investigação de contatos",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Se persistir, usar levetiracetam, valproato ou fosfenitoína e escalar para anestesia se refratário",
+        "E": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Controlar o foco e realizar avaliação cirúrgica precoce por insuficiência valvar e infecção persistente."
+      },
+      "referencia_principal": "2023 ESC Guidelines for the Management of Endocarditis",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "endocardite",
+        "S. aureus",
+        "cirurgia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0044",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hepatologia",
+      "tema": "Cirrose compensada com hipertensão portal clinicamente significativa",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com cirrose compensada apresenta rigidez hepática elevada, plaquetopenia e varizes pequenas, sem ascite prévia. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Temperatura, ritmo, função hepática, glicemia e insuficiência cardíaca",
+        "B": "Malperfusão, tamponamento, insuficiência aórtica, pressão e progressão",
+        "C": "Temperatura, rigidez, alimentação, trombose e resposta",
+        "D": "Pressão, frequência, descompensações, função hepática e tolerância",
+        "E": "Hemoglobina, choque, beta-hCG e recuperação"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Pressão, frequência, descompensações, função hepática e tolerância. Betabloqueadores não seletivos podem prevenir a primeira descompensação em CSPH.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Temperatura, ritmo, função hepática, glicemia e insuficiência cardíaca",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Malperfusão, tamponamento, insuficiência aórtica, pressão e progressão",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Temperatura, rigidez, alimentação, trombose e resposta",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Pressão, frequência, descompensações, função hepática e tolerância.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Hemoglobina, choque, beta-hCG e recuperação"
+      },
+      "referencia_principal": "AASLD Practice Guidance on Portal Hypertension and Varices in Cirrhosis",
+      "instituicao_responsavel": "AASLD",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "cirrose",
+        "hipertensão portal",
+        "carvedilol",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0055",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hepatologia",
+      "tema": "Síndrome hepatorrenal",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com cirrose e ascite apresenta elevação progressiva da creatinina sem choque, nefrotóxicos, proteinúria ou resposta à albumina. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Se persistir, usar anticonvulsivante de segunda linha e escalar para terapia refratária",
+        "B": "Manter insulina até resolução da cetose, repondo potássio e acrescentando glicose",
+        "C": "Encaminhar para elastografia ou hepatologia quando houver risco intermediário ou alto de fibrose",
+        "D": "Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "E": "Avaliar transplante hepático e manter terapia até resposta ou decisão definitiva"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A estratégia recomendada é: Avaliar transplante hepático e manter terapia até resposta ou decisão definitiva.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Se persistir, usar anticonvulsivante de segunda linha e escalar para terapia refratária",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Manter insulina até resolução da cetose, repondo potássio e acrescentando glicose",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Encaminhar para elastografia ou hepatologia quando houver risco intermediário ou alto de fibrose",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "E": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Avaliar transplante hepático e manter terapia até resposta ou decisão definitiva."
+      },
+      "referencia_principal": "AASLD Practice Guidance on Ascites, SBP and Hepatorenal Syndrome",
+      "instituicao_responsavel": "AASLD",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "HRS-AKI",
+        "terlipressina",
+        "albumina",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0057",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hepatologia",
+      "tema": "Encefalopatia hepática",
+      "subtema": "Diagnóstico e reconhecimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com cirrose apresenta desorientação, asterixis e constipação após uso excessivo de diurético. Qual é o diagnóstico ou enquadramento clínico mais provável?",
+      "alternativas": {
+        "A": "Pré-eclâmpsia com sinais de gravidade",
+        "B": "Encefalopatia hepática manifesta",
+        "C": "Apendicite aguda com apendicolito",
+        "D": "Glaucoma agudo de ângulo fechado",
+        "E": "Asma persistente não controlada"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "O quadro corresponde a Encefalopatia hepática manifesta. A amônia isolada não confirma nem acompanha adequadamente a resposta clínica.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Pré-eclâmpsia com sinais de gravidade",
+        "B": "Correta. Os dados apresentados sustentam Encefalopatia hepática manifesta.",
+        "C": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Apendicite aguda com apendicolito",
+        "D": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Glaucoma agudo de ângulo fechado",
+        "E": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Asma persistente não controlada"
+      },
+      "referencia_principal": "AASLD/EASL Practice Guideline for Hepatic Encephalopathy and current AASLD guidance",
+      "instituicao_responsavel": "AASLD/EASL",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "encefalopatia hepática",
+        "lactulose",
+        "rifaximina",
+        "diagnóstico e reconhecimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0062",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hepatologia/Oncologia",
+      "tema": "Carcinoma hepatocelular inicial",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente cirrótico em rastreamento apresenta lesão única de 2,2 cm com padrão típico de realce arterial e washout, sem hipertensão portal importante. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Tratar hipertensão grave e iniciar sulfato de magnésio",
+        "B": "Estadiar função hepática, performance, hipertensão portal e extensão tumoral",
+        "C": "Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce",
+        "D": "Administrar benzodiazepínico imediatamente",
+        "E": "Controlar pressão, iniciar nimodipino e acionar equipe neurovascular"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A prioridade é: Estadiar função hepática, performance, hipertensão portal e extensão tumoral. Em paciente de alto risco, imagem típica pode estabelecer o diagnóstico sem biópsia.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Tratar hipertensão grave e iniciar sulfato de magnésio",
+        "B": "Correta. Essa abordagem atende à prioridade imediata: Estadiar função hepática, performance, hipertensão portal e extensão tumoral.",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar benzodiazepínico imediatamente",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Controlar pressão, iniciar nimodipino e acionar equipe neurovascular"
+      },
+      "referencia_principal": "AASLD Practice Guidance on Prevention, Diagnosis and Treatment of Hepatocellular Carcinoma",
+      "instituicao_responsavel": "AASLD",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "CHC",
+        "LI-RADS",
+        "ablação",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0074",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Gastroenterologia",
+      "tema": "Colite ulcerativa aguda grave",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta oito evacuações sanguinolentas ao dia, febre, taquicardia, anemia e PCR elevada. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Administrar antibiótico intravenoso precoce, profilaxia antitetânica e cobrir a ferida",
+        "B": "Suspender SGLT2 e iniciar fluidos, insulina e glicose conforme necessário",
+        "C": "Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce",
+        "D": "Internar, excluir infecções e iniciar corticosteroide intravenoso",
+        "E": "Solicitar angiotomografia urgente e iniciar anticoagulação se não houver contraindicação"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "A prioridade é: Internar, excluir infecções e iniciar corticosteroide intravenoso. A ausência de resposta precoce exige decisão rápida sobre resgate ou cirurgia.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar antibiótico intravenoso precoce, profilaxia antitetânica e cobrir a ferida",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Suspender SGLT2 e iniciar fluidos, insulina e glicose conforme necessário",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce",
+        "D": "Correta. Essa abordagem atende à prioridade imediata: Internar, excluir infecções e iniciar corticosteroide intravenoso.",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Solicitar angiotomografia urgente e iniciar anticoagulação se não houver contraindicação"
+      },
+      "referencia_principal": "ACG Clinical Guideline Update: Ulcerative Colitis in Adults",
+      "instituicao_responsavel": "American College of Gastroenterology",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "colite ulcerativa",
+        "corticoide",
+        "infliximabe",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0100",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Emergência",
+      "tema": "Crise adrenal",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Pessoa com insuficiência adrenal primária apresenta vômitos, choque, hiponatremia, hipercalemia e hipoglicemia. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Perfusão, progressão local, culturas e necessidade de novos desbridamentos",
+        "B": "Pele, articulações, infecção, fígado, peso e resposta",
+        "C": "Dor, perfusão, função neurológica, rabdomiólise e revisão cirúrgica",
+        "D": "Pressão intracraniana, cultura do líquor, função renal, citopenias e IRIS",
+        "E": "Pressão, sódio, potássio, glicemia e resposta clínica"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Pressão, sódio, potássio, glicemia e resposta clínica. O tratamento não deve aguardar o resultado do cortisol.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Perfusão, progressão local, culturas e necessidade de novos desbridamentos",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Pele, articulações, infecção, fígado, peso e resposta",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Dor, perfusão, função neurológica, rabdomiólise e revisão cirúrgica",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Pressão intracraniana, cultura do líquor, função renal, citopenias e IRIS",
+        "E": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Pressão, sódio, potássio, glicemia e resposta clínica."
+      },
+      "referencia_principal": "Endocrine Society Clinical Practice Guideline for Primary Adrenal Insufficiency",
+      "instituicao_responsavel": "Endocrine Society",
+      "ano_da_diretriz": 2016,
+      "tags": [
+        "crise adrenal",
+        "hidrocortisona",
+        "choque",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0104",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Endocrinologia/Oncologia",
+      "tema": "Hipercalcemia da malignidade",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com neoplasia apresenta cálcio de 16,2 mg/dL, confusão, náuseas e desidratação. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Creatinina, oxigenação, perfusão, sódio e sinais de isquemia",
+        "B": "Pressão, potássio, renina, função renal e lesão de órgão-alvo",
+        "C": "Isquemia recorrente, sangramento, função renal e anatomia coronária",
+        "D": "Cálcio, volume, função renal, recorrência e causa tumoral",
+        "E": "Ritmo, consciência, acidose e dose total do anestésico"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Cálcio, volume, função renal, recorrência e causa tumoral. A calcitonina atua rápido, mas sofre taquifilaxia; o antirreabsortivo sustenta o efeito.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Creatinina, oxigenação, perfusão, sódio e sinais de isquemia",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Pressão, potássio, renina, função renal e lesão de órgão-alvo",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Isquemia recorrente, sangramento, função renal e anatomia coronária",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Cálcio, volume, função renal, recorrência e causa tumoral.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ritmo, consciência, acidose e dose total do anestésico"
+      },
+      "referencia_principal": "Endocrine Society Clinical Practice Guideline: Treatment of Hypercalcemia of Malignancy",
+      "instituicao_responsavel": "Endocrine Society",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "hipercalcemia",
+        "calcitonina",
+        "bisfosfonato",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0119",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia/Neurologia",
+      "tema": "Meningite bacteriana no idoso",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Idoso apresenta febre, rigidez de nuca, alteração de consciência e líquor compatível com meningite bacteriana. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Iniciar biológico direcionado, como anti-IL5 ou anti-IL5R, conforme perfil",
+        "B": "Manter suporte cardiovascular adaptado e monitorizar recorrência",
+        "C": "Iniciar ou ajustar urato-redutor quando indicado, com profilaxia anti-inflamatória",
+        "D": "Ajustar o antibiótico ao agente e completar duração recomendada",
+        "E": "Realizar artroplastia em tempo oportuno conforme funcionalidade"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "A estratégia recomendada é: Ajustar o antibiótico ao agente e completar duração recomendada.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Iniciar biológico direcionado, como anti-IL5 ou anti-IL5R, conforme perfil",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Manter suporte cardiovascular adaptado e monitorizar recorrência",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Iniciar ou ajustar urato-redutor quando indicado, com profilaxia anti-inflamatória",
+        "D": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Ajustar o antibiótico ao agente e completar duração recomendada.",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar artroplastia em tempo oportuno conforme funcionalidade"
+      },
+      "referencia_principal": "IDSA Practice Guidelines for Bacterial Meningitis",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2004,
+      "tags": [
+        "meningite",
+        "Listeria",
+        "ampicilina",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0123",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Bacteremia por enterobactéria produtora de ESBL",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente com pielonefrite complicada apresenta bacteremia por Escherichia coli produtora de ESBL, sensível a meropenem e piperacilina-tazobactam. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Usar infliximabe ou ciclosporina como resgate; indicar colectomia se falha ou complicação",
+        "B": "Realizar irrigação, desbridamento e estabilização cirúrgica",
+        "C": "Descalonar conforme susceptibilidade, estabilidade e possibilidade de opção oral validada",
+        "D": "Manter insulina até resolução da cetose e revisar medidas de suspensão perioperatória",
+        "E": "Realizar ligadura elástica e considerar TIPS precoce em paciente de alto risco"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A estratégia recomendada é: Descalonar conforme susceptibilidade, estabilidade e possibilidade de opção oral validada.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Usar infliximabe ou ciclosporina como resgate; indicar colectomia se falha ou complicação",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar irrigação, desbridamento e estabilização cirúrgica",
+        "C": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Descalonar conforme susceptibilidade, estabilidade e possibilidade de opção oral validada.",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Manter insulina até resolução da cetose e revisar medidas de suspensão perioperatória",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar ligadura elástica e considerar TIPS precoce em paciente de alto risco"
+      },
+      "referencia_principal": "IDSA 2024 Guidance on Antimicrobial-Resistant Gram-Negative Infections",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "ESBL",
+        "bacteremia",
+        "carbapenêmico",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0124",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Bacteremia por enterobactéria produtora de ESBL",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com pielonefrite complicada apresenta bacteremia por Escherichia coli produtora de ESBL, sensível a meropenem e piperacilina-tazobactam. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Artérias coronárias, febre, marcadores inflamatórios e plaquetas",
+        "B": "Ventilação, glicemia, duração da crise e recorrência",
+        "C": "Sintomas, função ventricular, gradiente, prótese e complicações",
+        "D": "Negativação das culturas, foco, função renal e eventos adversos",
+        "E": "Ácido úrico, crises, tofos, função renal e toxicidade"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Negativação das culturas, foco, função renal e eventos adversos. Em bacteremia por ESBL, carbapenêmico é preferido mesmo quando outras drogas parecem sensíveis in vitro.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Artérias coronárias, febre, marcadores inflamatórios e plaquetas",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ventilação, glicemia, duração da crise e recorrência",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Sintomas, função ventricular, gradiente, prótese e complicações",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Negativação das culturas, foco, função renal e eventos adversos.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ácido úrico, crises, tofos, função renal e toxicidade"
+      },
+      "referencia_principal": "IDSA 2024 Guidance on Antimicrobial-Resistant Gram-Negative Infections",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "ESBL",
+        "bacteremia",
+        "carbapenêmico",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0126",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Infecção invasiva por CRE",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente em UTI apresenta bacteremia por Klebsiella pneumoniae resistente a carbapenêmicos, com teste molecular identificando KPC. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Escolher beta-lactâmico ativo contra KPC conforme susceptibilidade e sítio",
+        "B": "Iniciar analgesia e betabloqueador intravenoso, acrescentando vasodilatador após controle da frequência se necessário",
+        "C": "Iniciar fidaxomicina quando disponível ou vancomicina oral como alternativa",
+        "D": "Iniciar ventilação protetora com baixo volume corrente e limitar pressão de platô",
+        "E": "Corrigir potássio e confirmar o diagnóstico bioquímico quando apropriado"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A prioridade é: Escolher beta-lactâmico ativo contra KPC conforme susceptibilidade e sítio. Polimixina não é preferida quando há beta-lactâmico moderno ativo.",
+      "justificativas": {
+        "A": "Correta. Essa abordagem atende à prioridade imediata: Escolher beta-lactâmico ativo contra KPC conforme susceptibilidade e sítio.",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar analgesia e betabloqueador intravenoso, acrescentando vasodilatador após controle da frequência se necessário",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar fidaxomicina quando disponível ou vancomicina oral como alternativa",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar ventilação protetora com baixo volume corrente e limitar pressão de platô",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Corrigir potássio e confirmar o diagnóstico bioquímico quando apropriado"
+      },
+      "referencia_principal": "IDSA 2024 Guidance on Antimicrobial-Resistant Gram-Negative Infections",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "CRE",
+        "KPC",
+        "ceftazidima-avibactam",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0127",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Infecção invasiva por CRE",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente em UTI apresenta bacteremia por Klebsiella pneumoniae resistente a carbapenêmicos, com teste molecular identificando KPC. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar ligadura elástica e considerar TIPS precoce em paciente de alto risco",
+        "B": "Utilizar agente como ceftazidima-avibactam, meropenem-vaborbactam ou imipenem-relebactam",
+        "C": "Iniciar biológico direcionado, como anti-IL5 ou anti-IL5R, conforme perfil",
+        "D": "Oferecer profilaxia aos contatos domiciliares e atualizar vacinação",
+        "E": "Escalonar para terapia tripla LABA/LAMA/ICS"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A estratégia recomendada é: Utilizar agente como ceftazidima-avibactam, meropenem-vaborbactam ou imipenem-relebactam.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar ligadura elástica e considerar TIPS precoce em paciente de alto risco",
+        "B": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Utilizar agente como ceftazidima-avibactam, meropenem-vaborbactam ou imipenem-relebactam.",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Iniciar biológico direcionado, como anti-IL5 ou anti-IL5R, conforme perfil",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Oferecer profilaxia aos contatos domiciliares e atualizar vacinação",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Escalonar para terapia tripla LABA/LAMA/ICS"
+      },
+      "referencia_principal": "IDSA 2024 Guidance on Antimicrobial-Resistant Gram-Negative Infections",
+      "instituicao_responsavel": "IDSA",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "CRE",
+        "KPC",
+        "ceftazidima-avibactam",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0136",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Meningite criptocócica",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Pessoa com HIV avançado apresenta cefaleia, antígeno criptocócico positivo no líquor e pressão de abertura de 38 cmH2O. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Pressão intracraniana, cultura do líquor, função renal, citopenias e IRIS",
+        "B": "Ácido úrico, crises, tofos, função renal e toxicidade",
+        "C": "Componente monoclonal, cadeias leves, função renal, cálcio e resposta",
+        "D": "Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens",
+        "E": "Culturas, líquor, evolução clínica e foco urinário"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Pressão intracraniana, cultura do líquor, função renal, citopenias e IRIS. O controle mecânico da pressão intracraniana é essencial.",
+      "justificativas": {
+        "A": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Pressão intracraniana, cultura do líquor, função renal, citopenias e IRIS.",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ácido úrico, crises, tofos, função renal e toxicidade",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Componente monoclonal, cadeias leves, função renal, cálcio e resposta",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Culturas, líquor, evolução clínica e foco urinário"
+      },
+      "referencia_principal": "Global Guideline for the Diagnosis and Management of Cryptococcosis",
+      "instituicao_responsavel": "ECMM/ISHAM/ASM",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "criptococo",
+        "HIV",
+        "punção lombar",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0138",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Tuberculose pulmonar sensível",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta tosse crônica, emagrecimento e cavitação apical; teste molecular é positivo para M. tuberculosis sem resistência à rifampicina. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Evitar hipotensão e encaminhar rapidamente para Heart Team",
+        "B": "Iniciar ressuscitação e acionar cirurgia imediatamente",
+        "C": "Instituir isolamento respiratório e iniciar esquema antituberculose",
+        "D": "Confirmar técnica, adesão, medidas domiciliares e fatores reversíveis",
+        "E": "Revisar horários, absorção, adesão e medicamentos que pioram parkinsonismo"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A prioridade é: Instituir isolamento respiratório e iniciar esquema antituberculose. O teste molecular acelera o diagnóstico e a avaliação inicial de resistência.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Evitar hipotensão e encaminhar rapidamente para Heart Team",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar ressuscitação e acionar cirurgia imediatamente",
+        "C": "Correta. Essa abordagem atende à prioridade imediata: Instituir isolamento respiratório e iniciar esquema antituberculose.",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Confirmar técnica, adesão, medidas domiciliares e fatores reversíveis",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Revisar horários, absorção, adesão e medicamentos que pioram parkinsonismo"
+      },
+      "referencia_principal": "ATS/CDC/ERS/IDSA Clinical Practice Guideline Update on Tuberculosis",
+      "instituicao_responsavel": "ATS/CDC/ERS/IDSA",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "tuberculose",
+        "teste molecular",
+        "isolamento",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0144",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Infectologia",
+      "tema": "Profilaxia pós-exposição ao HIV",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Profissional sofre perfuração com agulha oca usada em pessoa com HIV detectável há duas horas. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Temperatura, ritmo, função hepática, glicemia e insuficiência cardíaca",
+        "B": "Histologia, margens, HPV e seguimento",
+        "C": "Dor, viabilidade ovariana e recorrência",
+        "D": "Adesão, toxicidade, sorologias, hepatites virais e saúde mental",
+        "E": "Expansão do hematoma, pressão, consciência, hidrocefalia e trombose"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Adesão, toxicidade, sorologias, hepatites virais e saúde mental. A PEP deve começar o mais cedo possível, no máximo até 72 horas.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Temperatura, ritmo, função hepática, glicemia e insuficiência cardíaca",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Histologia, margens, HPV e seguimento",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Dor, viabilidade ovariana e recorrência",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Adesão, toxicidade, sorologias, hepatites virais e saúde mental.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Expansão do hematoma, pressão, consciência, hidrocefalia e trombose"
+      },
+      "referencia_principal": "PCDT para Profilaxia Pós-Exposição ao HIV, IST e Hepatites Virais",
+      "instituicao_responsavel": "Ministério da Saúde do Brasil",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "PEP",
+        "HIV",
+        "ocupacional",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0167",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia/Terapia Intensiva",
+      "tema": "Síndrome do desconforto respiratório agudo",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente séptico apresenta infiltrados bilaterais, hipoxemia grave e ausência de edema cardiogênico predominante. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Reavaliar controle, técnica inalatória e necessidade de intensificação",
+        "B": "Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "C": "Considerar magnésio intravenoso e suporte intensivo se resposta inadequada",
+        "D": "Preferir anticoagulante oral direto, ajustado à função renal, e aplicar abordagem AF-CARE para sintomas e comorbidades",
+        "E": "Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Reavaliar controle, técnica inalatória e necessidade de intensificação",
+        "B": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa.",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Considerar magnésio intravenoso e suporte intensivo se resposta inadequada",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Preferir anticoagulante oral direto, ajustado à função renal, e aplicar abordagem AF-CARE para sintomas e comorbidades",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco"
+      },
+      "referencia_principal": "ESICM Guidelines on Acute Respiratory Distress Syndrome",
+      "instituicao_responsavel": "ESICM",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "SDRA",
+        "ventilação protetora",
+        "prona",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0168",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia/Terapia Intensiva",
+      "tema": "Síndrome do desconforto respiratório agudo",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente séptico apresenta infiltrados bilaterais, hipoxemia grave e ausência de edema cardiogênico predominante. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Infecção, cobertura de partes moles, consolidação e síndrome compartimental",
+        "B": "Baciloscopia ou cultura, adesão, toxicidade e resposta radiológica",
+        "C": "Pressão de platô, driving pressure, oxigenação, barotrauma e sedação",
+        "D": "Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "E": "Perfusão, lactato, viabilidade intestinal e síndrome compartimental"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Pressão de platô, driving pressure, oxigenação, barotrauma e sedação. Ventilação protetora reduz lesão pulmonar associada ao ventilador.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Infecção, cobertura de partes moles, consolidação e síndrome compartimental",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Baciloscopia ou cultura, adesão, toxicidade e resposta radiológica",
+        "C": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Pressão de platô, driving pressure, oxigenação, barotrauma e sedação.",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Perfusão, lactato, viabilidade intestinal e síndrome compartimental"
+      },
+      "referencia_principal": "ESICM Guidelines on Acute Respiratory Distress Syndrome",
+      "instituicao_responsavel": "ESICM",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "SDRA",
+        "ventilação protetora",
+        "prona",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0170",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia/Infectologia",
+      "tema": "Pneumonia comunitária grave",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Adulto com pneumonia adquirida na comunidade necessita de UTI, sem fatores de risco para MRSA ou Pseudomonas. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Confirmar com medula, imunofixação e avaliação de eventos definidores",
+        "B": "Iniciar analgesia e betabloqueador intravenoso, acrescentando vasodilatador após controle da frequência se necessário",
+        "C": "Internar, excluir infecções e iniciar corticosteroide intravenoso",
+        "D": "Interromper a injeção, garantir via aérea, tratar convulsão e iniciar emulsão lipídica",
+        "E": "Iniciar beta-lactâmico associado a macrolídeo"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A prioridade é: Iniciar beta-lactâmico associado a macrolídeo. Cobertura anti-MRSA ou antipseudomonas depende de fatores específicos, não da gravidade isolada.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Confirmar com medula, imunofixação e avaliação de eventos definidores",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar analgesia e betabloqueador intravenoso, acrescentando vasodilatador após controle da frequência se necessário",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Internar, excluir infecções e iniciar corticosteroide intravenoso",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Interromper a injeção, garantir via aérea, tratar convulsão e iniciar emulsão lipídica",
+        "E": "Correta. Essa abordagem atende à prioridade imediata: Iniciar beta-lactâmico associado a macrolídeo."
+      },
+      "referencia_principal": "ATS/IDSA Clinical Practice Guideline for Community-Acquired Pneumonia",
+      "instituicao_responsavel": "ATS/IDSA",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "pneumonia",
+        "UTI",
+        "antibiótico",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0173",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Pneumologia/Emergência",
+      "tema": "Embolia pulmonar de alto risco",
+      "subtema": "Diagnóstico e reconhecimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com embolia pulmonar confirmada apresenta choque e disfunção de ventrículo direito, sem contraindicação hemorrágica. Qual é o diagnóstico ou enquadramento clínico mais provável?",
+      "alternativas": {
+        "A": "Endocardite infecciosa complicada por Staphylococcus aureus",
+        "B": "Pneumonia adquirida na comunidade grave",
+        "C": "Embolia pulmonar de alto risco",
+        "D": "Arterite de células gigantes",
+        "E": "Coqueluche"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O quadro corresponde a Embolia pulmonar de alto risco. A instabilidade hemodinâmica define alto risco e indica reperfusão quando possível.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Endocardite infecciosa complicada por Staphylococcus aureus",
+        "B": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Pneumonia adquirida na comunidade grave",
+        "C": "Correta. Os dados apresentados sustentam Embolia pulmonar de alto risco.",
+        "D": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Arterite de células gigantes",
+        "E": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Coqueluche"
+      },
+      "referencia_principal": "ESC Guidelines for Acute Pulmonary Embolism",
+      "instituicao_responsavel": "European Society of Cardiology",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "TEP",
+        "trombólise",
+        "choque",
+        "diagnóstico e reconhecimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0179",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Neurologia/Emergência",
+      "tema": "AVC isquêmico de grande vaso",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente chega 10 horas após último momento bem, com oclusão de M1 e grande penumbra em imagem de perfusão. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Ajustar antibióticos às culturas, foco e recuperação hematológica",
+        "B": "Completar antibióticos e tratar parceiros conforme infecção identificada",
+        "C": "Realizar intervenção coronária percutânea primária",
+        "D": "Realizar trombectomia mecânica em paciente selecionado",
+        "E": "Associar caplacizumabe e imunossupressão dirigida conforme disponibilidade"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar trombectomia mecânica em paciente selecionado.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Ajustar antibióticos às culturas, foco e recuperação hematológica",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar antibióticos e tratar parceiros conforme infecção identificada",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar intervenção coronária percutânea primária",
+        "D": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar trombectomia mecânica em paciente selecionado.",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Associar caplacizumabe e imunossupressão dirigida conforme disponibilidade"
+      },
+      "referencia_principal": "AHA/ASA Guideline for Early Management of Acute Ischemic Stroke",
+      "instituicao_responsavel": "AHA/ASA",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "AVC",
+        "trombectomia",
+        "penumbra",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0195",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Neurologia",
+      "tema": "Síndrome de Guillain-Barré",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta fraqueza ascendente, arreflexia, parestesias e dissociação albuminocitológica. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Reavaliar controle, técnica inalatória e necessidade de intensificação",
+        "B": "Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "C": "Completar antibióticos e tratar parceiros conforme infecção identificada",
+        "D": "Repetir adrenalina se necessário e oferecer suporte e plano de prevenção",
+        "E": "Tratar com imunoglobulina intravenosa ou plasmaférese"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A estratégia recomendada é: Tratar com imunoglobulina intravenosa ou plasmaférese.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Reavaliar controle, técnica inalatória e necessidade de intensificação",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar pronação prolongada na hipoxemia moderada-grave e tratar a causa",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar antibióticos e tratar parceiros conforme infecção identificada",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Repetir adrenalina se necessário e oferecer suporte e plano de prevenção",
+        "E": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Tratar com imunoglobulina intravenosa ou plasmaférese."
+      },
+      "referencia_principal": "EAN/PNS Guideline on Guillain-Barré Syndrome",
+      "instituicao_responsavel": "EAN/PNS",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "Guillain-Barré",
+        "IVIG",
+        "disautonomia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0204",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Neurologia",
+      "tema": "Doença de Parkinson com flutuações motoras",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente com Parkinson apresenta períodos de wearing-off e discinesias apesar de levodopa em doses regulares. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Resposta em 72 horas, abscesso, gravidez e adesão",
+        "B": "Histologia, margens, HPV e seguimento",
+        "C": "Peso, congestão, pressão, função renal e hospitalizações",
+        "D": "Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "E": "Capacidade vital, ritmo cardíaco, pressão e progressão da fraqueza"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Flutuações, discinesias, cognição, sono, hipotensão e impulsividade. A estimulação cerebral profunda melhora flutuações em pacientes selecionados, mas não trata demência ou instabilidade axial avançada.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Resposta em 72 horas, abscesso, gravidez e adesão",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Histologia, margens, HPV e seguimento",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Peso, congestão, pressão, função renal e hospitalizações",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Flutuações, discinesias, cognição, sono, hipotensão e impulsividade.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Capacidade vital, ritmo cardíaco, pressão e progressão da fraqueza"
+      },
+      "referencia_principal": "International Parkinson and Movement Disorder Society Evidence-Based Medicine Review",
+      "instituicao_responsavel": "Movement Disorder Society",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "Parkinson",
+        "wearing-off",
+        "DBS",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0209",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hematologia",
+      "tema": "Leucemia promielocítica aguda",
+      "subtema": "Diagnóstico e reconhecimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Adulto com pancitopenia, sangramento, CIVD e promielócitos anormais apresenta suspeita de leucemia promielocítica. Qual é o diagnóstico ou enquadramento clínico mais provável?",
+      "alternativas": {
+        "A": "Gestação ectópica rota com choque hemorrágico",
+        "B": "Hipertensão arterial acima da meta terapêutica preferencial",
+        "C": "Estado hiperglicêmico hiperosmolar",
+        "D": "Leucemia promielocítica aguda",
+        "E": "Cirrose compensada com hipertensão portal clinicamente significativa"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O quadro corresponde a Leucemia promielocítica aguda. A demora no ATRA aumenta o risco de hemorragia fatal.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Gestação ectópica rota com choque hemorrágico",
+        "B": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Hipertensão arterial acima da meta terapêutica preferencial",
+        "C": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Estado hiperglicêmico hiperosmolar",
+        "D": "Correta. Os dados apresentados sustentam Leucemia promielocítica aguda.",
+        "E": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Cirrose compensada com hipertensão portal clinicamente significativa"
+      },
+      "referencia_principal": "European LeukemiaNet Recommendations for Acute Promyelocytic Leukemia",
+      "instituicao_responsavel": "European LeukemiaNet",
+      "ano_da_diretriz": 2019,
+      "tags": [
+        "LPA",
+        "ATRA",
+        "CIVD",
+        "diagnóstico e reconhecimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0213",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hematologia",
+      "tema": "Púrpura trombótica trombocitopênica",
+      "subtema": "Diagnóstico e reconhecimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente apresenta anemia hemolítica microangiopática, plaquetopenia, confusão e coagulograma normal. Qual é o diagnóstico ou enquadramento clínico mais provável?",
+      "alternativas": {
+        "A": "Asma grave tipo 2 eosinofílica",
+        "B": "Asma com sintomas infrequentes",
+        "C": "Púrpura trombótica trombocitopênica imune",
+        "D": "Fratura exposta",
+        "E": "Peritonite bacteriana espontânea"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O quadro corresponde a Púrpura trombótica trombocitopênica imune. O tratamento deve começar pela alta suspeita clínica, sem aguardar ADAMTS13.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Asma grave tipo 2 eosinofílica",
+        "B": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Asma com sintomas infrequentes",
+        "C": "Correta. Os dados apresentados sustentam Púrpura trombótica trombocitopênica imune.",
+        "D": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Fratura exposta",
+        "E": "Incorreta. O conjunto de achados não é o mais compatível com essa condição. A alternativa propõe: Peritonite bacteriana espontânea"
+      },
+      "referencia_principal": "ISTH Guidelines for Treatment of Thrombotic Thrombocytopenic Purpura",
+      "instituicao_responsavel": "ISTH",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "PTT",
+        "plasmaférese",
+        "caplacizumabe",
+        "diagnóstico e reconhecimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0223",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hematologia/Oncologia",
+      "tema": "Mieloma múltiplo sintomático",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta anemia, lesões líticas, insuficiência renal e pico monoclonal. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Utilizar ICS-formoterol como manutenção e alívio no regime MART",
+        "B": "Manter insulina até resolução da cetose, acrescentando glicose quando necessário",
+        "C": "Iniciar esquema antieloma baseado em inibidor de proteassoma e avaliar transplante quando elegível",
+        "D": "Ajustar o antibiótico ao agente e completar duração recomendada",
+        "E": "Realizar irrigação, desbridamento e estabilização cirúrgica"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A estratégia recomendada é: Iniciar esquema antieloma baseado em inibidor de proteassoma e avaliar transplante quando elegível.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Utilizar ICS-formoterol como manutenção e alívio no regime MART",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Manter insulina até resolução da cetose, acrescentando glicose quando necessário",
+        "C": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Iniciar esquema antieloma baseado em inibidor de proteassoma e avaliar transplante quando elegível.",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Ajustar o antibiótico ao agente e completar duração recomendada",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar irrigação, desbridamento e estabilização cirúrgica"
+      },
+      "referencia_principal": "International Myeloma Working Group Recommendations",
+      "instituicao_responsavel": "IMWG",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "mieloma",
+        "CRAB",
+        "bortezomibe",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0224",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Hematologia/Oncologia",
+      "tema": "Mieloma múltiplo sintomático",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente apresenta anemia, lesões líticas, insuficiência renal e pico monoclonal. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Via aérea, abscesso, cultura e resposta clínica",
+        "B": "Oxigenação, choque, culturas e complicações pleurais",
+        "C": "Sangramento, fibrinogênio, choque e resposta uterina",
+        "D": "Componente monoclonal, cadeias leves, função renal, cálcio e resposta",
+        "E": "Exacerbações, pneumonia, sintomas, eosinófilos e função pulmonar"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Componente monoclonal, cadeias leves, função renal, cálcio e resposta. A presença de evento definidor de mieloma exige tratamento.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Via aérea, abscesso, cultura e resposta clínica",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Oxigenação, choque, culturas e complicações pleurais",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Sangramento, fibrinogênio, choque e resposta uterina",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Componente monoclonal, cadeias leves, função renal, cálcio e resposta.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Exacerbações, pneumonia, sintomas, eosinófilos e função pulmonar"
+      },
+      "referencia_principal": "International Myeloma Working Group Recommendations",
+      "instituicao_responsavel": "IMWG",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "mieloma",
+        "CRAB",
+        "bortezomibe",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0238",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Reumatologia",
+      "tema": "Artrite reumatoide inicial",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Mulher apresenta poliartrite simétrica de pequenas articulações, rigidez matinal prolongada e anti-CCP positivo. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Iniciar tratamento empírico com cobertura para gonococo, clamídia e anaeróbios",
+        "B": "Encaminhar para laparoscopia urgente sem depender da ausência de fluxo no Doppler",
+        "C": "Iniciar rapidamente metotrexato após avaliação de segurança",
+        "D": "Suspender imediatamente o fármaco suspeito e encaminhar para unidade especializada",
+        "E": "Iniciar beta-lactâmico associado a macrolídeo"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A prioridade é: Iniciar rapidamente metotrexato após avaliação de segurança. O controle precoce da inflamação reduz dano articular irreversível.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar tratamento empírico com cobertura para gonococo, clamídia e anaeróbios",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Encaminhar para laparoscopia urgente sem depender da ausência de fluxo no Doppler",
+        "C": "Correta. Essa abordagem atende à prioridade imediata: Iniciar rapidamente metotrexato após avaliação de segurança.",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Suspender imediatamente o fármaco suspeito e encaminhar para unidade especializada",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar beta-lactâmico associado a macrolídeo"
+      },
+      "referencia_principal": "ACR Guideline for the Treatment of Rheumatoid Arthritis",
+      "instituicao_responsavel": "American College of Rheumatology",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "artrite reumatoide",
+        "metotrexato",
+        "treat-to-target",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0243",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Reumatologia",
+      "tema": "Gota aguda",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente apresenta monoartrite da primeira metatarsofalângica e cristais em agulha com birrefringência negativa. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar CPRE urgente para descompressão biliar",
+        "B": "Completar 28 dias e realizar seguimento sorológico",
+        "C": "Iniciar ou ajustar urato-redutor quando indicado, com profilaxia anti-inflamatória",
+        "D": "Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada",
+        "E": "Realizar fasciotomia urgente"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "A estratégia recomendada é: Iniciar ou ajustar urato-redutor quando indicado, com profilaxia anti-inflamatória.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar CPRE urgente para descompressão biliar",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar 28 dias e realizar seguimento sorológico",
+        "C": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Iniciar ou ajustar urato-redutor quando indicado, com profilaxia anti-inflamatória.",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar fasciotomia urgente"
+      },
+      "referencia_principal": "ACR Guideline for the Management of Gout",
+      "instituicao_responsavel": "American College of Rheumatology",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "gota",
+        "colchicina",
+        "alopurinol",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0246",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Reumatologia",
+      "tema": "Artrite séptica versus crise inflamatória",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente imunossuprimido apresenta monoartrite aguda, febre e líquido sinovial com elevada contagem de neutrófilos. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Realizar punção articular, hemoculturas e iniciar antibiótico após coleta",
+        "B": "Iniciar terapia antitrombótica e anti-isquêmica, estratificando risco de sangramento e isquemia",
+        "C": "Internar em UTI, avaliar ventilação e tratar precipitantes",
+        "D": "Revisar horários, absorção, adesão e medicamentos que pioram parkinsonismo",
+        "E": "Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A prioridade é: Realizar punção articular, hemoculturas e iniciar antibiótico após coleta. Cristais no líquido não excluem infecção concomitante.",
+      "justificativas": {
+        "A": "Correta. Essa abordagem atende à prioridade imediata: Realizar punção articular, hemoculturas e iniciar antibiótico após coleta.",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar terapia antitrombótica e anti-isquêmica, estratificando risco de sangramento e isquemia",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Internar em UTI, avaliar ventilação e tratar precipitantes",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Revisar horários, absorção, adesão e medicamentos que pioram parkinsonismo",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar oxigênio, salbutamol repetido, ipratrópio e corticoide sistêmico precoce"
+      },
+      "referencia_principal": "EBJIS Guideline for Septic Arthritis in Native Joints",
+      "instituicao_responsavel": "EBJIS",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "artrite séptica",
+        "punção",
+        "drenagem",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0251",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Dermatologia/Emergência",
+      "tema": "Síndrome de Stevens-Johnson e necrólise epidérmica",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Paciente após iniciar medicamento de alto risco evolui com febre, erosões mucosas e descolamento epidérmico doloroso. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar suporte intensivo, cuidado de pele, olhos, dor e infecção",
+        "B": "Realizar cesariana-histerectomia sem tentativa de retirada forçada da placenta em caso típico",
+        "C": "Realizar destorção e preservar o ovário sempre que possível",
+        "D": "Completar indução, consolidação e manutenção, iniciando TARV no momento apropriado",
+        "E": "Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar suporte intensivo, cuidado de pele, olhos, dor e infecção.",
+      "justificativas": {
+        "A": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar suporte intensivo, cuidado de pele, olhos, dor e infecção.",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar cesariana-histerectomia sem tentativa de retirada forçada da placenta em caso típico",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar destorção e preservar o ovário sempre que possível",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar indução, consolidação e manutenção, iniciando TARV no momento apropriado",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Intensificar tratamento visando pressão sistólica de 120 a 129 mmHg quando bem tolerada"
+      },
+      "referencia_principal": "European Guidelines for SJS/TEN Management",
+      "instituicao_responsavel": "European Dermatology Consensus",
+      "ano_da_diretriz": 2023,
+      "tags": [
+        "SJS",
+        "NET",
+        "fármaco",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0260",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Clínica Médica",
+      "area": "Dermatologia",
+      "tema": "Psoríase moderada a grave",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente apresenta placas extensas, artralgia, comprometimento ungueal e falha de terapia tópica. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "B": "Potássio, fósforo, cálcio, ácido úrico, creatinina e arritmias",
+        "C": "Exacerbações, uso de alívio, técnica, eosinófilos e função pulmonar",
+        "D": "Peso, diabetes, FIB-4, elastografia e risco cardiovascular",
+        "E": "Pele, articulações, infecção, fígado, peso e resposta"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Pele, articulações, infecção, fígado, peso e resposta. A presença de artrite muda a escolha e a urgência da terapia sistêmica.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Potássio, fósforo, cálcio, ácido úrico, creatinina e arritmias",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Exacerbações, uso de alívio, técnica, eosinófilos e função pulmonar",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Peso, diabetes, FIB-4, elastografia e risco cardiovascular",
+        "E": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Pele, articulações, infecção, fígado, peso e resposta."
+      },
+      "referencia_principal": "AAD-NPF Guidelines of Care for Management of Psoriasis",
+      "instituicao_responsavel": "AAD/NPF",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "psoríase",
+        "biológico",
+        "artrite psoriásica",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0271",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Pediatria",
+      "area": "Emergência Pediátrica",
+      "tema": "Anafilaxia",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança apresenta urticária difusa, sibilância, vômitos e hipotensão após ingerir amendoim. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Repetir adrenalina se necessário e oferecer suporte e plano de prevenção",
+        "B": "Realizar fasciotomia urgente",
+        "C": "Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco",
+        "D": "Completar esquema recomendado e realizar investigação de contatos",
+        "E": "Escalonar para balão, embolização ou cirurgia conforme resposta"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A estratégia recomendada é: Repetir adrenalina se necessário e oferecer suporte e plano de prevenção.",
+      "justificativas": {
+        "A": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Repetir adrenalina se necessário e oferecer suporte e plano de prevenção.",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar fasciotomia urgente",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Completar esquema recomendado e realizar investigação de contatos",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Escalonar para balão, embolização ou cirurgia conforme resposta"
+      },
+      "referencia_principal": "World Allergy Organization Anaphylaxis Guidance",
+      "instituicao_responsavel": "World Allergy Organization",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "anafilaxia",
+        "adrenalina",
+        "alergia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0274",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Pediatria",
+      "area": "Neurologia Pediátrica/Emergência",
+      "tema": "Estado de mal epiléptico pediátrico",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança de 6 anos apresenta crise tônico-clônica contínua há sete minutos e não há acesso venoso. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Iniciar rapidamente metotrexato após avaliação de segurança",
+        "B": "Internar, monitorar função respiratória e disautonomia",
+        "C": "Suspender e reverter anticoagulação, controlar pressão e acionar neurologia ou neurocirurgia",
+        "D": "Administrar midazolam intranasal, bucal ou intramuscular",
+        "E": "Iniciar compressões coordenadas na relação 3:1 com ventilação e oxigênio a 100%"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "A prioridade é: Administrar midazolam intranasal, bucal ou intramuscular. A ausência de acesso venoso não deve atrasar benzodiazepínico.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar rapidamente metotrexato após avaliação de segurança",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Internar, monitorar função respiratória e disautonomia",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Suspender e reverter anticoagulação, controlar pressão e acionar neurologia ou neurocirurgia",
+        "D": "Correta. Essa abordagem atende à prioridade imediata: Administrar midazolam intranasal, bucal ou intramuscular.",
+        "E": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar compressões coordenadas na relação 3:1 com ventilação e oxigênio a 100%"
+      },
+      "referencia_principal": "American Epilepsy Society Guideline for Convulsive Status Epilepticus",
+      "instituicao_responsavel": "AES",
+      "ano_da_diretriz": 2016,
+      "tags": [
+        "estado de mal",
+        "midazolam",
+        "pediatria",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0290",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Pediatria",
+      "area": "Infectologia Pediátrica",
+      "tema": "Meningococcemia",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Criança apresenta febre, petéquias rapidamente progressivas, choque e alteração do nível de consciência. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Confirmar com medula, imunofixação e avaliação de eventos definidores",
+        "B": "Suspender agentes desencadeantes, administrar dantrolene e iniciar resfriamento e suporte",
+        "C": "Iniciar tratamento empírico com cobertura para gonococo, clamídia e anaeróbios",
+        "D": "Iniciar ácido all-trans-retinoico imediatamente",
+        "E": "Iniciar ressuscitação e ceftriaxona imediatamente, sem aguardar punção lombar"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A prioridade é: Iniciar ressuscitação e ceftriaxona imediatamente, sem aguardar punção lombar. A punção lombar deve ser adiada no paciente instável.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Confirmar com medula, imunofixação e avaliação de eventos definidores",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Suspender agentes desencadeantes, administrar dantrolene e iniciar resfriamento e suporte",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar tratamento empírico com cobertura para gonococo, clamídia e anaeróbios",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar ácido all-trans-retinoico imediatamente",
+        "E": "Correta. Essa abordagem atende à prioridade imediata: Iniciar ressuscitação e ceftriaxona imediatamente, sem aguardar punção lombar."
+      },
+      "referencia_principal": "AAP Red Book and CDC Guidance on Meningococcal Disease",
+      "instituicao_responsavel": "AAP/CDC",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "meningococcemia",
+        "ceftriaxona",
+        "choque",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0292",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Pediatria",
+      "area": "Infectologia Pediátrica",
+      "tema": "Meningococcemia",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Criança apresenta febre, petéquias rapidamente progressivas, choque e alteração do nível de consciência. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Negativação das culturas, embolização, função valvar e focos metastáticos",
+        "B": "Perfusão, coagulopatia, necrose, culturas e sequelas",
+        "C": "Osmolaridade efetiva, sódio corrigido, potássio, glicemia e consciência",
+        "D": "Pressão, reflexos, diurese, plaquetas, fígado e bem-estar fetal",
+        "E": "Exacerbações, pneumonia, sintomas, eosinófilos e função pulmonar"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Perfusão, coagulopatia, necrose, culturas e sequelas. A punção lombar deve ser adiada no paciente instável.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Negativação das culturas, embolização, função valvar e focos metastáticos",
+        "B": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Perfusão, coagulopatia, necrose, culturas e sequelas.",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Osmolaridade efetiva, sódio corrigido, potássio, glicemia e consciência",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Pressão, reflexos, diurese, plaquetas, fígado e bem-estar fetal",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Exacerbações, pneumonia, sintomas, eosinófilos e função pulmonar"
+      },
+      "referencia_principal": "AAP Red Book and CDC Guidance on Meningococcal Disease",
+      "instituicao_responsavel": "AAP/CDC",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "meningococcemia",
+        "ceftriaxona",
+        "choque",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0300",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Pediatria",
+      "area": "Infectologia Pediátrica",
+      "tema": "Coqueluche em lactente",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Lactente de 2 meses apresenta crises de tosse, cianose e apneia; PCR para Bordetella pertussis é positiva. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Ácido úrico, crises, tofos, função renal e toxicidade",
+        "B": "Osmolaridade efetiva, sódio corrigido, potássio, glicemia e consciência",
+        "C": "Cetonemia, ânion gap, potássio, glicemia e fator precipitante",
+        "D": "Plaquetas, sangramento, trombose, infecção e toxicidade",
+        "E": "Apneia, oxigenação, alimentação, leucocitose e transmissão"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Apneia, oxigenação, alimentação, leucocitose e transmissão. Lactentes pequenos têm alto risco de apneia e complicações graves.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ácido úrico, crises, tofos, função renal e toxicidade",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Osmolaridade efetiva, sódio corrigido, potássio, glicemia e consciência",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Cetonemia, ânion gap, potássio, glicemia e fator precipitante",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Plaquetas, sangramento, trombose, infecção e toxicidade",
+        "E": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Apneia, oxigenação, alimentação, leucocitose e transmissão."
+      },
+      "referencia_principal": "CDC Clinical Treatment and Postexposure Prophylaxis Guidance for Pertussis",
+      "instituicao_responsavel": "CDC",
+      "ano_da_diretriz": 2024,
+      "tags": [
+        "coqueluche",
+        "azitromicina",
+        "lactente",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0308",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Eclâmpsia",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Gestante de 34 semanas com hipertensão grave apresenta convulsão tônico-clônica. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Via aérea, pressão, recorrência bifásica e exposição ao alérgeno",
+        "B": "Viabilidade testicular, dor e fertilidade",
+        "C": "Recorrência de convulsão, reflexos, diurese, magnésio e bem-estar fetal",
+        "D": "Ácido úrico, crises, tofos, função renal e toxicidade",
+        "E": "Estado neurológico, sódio, potássio, glicemia, cetonemia e edema cerebral"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Recorrência de convulsão, reflexos, diurese, magnésio e bem-estar fetal. O sulfato de magnésio é superior a outros anticonvulsivantes para prevenção de recorrência.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Via aérea, pressão, recorrência bifásica e exposição ao alérgeno",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Viabilidade testicular, dor e fertilidade",
+        "C": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Recorrência de convulsão, reflexos, diurese, magnésio e bem-estar fetal.",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Ácido úrico, crises, tofos, função renal e toxicidade",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Estado neurológico, sódio, potássio, glicemia, cetonemia e edema cerebral"
+      },
+      "referencia_principal": "ACOG Practice Bulletin: Gestational Hypertension and Preeclampsia",
+      "instituicao_responsavel": "ACOG",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "eclâmpsia",
+        "magnésio",
+        "convulsão",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0310",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Ginecologia e Obstetrícia",
+      "area": "Obstetrícia",
+      "tema": "Hemorragia pós-parto por atonia",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Puérpera apresenta sangramento importante, útero amolecido, taquicardia e queda da pressão. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Iniciar hidratação com cristaloide e calcitonina para efeito rápido",
+        "B": "Interromper a injeção, garantir via aérea, tratar convulsão e iniciar emulsão lipídica",
+        "C": "Iniciar ácido all-trans-retinoico imediatamente",
+        "D": "Procurar e corrigir precipitantes e iniciar lactulose",
+        "E": "Iniciar massagem uterina, uterotônico, ácido tranexâmico precoce e ressuscitação"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A prioridade é: Iniciar massagem uterina, uterotônico, ácido tranexâmico precoce e ressuscitação. O tratamento deve ocorrer em pacote simultâneo, sem aguardar exames.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar hidratação com cristaloide e calcitonina para efeito rápido",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Interromper a injeção, garantir via aérea, tratar convulsão e iniciar emulsão lipídica",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Iniciar ácido all-trans-retinoico imediatamente",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Procurar e corrigir precipitantes e iniciar lactulose",
+        "E": "Correta. Essa abordagem atende à prioridade imediata: Iniciar massagem uterina, uterotônico, ácido tranexâmico precoce e ressuscitação."
+      },
+      "referencia_principal": "WHO/FIGO/ICM Consolidated Guidelines for Postpartum Haemorrhage",
+      "instituicao_responsavel": "WHO/FIGO/ICM",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "hemorragia pós-parto",
+        "atonia",
+        "TXA",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0344",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Geral",
+      "tema": "Apendicite com apendicolito",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Adulto estável apresenta apendicite aguda não complicada e apendicolito na tomografia. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "B": "Componente monoclonal, cadeias leves, função renal, cálcio e resposta",
+        "C": "Consciência, culturas, líquor, convulsões e complicações",
+        "D": "Infecção de ferida, abscesso e recuperação",
+        "E": "Expansão do hematoma, pressão, consciência, hidrocefalia e trombose"
+      },
+      "resposta_correta": "D",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Infecção de ferida, abscesso e recuperação. O apendicolito aumenta falha, recorrência e complicações no tratamento não operatório.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Flutuações, discinesias, cognição, sono, hipotensão e impulsividade",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Componente monoclonal, cadeias leves, função renal, cálcio e resposta",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Consciência, culturas, líquor, convulsões e complicações",
+        "D": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Infecção de ferida, abscesso e recuperação.",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Expansão do hematoma, pressão, consciência, hidrocefalia e trombose"
+      },
+      "referencia_principal": "WSES Jerusalem Guidelines for Acute Appendicitis",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "apendicite",
+        "apendicolito",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0355",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Cirurgia",
+      "area": "Cirurgia Vascular",
+      "tema": "Isquemia mesentérica aguda",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Idosa com fibrilação atrial sem anticoagulação apresenta dor abdominal súbita desproporcional e lactato elevado. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Iniciar fototerapia ou terapia sistêmica/biológica conforme perfil",
+        "B": "Confirmar com imagem ou biópsia sem atrasar o tratamento e considerar tocilizumabe",
+        "C": "Se persistir, usar levetiracetam, valproato ou fosfenitoína e escalar para anestesia se refratário",
+        "D": "Combinar ARNI ou IECA/BRA, betabloqueador com evidência, antagonista mineralocorticoide e inibidor de SGLT2",
+        "E": "Realizar revascularização e ressecar intestino inviável"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar revascularização e ressecar intestino inviável.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Iniciar fototerapia ou terapia sistêmica/biológica conforme perfil",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Confirmar com imagem ou biópsia sem atrasar o tratamento e considerar tocilizumabe",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Se persistir, usar levetiracetam, valproato ou fosfenitoína e escalar para anestesia se refratário",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Combinar ARNI ou IECA/BRA, betabloqueador com evidência, antagonista mineralocorticoide e inibidor de SGLT2",
+        "E": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar revascularização e ressecar intestino inviável."
+      },
+      "referencia_principal": "WSES Updated Guidelines for Acute Mesenteric Ischemia",
+      "instituicao_responsavel": "WSES",
+      "ano_da_diretriz": 2022,
+      "tags": [
+        "isquemia mesentérica",
+        "angiotomografia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0367",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Ortopedia",
+      "area": "Ortopedia/Geriatria",
+      "tema": "Fratura de quadril no idoso",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Idosa apresenta fratura desviada do colo femoral após queda, sem contraindicação à cirurgia. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar colecistectomia laparoscópica precoce na mesma internação",
+        "B": "Realizar artroplastia em tempo oportuno conforme funcionalidade",
+        "C": "Tratar o precipitante e orientar dose de estresse e autoadministração de emergência",
+        "D": "Realizar drenagem articular e ajustar o antibiótico à cultura",
+        "E": "Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar artroplastia em tempo oportuno conforme funcionalidade.",
+      "justificativas": {
+        "A": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar colecistectomia laparoscópica precoce na mesma internação",
+        "B": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar artroplastia em tempo oportuno conforme funcionalidade.",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Tratar o precipitante e orientar dose de estresse e autoadministração de emergência",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar drenagem articular e ajustar o antibiótico à cultura",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar substituição valvar cirúrgica ou transcateter conforme anatomia, idade e risco"
+      },
+      "referencia_principal": "AAOS Clinical Practice Guideline: Management of Hip Fractures in Older Adults",
+      "instituicao_responsavel": "AAOS",
+      "ano_da_diretriz": 2021,
+      "tags": [
+        "fratura de quadril",
+        "idoso",
+        "artroplastia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0370",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Cirurgia",
+      "area": "Urologia/Emergência",
+      "tema": "Torção testicular",
+      "subtema": "Conduta inicial",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Adolescente apresenta dor escrotal súbita, náusea, testículo elevado e reflexo cremastérico ausente. Considerando a prioridade clínica atual, qual é a conduta inicial mais adequada?",
+      "alternativas": {
+        "A": "Quantificar gravidade, rastrear artrite, infecção e comorbidades cardiometabólicas",
+        "B": "Administrar antitrombóticos apropriados e ativar imediatamente a hemodinâmica",
+        "C": "Realizar investigação completa, incluindo culturas e punção lombar, e iniciar antibiótico parenteral",
+        "D": "Internar, administrar corticoide antenatal e antibiótico de latência",
+        "E": "Acionar exploração cirúrgica imediata sem atrasar por ultrassom quando a suspeita é alta"
+      },
+      "resposta_correta": "E",
+      "comentario_do_gabarito": "A prioridade é: Acionar exploração cirúrgica imediata sem atrasar por ultrassom quando a suspeita é alta. O salvamento testicular cai rapidamente com o tempo de isquemia.",
+      "justificativas": {
+        "A": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Quantificar gravidade, rastrear artrite, infecção e comorbidades cardiometabólicas",
+        "B": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Administrar antitrombóticos apropriados e ativar imediatamente a hemodinâmica",
+        "C": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Realizar investigação completa, incluindo culturas e punção lombar, e iniciar antibiótico parenteral",
+        "D": "Incorreta. A medida não atende à prioridade do caso ou pertence a outro cenário. A alternativa propõe: Internar, administrar corticoide antenatal e antibiótico de latência",
+        "E": "Correta. Essa abordagem atende à prioridade imediata: Acionar exploração cirúrgica imediata sem atrasar por ultrassom quando a suspeita é alta."
+      },
+      "referencia_principal": "EAU Guidelines on Paediatric Urology",
+      "instituicao_responsavel": "European Association of Urology",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "torção testicular",
+        "orquidopexia",
+        "conduta inicial"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0371",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Cirurgia",
+      "area": "Urologia/Emergência",
+      "tema": "Torção testicular",
+      "subtema": "Tratamento definitivo",
+      "nivel_dificuldade": "Difícil",
+      "enunciado": "Adolescente apresenta dor escrotal súbita, náusea, testículo elevado e reflexo cremastérico ausente. Após estabilização e confirmação, qual estratégia terapêutica é a mais apropriada?",
+      "alternativas": {
+        "A": "Realizar destorção e orquidopexia bilateral, com orquiectomia se inviável",
+        "B": "Ajustar antibióticos às culturas, foco e recuperação hematológica",
+        "C": "Realizar adrenalectomia em doença unilateral ou antagonista mineralocorticoide em doença bilateral",
+        "D": "Realizar terapia renal substitutiva se houver complicações refratárias",
+        "E": "Manter tratamento protocolizado e corrigir eletrólitos e complicações"
+      },
+      "resposta_correta": "A",
+      "comentario_do_gabarito": "A estratégia recomendada é: Realizar destorção e orquidopexia bilateral, com orquiectomia se inviável.",
+      "justificativas": {
+        "A": "Correta. Essa é a terapia definitiva ou de longo prazo mais adequada: Realizar destorção e orquidopexia bilateral, com orquiectomia se inviável.",
+        "B": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Ajustar antibióticos às culturas, foco e recuperação hematológica",
+        "C": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar adrenalectomia em doença unilateral ou antagonista mineralocorticoide em doença bilateral",
+        "D": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Realizar terapia renal substitutiva se houver complicações refratárias",
+        "E": "Incorreta. A alternativa não resolve adequadamente a fisiopatologia ou a gravidade descrita. A alternativa propõe: Manter tratamento protocolizado e corrigir eletrólitos e complicações"
+      },
+      "referencia_principal": "EAU Guidelines on Paediatric Urology",
+      "instituicao_responsavel": "European Association of Urology",
+      "ano_da_diretriz": 2025,
+      "tags": [
+        "torção testicular",
+        "orquidopexia",
+        "tratamento definitivo"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0388",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Anestesiologia",
+      "area": "Anestesiologia/Emergência",
+      "tema": "Toxicidade sistêmica por anestésico local",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Após bloqueio regional, paciente apresenta gosto metálico, zumbido, convulsão e arritmia ventricular. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens",
+        "B": "Infecção, cobertura de partes moles, consolidação e síndrome compartimental",
+        "C": "Ritmo, consciência, acidose e dose total do anestésico",
+        "D": "Perfusão, lactato, viabilidade intestinal e síndrome compartimental",
+        "E": "Peso, congestão, pressão, função renal e hospitalizações"
+      },
+      "resposta_correta": "C",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Ritmo, consciência, acidose e dose total do anestésico. Grandes doses de vasopressina e alguns antiarrítmicos devem ser evitados na LAST.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens",
+        "B": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Infecção, cobertura de partes moles, consolidação e síndrome compartimental",
+        "C": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Ritmo, consciência, acidose e dose total do anestésico.",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Perfusão, lactato, viabilidade intestinal e síndrome compartimental",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Peso, congestão, pressão, função renal e hospitalizações"
+      },
+      "referencia_principal": "ASRA Practice Advisory on Local Anesthetic Systemic Toxicity",
+      "instituicao_responsavel": "ASRA",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "LAST",
+        "emulsão lipídica",
+        "bloqueio",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    },
+    {
+      "id_externo": "MR26-DIR-ATUAL-0392",
+      "tipo_da_questao": "Questão autoral baseada em diretriz vigente",
+      "especialidade": "Psiquiatria",
+      "area": "Psiquiatria/Emergência",
+      "tema": "Abstinência alcoólica grave",
+      "subtema": "Monitorização e seguimento",
+      "nivel_dificuldade": "Média",
+      "enunciado": "Paciente dependente de álcool apresenta tremor, alucinações, agitação, hipertensão e convulsão após interromper o consumo. Depois de instituído o tratamento, qual conjunto de parâmetros deve ser priorizado no seguimento?",
+      "alternativas": {
+        "A": "Pressão, frequência, descompensações, função hepática e tolerância",
+        "B": "Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens",
+        "C": "Complicações biliares, conversão e recuperação",
+        "D": "Consciência, culturas, líquor, convulsões e complicações",
+        "E": "Sangramento, hemodinâmica, oxigenação e recuperação ventricular"
+      },
+      "resposta_correta": "B",
+      "comentario_do_gabarito": "O acompanhamento deve priorizar: Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens. Antipsicótico não substitui benzodiazepínico na abstinência.",
+      "justificativas": {
+        "A": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Pressão, frequência, descompensações, função hepática e tolerância",
+        "B": "Correta. Esses parâmetros avaliam resposta, progressão e toxicidade: Agitação, convulsão, sinais autonômicos, magnésio e delirium tremens.",
+        "C": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Complicações biliares, conversão e recuperação",
+        "D": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Consciência, culturas, líquor, convulsões e complicações",
+        "E": "Incorreta. O conjunto sugerido não acompanha os principais desfechos e complicações desta condição. A alternativa propõe: Sangramento, hemodinâmica, oxigenação e recuperação ventricular"
+      },
+      "referencia_principal": "ASAM Clinical Practice Guideline on Alcohol Withdrawal Management",
+      "instituicao_responsavel": "ASAM",
+      "ano_da_diretriz": 2020,
+      "tags": [
+        "abstinência alcoólica",
+        "benzodiazepínico",
+        "tiamina",
+        "monitorização e seguimento"
+      ],
+      "data_criacao": "2026-07-23",
+      "status": "rascunho",
+      "versao": 1,
+      "aviso": "Questão autoral de treinamento baseada em diretriz ou consenso vigente. Não corresponde a questão oficial de prova de residência.",
+      "lote_importacao": "MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22"
+    }
+  ]
+}

@@ -23,12 +23,21 @@ const REPO_LOTES = [
   'MEDRANK_NEFRO_NEFROPED_2026_LOTE_17',
   'MEDRANK_NEFRO_NEFROPED_2026_LOTE_18',
   'MEDRANK_NEFRO_NEFROPED_2026_LOTE_19',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_20',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_21',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_22',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_23',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_24',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_25',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_26',
+  'MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_27',
 ] as const;
 
 function loteLabel(lote: string): string {
   return lote
     .replace('MEDRANK_AUTORAL_2026_', '')
-    .replace('MEDRANK_NEFRO_NEFROPED_2026_', 'NEFRO_');
+    .replace('MEDRANK_NEFRO_NEFROPED_2026_', 'NEFRO_')
+    .replace('MEDRANK_DIRETRIZES_ATUAIS_2026_', 'DIR_');
 }
 
 type PreviewRow = {
@@ -363,6 +372,7 @@ export default function ImportarLotePage() {
             const href = `/templates/${lote}.json`;
             const active = loadedLote === lote;
             const nefro = lote.includes('NEFRO');
+            const dir = lote.includes('DIRETRIZES');
             return (
               <li
                 key={lote}
@@ -372,6 +382,9 @@ export default function ImportarLotePage() {
                   {label}
                   {nefro ? (
                     <span className="ml-1 font-medium text-teal-700">nefro</span>
+                  ) : null}
+                  {dir ? (
+                    <span className="ml-1 font-medium text-teal-700">diretriz</span>
                   ) : null}
                 </span>
                 <button
