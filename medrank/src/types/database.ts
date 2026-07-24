@@ -94,6 +94,24 @@ export interface Question {
   quality_reviewed_by?: string | null;
   /** acesso_direto | pre_requisito | titulo | revalida | outro */
   exam_track?: string | null;
+  external_id?: string | null;
+  question_kind?:
+    | 'official_residency'
+    | 'authorial_guideline'
+    | 'authorial_prediction'
+    | 'in_review'
+    | null;
+  area?: string | null;
+  option_a_rationale?: string | null;
+  option_b_rationale?: string | null;
+  option_c_rationale?: string | null;
+  option_d_rationale?: string | null;
+  option_e_rationale?: string | null;
+  guideline_name?: string | null;
+  guideline_institution?: string | null;
+  guideline_year?: number | null;
+  question_version?: string | null;
+  lote_importacao?: string | null;
 }
 
 export interface Exam {

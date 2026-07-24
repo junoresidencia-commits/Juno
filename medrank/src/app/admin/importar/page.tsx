@@ -50,10 +50,16 @@ export default function ImportarPage() {
 
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
+          href="/admin/importar/lote"
+          className="rounded-lg bg-teal-800 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-900"
+        >
+          Importar lote de questões
+        </Link>
+        <Link
           href="/admin/importar/prova"
           className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
         >
-          Importar prova completa
+          Importar prova oficial
         </Link>
         <Link
           href="/admin/questoes/revisao"
