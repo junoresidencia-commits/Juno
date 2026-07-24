@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+type SpecialtyCount = { specialty: string; count: number };
+
 type Inventory = {
   totalApproved: number;
   lotsApproved: number;
@@ -9,10 +11,13 @@ type Inventory = {
   nefroAdultTagged: number;
   nefroPedTagged: number;
   nefroBySpecialty?: number;
+  clinicaMedica?: number;
   residenciaTagged: number;
   official2024plus: number;
   draftLots: number;
+  bySpecialty?: SpecialtyCount[];
   canBuildNefro?: boolean;
+  canBuildGeneral?: boolean;
   hint?: string | null;
 };
 
@@ -70,7 +75,7 @@ export function BankInventoryPanel() {
         <div>
           <h2 className="font-semibold text-slate-900">Quantas questões tem no banco</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Contagem real no Supabase — para não depender da mensagem “insuficiente”.
+            Contagem pelos lotes que você importou, por especialidade (Clínica Médica, Nefrologia…).
           </p>
         </div>
         <button
@@ -90,20 +95,41 @@ export function BankInventoryPanel() {
         <>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat value={data.totalApproved} label="aprovadas (total)" />
-            <Stat value={data.lotsApproved} label="lotes MedRank" />
+            <Stat value={data.lotsApproved} label="nos lotes MedRank" />
             <Stat value={data.official2024plus} label="oficiais 2024+" />
             <Stat value={data.draftLots} label="ainda em rascunho" />
           </div>
+
+          <h3 className="mt-5 text-sm font-semibold text-slate-800">Por especialidade (lotes)</h3>
+          {(data.bySpecialty?.length ?? 0) > 0 ? (
+            <ul className="mt-2 divide-y divide-slate-100 rounded-xl ring-1 ring-slate-200">
+              {data.bySpecialty!.map((row) => (
+                <li
+                  key={row.specialty}
+                  className="flex items-center justify-between gap-3 bg-white px-4 py-2.5 text-sm first:rounded-t-xl last:rounded-b-xl"
+                >
+                  <span className="font-medium text-slate-900">{row.specialty}</span>
+                  <span className="tabular-nums font-bold text-teal-800">{row.count}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-amber-800">
+              Nenhuma questão aprovada com especialidade nos lotes. Publique os lotes em Questões →
+              Importar lote.
+            </p>
+          )}
+
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Stat value={data.nefroLots} label="lotes Nefro" highlight />
-            <Stat value={data.nefroAdultTagged} label="tag adulto" highlight />
-            <Stat value={data.nefroPedTagged} label="tag pediátrica" highlight />
+            <Stat value={data.clinicaMedica ?? 0} label="Clínica Médica" highlight />
+            <Stat value={data.nefroBySpecialty ?? 0} label="Nefro + Nefroped" highlight />
+            <Stat value={data.nefroLots} label="lotes Nefro" />
             <Stat value={data.residenciaTagged} label="tag residência" />
           </div>
 
           {data.hint ? (
             <div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-950 ring-1 ring-amber-200">
-              <p className="font-semibold">Por que deu “insuficiente”?</p>
+              <p className="font-semibold">Atenção</p>
               <p className="mt-1">{data.hint}</p>
             </div>
           ) : null}
@@ -117,12 +143,6 @@ export function BankInventoryPanel() {
             >
               {repairing ? 'Corrigindo tags…' : 'Corrigir tags dos lotes Nefro'}
             </button>
-          ) : null}
-
-          {data.canBuildNefro === false && data.nefroLots === 0 ? (
-            <p className="mt-3 text-sm text-red-700">
-              Ainda não há lotes Nefro publicados. Vá em Questões → Importar lote → Publicar.
-            </p>
           ) : null}
         </>
       ) : loading ? (
