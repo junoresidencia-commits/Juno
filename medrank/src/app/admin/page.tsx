@@ -21,6 +21,7 @@ export default async function AdminDashboard() {
       { href: '/admin/importar/lote', label: 'Importar lote', desc: 'JSON autorais → publicar' },
       { href: '/admin/importar/prova', label: 'Importar prova', desc: 'Texto/JSON → revisão' },
       { href: '/admin/provas', label: 'Provas', desc: `${demo.examCount} provas diárias` },
+      { href: '/admin/liberacoes', label: 'Liberar prova', desc: 'Erro técnico / antifraude' },
       { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
       { href: '/admin/desafios', label: 'Desafios semanais', desc: `${demo.challenges.length} metas ativas` },
       { href: '/admin/relatorios', label: 'Relatórios', desc: 'Excel e PDF' },

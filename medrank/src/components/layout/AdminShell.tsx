@@ -9,6 +9,7 @@ const NAV = [
   { href: '/admin/grupos', label: 'Grupos' },
   { href: '/admin/questoes', label: 'Questões' },
   { href: '/admin/provas', label: 'Provas' },
+  { href: '/admin/liberacoes', label: 'Liberar' },
   { href: '/admin/importar', label: 'Importar' },
   { href: '/admin/ranking', label: 'Ranking' },
   { href: '/admin/desafios', label: 'Desafios' },

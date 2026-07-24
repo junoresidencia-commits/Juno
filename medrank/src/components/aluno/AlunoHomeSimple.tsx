@@ -106,8 +106,9 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
           <div className="rounded-xl bg-red-50 px-4 py-5 text-center ring-1 ring-red-100">
             <p className="font-semibold text-red-900">Você saiu da disputa</p>
             <p className="mt-1 text-sm text-red-700">
-              Esta prova encerrou (antifraude ou abandono). Não dá para refazer hoje — a outra
-              disputa, se houver, continua disponível.
+              Esta prova encerrou (antifraude ou abandono). A outra disputa, se houver, continua
+              disponível. Se foi ligação ou notificação, fale com o professor — ele pode liberar de
+              novo.
             </p>
             {card.attemptId && (
               <Link href={resultHref} className="mt-3 inline-block text-sm font-medium text-red-800 underline">
