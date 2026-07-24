@@ -7,7 +7,7 @@ import { parseRequestFields } from '@/lib/parse-request-body';
 import { randomBytes } from 'crypto';
 
 function inviteRedirect(request: Request, params: Record<string, string>) {
-  const url = new URL('/admin/convites', getRequestOrigin(request));
+  const url = new URL('/admin/pagamentos', getRequestOrigin(request));
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }

@@ -136,7 +136,9 @@ export async function POST(request: NextRequest) {
 
   if (!profile.active) {
     await supabase.auth.signOut();
-    const error = profile.approved_at ? 'Acesso bloqueado.' : 'Aguardando liberação do professor.';
+    const error = profile.approved_at
+      ? 'Acesso bloqueado.'
+      : 'Aguardando liberação. Pague o PIX de R$ 10 e aguarde o professor confirmar.';
     if (formSubmit) return redirectLogin(request, error);
     return NextResponse.json({ error }, { status: 403 });
   }
