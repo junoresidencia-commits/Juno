@@ -12,6 +12,7 @@ interface Props {
   pending: boolean;
   leagueAdmin?: boolean;
   enabledTracks?: AppTrackId[];
+  subscriptionExpiresAt?: string | null;
 }
 
 export function StudentActions({
@@ -21,6 +22,7 @@ export function StudentActions({
   pending,
   leagueAdmin = false,
   enabledTracks = [],
+  subscriptionExpiresAt = null,
 }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
@@ -51,9 +53,16 @@ export function StudentActions({
   }
 
   async function approve() {
-    if (!confirm(`Liberar acesso de ${name}?`)) return;
+    if (!confirm(`Confirmar PIX de R$ 10 e liberar ${name} por 30 dias?`)) return;
     setLoading('approve');
     await apiCall('PATCH', { action: 'approve' });
+    setLoading(null);
+  }
+
+  async function renew() {
+    if (!confirm(`Confirmar novo PIX e renovar ${name} por +30 dias?`)) return;
+    setLoading('renew');
+    await apiCall('PATCH', { action: 'renew' });
     setLoading(null);
   }
 
@@ -108,12 +117,22 @@ export function StudentActions({
   }
 
   const approveHandlers = useMobileAction(approve);
+  const renewHandlers = useMobileAction(renew);
   const blockHandlers = useMobileAction(toggleBlock);
   const leagueHandlers = useMobileAction(toggleLeagueAdmin);
   const deleteHandlers = useMobileAction(deleteStudent);
 
+  const expiresLabel = subscriptionExpiresAt
+    ? new Date(subscriptionExpiresAt).toLocaleDateString('pt-BR')
+    : null;
+
   return (
     <div className="space-y-3">
+      {expiresLabel ? (
+        <p className="text-xs text-slate-500">
+          Assinatura até <strong className="text-slate-800">{expiresLabel}</strong>
+        </p>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         {pending && (
           <button
@@ -122,7 +141,17 @@ export function StudentActions({
             {...approveHandlers}
             className="exam-tap rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
           >
-            {loading === 'approve' ? '...' : 'Liberar acesso'}
+            {loading === 'approve' ? '...' : 'Liberar após PIX'}
+          </button>
+        )}
+        {!pending && (
+          <button
+            type="button"
+            disabled={loading !== null}
+            {...renewHandlers}
+            className="exam-tap rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-50"
+          >
+            {loading === 'renew' ? '...' : 'Renovar mês (+30d)'}
           </button>
         )}
         {!pending && (

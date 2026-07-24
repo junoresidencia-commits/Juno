@@ -82,7 +82,8 @@ export async function POST(
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    const message = 'Cadastro realizado! Aguarde o professor liberar seu acesso.';
+    const message =
+      'Cadastro realizado! Pague o PIX de R$ 10 e aguarde o professor liberar seu acesso.';
     if (formSubmit) {
       return cadastroRedirect(request, token, { ok: '1' });
     }
@@ -157,7 +158,8 @@ export async function POST(
     .update({ used_at: new Date().toISOString(), used_by: authUser.user.id })
     .eq('token', token);
 
-  const message = 'Cadastro realizado! Aguarde o professor liberar seu acesso.';
+  const message =
+    'Cadastro realizado! Pague o PIX de R$ 10 e aguarde o professor liberar seu acesso.';
   if (formSubmit) {
     return cadastroRedirect(request, token, { ok: '1' });
   }

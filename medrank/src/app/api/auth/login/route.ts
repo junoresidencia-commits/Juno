@@ -89,13 +89,14 @@ export async function POST(request: NextRequest) {
     active: boolean;
     approved_at: string | null;
     role: string;
+    subscription_expires_at?: string | null;
   } | null = null;
   let profileErrorMessage: string | null = null;
 
   {
     const { data, error } = await supabase
       .from('profiles')
-      .select('active, approved_at, role')
+      .select('active, approved_at, role, subscription_expires_at')
       .eq('id', authData.user.id)
       .maybeSingle();
     if (!error && data) {
@@ -114,16 +115,32 @@ export async function POST(request: NextRequest) {
       }
       const adminResult = await admin
         .from('profiles')
-        .select('active, approved_at, role')
+        .select('active, approved_at, role, subscription_expires_at')
         .eq('id', authData.user.id)
         .maybeSingle();
       if (adminResult.error) {
-        await supabase.auth.signOut();
-        const errorText = adminResult.error.message;
-        if (formSubmit) return redirectLogin(request, `Perfil: ${errorText}`);
-        return NextResponse.json({ error: `Perfil: ${errorText}` }, { status: 500 });
+        // Coluna subscription_expires_at pode faltar antes da migration 039
+        if (/subscription_expires_at|schema cache/i.test(adminResult.error.message)) {
+          const fallback = await admin
+            .from('profiles')
+            .select('active, approved_at, role')
+            .eq('id', authData.user.id)
+            .maybeSingle();
+          if (fallback.error) {
+            await supabase.auth.signOut();
+            if (formSubmit) return redirectLogin(request, `Perfil: ${fallback.error.message}`);
+            return NextResponse.json({ error: `Perfil: ${fallback.error.message}` }, { status: 500 });
+          }
+          profile = fallback.data;
+        } else {
+          await supabase.auth.signOut();
+          const errorText = adminResult.error.message;
+          if (formSubmit) return redirectLogin(request, `Perfil: ${errorText}`);
+          return NextResponse.json({ error: `Perfil: ${errorText}` }, { status: 500 });
+        }
+      } else {
+        profile = adminResult.data;
       }
-      profile = adminResult.data;
     }
   }
 
@@ -134,9 +151,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error }, { status: 403 });
   }
 
-  if (!profile.active) {
+  if (profile.role === 'student') {
+    const { accessDeniedMessage, deactivateIfSubscriptionExpired, isSubscriptionExpired } =
+      await import('@/lib/billing/subscription');
+
+    if (isSubscriptionExpired(profile.subscription_expires_at)) {
+      const { createAdminClient } = await import('@/lib/supabase/admin');
+      const admin = createAdminClient();
+      if (admin) {
+        await deactivateIfSubscriptionExpired(
+          admin,
+          authData.user.id,
+          profile.subscription_expires_at,
+          profile.active
+        );
+      }
+      profile = { ...profile, active: false };
+    }
+
+    if (!profile.active) {
+      await supabase.auth.signOut();
+      const error = accessDeniedMessage(profile);
+      if (formSubmit) return redirectLogin(request, error);
+      return NextResponse.json({ error }, { status: 403 });
+    }
+  } else if (!profile.active) {
     await supabase.auth.signOut();
-    const error = profile.approved_at ? 'Acesso bloqueado.' : 'Aguardando liberação do professor.';
+    const error = 'Acesso bloqueado.';
     if (formSubmit) return redirectLogin(request, error);
     return NextResponse.json({ error }, { status: 403 });
   }

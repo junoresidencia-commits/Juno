@@ -27,6 +27,7 @@ export interface DemoStudent {
   leagueAdmin?: boolean;
   /** Módulos ligados pelo admin. */
   enabled_tracks?: string[];
+  subscriptionExpiresAt?: string | null;
 }
 
 export interface DemoStore {
@@ -349,6 +350,26 @@ export function approveDemoStudent(id: string): boolean {
 
   student.active = true;
   student.approvedAt = new Date().toISOString();
+  const base = new Date();
+  base.setDate(base.getDate() + 30);
+  student.subscriptionExpiresAt = base.toISOString();
+  writeDemoStore(store);
+  return true;
+}
+
+export function renewDemoStudent(id: string): boolean {
+  const store = readDemoStore();
+  const student = store.students.find((s) => s.id === id);
+  if (!student) return false;
+  const now = new Date();
+  const current = student.subscriptionExpiresAt
+    ? new Date(student.subscriptionExpiresAt)
+    : now;
+  const from = current > now ? current : now;
+  from.setDate(from.getDate() + 30);
+  student.subscriptionExpiresAt = from.toISOString();
+  student.active = true;
+  if (!student.approvedAt) student.approvedAt = now.toISOString();
   writeDemoStore(store);
   return true;
 }

@@ -62,6 +62,22 @@ export async function getSessionProfile(): Promise<{
       .eq('id', user.id)
       .maybeSingle();
     if (!profile) return null;
+
+    if (profile.role === 'student') {
+      const { deactivateIfSubscriptionExpired, isSubscriptionExpired } = await import(
+        '@/lib/billing/subscription'
+      );
+      if (isSubscriptionExpired(profile.subscription_expires_at)) {
+        await deactivateIfSubscriptionExpired(
+          admin,
+          user.id,
+          profile.subscription_expires_at,
+          profile.active
+        );
+        profile.active = false;
+      }
+    }
+
     return { userId: user.id, profile: profile as Profile };
   }
 
@@ -94,5 +110,8 @@ export async function requireAuth() {
   }
   const session = await getSessionProfile();
   if (!session) redirect('/login');
+  if (session.profile.role === 'student' && !session.profile.active) {
+    redirect('/login?blocked=1');
+  }
   return session;
 }

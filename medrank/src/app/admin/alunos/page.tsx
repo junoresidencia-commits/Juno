@@ -10,15 +10,28 @@ function StudentStatus({
   active,
   approvedAt,
   leagueAdmin,
+  subscriptionExpiresAt,
 }: {
   active: boolean;
   approvedAt: string | null;
   leagueAdmin?: boolean;
+  subscriptionExpiresAt?: string | null;
 }) {
+  const expired =
+    Boolean(subscriptionExpiresAt) &&
+    new Date(subscriptionExpiresAt as string).getTime() < Date.now();
+
   if (!active && !approvedAt) {
     return (
       <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-        Aguardando liberação
+        Aguardando 1º PIX
+      </span>
+    );
+  }
+  if (expired || (!active && approvedAt)) {
+    return (
+      <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+        {expired ? 'Mês vencido — renovar' : 'Bloqueado'}
       </span>
     );
   }
@@ -59,6 +72,7 @@ export default async function AlunosPage({
     approved_at: string | null;
     league_admin: boolean;
     enabled_tracks: string[];
+    subscription_expires_at: string | null;
   }[] = [];
 
   if (isDemoMode()) {
@@ -70,15 +84,16 @@ export default async function AlunosPage({
       approved_at: s.approvedAt,
       league_admin: !!s.leagueAdmin,
       enabled_tracks: s.enabled_tracks ?? [],
+      subscription_expires_at: s.subscriptionExpiresAt ?? null,
     }));
   } else {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, name, email, active, approved_at, league_admin, enabled_tracks')
+      .select('id, name, email, active, approved_at, league_admin, enabled_tracks, subscription_expires_at')
       .eq('role', 'student')
       .order('created_at', { ascending: false });
-    if (error && /enabled_tracks|schema cache/i.test(error.message)) {
+    if (error && /subscription_expires_at|enabled_tracks|schema cache/i.test(error.message)) {
       const { data: fallback } = await supabase
         .from('profiles')
         .select('id, name, email, active, approved_at, league_admin')
@@ -92,6 +107,7 @@ export default async function AlunosPage({
         approved_at: s.approved_at,
         league_admin: !!s.league_admin,
         enabled_tracks: [],
+        subscription_expires_at: null,
       }));
     } else {
       students = (data ?? []).map((s) => ({
@@ -104,12 +120,22 @@ export default async function AlunosPage({
         enabled_tracks: Array.isArray((s as { enabled_tracks?: string[] }).enabled_tracks)
           ? ((s as { enabled_tracks?: string[] }).enabled_tracks as string[])
           : [],
+        subscription_expires_at:
+          (s as { subscription_expires_at?: string | null }).subscription_expires_at ?? null,
       }));
     }
   }
 
   const pending = students.filter((s) => !s.active && !s.approved_at);
-  const others = students.filter((s) => s.active || s.approved_at);
+  const expired = students.filter(
+    (s) =>
+      s.approved_at &&
+      s.subscription_expires_at &&
+      new Date(s.subscription_expires_at).getTime() < Date.now()
+  );
+  const others = students.filter(
+    (s) => (s.active || s.approved_at) && !expired.some((e) => e.id === s.id)
+  );
   const activeCount = students.filter((s) => s.active).length;
 
   const initialSuccess =
@@ -120,9 +146,17 @@ export default async function AlunosPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
-      <div className="mt-4">
-        <h1 className="text-2xl font-bold text-slate-900">Alunos</h1>
-        <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Alunos</h1>
+          <p className="text-sm text-slate-600">{activeCount} ativos · {students.length} cadastrados</p>
+        </div>
+        <Link
+          href="/admin/pagamentos"
+          className="rounded-xl bg-teal-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-900"
+        >
+          Gerar link PIX →
+        </Link>
       </div>
 
       <div className="mt-6">
@@ -131,7 +165,12 @@ export default async function AlunosPage({
 
       {pending.length > 0 && (
         <section className="mt-8">
-          <h2 className="font-semibold text-amber-800">Aguardando sua liberação ({pending.length})</h2>
+          <h2 className="font-semibold text-amber-800">
+            Aguardando PIX / liberação ({pending.length})
+          </h2>
+          <p className="mt-1 text-sm text-amber-900/80">
+            Confira o PIX de R$ 10 no extrato e toque em Liberar após PIX.
+          </p>
           <div className="mt-4 space-y-3">
             {pending.map((s) => (
               <div key={s.id} className="flex items-center justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
@@ -144,9 +183,57 @@ export default async function AlunosPage({
                     active={s.active}
                     approvedAt={s.approved_at}
                     leagueAdmin={s.league_admin}
+                    subscriptionExpiresAt={s.subscription_expires_at}
                   />
-                  <StudentActions studentId={s.id} name={s.name} active={s.active} pending />
+                  <StudentActions
+                    studentId={s.id}
+                    name={s.name}
+                    active={s.active}
+                    pending
+                    subscriptionExpiresAt={s.subscription_expires_at}
+                  />
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {expired.length > 0 && (
+        <section className="mt-8">
+          <h2 className="font-semibold text-red-800">
+            Assinatura vencida — precisa renovar ({expired.length})
+          </h2>
+          <p className="mt-1 text-sm text-red-900/80">
+            Conta bloqueada automaticamente. Confirme o PIX do mês e toque em Renovar mês.
+          </p>
+          <div className="mt-4 space-y-3">
+            {expired.map((s) => (
+              <div
+                key={s.id}
+                className="flex flex-col gap-3 rounded-xl border border-red-200 bg-red-50 p-4 sm:flex-row sm:items-start sm:justify-between"
+              >
+                <div>
+                  <p className="font-medium">{s.name}</p>
+                  <p className="text-sm text-slate-600">{s.email}</p>
+                  <div className="mt-2">
+                    <StudentStatus
+                      active={s.active}
+                      approvedAt={s.approved_at}
+                      leagueAdmin={s.league_admin}
+                      subscriptionExpiresAt={s.subscription_expires_at}
+                    />
+                  </div>
+                </div>
+                <StudentActions
+                  studentId={s.id}
+                  name={s.name}
+                  active={s.active}
+                  pending={false}
+                  leagueAdmin={s.league_admin}
+                  enabledTracks={s.enabled_tracks as import('@/lib/tracks/config').AppTrackId[]}
+                  subscriptionExpiresAt={s.subscription_expires_at}
+                />
               </div>
             ))}
           </div>
@@ -157,10 +244,10 @@ export default async function AlunosPage({
         <h2 className="font-semibold text-slate-900">Alunos cadastrados</h2>
         <p className="mt-1 text-sm text-slate-600">
           Em cada aluno, ligue ou desligue os módulos (Nefrologia, Residência, RM…). Isso define
-          quais disputas e treinos aparecem para ele.
+          quais disputas e treinos aparecem para ele. Todo mês: confirmar PIX → Renovar.
         </p>
         <div className="mt-4 space-y-3">
-          {others.length === 0 && pending.length === 0 ? (
+          {others.length === 0 && pending.length === 0 && expired.length === 0 ? (
             <p className="text-slate-600">Nenhum aluno ainda. Crie o primeiro login acima.</p>
           ) : (
             others.map((s) => (
@@ -176,6 +263,7 @@ export default async function AlunosPage({
                       active={s.active}
                       approvedAt={s.approved_at}
                       leagueAdmin={s.league_admin}
+                      subscriptionExpiresAt={s.subscription_expires_at}
                     />
                   </div>
                 </div>
@@ -186,6 +274,7 @@ export default async function AlunosPage({
                   pending={!s.active && !s.approved_at}
                   leagueAdmin={s.league_admin}
                   enabledTracks={s.enabled_tracks as import('@/lib/tracks/config').AppTrackId[]}
+                  subscriptionExpiresAt={s.subscription_expires_at}
                 />
               </div>
             ))

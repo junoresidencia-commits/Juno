@@ -4,12 +4,21 @@ import { isDemoMode } from '@/lib/demo-auth';
 import {
   approveDemoStudent,
   readDemoStore,
+  renewDemoStudent,
   setDemoLeagueAdmin,
   writeDemoStore,
 } from '@/lib/demo-store';
 import { requireAdminApi } from '@/lib/api-auth';
 import { normalizeTracks } from '@/lib/tracks/config';
 import { ensureGeneralTrack, syncTrackGroupMembership } from '@/lib/exams/audience';
+import { subscriptionExpiresAt } from '@/lib/billing/pix';
+
+function nextExpiryIso(currentExpires: string | null | undefined): string {
+  const now = new Date();
+  const current = currentExpires ? new Date(currentExpires) : now;
+  const from = current > now ? current : now;
+  return subscriptionExpiresAt(from).toISOString();
+}
 
 export async function PATCH(
   request: Request,
@@ -34,6 +43,13 @@ export async function PATCH(
         return NextResponse.json({ error: 'Não foi possível liberar o aluno.' }, { status: 400 });
       }
       return NextResponse.json({ ok: true, active: true });
+    }
+
+    if (action === 'renew') {
+      if (!renewDemoStudent(id)) {
+        return NextResponse.json({ error: 'Não foi possível renovar.' }, { status: 400 });
+      }
+      return NextResponse.json({ ok: true, renewed: true });
     }
 
     if (action === 'block') {
@@ -73,7 +89,7 @@ export async function PATCH(
   const admin = createAdminClient() ?? auth.supabase;
   const { data: student } = await admin
     .from('profiles')
-    .select('id, role, active, approved_at, league_admin, enabled_tracks')
+    .select('id, role, active, approved_at, league_admin, enabled_tracks, subscription_expires_at')
     .eq('id', id)
     .eq('role', 'student')
     .single();
@@ -83,12 +99,59 @@ export async function PATCH(
   }
 
   if (action === 'approve') {
+    const expires = subscriptionExpiresAt().toISOString();
     const { error } = await admin
       .from('profiles')
-      .update({ active: true, approved_at: new Date().toISOString() })
+      .update({
+        active: true,
+        approved_at: new Date().toISOString(),
+        subscription_expires_at: expires,
+      })
       .eq('id', id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ ok: true, active: true });
+    if (error) {
+      if (/subscription_expires_at|schema cache/i.test(error.message)) {
+        const { error: fallback } = await admin
+          .from('profiles')
+          .update({ active: true, approved_at: new Date().toISOString() })
+          .eq('id', id);
+        if (fallback) return NextResponse.json({ error: fallback.message }, { status: 500 });
+        return NextResponse.json({
+          ok: true,
+          active: true,
+          warning: 'Rode a migration 039 no Supabase para gravar validade de 30 dias.',
+        });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, active: true, subscription_expires_at: expires });
+  }
+
+  if (action === 'renew') {
+    const expires = nextExpiryIso(
+      (student as { subscription_expires_at?: string | null }).subscription_expires_at
+    );
+    const { error } = await admin
+      .from('profiles')
+      .update({
+        active: true,
+        approved_at:
+          (student as { approved_at?: string | null }).approved_at ?? new Date().toISOString(),
+        subscription_expires_at: expires,
+      })
+      .eq('id', id);
+    if (error) {
+      if (/subscription_expires_at|schema cache/i.test(error.message)) {
+        return NextResponse.json(
+          {
+            error:
+              'Migration 039 ainda não aplicada no Supabase (subscription_expires_at). Rode o SQL e tente de novo.',
+          },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, subscription_expires_at: expires });
   }
 
   if (action === 'block') {

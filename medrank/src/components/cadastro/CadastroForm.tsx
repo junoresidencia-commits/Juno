@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { PixPaymentCard } from '@/components/billing/PixPaymentCard';
+import { formatPriceBrl } from '@/lib/billing/pix';
 
 interface Props {
   token: string;
@@ -9,6 +11,29 @@ interface Props {
 }
 
 export function CadastroForm({ token, valid, error, inviteEmail, success }: Props) {
+  if (success) {
+    return (
+      <div className="space-y-4">
+        <div className="rounded-xl bg-emerald-50 p-5 text-center ring-1 ring-emerald-200">
+          <p className="text-lg font-semibold text-emerald-900">Conta criada</p>
+          <p className="mt-2 text-sm text-emerald-800">
+            Agora pague {formatPriceBrl()} via PIX. Só depois o professor libera o acesso.
+          </p>
+        </div>
+        <PixPaymentCard emailHint={inviteEmail} />
+        <Link
+          href="/login"
+          className="exam-tap block w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white"
+        >
+          Ir para login →
+        </Link>
+        <p className="text-center text-xs text-slate-500">
+          Se entrar antes da liberação, verá “Aguardando liberação”.
+        </p>
+      </div>
+    );
+  }
+
   if (!valid) {
     return (
       <div className="rounded-xl bg-red-50 p-6 text-center">
@@ -20,35 +45,28 @@ export function CadastroForm({ token, valid, error, inviteEmail, success }: Prop
     );
   }
 
-  if (success) {
-    return (
-      <div className="rounded-xl bg-emerald-50 p-6 text-center">
-        <p className="text-lg font-semibold text-emerald-800">Cadastro realizado!</p>
-        <p className="mt-2 text-sm text-emerald-700">
-          Aguarde o professor liberar seu acesso. Depois entre com seu e-mail e senha.
-        </p>
-        <Link href="/login" className="exam-tap mt-4 inline-block rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700">
-          Ir para login →
-        </Link>
-      </div>
-    );
-  }
-
   const inputClass =
     'mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-base focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200';
 
   return (
     <form action={`/api/cadastro/${token}`} method="POST" className="space-y-4">
       <p className="text-sm text-slate-600">
-        Você foi convidado(a) para o MedRank. Crie seu login — o professor liberará seu acesso em seguida.
+        Crie seu login. Em seguida você verá o PIX de {formatPriceBrl()}/mês. A conta só libera
+        após o pagamento confirmado.
       </p>
 
+      <PixPaymentCard emailHint={inviteEmail} compact />
+
       <div>
-        <label htmlFor="cadastro-name" className="block text-sm font-medium">Nome completo *</label>
+        <label htmlFor="cadastro-name" className="block text-sm font-medium">
+          Nome completo *
+        </label>
         <input id="cadastro-name" name="name" required className={inputClass} />
       </div>
       <div>
-        <label htmlFor="cadastro-email" className="block text-sm font-medium">E-mail *</label>
+        <label htmlFor="cadastro-email" className="block text-sm font-medium">
+          E-mail *
+        </label>
         <input
           id="cadastro-email"
           name="email"
@@ -59,15 +77,26 @@ export function CadastroForm({ token, valid, error, inviteEmail, success }: Prop
           className={`${inputClass}${inviteEmail ? ' bg-slate-50' : ''}`}
         />
         {inviteEmail && (
-          <p className="mt-1 text-xs text-slate-600">Este convite é exclusivo para este e-mail.</p>
+          <p className="mt-1 text-xs text-slate-600">Este link é exclusivo para este e-mail.</p>
         )}
       </div>
       <div>
-        <label htmlFor="cadastro-password" className="block text-sm font-medium">Senha *</label>
-        <input id="cadastro-password" name="password" type="password" required minLength={4} className={inputClass} />
+        <label htmlFor="cadastro-password" className="block text-sm font-medium">
+          Senha *
+        </label>
+        <input
+          id="cadastro-password"
+          name="password"
+          type="password"
+          required
+          minLength={4}
+          className={inputClass}
+        />
       </div>
       <div>
-        <label htmlFor="cadastro-confirm" className="block text-sm font-medium">Confirmar senha *</label>
+        <label htmlFor="cadastro-confirm" className="block text-sm font-medium">
+          Confirmar senha *
+        </label>
         <input id="cadastro-confirm" name="confirm" type="password" required className={inputClass} />
       </div>
 
@@ -75,9 +104,9 @@ export function CadastroForm({ token, valid, error, inviteEmail, success }: Prop
 
       <button
         type="submit"
-        className="exam-tap w-full rounded-lg bg-emerald-600 py-3 text-base font-semibold text-white hover:bg-emerald-700"
+        className="exam-tap w-full rounded-lg bg-teal-800 py-3 text-base font-semibold text-white hover:bg-teal-900"
       >
-        Criar minha conta
+        Criar conta e ver PIX
       </button>
     </form>
   );

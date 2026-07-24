@@ -28,6 +28,9 @@ export interface Profile {
    * Controla disputas diárias e treinos livres.
    */
   enabled_tracks?: string[];
+  /** Fim do período pago (30 dias após liberar/renovar). */
+  subscription_expires_at?: string | null;
+  approved_at?: string | null;
 }
 
 export type BankStatus =
