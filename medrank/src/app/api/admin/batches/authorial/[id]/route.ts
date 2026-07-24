@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/api-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { usesDemoStore } from '@/lib/demo-data';
+import { publishAuthorialBatch } from '@/lib/question-bank/publish-authorial-batch';
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -28,7 +29,19 @@ export async function GET(_request: Request, ctx: Ctx) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!batch) return NextResponse.json({ error: 'Lote não encontrado' }, { status: 404 });
 
-  return NextResponse.json({ batch, questions: questions ?? [] });
+  let list = questions ?? [];
+  if (list.length === 0 && batch.lote_codigo) {
+    const { data: byLote } = await admin
+      .from('questions')
+      .select(
+        'id, external_id, statement, option_a, option_b, option_c, option_d, option_e, correct_option, explanation, specialty, area, topic, subtopic, difficulty, bank_status, question_kind, guideline_name, guideline_institution, guideline_year, bibliography, quality_label, lote_importacao, created_at'
+      )
+      .eq('lote_importacao', batch.lote_codigo)
+      .order('created_at', { ascending: true });
+    list = byLote ?? [];
+  }
+
+  return NextResponse.json({ batch, questions: list });
 }
 
 /**
@@ -73,59 +86,20 @@ export async function POST(request: Request, ctx: Ctx) {
       : null;
 
   if (body.action === 'publish') {
-    const { data: drafts, error: loadErr } = await admin
-      .from('questions')
-      .select('id, tags, question_kind')
-      .eq('import_batch_id', id)
-      .in('bank_status', ['draft', 'pending_review'])
-      .neq('question_kind', 'official_residency');
-
-    if (loadErr) return NextResponse.json({ error: loadErr.message }, { status: 500 });
-
-    let published = 0;
-    for (const q of drafts ?? []) {
-      const tags = Array.from(
-        new Set([
-          ...((q.tags as string[]) || []),
-          'authorial-published',
-          'residencia-expert',
-          'banco-expert',
-        ])
-      ).filter((t) => t !== 'rascunho');
-      const { error } = await admin
-        .from('questions')
-        .update({
-          bank_status: 'approved',
-          quality_label: 'aprovada',
-          quality_notes: reason || 'Lote publicado após revisão',
-          reviewed_at: new Date().toISOString(),
-          reviewed_by: userId,
-          tags,
-          // Nunca marcar autoral como official
-          question_origin:
-            q.question_kind === 'authorial_guideline'
-              ? 'guideline'
-              : q.question_kind === 'authorial_prediction'
-                ? 'original_based_on_exam'
-                : 'original',
-          reproduction_allowed: false,
-        })
-        .eq('id', q.id);
-      if (!error) published += 1;
+    const result = await publishAuthorialBatch(admin, {
+      batchId: id,
+      loteCodigo: batch.lote_codigo,
+      userId,
+      reason: reason || 'Lote publicado após revisão',
+    });
+    if (result.error && result.published === 0) {
+      return NextResponse.json({ error: result.error, published: 0 }, { status: 400 });
     }
-
-    await admin
-      .from('question_import_batches')
-      .update({
-        status: 'published',
-        approved_count: published,
-      })
-      .eq('id', id);
-
     return NextResponse.json({
       ok: true,
-      published,
-      message: `${published} questões publicadas no banco ativo (autorais — não oficiais).`,
+      published: result.published,
+      warning: result.error,
+      message: `${result.published} questões publicadas no banco ativo (autorais — não oficiais).`,
     });
   }
 
@@ -144,7 +118,6 @@ export async function POST(request: Request, ctx: Ctx) {
   }
 
   if (body.action === 'undo' || body.action === 'delete') {
-    // Só remove rascunhos/pendentes sem vínculo em provas
     const { data: qs } = await admin
       .from('questions')
       .select('id, bank_status')

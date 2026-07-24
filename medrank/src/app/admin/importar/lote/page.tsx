@@ -153,26 +153,76 @@ export default function ImportarLotePage() {
         ? 'Lote publicado após revisão'
         : window.prompt('Motivo:') || '';
     if (action !== 'publish' && reason.length < 5) return;
-    if (action === 'publish' && !window.confirm('Publicar este lote? As questões passam a valer no banco (autoral).')) {
-      return;
-    }
     setBusy(true);
+    setMsg(null);
+    setErr(null);
     try {
       const res = await fetch(`/api/admin/batches/authorial/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, reason }),
       });
-      const data = await res.json();
-      if (!res.ok) setErr(data.error || 'Falha');
-      else {
-        setMsg(data.message || 'Ok');
-        if (action === 'publish') {
-          setLastPublishedOk(true);
-          setLastImportedBatchId(null);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const e = data.error || `Falha HTTP ${res.status}`;
+        setErr(e);
+        window.alert(`Erro ao publicar: ${e}`);
+        return;
+      }
+      setMsg(data.message || 'Ok');
+      if (action === 'publish') {
+        setLastPublishedOk(true);
+        setLastImportedBatchId(null);
+        if (data.published === 0) {
+          setErr(data.error || 'Nenhuma questão publicada.');
         }
       }
       await loadBatches();
+    } catch (e) {
+      const m = e instanceof Error ? e.message : 'Falha de rede';
+      setErr(m);
+      window.alert(m);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function publishAllDrafts() {
+    const drafts = batches.filter((b) =>
+      ['draft', 'pending_review', 'partially_approved'].includes(b.status)
+    );
+    if (drafts.length === 0) {
+      window.alert('Nenhum lote em rascunho.');
+      return;
+    }
+    if (!window.confirm(`Publicar TODOS os ${drafts.length} lote(s) em rascunho de uma vez?`)) {
+      return;
+    }
+    setBusy(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      const res = await fetch('/api/admin/batches/authorial/publish-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const e = data.error || `Falha HTTP ${res.status}`;
+        setErr(e);
+        window.alert(e);
+        return;
+      }
+      setMsg(data.message || 'Ok');
+      setLastPublishedOk(true);
+      setLastImportedBatchId(null);
+      window.alert(data.message || 'Publicado.');
+      await loadBatches();
+    } catch (e) {
+      const m = e instanceof Error ? e.message : 'Falha de rede';
+      setErr(m);
+      window.alert(m);
     } finally {
       setBusy(false);
     }
@@ -213,7 +263,7 @@ export default function ImportarLotePage() {
           (vira rascunho)
         </li>
         <li>
-          <strong>2.</strong> Embaixo, toque <strong>Publicar lote</strong> (senão o aluno não vê)
+          <strong>2.</strong> Toque <strong>Publicar TODOS</strong> (ou Publicar lote um a um)
         </li>
         <li>
           <strong>3.</strong> Vá em{' '}
@@ -429,7 +479,19 @@ export default function ImportarLotePage() {
       )}
 
       <section className="mt-10">
-        <h2 className="font-semibold text-slate-900">Seus lotes</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="font-semibold text-slate-900">Seus lotes</h2>
+          {draftBatches.length > 0 ? (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void publishAllDrafts()}
+              className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+            >
+              {busy ? 'Publicando…' : `Publicar TODOS (${draftBatches.length})`}
+            </button>
+          ) : null}
+        </div>
         {draftBatches.length > 0 && (
           <p className="mt-1 text-sm text-amber-800">
             {draftBatches.length} lote(s) em rascunho — publique para entrar no banco.
