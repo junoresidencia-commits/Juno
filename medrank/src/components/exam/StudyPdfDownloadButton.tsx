@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-export function ExamPdfDownloadButton({
-  examId,
-  available,
-  lockedMessage,
+export function StudyPdfDownloadButton({
+  attemptId,
+  available = true,
+  lockedMessage = 'Finalize a disputa para baixar o PDF de estudo.',
 }: {
-  examId: string;
-  available: boolean;
-  lockedMessage: string;
+  attemptId: string;
+  available?: boolean;
+  lockedMessage?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,7 +18,7 @@ export function ExamPdfDownloadButton({
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/exams/${examId}/pdf`);
+      const res = await fetch(`/api/attempts/${attemptId}/study-pdf`);
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setError((data as { error?: string }).error ?? 'Não foi possível baixar o PDF');
@@ -29,7 +29,7 @@ export function ExamPdfDownloadButton({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `medrank-prova-${examId}.pdf`;
+      a.download = `medrank-estudo-${attemptId.slice(0, 8)}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -49,19 +49,20 @@ export function ExamPdfDownloadButton({
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 rounded-2xl bg-teal-900 p-5 text-white">
+      <p className="text-sm font-semibold text-teal-100">Estudar depois</p>
+      <p className="mt-1 text-sm text-teal-50">
+        Baixe o PDF com gabarito, suas respostas e o que você acertou ou errou.
+      </p>
       <button
         type="button"
         disabled={loading}
-        onClick={download}
-        className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+        onClick={() => void download()}
+        className="exam-tap mt-4 w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-teal-950 disabled:opacity-50"
       >
-        {loading ? 'Gerando PDF…' : 'Baixar PDF limpo (sem gabarito · após 22h)'}
+        {loading ? 'Gerando PDF…' : 'Baixar PDF para estudar'}
       </button>
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
-      <p className="mt-2 text-xs text-slate-500">
-        Para estudar com certo/errado, use o botão verde acima.
-      </p>
+      {error ? <p className="mt-2 text-sm text-red-200">{error}</p> : null}
     </div>
   );
 }

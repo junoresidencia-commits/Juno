@@ -19,6 +19,7 @@ import { getDemoRanking, getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { GabaritoReview, type GabaritoRow } from '@/components/exam/GabaritoReview';
 import { ResultInsightsPanel } from '@/components/exam/ResultInsightsPanel';
 import { ExamPdfDownloadButton } from '@/components/exam/ExamPdfDownloadButton';
+import { StudyPdfDownloadButton } from '@/components/exam/StudyPdfDownloadButton';
 
 function ResultStats({
   totalCorrect,
@@ -131,6 +132,7 @@ export default async function ResultadoPage({
             Disputa enviada automaticamente ao fim do tempo.
           </p>
         )}
+        <StudyPdfDownloadButton attemptId={attemptId} available={showGabarito} />
         <ExamPdfDownloadButton
           examId={attempt.exam_id}
           available={showPdf}
@@ -267,6 +269,7 @@ export default async function ResultadoPage({
           Disputa enviada automaticamente ao fim do tempo.
         </p>
       )}
+      <StudyPdfDownloadButton attemptId={attemptId} available={showGabarito} />
       <ExamPdfDownloadButton
         examId={attempt.exam_id}
         available={showPdf}
