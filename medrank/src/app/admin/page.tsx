@@ -25,6 +25,7 @@ export default async function AdminDashboard() {
       { href: '/admin/liberacoes', label: 'Liberar prova', desc: 'Erro técnico / antifraude' },
       { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
       { href: '/admin/desafios', label: 'Desafios semanais', desc: `${demo.challenges.length} metas ativas` },
+      { href: '/admin/desafio-expert', label: 'Desafio Expert', desc: '5 casos difíceis · 20h · ×2 pts' },
       { href: '/admin/relatorios', label: 'Relatórios', desc: 'Excel e PDF' },
     ];
     return (
@@ -92,6 +93,7 @@ export default async function AdminDashboard() {
     { href: '/admin/liberacoes', label: 'Liberar prova', desc: 'Ligação / notificação / bug' },
     { href: '/admin/ranking', label: 'Rankings', desc: 'Diário, semanal, mensal, geral' },
     { href: '/admin/desafios', label: 'Desafios semanais', desc: 'Metas e gamificação' },
+    { href: '/admin/desafio-expert', label: 'Desafio Expert', desc: '5 casos difíceis · 20h · ×2 pts' },
     { href: '/admin/relatorios', label: 'Relatórios', desc: 'Excel e PDF' },
   ];
 

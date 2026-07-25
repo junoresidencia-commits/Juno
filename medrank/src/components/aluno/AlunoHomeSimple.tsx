@@ -3,7 +3,9 @@ import type { Exam } from '@/types/database';
 import type { RankingPreviewRow } from '@/components/ranking/RankingPreviewList';
 import { DisputeOnboarding } from '@/components/aluno/DisputeOnboarding';
 import { formatExamWindowShort } from '@/lib/exams/window';
+import { formatExamWindowForExam } from '@/lib/exams/release';
 import { studentRankingBeforeFinishMessage } from '@/lib/exams/ranking-visibility';
+import { WEEKLY_EXPERT_SCORE_MULTIPLIER } from '@/lib/exams/weekly-expert';
 
 type WindowPhase = 'before' | 'open' | 'after' | 'wrong_day' | null;
 
@@ -21,6 +23,7 @@ export type HomeDisputeCard = {
   attemptId?: string;
   qualityStatus?: string | null;
   qualitySummary?: string | null;
+  variant?: 'daily' | 'expert';
 };
 
 interface Props {
@@ -57,28 +60,41 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
   const effectiveCanStart = card.canStart && !qualityBlocked;
   const qCount = card.exam?.total_questions ?? 20;
   const isNefro = card.key === 'nephrology';
+  const isExpert = card.variant === 'expert' || card.key === 'weekly_expert';
+  const openHour = card.exam?.window_start_hour ?? 7;
+  const windowLabel = card.exam
+    ? formatExamWindowForExam(card.exam)
+    : formatExamWindowShort();
+  const multiplier = card.exam?.score_multiplier ?? (isExpert ? WEEKLY_EXPERT_SCORE_MULTIPLIER : 1);
 
   return (
     <article
       className={`rounded-3xl p-5 ring-1 ${
-        isNefro
-          ? 'bg-teal-900 text-white ring-teal-950'
-          : 'bg-white text-slate-900 ring-slate-200/80'
+        isExpert
+          ? 'bg-amber-50 text-amber-950 ring-amber-200'
+          : isNefro
+            ? 'bg-teal-900 text-white ring-teal-950'
+            : 'bg-white text-slate-900 ring-slate-200/80'
       }`}
     >
       <p
         className={`text-xs font-semibold uppercase tracking-wide ${
-          isNefro ? 'text-teal-200' : 'text-teal-800'
+          isExpert ? 'text-amber-800' : isNefro ? 'text-teal-200' : 'text-teal-800'
         }`}
       >
         {card.leagueLabel || 'Disputa'}
       </p>
-      <h3 className={`mt-1 text-xl font-bold tracking-tight ${isNefro ? 'text-white' : 'text-slate-900'}`}>
+      <h3
+        className={`mt-1 text-xl font-bold tracking-tight ${
+          isExpert ? 'text-amber-950' : isNefro ? 'text-white' : 'text-slate-900'
+        }`}
+      >
         {specialty}
       </h3>
       {card.exam && (
-        <p className={`mt-1 text-sm ${isNefro ? 'text-teal-100' : 'text-slate-600'}`}>
-          {qCount} questões · {card.exam.duration_minutes} min · {formatExamWindowShort()}
+        <p className={`mt-1 text-sm ${isExpert ? 'text-amber-900/80' : isNefro ? 'text-teal-100' : 'text-slate-600'}`}>
+          {qCount} questões · {card.exam.duration_minutes} min · {windowLabel}
+          {multiplier > 1 ? ` · acerto ×${multiplier}` : ''}
         </p>
       )}
 
@@ -150,10 +166,15 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
         ) : card.windowPhase === 'before' ? (
           <div
             className={`rounded-2xl px-4 py-4 text-center text-sm ${
-              isNefro ? 'bg-teal-800/50 text-teal-50' : 'bg-sky-50 text-sky-950'
+              isExpert
+                ? 'bg-amber-100 text-amber-950'
+                : isNefro
+                  ? 'bg-teal-800/50 text-teal-50'
+                  : 'bg-sky-50 text-sky-950'
             }`}
           >
-            Abre às 7h (Brasília)
+            Abre às {openHour}h (Brasília)
+            {isExpert ? ' — casos difíceis, mais pontos' : ''}
           </div>
         ) : card.missedToday ? (
           <div

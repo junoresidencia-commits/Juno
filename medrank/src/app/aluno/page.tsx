@@ -16,23 +16,15 @@ import { shortTrackLabel, trackForDate } from '@/lib/exams/daily-schedule';
 import { canAccessNephrologyTreino } from '@/lib/treino/access';
 import type { Exam } from '@/types/database';
 
-async function loadDisputeCard(
+const EXAM_SELECT =
+  'id, title, date_available, duration_minutes, total_questions, status, audience, exam_kind, score_multiplier, quality_status, quality_summary, window_start_hour, window_end_hour, date_closes, ranking_visible_to_students, ranking_release';
+
+async function loadAttemptCard(
   supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string,
-  today: string,
-  audience: ExamAudience
+  exam: Exam | null,
+  card: Pick<HomeDisputeCard, 'key' | 'trackLabel' | 'leagueLabel' | 'variant'>
 ): Promise<HomeDisputeCard> {
-  const { data: todayExam } = await supabase
-    .from('exams')
-    .select(
-      'id, title, date_available, duration_minutes, total_questions, status, audience, quality_status, quality_summary, window_start_hour, window_end_hour, date_closes, ranking_visible_to_students, ranking_release'
-    )
-    .eq('date_available', today)
-    .eq('audience', audience)
-    .eq('status', 'published')
-    .maybeSingle();
-
-  const exam = (todayExam as Exam | null) ?? null;
   const windowPhase = exam ? getExamWindowStatus(exam) : null;
 
   let { data: attempt } = exam
@@ -57,18 +49,11 @@ async function loadDisputeCard(
     attempt = refreshed;
   }
 
-  const trackLabel =
-    audience === 'nephrology'
-      ? shortTrackLabel(trackForDate(today), today)
-      : 'Residência Geral';
-
   const inProgress = Boolean(exam && attempt && !attempt.finished_at && windowPhase === 'open');
 
   return {
-    key: audience,
+    ...card,
     exam,
-    trackLabel,
-    leagueLabel: audienceLabel(audience),
     windowPhase,
     canStart: Boolean(exam && windowPhase === 'open' && !attempt),
     canContinue: inProgress,
@@ -76,9 +61,60 @@ async function loadDisputeCard(
     forfeitedToday: Boolean(exam && attempt?.forfeited),
     missedToday: Boolean(exam && windowPhase === 'after' && !attempt?.finished_at),
     attemptId: attempt?.id,
-    qualityStatus: (exam as { quality_status?: string } | null)?.quality_status ?? null,
-    qualitySummary: (exam as { quality_summary?: string } | null)?.quality_summary ?? null,
+    qualityStatus: exam?.quality_status ?? null,
+    qualitySummary: exam?.quality_summary ?? null,
   };
+}
+
+async function loadDisputeCard(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  today: string,
+  audience: ExamAudience
+): Promise<HomeDisputeCard> {
+  const { data: todayExam } = await supabase
+    .from('exams')
+    .select(EXAM_SELECT)
+    .eq('date_available', today)
+    .eq('audience', audience)
+    .eq('exam_kind', 'daily')
+    .eq('status', 'published')
+    .maybeSingle();
+
+  const trackLabel =
+    audience === 'nephrology'
+      ? shortTrackLabel(trackForDate(today), today)
+      : 'Residência Geral';
+
+  return loadAttemptCard(supabase, userId, (todayExam as Exam | null) ?? null, {
+    key: audience,
+    trackLabel,
+    leagueLabel: audienceLabel(audience),
+    variant: 'daily',
+  });
+}
+
+async function loadWeeklyExpertCard(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  today: string
+): Promise<HomeDisputeCard | null> {
+  const { data: exam } = await supabase
+    .from('exams')
+    .select(EXAM_SELECT)
+    .eq('date_available', today)
+    .eq('exam_kind', 'weekly_expert')
+    .eq('status', 'published')
+    .maybeSingle();
+
+  if (!exam) return null;
+
+  return loadAttemptCard(supabase, userId, exam as Exam, {
+    key: 'weekly_expert',
+    trackLabel: 'Casos clínicos difíceis',
+    leagueLabel: 'Desafio Expert',
+    variant: 'expert',
+  });
 }
 
 export default async function AlunoDashboard() {
@@ -146,14 +182,16 @@ export default async function AlunoDashboard() {
   const supabase = await createClient();
   const userId = session.userId;
 
-  // Paralelo: mais rápido que serial
-  const disputes = await Promise.all(
-    ctx.audiences.map((audience) => loadDisputeCard(supabase, userId, today, audience))
-  );
+  // Paralelo: disputas diárias + Desafio Expert do dia (se houver)
+  const [dailyDisputes, expertCard] = await Promise.all([
+    Promise.all(ctx.audiences.map((audience) => loadDisputeCard(supabase, userId, today, audience))),
+    loadWeeklyExpertCard(supabase, userId, today),
+  ]);
+  const disputes = expertCard ? [...dailyDisputes, expertCard] : dailyDisputes;
 
   const rankingDate = getTodayRankingDate();
-  const primary = disputes[0] ?? null;
-  const hasFinishedAny = disputes.some((d) => d.completed || d.forfeitedToday);
+  const primary = dailyDisputes[0] ?? null;
+  const hasFinishedAny = dailyDisputes.some((d) => d.completed || d.forfeitedToday);
   const showRanking =
     Boolean(primary?.exam) &&
     canStudentSeeTodayRanking(primary?.exam ?? null, hasFinishedAny) &&

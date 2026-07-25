@@ -23,6 +23,11 @@ export default async function DesafiosPage() {
         <Link href="/admin" className="text-sm text-emerald-700 hover:underline">← Painel</Link>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">Desafios semanais</h1>
         <p className="text-sm text-slate-600">Metas já criadas para a disputa diária.</p>
+        <p className="mt-2 text-sm">
+          <Link href="/admin/desafio-expert" className="font-semibold text-teal-800 hover:underline">
+            Desafio Expert →
+          </Link>
+        </p>
         <div className="mt-6">
           <ChallengeManager challenges={challenges} weekStart={weekStart} weekEnd={weekEnd} />
         </div>
@@ -44,6 +49,12 @@ export default async function DesafiosPage() {
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Desafios semanais</h1>
       <p className="text-sm text-slate-600">
         Crie metas para motivar os alunos. O progresso é verificado ao finalizar cada prova.
+      </p>
+      <p className="mt-2 text-sm">
+        <Link href="/admin/desafio-expert" className="font-semibold text-teal-800 hover:underline">
+          Desafio Expert →
+        </Link>{' '}
+        <span className="text-slate-600">5 casos difíceis que você cria · 20h · ×2 pontos</span>
       </p>
 
       <div className="mt-6">
