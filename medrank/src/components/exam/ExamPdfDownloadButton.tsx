@@ -56,9 +56,12 @@ export function ExamPdfDownloadButton({
         onClick={download}
         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
       >
-        {loading ? 'Gerando PDF…' : 'Baixar PDF da prova (sem comentários)'}
+        {loading ? 'Gerando PDF…' : 'Baixar PDF limpo (sem gabarito · após 22h)'}
       </button>
       {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      <p className="mt-2 text-xs text-slate-500">
+        Para estudar com certo/errado, use o botão verde acima.
+      </p>
     </div>
   );
 }
