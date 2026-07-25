@@ -174,15 +174,21 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
             }`}
           >
             Abre às {openHour}h (Brasília)
-            {isExpert ? ' — casos difíceis, mais pontos' : ''}
+            {isExpert ? ` — só ${windowLabel}, mais pontos` : ''}
           </div>
         ) : card.missedToday ? (
           <div
             className={`rounded-2xl px-4 py-4 text-center text-sm ${
-              isNefro ? 'bg-teal-800/40 text-teal-100' : 'bg-slate-100 text-slate-700'
+              isExpert
+                ? 'bg-amber-100/80 text-amber-950'
+                : isNefro
+                  ? 'bg-teal-800/40 text-teal-100'
+                  : 'bg-slate-100 text-slate-700'
             }`}
           >
-            Prazo encerrado — sem pontos nesta disputa.
+            {isExpert
+              ? `Janela de ${windowLabel} encerrada — sem pontos neste Expert.`
+              : 'Prazo encerrado — sem pontos nesta disputa.'}
           </div>
         ) : (
           <p className="text-center text-sm opacity-70">Aguardando…</p>

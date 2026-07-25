@@ -1,5 +1,5 @@
--- Desafio Expert semanal: 5 casos clínicos difíceis (criados pelo professor),
--- um dia da semana (ex.: quarta) a partir das 20h BRT, pontuação com multiplicador.
+-- Desafio Expert: 5 casos clínicos difíceis (criados pelo professor).
+-- Professor escolhe o dia (não fixo). Janela 20h–22h BRT (2 horas). Pontuação × multiplier.
 
 DO $$
 DECLARE
