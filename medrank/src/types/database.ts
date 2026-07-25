@@ -137,7 +137,11 @@ export interface Exam {
   selection_mode?: SelectionMode;
   /** general = outras ligas; nephrology = Liga de Nefrologia */
   audience?: 'general' | 'nephrology';
-  exam_kind?: 'daily' | 'simulado';
+  exam_kind?: 'daily' | 'simulado' | 'weekly_expert';
+  /** Multiplica pontuação da tentativa (Desafio Expert = 2). */
+  score_multiplier?: number;
+  window_start_hour?: number;
+  window_end_hour?: number;
   quality_status?: 'pending' | 'passed' | 'warning' | 'blocked' | 'approved_override';
   quality_summary?: string | null;
   quality_reviewed_at?: string | null;

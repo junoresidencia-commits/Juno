@@ -14,6 +14,7 @@ const NAV = [
   { href: '/admin/importar', label: 'Importar' },
   { href: '/admin/ranking', label: 'Ranking' },
   { href: '/admin/desafios', label: 'Desafios' },
+  { href: '/admin/desafio-expert', label: 'Expert' },
   { href: '/admin/relatorios', label: 'Relatórios' },
 ] as const;
 

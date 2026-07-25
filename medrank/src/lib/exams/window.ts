@@ -48,33 +48,55 @@ export function minutesSinceMidnightBrazil(now = new Date()): number {
   return hour * 60 + minute;
 }
 
-export function isWithinExamHours(now = new Date()): boolean {
+export function isWithinExamHours(
+  now = new Date(),
+  startHour = EXAM_WINDOW_START_HOUR,
+  endHour = EXAM_WINDOW_END_HOUR
+): boolean {
   const mins = minutesSinceMidnightBrazil(now);
-  return mins >= EXAM_WINDOW_START_HOUR * 60 && mins < EXAM_WINDOW_END_HOUR * 60;
+  return mins >= startHour * 60 && mins < endHour * 60;
 }
 
-export function getSecondsUntilWindowClose(now = new Date()): number {
+export function getSecondsUntilWindowClose(
+  now = new Date(),
+  endHour = EXAM_WINDOW_END_HOUR
+): number {
   const { hour, minute, second } = getBrazilClock(now);
   const nowSeconds = hour * 3600 + minute * 60 + second;
-  const closeSeconds = EXAM_WINDOW_END_HOUR * 3600;
+  const closeSeconds = endHour * 3600;
   if (nowSeconds >= closeSeconds) return 0;
   return closeSeconds - nowSeconds;
 }
 
-export function getExamWindowPhase(examDate: string, now = new Date()): ExamWindowPhase {
+export function getExamWindowPhase(
+  examDate: string,
+  now = new Date(),
+  windowStartHour = EXAM_WINDOW_START_HOUR,
+  windowEndHour = EXAM_WINDOW_END_HOUR
+): ExamWindowPhase {
   const clock = getBrazilClock(now);
   if (clock.date < examDate) return 'wrong_day';
   if (clock.date > examDate) return 'after';
-  if (!isWithinExamHours(now)) {
-    return minutesSinceMidnightBrazil(now) < EXAM_WINDOW_START_HOUR * 60 ? 'before' : 'after';
-  }
+  const mins = minutesSinceMidnightBrazil(now);
+  if (mins < windowStartHour * 60) return 'before';
+  if (mins >= windowEndHour * 60) return 'after';
   return 'open';
 }
 
-export function formatExamWindowLabel(): string {
-  return `Das ${EXAM_WINDOW_START_HOUR}h às 23h59 (horário de Brasília)`;
+export function formatExamWindowLabel(
+  startHour = EXAM_WINDOW_START_HOUR,
+  endHour = EXAM_WINDOW_END_HOUR
+): string {
+  if (endHour >= 24) {
+    return `Das ${startHour}h às 23h59 (horário de Brasília)`;
+  }
+  return `Das ${startHour}h às ${endHour}h (horário de Brasília)`;
 }
 
-export function formatExamWindowShort(): string {
-  return `${EXAM_WINDOW_START_HOUR}h–23h59`;
+export function formatExamWindowShort(
+  startHour = EXAM_WINDOW_START_HOUR,
+  endHour = EXAM_WINDOW_END_HOUR
+): string {
+  if (endHour >= 24) return `${startHour}h–23h59`;
+  return `${startHour}h–${endHour}h`;
 }
