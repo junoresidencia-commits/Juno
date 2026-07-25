@@ -22,6 +22,11 @@ export type ParsedImportQuestion = {
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E'] as const;
 
+export type ParseTextOptions = {
+  /** Se false, aceita questões sem "Gabarito: X" (para juntar com arquivo de gabarito). */
+  requireGabarito?: boolean;
+};
+
 /**
  * Parseia bloco de texto no formato:
  * 1. Enunciado...
@@ -30,43 +35,63 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E'] as const;
  * C) ...
  * D) ...
  * E) ...
- * Gabarito: C
+ * Gabarito: C   ← opcional se requireGabarito=false
  * (opcional) Explicacao: ...
  */
-export function parseTextExamBlocks(raw: string): {
+export function parseTextExamBlocks(
+  raw: string,
+  opts: ParseTextOptions = {}
+): {
   questions: ParsedImportQuestion[];
   errors: string[];
+  missingGabarito: number[];
 } {
+  const requireGabarito = opts.requireGabarito !== false;
   const errors: string[] = [];
   const questions: ParsedImportQuestion[] = [];
+  const missingGabarito: number[] = [];
   const text = String(raw || '').replace(/\r\n/g, '\n').trim();
-  if (!text) return { questions, errors: ['Texto vazio'] };
+  if (!text) return { questions, errors: ['Texto vazio'], missingGabarito };
 
-  const chunks = text.split(/\n(?=\s*\d{1,3}[\).\:\-]\s+)/).filter((c) => c.trim());
+  // Aceita "1.", "1)", "QUESTÃO 1", "Questao 1 -"
+  const normalized = text.replace(
+    /(?:^|\n)\s*(?:quest[aã]o|q)\s*(\d{1,3})\s*[\).\-:]\s*/gi,
+    '\n$1. '
+  );
+
+  const chunks = normalized
+    .split(/\n(?=\s*\d{1,3}[\).\:\-]\s+)/)
+    .filter((c) => c.trim());
 
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i].trim();
     try {
-      const q = parseOneBlock(chunk);
-      questions.push(q);
+      const { question, hasGabarito } = parseOneBlock(chunk, requireGabarito);
+      if (!hasGabarito) missingGabarito.push(questions.length + 1);
+      questions.push(question);
     } catch (e) {
       errors.push(`Bloco ${i + 1}: ${e instanceof Error ? e.message : 'erro'}`);
     }
   }
 
   // Fallback: um unico bloco sem numeracao
-  if (questions.length === 0 && /A\)|A\./i.test(text)) {
+  if (questions.length === 0 && /A\)|A\./i.test(normalized)) {
     try {
-      questions.push(parseOneBlock(text));
+      const { question, hasGabarito } = parseOneBlock(normalized, requireGabarito);
+      if (!hasGabarito) missingGabarito.push(1);
+      questions.push(question);
     } catch (e) {
       errors.push(e instanceof Error ? e.message : 'Falha no parse');
     }
   }
 
-  return { questions, errors };
+  return { questions, errors, missingGabarito };
 }
 
-function parseOneBlock(chunk: string): ParsedImportQuestion {
+function parseOneBlock(
+  chunk: string,
+  requireGabarito: boolean
+): { question: ParsedImportQuestion; hasGabarito: boolean } {
   const lines = chunk.split('\n').map((l) => l.trim()).filter(Boolean);
   if (lines.length < 5) throw new Error('bloco curto demais');
 
@@ -100,26 +125,161 @@ function parseOneBlock(chunk: string): ParsedImportQuestion {
   for (const L of LETTERS) {
     if (!opts[L]) throw new Error(`falta alternativa ${L}`);
   }
-  if (!correct || !LETTERS.includes(correct)) {
-    throw new Error('gabarito A-E nao encontrado (linha "Gabarito: X")');
+  const hasGabarito = Boolean(correct && LETTERS.includes(correct));
+  if (!hasGabarito && requireGabarito) {
+    throw new Error('gabarito A-E nao encontrado (envie o arquivo de gabarito ou "Gabarito: X")');
   }
 
   return {
-    statement,
-    option_a: opts.A,
-    option_b: opts.B,
-    option_c: opts.C,
-    option_d: opts.D,
-    option_e: opts.E,
-    correct_option: correct,
-    explanation,
-    specialty: null,
-    topic: null,
-    subtopic: null,
-    difficulty: null,
-    year: null,
-    source: null,
-    statement_fingerprint: statementFingerprint(statement),
+    hasGabarito,
+    question: {
+      statement,
+      option_a: opts.A,
+      option_b: opts.B,
+      option_c: opts.C,
+      option_d: opts.D,
+      option_e: opts.E,
+      // Placeholder até applyGabaritoMap
+      correct_option: hasGabarito ? (correct as OptionLetter) : ('A' as OptionLetter),
+      explanation,
+      specialty: null,
+      topic: null,
+      subtopic: null,
+      difficulty: null,
+      year: null,
+      source: null,
+      statement_fingerprint: statementFingerprint(statement),
+    },
+  };
+}
+
+/**
+ * Lê gabarito oficial separado, formatos comuns:
+ * 1 C | 1-C | 1. C | 01) C | Questão 1: C | 1:A
+ * Também sequências: "1A 2B 3C" ou linhas "A B C D E" na ordem.
+ */
+export function parseGabaritoMap(raw: string): {
+  map: Map<number, OptionLetter>;
+  errors: string[];
+} {
+  const map = new Map<number, OptionLetter>();
+  const errors: string[] = [];
+  const text = String(raw || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\u00a0/g, ' ')
+    .trim();
+  if (!text) return { map, errors: ['Gabarito vazio'] };
+
+  // Pares "N Letra" em qualquer lugar
+  const pairRe =
+    /(?:quest[aã]o|q\.?|n[uú]mero)?\s*(\d{1,3})\s*[\).\-:]\s*([A-Ea-e])\b/gi;
+  let m: RegExpExecArray | null;
+  while ((m = pairRe.exec(text)) !== null) {
+    const n = Number(m[1]);
+    const L = m[2].toUpperCase() as OptionLetter;
+    if (n >= 1 && n <= 300 && LETTERS.includes(L)) map.set(n, L);
+  }
+
+  // Compacto: 1A 2B 3C ou 1-A 2-B
+  const compactRe = /(\d{1,3})\s*[-:]?\s*([A-Ea-e])\b/g;
+  while ((m = compactRe.exec(text)) !== null) {
+    const n = Number(m[1]);
+    const L = m[2].toUpperCase() as OptionLetter;
+    if (n >= 1 && n <= 300 && LETTERS.includes(L) && !map.has(n)) map.set(n, L);
+  }
+
+  // Só letras em ordem: "A B C D E A ..." (1 resposta por linha ou espaço)
+  if (map.size === 0) {
+    const lettersOnly = text
+      .split(/\s+/)
+      .map((t) => t.replace(/[^A-Ea-e]/g, '').toUpperCase())
+      .filter((t) => t.length === 1 && LETTERS.includes(t as OptionLetter));
+    if (lettersOnly.length >= 5) {
+      lettersOnly.forEach((L, i) => map.set(i + 1, L as OptionLetter));
+    }
+  }
+
+  if (map.size === 0) {
+    errors.push(
+      'Não li o gabarito. Use linhas como: 1 C  |  1-C  |  Questão 1: C'
+    );
+  }
+
+  return { map, errors };
+}
+
+/** Aplica mapa de gabarito (1→C) nas questões na ordem do arquivo. */
+export function applyGabaritoMap(
+  questions: ParsedImportQuestion[],
+  map: Map<number, OptionLetter>,
+  alreadyHad: Set<number> = new Set()
+): {
+  questions: ParsedImportQuestion[];
+  applied: number;
+  missing: number[];
+} {
+  const missing: number[] = [];
+  const out = questions.map((q, i) => {
+    const n = i + 1;
+    const letter = map.get(n);
+    if (letter) {
+      return {
+        ...q,
+        correct_option: letter,
+        explanation: q.explanation || `Gabarito oficial: ${letter}`,
+      };
+    }
+    if (alreadyHad.has(n)) return q;
+    missing.push(n);
+    return q;
+  });
+  return {
+    questions: out,
+    applied: out.length - missing.length,
+    missing,
+  };
+}
+
+/** Junta texto da prova + texto do gabarito → questões prontas. */
+export function mergeExamWithGabarito(
+  examText: string,
+  gabaritoText: string
+): {
+  questions: ParsedImportQuestion[];
+  errors: string[];
+  applied: number;
+  missing: number[];
+  readyText: string;
+} {
+  const parsed = parseTextExamBlocks(examText, { requireGabarito: false });
+  const alreadyHad = new Set(parsed.questions.map((_, i) => i + 1).filter((n) => !parsed.missingGabarito.includes(n)));
+  const { map, errors: gabErrors } = parseGabaritoMap(gabaritoText);
+  const merged = applyGabaritoMap(parsed.questions, map, alreadyHad);
+  const errors = [...parsed.errors, ...gabErrors];
+  if (merged.missing.length) {
+    errors.push(
+      `Sem gabarito para as questões: ${merged.missing.slice(0, 20).join(', ')}${
+        merged.missing.length > 20 ? '…' : ''
+      }`
+    );
+  }
+
+  const ready = merged.questions.filter((_, i) => !merged.missing.includes(i + 1));
+  const readyText = ready
+    .map(
+      (q, i) =>
+        `${i + 1}. ${q.statement}\nA) ${q.option_a}\nB) ${q.option_b}\nC) ${q.option_c}\nD) ${q.option_d}\nE) ${q.option_e}\nGabarito: ${q.correct_option}${
+          q.explanation ? `\nExplicacao: ${q.explanation}` : ''
+        }`
+    )
+    .join('\n\n');
+
+  return {
+    questions: ready,
+    errors,
+    applied: ready.length,
+    missing: merged.missing,
+    readyText,
   };
 }
 

@@ -1,0 +1,22 @@
+{
+  "metadados": {
+    "nome_lote": "Modelo — Prova oficial USP/ENARE",
+    "instituicao": "USP",
+    "ano": 2025,
+    "observacao": "Preencha questions[] e importe em Admin → Importar prova → JSON. Ou use o template .txt."
+  },
+  "questions": [
+    {
+      "statement": "Paciente de 68 anos, hipertenso, chega com dispneia e edema de membros inferiores. Qual o próximo passo?",
+      "option_a": "Observação clínica sem exames",
+      "option_b": "Dosar BNP e solicitar radiografia de tórax",
+      "option_c": "Iniciar antibiótico empírico imediato",
+      "option_d": "Indicar cirurgia cardíaca de urgência",
+      "option_e": "Suspender todos os anti-hipertensivos",
+      "correct_option": "B",
+      "explanation": "Exemplo de comentário (opcional).",
+      "specialty": "Clínica Médica",
+      "topic": "Insuficiência cardíaca"
+    }
+  ]
+}
