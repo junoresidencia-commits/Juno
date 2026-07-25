@@ -6,15 +6,20 @@ export function StudyPdfDownloadButton({
   attemptId,
   available = true,
   lockedMessage = 'Finalize a disputa para baixar o PDF de estudo.',
+  compact = false,
 }: {
   attemptId: string;
   available?: boolean;
   lockedMessage?: string;
+  /** Botão pequeno para o Histórico */
+  compact?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  async function download() {
+  async function download(e?: React.MouseEvent) {
+    e?.preventDefault();
+    e?.stopPropagation();
     setLoading(true);
     setError('');
     try {
@@ -41,10 +46,27 @@ export function StudyPdfDownloadButton({
   }
 
   if (!available) {
+    if (compact) return null;
     return (
       <p className="mt-6 rounded-lg bg-slate-100 p-4 text-sm text-slate-800 ring-1 ring-slate-200">
         {lockedMessage}
       </p>
+    );
+  }
+
+  if (compact) {
+    return (
+      <div className="mt-3">
+        <button
+          type="button"
+          disabled={loading}
+          onClick={(e) => void download(e)}
+          className="exam-tap w-full rounded-xl bg-teal-800 px-3 py-2.5 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-50"
+        >
+          {loading ? 'Gerando…' : 'Baixar PDF'}
+        </button>
+        {error ? <p className="mt-1 text-xs text-red-600">{error}</p> : null}
+      </div>
     );
   }
 
