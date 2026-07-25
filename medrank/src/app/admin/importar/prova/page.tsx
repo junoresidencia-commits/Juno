@@ -194,10 +194,10 @@ export default function ImportarProvaPage() {
       <Link href="/admin/importar" className="text-sm text-emerald-700 hover:underline">
         ← Importar
       </Link>
-      <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar prova oficial</h1>
+      <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar prova — tudo</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Baixe da net a <strong>prova</strong> (PDF/Word) e o <strong>gabarito</strong> → o MedRank
-        junta e deixa as questões prontas para revisão.
+        Manda do jeito que quiser: <strong>PDF</strong>, <strong>Word</strong>, pasta, ZIP, link,
+        texto ou JSON. Se o gabarito vier separado, manda junto — o sistema monta as questões.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2 text-sm">
@@ -230,12 +230,12 @@ export default function ImportarProvaPage() {
         </Link>
       </div>
 
-      <div className="mt-6 flex gap-2 text-sm">
+      <div className="mt-6 flex flex-wrap gap-2 text-sm">
         {(
           [
-            ['files', 'Arquivos / pasta'],
-            ['text', 'Texto'],
-            ['json', 'JSON'],
+            ['files', 'Arquivo / pasta / link'],
+            ['text', 'Colar texto'],
+            ['json', 'Colar JSON'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -250,6 +250,9 @@ export default function ImportarProvaPage() {
           </button>
         ))}
       </div>
+      <p className="mt-2 text-xs text-slate-500">
+        Aceita: .pdf · .docx · .txt · .json · .zip · pasta · URL · gabarito separado
+      </p>
 
       {tab === 'files' && (
         <section className="mt-4 space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
