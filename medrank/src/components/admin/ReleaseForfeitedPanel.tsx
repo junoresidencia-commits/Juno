@@ -22,15 +22,19 @@ type ForfeitRow = {
 export function ReleaseForfeitedPanel({
   examId,
   autoLoad = true,
+  hideWhenEmpty = false,
 }: {
   /** Se informado, lista só desta prova; senão, todas de hoje. */
   examId?: string;
   autoLoad?: boolean;
+  /** Em Provas: some da tela se ninguém caiu no antifraude. */
+  hideWhenEmpty?: boolean;
 }) {
   const router = useRouter();
   const [rows, setRows] = useState<ForfeitRow[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(!autoLoad);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -54,6 +58,7 @@ export function ReleaseForfeitedPanel({
       setError('Erro de conexão');
     }
     setLoading(false);
+    setChecked(true);
   }, [examId, query]);
 
   useEffect(() => {
@@ -90,23 +95,30 @@ export function ReleaseForfeitedPanel({
     setBusyId(null);
   }
 
+  // Em Provas: some da tela se não houver ninguém (evita poluir).
+  if (
+    hideWhenEmpty &&
+    (!checked || (!loading && rows.length === 0 && !error && !message && !query))
+  ) {
+    return null;
+  }
+
   return (
-    <section className="mb-6 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+    <section className="mb-6 rounded-2xl bg-red-50 p-5 ring-1 ring-red-200">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-semibold text-slate-900">Liberar prova (erro técnico)</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Aluno ligou, notificação, falso antifraude? Encerrou com “PROVA ENCERRADA”? Libere aqui
-            para ele refazer hoje.
+          <h2 className="font-semibold text-red-950">Liberar prova (erro técnico)</h2>
+          <p className="mt-1 text-sm text-red-900/80">
+            Aluno caiu no antifraude por engano? Libere para refazer hoje.
           </p>
         </div>
         <button
           type="button"
           onClick={() => void load()}
           disabled={loading}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
         >
-          {loading ? 'Carregando…' : 'Atualizar lista'}
+          {loading ? 'Carregando…' : 'Atualizar'}
         </button>
       </div>
 
@@ -121,7 +133,7 @@ export function ReleaseForfeitedPanel({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar aluno (nome ou e-mail)"
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
         />
         <button
           type="submit"
@@ -138,16 +150,16 @@ export function ReleaseForfeitedPanel({
         {loading && rows.length === 0 ? (
           <li className="text-sm text-slate-500">Carregando…</li>
         ) : rows.length === 0 ? (
-          <li className="rounded-xl bg-slate-50 px-4 py-5 text-center text-sm text-slate-600 ring-1 ring-slate-100">
-            Nenhuma prova encerrada por segurança hoje
-            {examId ? ' nesta disputa' : ''}. Quando um aluno cair no antifraude por engano, o nome
-            aparece aqui.
+          <li className="rounded-xl bg-white px-4 py-3 text-center text-sm text-slate-600 ring-1 ring-slate-100">
+            {query.trim()
+              ? 'Nenhum resultado para essa busca.'
+              : 'Nenhuma prova encerrada por segurança hoje. Quando um aluno cair no antifraude por engano, o nome aparece aqui.'}
           </li>
         ) : (
           rows.map((row) => (
             <li
               key={row.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-red-50 px-4 py-3 ring-1 ring-red-100"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-red-100"
             >
               <div className="min-w-0">
                 <p className="font-semibold text-slate-900">{row.name}</p>
