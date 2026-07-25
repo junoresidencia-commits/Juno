@@ -28,6 +28,8 @@ export default function ImportarProvaPage() {
   const [sourceUrl, setSourceUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [files, setFiles] = useState<File[]>([]);
+  const [gabaritoFile, setGabaritoFile] = useState<File | null>(null);
+  const [gabaritoUrl, setGabaritoUrl] = useState('');
   const [extracted, setExtracted] = useState<ExtractedFile[]>([]);
   const [reproduction, setReproduction] = useState(false);
   const [origin, setOrigin] = useState<'official' | 'original_based_on_exam' | 'original'>(
@@ -63,8 +65,10 @@ export default function ImportarProvaPage() {
       const form = new FormData();
       for (const f of files) form.append('files', f);
       if (linkUrl.trim()) form.append('url', linkUrl.trim());
+      if (gabaritoFile) form.append('gabarito', gabaritoFile);
+      if (gabaritoUrl.trim()) form.append('gabarito_url', gabaritoUrl.trim());
       if (files.length === 0 && !linkUrl.trim()) {
-        setErr('Envie PDF/Word/ZIP/pasta ou cole um link.');
+        setErr('Envie a prova (PDF/Word/ZIP/pasta ou link).');
         return;
       }
 
@@ -95,7 +99,12 @@ export default function ImportarProvaPage() {
       if (!title) {
         setTitle(`${institution} ${year}${examName ? ` — ${examName}` : ''}`);
       }
-      setMsg(data.tip || `Extraídos ${list.length} arquivo(s).`);
+      setMsg(
+        data.tip ||
+          (data.gabaritoApplied
+            ? `Prova + gabarito → ${data.totalQuestions} questão(ões) prontas.`
+            : `Extraídos ${list.length} arquivo(s).`)
+      );
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Erro de rede');
     } finally {
@@ -187,8 +196,8 @@ export default function ImportarProvaPage() {
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar prova oficial</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Várias provas de uma vez: <strong>PDF</strong>, <strong>Word (.docx)</strong>, pasta,{' '}
-        <strong>ZIP</strong> ou link. O sistema identifica as questões e manda para revisão.
+        Baixe da net a <strong>prova</strong> (PDF/Word) e o <strong>gabarito</strong> → o MedRank
+        junta e deixa as questões prontas para revisão.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2 text-sm">
@@ -197,7 +206,14 @@ export default function ImportarProvaPage() {
           download
           className="rounded-lg bg-slate-100 px-3 py-2 font-medium text-slate-800 hover:bg-slate-200"
         >
-          Template TXT
+          Template prova
+        </a>
+        <a
+          href="/templates/MEDRANK_GABARITO_MODELO.txt"
+          download
+          className="rounded-lg bg-slate-100 px-3 py-2 font-medium text-slate-800 hover:bg-slate-200"
+        >
+          Template gabarito
         </a>
         <a
           href="/templates/MEDRANK_PROVA_OFICIAL_MODELO.json"
@@ -237,24 +253,33 @@ export default function ImportarProvaPage() {
 
       {tab === 'files' && (
         <section className="mt-4 space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">
-            Selecione vários PDFs/DOCX, uma <strong>pasta</strong>, ou um <strong>ZIP</strong> com
-            a pasta de provas. Word antigo (.doc) → salve como .docx.
-          </p>
+          <div className="rounded-xl bg-teal-50 p-4 text-sm text-teal-950 ring-1 ring-teal-200">
+            <p className="font-semibold">Como usar (prova da net + gabarito)</p>
+            <ol className="mt-2 list-decimal space-y-1 pl-5">
+              <li>Baixe a prova (PDF ou Word) e o gabarito oficial</li>
+              <li>Coloque a prova acima e o gabarito no campo Gabarito</li>
+              <li>Clique em montar → revise → envie para revisão</li>
+            </ol>
+            <p className="mt-2 text-xs text-teal-900/80">
+              Gabarito aceito: linhas <code className="rounded bg-white px-1">1 C</code>,{' '}
+              <code className="rounded bg-white px-1">1-C</code>,{' '}
+              <code className="rounded bg-white px-1">Questão 1: C</code> — ou PDF/Word do gabarito.
+            </p>
+          </div>
 
-          <label className="block text-sm">
-            Arquivos (PDF, DOCX, TXT, JSON, ZIP) — até 25
+          <label className="block text-sm font-medium">
+            1) Prova(s) — PDF, Word (.docx), TXT, ZIP, pasta
             <input
               type="file"
               multiple
               accept=".pdf,.docx,.txt,.json,.zip,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip"
               onChange={(e) => onPickFiles(e.target.files)}
-              className="mt-1 block w-full text-sm"
+              className="mt-1 block w-full text-sm font-normal"
             />
           </label>
 
           <label className="block text-sm">
-            Ou pasta inteira
+            Ou pasta com várias provas
             <input
               type="file"
               multiple
@@ -271,7 +296,7 @@ export default function ImportarProvaPage() {
 
           {files.length > 0 && (
             <p className="text-xs text-slate-500">
-              {files.length} arquivo(s) selecionado(s):{' '}
+              {files.length} prova(s):{' '}
               {files
                 .slice(0, 5)
                 .map((f) => f.name)
@@ -281,7 +306,7 @@ export default function ImportarProvaPage() {
           )}
 
           <label className="block text-sm">
-            Ou link (PDF/DOCX)
+            Link da prova (opcional)
             <input
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
@@ -290,13 +315,35 @@ export default function ImportarProvaPage() {
             />
           </label>
 
+          <label className="block text-sm font-medium">
+            2) Gabarito (arquivo separado — o que você baixa da banca)
+            <input
+              type="file"
+              accept=".pdf,.docx,.txt,.json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+              onChange={(e) => setGabaritoFile(e.target.files?.[0] ?? null)}
+              className="mt-1 block w-full text-sm font-normal"
+            />
+          </label>
+          <label className="block text-sm">
+            Ou link do gabarito
+            <input
+              value={gabaritoUrl}
+              onChange={(e) => setGabaritoUrl(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              placeholder="https://.../gabarito.pdf"
+            />
+          </label>
+          {gabaritoFile ? (
+            <p className="text-xs text-slate-500">Gabarito: {gabaritoFile.name}</p>
+          ) : null}
+
           <button
             type="button"
             disabled={extracting}
             onClick={() => void extractBatch()}
             className="rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {extracting ? 'Identificando questões…' : 'Extrair e identificar questões'}
+            {extracting ? 'Montando questões…' : 'Montar questões (prova + gabarito)'}
           </button>
         </section>
       )}
@@ -472,9 +519,9 @@ export default function ImportarProvaPage() {
       {err && <p className="mt-4 text-sm text-red-700">{err}</p>}
 
       <ol className="mt-8 list-decimal space-y-1 pl-5 text-sm text-slate-600">
-        <li>PDF / Word / pasta / ZIP → extrair</li>
-        <li>Marque as provas ok → enviar lote para revisão</li>
-        <li>Aprove em Questões → entram na disputa</li>
+        <li>Baixe prova + gabarito da net (USP/ENARE…)</li>
+        <li>Envie os dois aqui → montar questões</li>
+        <li>Enviar para revisão → aprovar em Questões → entram na disputa</li>
       </ol>
     </div>
   );

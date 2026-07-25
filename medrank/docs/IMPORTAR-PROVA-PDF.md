@@ -1,25 +1,30 @@
-# Importar prova oficial (USP / ENARE / similares)
+# Importar prova + gabarito (pronto para revisão)
 
-## Entradas aceitas
+## Seu fluxo
 
-- **PDF** (texto selecionável)
-- **Word (.docx)** — .doc antigo: salve como .docx
-- **Vários arquivos** de uma vez
-- **Pasta** inteira (Chromium)
-- **ZIP** com pasta de provas
-- **Link** de PDF/DOCX
-- **Template** TXT / JSON
+1. Baixe na net a **prova** (PDF ou Word) e o **gabarito** oficial  
+2. Admin → **Importar prova**  
+3. Campo 1: prova(s) · Campo 2: gabarito  
+4. **Montar questões** → preview com respostas  
+5. **Enviar para revisão** → aprove em Questões  
 
-## Fluxo
+## Formatos de gabarito
 
-1. Admin → **Importar prova**
-2. Selecione arquivos / pasta / ZIP (ou link)
-3. **Extrair e identificar questões**
-4. Marque as provas ok → **Enviar N prova(s) para revisão**
-5. Aprove em **Questões → Revisão**
+```
+1 C
+2 A
+3 B
+```
+
+Também: `1-C`, `1. C`, `Questão 1: C`, ou PDF/Word do gabarito oficial.
+
+## Sem gabarito separado
+
+Se cada questão já tiver `Gabarito: X` no texto, pode enviar só a prova.
 
 ## Limites
 
-- Até **25** arquivos por lote
-- PDF/Word com texto (não scan puro)
-- Nada publica sozinho (`pending_review`)
+- PDF/Word com **texto** (não scan puro)  
+- `.doc` antigo → salvar como `.docx`  
+- Até 25 provas por lote  
+- Nada publica sozinho

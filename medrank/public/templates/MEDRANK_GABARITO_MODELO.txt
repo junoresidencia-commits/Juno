@@ -1,0 +1,16 @@
+1 C
+2 A
+3 B
+4 D
+5 E
+6 C
+7 A
+8 B
+9 D
+10 E
+
+# Formatos aceitos (um por linha ou misturado):
+# 1 C
+# 1-C
+# 1. C
+# Questão 1: C
