@@ -151,7 +151,9 @@ export function ReleaseForfeitedPanel({
           <li className="text-sm text-slate-500">Carregando…</li>
         ) : rows.length === 0 ? (
           <li className="rounded-xl bg-white px-4 py-3 text-center text-sm text-slate-600 ring-1 ring-slate-100">
-            Nenhum resultado.
+            {query.trim()
+              ? 'Nenhum resultado para essa busca.'
+              : 'Nenhuma prova encerrada por segurança hoje. Quando um aluno cair no antifraude por engano, o nome aparece aqui.'}
           </li>
         ) : (
           rows.map((row) => (
