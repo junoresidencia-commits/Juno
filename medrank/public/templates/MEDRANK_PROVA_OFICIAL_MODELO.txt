@@ -1,0 +1,16 @@
+1. Paciente de 68 anos, hipertenso, chega com dispneia e edema de membros inferiores. Qual o próximo passo?
+A) Observação clínica sem exames
+B) Dosar BNP e solicitar radiografia de tórax
+C) Iniciar antibiótico empírico imediato
+D) Indicar cirurgia cardíaca de urgência
+E) Suspender todos os anti-hipertensivos
+Gabarito: B
+Explicacao: Exemplo de comentario (opcional).
+
+2. Segunda questao — use o mesmo padrao (A-E + Gabarito).
+A) Alternativa A
+B) Alternativa B
+C) Alternativa C
+D) Alternativa D
+E) Alternativa E
+Gabarito: A

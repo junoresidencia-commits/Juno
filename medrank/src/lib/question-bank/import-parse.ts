@@ -42,7 +42,15 @@ export function parseTextExamBlocks(raw: string): {
   const text = String(raw || '').replace(/\r\n/g, '\n').trim();
   if (!text) return { questions, errors: ['Texto vazio'] };
 
-  const chunks = text.split(/\n(?=\s*\d{1,3}[\).\:\-]\s+)/).filter((c) => c.trim());
+  // Aceita "1.", "1)", "QUESTÃO 1", "Questao 1 -"
+  const normalized = text.replace(
+    /(?:^|\n)\s*(?:quest[aã]o|q)\s*(\d{1,3})\s*[\).\-:]\s*/gi,
+    '\n$1. '
+  );
+
+  const chunks = normalized
+    .split(/\n(?=\s*\d{1,3}[\).\:\-]\s+)/)
+    .filter((c) => c.trim());
 
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i].trim();
@@ -55,9 +63,9 @@ export function parseTextExamBlocks(raw: string): {
   }
 
   // Fallback: um unico bloco sem numeracao
-  if (questions.length === 0 && /A\)|A\./i.test(text)) {
+  if (questions.length === 0 && /A\)|A\./i.test(normalized)) {
     try {
-      questions.push(parseOneBlock(text));
+      questions.push(parseOneBlock(normalized));
     } catch (e) {
       errors.push(e instanceof Error ? e.message : 'Falha no parse');
     }

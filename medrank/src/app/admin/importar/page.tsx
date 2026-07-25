@@ -28,7 +28,9 @@ export default async function ImportarPage() {
           className="block rounded-2xl bg-teal-700 px-5 py-6 text-center shadow-sm"
         >
           <span className="block text-lg font-bold text-white">Importar prova</span>
-          <span className="mt-1 block text-sm text-teal-100">Prova oficial (texto/JSON)</span>
+          <span className="mt-1 block text-sm text-teal-100">
+            PDF · link · template USP/ENARE → revisão
+          </span>
         </Link>
       </div>
     </div>
