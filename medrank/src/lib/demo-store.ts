@@ -374,6 +374,21 @@ export function renewDemoStudent(id: string): boolean {
   return true;
 }
 
+export function changeDemoStudentPassword(
+  id: string,
+  currentPassword: string,
+  newPassword: string
+): boolean {
+  const store = readDemoStore();
+  const student = store.students.find((s) => s.id === id);
+  if (!student) return false;
+  if (student.password !== currentPassword) return false;
+  if (!newPassword || newPassword.length < 4) return false;
+  student.password = newPassword;
+  writeDemoStore(store);
+  return true;
+}
+
 export function listDemoStudents(): DemoStudent[] {
   return readDemoStore().students;
 }

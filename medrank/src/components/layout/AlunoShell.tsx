@@ -17,6 +17,7 @@ const MORE_NAV = [
   { href: '/aluno/treino', label: 'Treino', nefroOnly: true },
   { href: '/aluno/desempenho', label: 'Desempenho' },
   { href: '/aluno/desafios', label: 'Desafios' },
+  { href: '/aluno/conta', label: 'Trocar senha' },
 ] as const;
 
 function isActive(pathname: string, href: string, exact?: boolean) {
