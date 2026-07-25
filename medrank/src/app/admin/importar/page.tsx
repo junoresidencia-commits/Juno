@@ -29,7 +29,7 @@ export default async function ImportarPage() {
         >
           <span className="block text-lg font-bold text-white">Importar prova</span>
           <span className="mt-1 block text-sm text-teal-100">
-            PDF · link · template USP/ENARE → revisão
+            PDF · Word · pasta/ZIP · template → revisão
           </span>
         </Link>
       </div>

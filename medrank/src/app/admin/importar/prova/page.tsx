@@ -5,8 +5,21 @@ import Link from 'next/link';
 
 type PreviewRow = { n: number; statement: string; correct_option: string };
 
+type ExtractedFile = {
+  filename: string;
+  kind: string;
+  text: string;
+  pages?: number | null;
+  parsedCount: number;
+  parseErrors: string[];
+  preview: PreviewRow[];
+  format: 'text' | 'json';
+  error?: string;
+  selected: boolean;
+};
+
 export default function ImportarProvaPage() {
-  const [tab, setTab] = useState<'pdf' | 'text' | 'json'>('pdf');
+  const [tab, setTab] = useState<'files' | 'text' | 'json'>('files');
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [institution, setInstitution] = useState('USP');
@@ -14,7 +27,8 @@ export default function ImportarProvaPage() {
   const [year, setYear] = useState(String(new Date().getFullYear()));
   const [sourceUrl, setSourceUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [extracted, setExtracted] = useState<ExtractedFile[]>([]);
   const [reproduction, setReproduction] = useState(false);
   const [origin, setOrigin] = useState<'official' | 'original_based_on_exam' | 'original'>(
     'official'
@@ -23,29 +37,34 @@ export default function ImportarProvaPage() {
   const [extracting, setExtracting] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [parsedCount, setParsedCount] = useState<number | null>(null);
-  const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const [preview, setPreview] = useState<PreviewRow[]>([]);
-  const [pages, setPages] = useState<number | null>(null);
 
   const format = tab === 'json' ? 'json' : 'text';
+  const selectedFiles = extracted.filter((f) => f.selected && f.parsedCount > 0);
+  const totalSelectedQs = selectedFiles.reduce((s, f) => s + f.parsedCount, 0);
 
-  const canSubmit = useMemo(() => content.trim().length > 20 && reproduction, [content, reproduction]);
+  const canSubmitSingle = useMemo(
+    () => content.trim().length > 20 && reproduction,
+    [content, reproduction]
+  );
+  const canSubmitBatch = selectedFiles.length > 0 && reproduction;
 
-  async function extractFromPdfOrLink() {
+  function onPickFiles(list: FileList | null, append = false) {
+    if (!list) return;
+    const next = Array.from(list);
+    setFiles((prev) => (append ? [...prev, ...next] : next).slice(0, 25));
+  }
+
+  async function extractBatch() {
     setExtracting(true);
     setMsg(null);
     setErr(null);
-    setPreview([]);
-    setParsedCount(null);
-    setParseErrors([]);
-    setPages(null);
+    setExtracted([]);
     try {
       const form = new FormData();
-      if (file) form.append('file', file);
+      for (const f of files) form.append('files', f);
       if (linkUrl.trim()) form.append('url', linkUrl.trim());
-      if (!file && !linkUrl.trim()) {
-        setErr('Envie um PDF ou cole o link do PDF oficial.');
+      if (files.length === 0 && !linkUrl.trim()) {
+        setErr('Envie PDF/Word/ZIP/pasta ou cole um link.');
         return;
       }
 
@@ -59,20 +78,24 @@ export default function ImportarProvaPage() {
         return;
       }
 
-      setContent(data.text || '');
-      setParsedCount(data.parsedCount ?? 0);
-      setParseErrors(data.parseErrors || []);
-      setPreview(data.preview || []);
-      setPages(data.pages ?? null);
+      const list: ExtractedFile[] = (data.files || []).map(
+        (f: Omit<ExtractedFile, 'selected'>) => ({
+          ...f,
+          selected: (f.parsedCount || 0) > 0,
+        })
+      );
+      setExtracted(list);
+
+      if (list.length === 1 && list[0].text) {
+        setContent(list[0].text);
+        if (list[0].kind === 'json') setTab('json');
+        else setTab('text');
+      }
       if (data.sourceUrl) setSourceUrl(data.sourceUrl);
       if (!title) {
         setTitle(`${institution} ${year}${examName ? ` — ${examName}` : ''}`);
       }
-      setTab('text');
-      setMsg(
-        data.tip ||
-          `Texto extraído${data.pages ? ` (${data.pages} páginas)` : ''}. Revise e envie para revisão.`
-      );
+      setMsg(data.tip || `Extraídos ${list.length} arquivo(s).`);
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Erro de rede');
     } finally {
@@ -80,7 +103,7 @@ export default function ImportarProvaPage() {
     }
   }
 
-  async function submit(e: React.FormEvent) {
+  async function submitSingle(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setMsg(null);
@@ -92,30 +115,64 @@ export default function ImportarProvaPage() {
         body: JSON.stringify({
           format,
           content,
-          meta: {
-            title: title || `${institution} ${year}`,
-            institution,
-            exam_name: examName || title,
-            year: Number(year) || undefined,
-            source_url: sourceUrl || linkUrl || undefined,
-            reproduction_allowed: reproduction,
-            question_origin:
-              origin === 'official' && !reproduction ? 'original_based_on_exam' : origin,
-          },
+          meta: baseMeta(),
         }),
       });
       const data = await res.json();
       if (!res.ok) {
         setErr(data.error || 'Falha na importação');
-        if (data.errors?.length) setParseErrors(data.errors);
         return;
       }
       setMsg(
-        `${data.message || 'Ok'} Inseridas: ${data.inserted}. Duplicatas: ${data.duplicates}. Lote: ${data.batchId}`
+        `${data.message || 'Ok'} Inseridas: ${data.inserted}. Duplicatas: ${data.duplicates}.`
       );
       setContent('');
-      setPreview([]);
-      setParsedCount(null);
+      setExtracted([]);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Erro de rede');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function baseMeta() {
+    return {
+      title: title || `${institution} ${year}`,
+      institution,
+      exam_name: examName || title,
+      year: Number(year) || undefined,
+      source_url: sourceUrl || linkUrl || undefined,
+      reproduction_allowed: reproduction,
+      question_origin: origin === 'official' && !reproduction ? 'original_based_on_exam' : origin,
+    };
+  }
+
+  async function submitBatch() {
+    setLoading(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      const res = await fetch('/api/admin/question-imports/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          baseMeta: baseMeta(),
+          items: selectedFiles.map((f) => ({
+            filename: f.filename,
+            format: f.format,
+            content: f.text,
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErr(data.error || 'Falha no lote');
+        return;
+      }
+      setMsg(data.message || 'Lote enviado');
+      setExtracted([]);
+      setFiles([]);
+      setContent('');
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Erro de rede');
     } finally {
@@ -130,9 +187,8 @@ export default function ImportarProvaPage() {
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-slate-900">Importar prova oficial</h1>
       <p className="mt-2 text-sm text-slate-600">
-        USP, ENARE e similares: envie o <strong>PDF</strong>, cole o <strong>link</strong>, ou use o{' '}
-        <strong>template</strong>. O sistema monta as questões e manda para revisão — nada publica
-        sozinho.
+        Várias provas de uma vez: <strong>PDF</strong>, <strong>Word (.docx)</strong>, pasta,{' '}
+        <strong>ZIP</strong> ou link. O sistema identifica as questões e manda para revisão.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2 text-sm">
@@ -141,14 +197,14 @@ export default function ImportarProvaPage() {
           download
           className="rounded-lg bg-slate-100 px-3 py-2 font-medium text-slate-800 hover:bg-slate-200"
         >
-          Baixar template TXT
+          Template TXT
         </a>
         <a
           href="/templates/MEDRANK_PROVA_OFICIAL_MODELO.json"
           download
           className="rounded-lg bg-slate-100 px-3 py-2 font-medium text-slate-800 hover:bg-slate-200"
         >
-          Baixar template JSON
+          Template JSON
         </a>
         <Link
           href="/admin/questoes/revisao"
@@ -161,7 +217,7 @@ export default function ImportarProvaPage() {
       <div className="mt-6 flex gap-2 text-sm">
         {(
           [
-            ['pdf', 'PDF / link'],
+            ['files', 'Arquivos / pasta'],
             ['text', 'Texto'],
             ['json', 'JSON'],
           ] as const
@@ -179,23 +235,53 @@ export default function ImportarProvaPage() {
         ))}
       </div>
 
-      {tab === 'pdf' && (
+      {tab === 'files' && (
         <section className="mt-4 space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
           <p className="text-sm text-slate-600">
-            Preferência: PDF com texto selecionável (não scan). Se for só imagem, use OCR e cole no
-            template TXT.
+            Selecione vários PDFs/DOCX, uma <strong>pasta</strong>, ou um <strong>ZIP</strong> com
+            a pasta de provas. Word antigo (.doc) → salve como .docx.
           </p>
+
           <label className="block text-sm">
-            Arquivo PDF
+            Arquivos (PDF, DOCX, TXT, JSON, ZIP) — até 25
             <input
               type="file"
-              accept="application/pdf,.pdf"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              multiple
+              accept=".pdf,.docx,.txt,.json,.zip,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip"
+              onChange={(e) => onPickFiles(e.target.files)}
               className="mt-1 block w-full text-sm"
             />
           </label>
+
           <label className="block text-sm">
-            Ou link direto do PDF / página oficial
+            Ou pasta inteira
+            <input
+              type="file"
+              multiple
+              ref={(el) => {
+                if (el) {
+                  el.setAttribute('webkitdirectory', '');
+                  el.setAttribute('directory', '');
+                }
+              }}
+              onChange={(e) => onPickFiles(e.target.files)}
+              className="mt-1 block w-full text-sm"
+            />
+          </label>
+
+          {files.length > 0 && (
+            <p className="text-xs text-slate-500">
+              {files.length} arquivo(s) selecionado(s):{' '}
+              {files
+                .slice(0, 5)
+                .map((f) => f.name)
+                .join(', ')}
+              {files.length > 5 ? '…' : ''}
+            </p>
+          )}
+
+          <label className="block text-sm">
+            Ou link (PDF/DOCX)
             <input
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
@@ -203,18 +289,19 @@ export default function ImportarProvaPage() {
               placeholder="https://.../prova.pdf"
             />
           </label>
+
           <button
             type="button"
             disabled={extracting}
-            onClick={() => void extractFromPdfOrLink()}
+            onClick={() => void extractBatch()}
             className="rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {extracting ? 'Extraindo e montando…' : 'Extrair e montar questões'}
+            {extracting ? 'Identificando questões…' : 'Extrair e identificar questões'}
           </button>
         </section>
       )}
 
-      <form onSubmit={(e) => void submit(e)} className="mt-4 space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
+      <div className="mt-4 space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-sm">
             Instituição
@@ -222,7 +309,6 @@ export default function ImportarProvaPage() {
               value={institution}
               onChange={(e) => setInstitution(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              placeholder="USP, ENARE, UNIFESP..."
               list="inst-list"
             />
             <datalist id="inst-list">
@@ -242,16 +328,16 @@ export default function ImportarProvaPage() {
             />
           </label>
           <label className="text-sm sm:col-span-2">
-            Nome da prova
+            Nome da prova / série
             <input
               value={examName}
               onChange={(e) => setExamName(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              placeholder="Residência Médica — 1ª fase"
+              placeholder="Residência — 1ª fase"
             />
           </label>
           <label className="text-sm sm:col-span-2">
-            Título do lote
+            Título base do lote
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -259,12 +345,11 @@ export default function ImportarProvaPage() {
             />
           </label>
           <label className="text-sm sm:col-span-2">
-            Link da fonte oficial
+            Link da fonte
             <input
               value={sourceUrl}
               onChange={(e) => setSourceUrl(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              placeholder="https://..."
             />
           </label>
         </div>
@@ -275,11 +360,9 @@ export default function ImportarProvaPage() {
             checked={reproduction}
             onChange={(e) => setReproduction(e.target.checked)}
             className="mt-1"
-            required
           />
           <span>
-            Confirmo que a fonte é pública e permite uso destas questões (sem violar direitos
-            autorais).
+            Confirmo que a(s) fonte(s) são públicas e permitem uso destas questões.
           </span>
         </label>
 
@@ -296,69 +379,102 @@ export default function ImportarProvaPage() {
           </select>
         </label>
 
-        {(tab === 'text' || tab === 'json' || content) && (
-          <label className="block text-sm">
-            Conteúdo ({tab === 'json' ? 'JSON' : 'texto no template'})
-            {pages != null ? (
-              <span className="ml-2 text-xs text-slate-500">{pages} pág. no PDF</span>
-            ) : null}
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-              rows={14}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"
-              placeholder={
-                tab === 'json'
-                  ? `[{ "statement": "...", "option_a": "...", "option_b": "...", "option_c": "...", "option_d": "...", "option_e": "...", "correct_option": "C" }]`
-                  : `1. Enunciado clinico...\nA) ...\nB) ...\nC) ...\nD) ...\nE) ...\nGabarito: C\nExplicacao: ...\n\n2. ...`
-              }
-            />
-          </label>
-        )}
-
-        {parsedCount != null && (
-          <div className="rounded-xl bg-slate-50 p-4 text-sm ring-1 ring-slate-200">
-            <p className="font-semibold text-slate-900">
-              Preview: {parsedCount} questão(ões) reconhecidas
-            </p>
-            {preview.length > 0 && (
-              <ul className="mt-2 space-y-2">
-                {preview.map((p) => (
-                  <li key={p.n} className="text-slate-700">
-                    <span className="font-semibold">{p.n}.</span> {p.statement}{' '}
-                    <span className="text-teal-800">[{p.correct_option}]</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {parseErrors.length > 0 && (
-              <ul className="mt-2 list-disc pl-5 text-amber-900">
-                {parseErrors.slice(0, 8).map((e) => (
-                  <li key={e}>{e}</li>
-                ))}
-              </ul>
-            )}
+        {extracted.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-slate-900">
+                Arquivos identificados ({extracted.length}) · {totalSelectedQs} questões
+                selecionadas
+              </p>
+              <button
+                type="button"
+                disabled={loading || !canSubmitBatch}
+                onClick={() => void submitBatch()}
+                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              >
+                {loading
+                  ? 'Enviando…'
+                  : `Enviar ${selectedFiles.length} prova(s) para revisão`}
+              </button>
+            </div>
+            {extracted.map((f, idx) => (
+              <div
+                key={`${f.filename}-${idx}`}
+                className="rounded-xl bg-slate-50 p-3 text-sm ring-1 ring-slate-200"
+              >
+                <label className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={f.selected}
+                    disabled={f.parsedCount === 0}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setExtracted((prev) =>
+                        prev.map((x, i) => (i === idx ? { ...x, selected: checked } : x))
+                      );
+                    }}
+                    className="mt-1"
+                  />
+                  <span className="flex-1">
+                    <span className="font-semibold text-slate-900">{f.filename}</span>
+                    <span className="ml-2 text-xs uppercase text-slate-500">{f.kind}</span>
+                    {f.pages ? (
+                      <span className="ml-2 text-xs text-slate-500">{f.pages} pág.</span>
+                    ) : null}
+                    <span className="mt-0.5 block text-slate-700">
+                      {f.parsedCount > 0
+                        ? `${f.parsedCount} questão(ões)`
+                        : f.error || 'Nenhuma questão reconhecida'}
+                    </span>
+                    {f.preview?.length > 0 && (
+                      <ul className="mt-2 space-y-1 text-xs text-slate-600">
+                        {f.preview.map((p) => (
+                          <li key={p.n}>
+                            {p.n}. {p.statement} [{p.correct_option}]
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {f.parseErrors?.length > 0 && f.parsedCount === 0 && (
+                      <p className="mt-1 text-xs text-amber-800">{f.parseErrors[0]}</p>
+                    )}
+                  </span>
+                </label>
+              </div>
+            ))}
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading || !canSubmit}
-          className="rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {loading ? 'Importando…' : 'Enviar para revisão'}
-        </button>
-      </form>
+        {(tab === 'text' || tab === 'json') && (
+          <form onSubmit={(e) => void submitSingle(e)} className="space-y-3">
+            <label className="block text-sm">
+              Conteúdo ({tab === 'json' ? 'JSON' : 'texto'})
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                required
+                rows={12}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={loading || !canSubmitSingle}
+              className="rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {loading ? 'Importando…' : 'Enviar este texto para revisão'}
+            </button>
+          </form>
+        )}
+      </div>
 
       {msg && <p className="mt-4 text-sm text-emerald-800">{msg}</p>}
       {err && <p className="mt-4 text-sm text-red-700">{err}</p>}
 
       <ol className="mt-8 list-decimal space-y-1 pl-5 text-sm text-slate-600">
-        <li>PDF/link ou template → extrair/montar</li>
-        <li>Revise o texto e o preview</li>
-        <li>Enviar para revisão → aprove em Questões</li>
-        <li>A disputa diária passa a usar as aprovadas (preferência 2024+)</li>
+        <li>PDF / Word / pasta / ZIP → extrair</li>
+        <li>Marque as provas ok → enviar lote para revisão</li>
+        <li>Aprove em Questões → entram na disputa</li>
       </ol>
     </div>
   );
