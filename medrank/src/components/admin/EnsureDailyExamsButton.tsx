@@ -15,9 +15,9 @@ function formatProgress(label: string, p?: Progress | null, examQs?: number | nu
   const selected = p?.selected ?? examQs ?? 0;
   const pool = p?.poolSize ?? 0;
   if (pool > 0) {
-    return `${label}: ${selected} na prova · pool de ${pool} no banco`;
+    return `${label}: ${selected} na prova · ${pool} no banco`;
   }
-  return `${label}: ${selected} questões na prova`;
+  return `${label}: ${selected} questões`;
 }
 
 export function EnsureDailyExamsButton() {
@@ -29,14 +29,12 @@ export function EnsureDailyExamsButton() {
   async function run(force: boolean, mode: 'ai' | 'bank') {
     if (mode === 'ai') {
       const ok = window.confirm(
-        'IA PAGA — estimativa ~US$ 0,50 a US$ 5 por regeneração completa.\n\n' +
-          'Só funciona se "Permitir IA paga" estiver ATIVADA.\n\n' +
-          'Recomendado: use o banco (grátis). Continuar com IA?'
+        'IA paga: regenerar pode custar ~US$ 0,50 a US$ 5.\n\nPreferível usar o banco (grátis). Continuar com IA?'
       );
       if (!ok) return;
     } else if (force) {
       const ok = window.confirm(
-        'Forçar regenerar (BANCO) apaga as disputas de HOJE e monta de novo só com o banco — sem OpenAI. Continuar?'
+        'Apagar as provas de HOJE e montar de novo com o banco? Continuar?'
       );
       if (!ok) return;
     }
@@ -58,7 +56,6 @@ export function EnsureDailyExamsButton() {
       }
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
-      const modeLabel = data.mode === 'ai' ? 'IA' : 'banco local';
 
       const lines: string[] = [];
       const gLine = formatProgress(
@@ -76,13 +73,9 @@ export function EnsureDailyExamsButton() {
       setDetails(lines);
 
       if (createdCount > 0) {
-        setMessage(
-          `Geradas ${createdCount} disputa(s) via ${modeLabel}. Veja abaixo quantas questões entraram.`
-        );
+        setMessage(`Pronto — ${createdCount} prova(s) de hoje gerada(s).`);
       } else if (data.general?.exam || data.nephrology?.exam) {
-        setMessage(
-          'Já existiam as de hoje — use Forçar regenerar para remontar e ver as contagens novas.'
-        );
+        setMessage('Já existem as de hoje. Use “Regenerar hoje” se quiser remontar.');
       } else {
         setMessage('Não foi possível criar as provas de hoje');
       }
@@ -97,7 +90,7 @@ export function EnsureDailyExamsButton() {
 
   async function resetFromToday() {
     const ok = window.confirm(
-      'Apagar TODAS as disputas diárias de HOJE em diante (incluindo as de agosto etc.) e regenerar hoje com o banco NOVO?\n\nProvas antigas já feitas por alunos no passado ficam. Continuar?'
+      'Apagar TODAS as disputas de HOJE em diante e regenerar hoje com o banco?\n\nProvas antigas dos alunos ficam. Continuar?'
     );
     if (!ok) return;
 
@@ -114,7 +107,6 @@ export function EnsureDailyExamsButton() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || 'Falha ao resetar');
-        window.alert(data.error || 'Falha ao resetar');
         return;
       }
       const lines: string[] = [];
@@ -131,14 +123,9 @@ export function EnsureDailyExamsButton() {
       if (gLine) lines.push(gLine);
       if (nLine) lines.push(nLine);
       setDetails(lines);
-      setMessage(data.message || 'Ok — provas regeneradas.');
-      window.alert(
-        `${data.message || 'Pronto'}\n\n${lines.join('\n') || 'Atualize a página para ver as provas.'}`
-      );
+      setMessage(data.message || 'Provas regeneradas.');
     } catch (e) {
-      const m = e instanceof Error ? e.message : 'Erro de rede';
-      setError(m);
-      window.alert(m);
+      setError(e instanceof Error ? e.message : 'Erro de rede');
     } finally {
       setLoading(false);
     }
@@ -149,34 +136,12 @@ export function EnsureDailyExamsButton() {
       <button
         type="button"
         disabled={loading}
-        onClick={() => void resetFromToday()}
-        className="w-full rounded-xl bg-red-800 px-4 py-3 text-sm font-bold text-white hover:bg-red-900 disabled:opacity-60"
+        onClick={() => void run(false, 'bank')}
+        className="w-full rounded-xl bg-teal-800 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-60"
       >
-        {loading ? 'Apagando e regenerando…' : 'Apagar disputas futuras e regenerar com banco novo'}
+        {loading ? 'Gerando…' : 'Gerar provas de hoje'}
       </button>
-      <p className="text-xs text-slate-600">
-        Busca nos lotes por especialidade (Clínica Médica, Nefrologia…). Depois da geração, aparece
-        quantas questões entraram em cada prova.
-      </p>
 
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => void run(false, 'bank')}
-          className="rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-        >
-          {loading ? 'Gerando…' : 'Gerar do banco (grátis)'}
-        </button>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => void run(true, 'bank')}
-          className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800 disabled:opacity-60"
-        >
-          Forçar regenerar hoje
-        </button>
-      </div>
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {details.length > 0 ? (
         <ul className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-950 ring-1 ring-emerald-200">
@@ -188,6 +153,33 @@ export function EnsureDailyExamsButton() {
         </ul>
       ) : null}
       {error && <p className="text-sm text-red-700">{error}</p>}
+
+      <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+        <summary className="cursor-pointer text-sm font-medium text-slate-700">
+          Mais opções
+        </summary>
+        <div className="mt-3 flex flex-col gap-2">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => void run(true, 'bank')}
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+          >
+            Regenerar hoje
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => void resetFromToday()}
+            className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-800 hover:bg-red-50 disabled:opacity-60"
+          >
+            Apagar futuras e regenerar
+          </button>
+          <p className="text-xs text-slate-500">
+            Só use se as provas de hoje estiverem erradas ou o banco mudou.
+          </p>
+        </div>
+      </details>
     </div>
   );
 }

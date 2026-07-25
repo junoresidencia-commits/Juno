@@ -161,7 +161,7 @@ export async function BankReadinessPanel() {
 
       {readyLots && readyGeral && readyNefro ? (
         <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-900 ring-1 ring-emerald-200">
-          Banco pronto para a semana. Em Provas → Forçar regenerar hoje quando for usar.
+          Banco pronto. Em Provas → Avançado → Regenerar hoje, se precisar.
         </p>
       ) : null}
     </section>
