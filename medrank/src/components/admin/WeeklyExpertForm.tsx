@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import type { OptionLetter } from '@/types/database';
+import { todayDateStringBrazil } from '@/lib/exams/window';
 import {
   WEEKLY_EXPERT_QUESTION_COUNT,
   WEEKLY_EXPERT_SCORE_MULTIPLIER,
+  WEEKLY_EXPERT_WINDOW_END_HOUR,
+  WEEKLY_EXPERT_WINDOW_HOURS,
   WEEKLY_EXPERT_WINDOW_START_HOUR,
+  weeklyExpertWindowLabel,
 } from '@/lib/exams/weekly-expert';
 
 type QDraft = {
@@ -44,19 +48,11 @@ function emptyQuestion(): QDraft {
   };
 }
 
-function nextWednesday(from = new Date()): string {
-  const d = new Date(from);
-  const day = d.getDay(); // 0=dom
-  const add = day <= 3 ? 3 - day : 10 - day;
-  d.setDate(d.getDate() + (add === 0 ? 0 : add));
-  return d.toISOString().slice(0, 10);
-}
-
 const inputClass =
   'mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-100';
 
 export function WeeklyExpertForm() {
-  const [date, setDate] = useState(nextWednesday);
+  const [date, setDate] = useState(() => todayDateStringBrazil());
   const [questions, setQuestions] = useState<QDraft[]>(() =>
     Array.from({ length: WEEKLY_EXPERT_QUESTION_COUNT }, emptyQuestion)
   );
@@ -120,7 +116,11 @@ export function WeeklyExpertForm() {
         setErr(data.error || 'Falha ao atualizar');
         return;
       }
-      setMsg(status === 'published' ? 'Publicado — abre às 20h no dia.' : 'Voltou para rascunho.');
+      setMsg(
+        status === 'published'
+          ? `Publicado — alunos têm ${WEEKLY_EXPERT_WINDOW_HOURS}h (${weeklyExpertWindowLabel()}) nesse dia.`
+          : 'Voltou para rascunho.'
+      );
       await refreshList();
     } finally {
       setBusy(false);
@@ -133,8 +133,13 @@ export function WeeklyExpertForm() {
         <h2 className="font-semibold text-slate-900">Como funciona</h2>
         <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-slate-600">
           <li>Você escreve 5 casos clínicos difíceis (dose, medicação, conduta…).</li>
-          <li>Escolhe o dia (ex.: quarta) e salva — pode deixar em rascunho.</li>
-          <li>No dia, publique. Os alunos só entram a partir das {WEEKLY_EXPERT_WINDOW_START_HOUR}h.</li>
+          <li>
+            <strong>Você escolhe o dia</strong> — não é fixo (pode ser qualquer dia da semana).
+          </li>
+          <li>
+            Publique quando quiser. Alunos só fazem nesse dia, das{' '}
+            {weeklyExpertWindowLabel()} ({WEEKLY_EXPERT_WINDOW_HOURS} horas).
+          </li>
           <li>Cada acerto vale {WEEKLY_EXPERT_SCORE_MULTIPLIER}× no ranking.</li>
         </ol>
       </section>
@@ -153,8 +158,11 @@ export function WeeklyExpertForm() {
                 <p className="font-medium text-slate-900">{e.title}</p>
                 <p className="text-xs text-slate-600">
                   {e.date_available} · {e.status === 'published' ? 'Publicado' : 'Rascunho'} ·{' '}
-                  {e.window_start_hour ?? WEEKLY_EXPERT_WINDOW_START_HOUR}h · ×
-                  {e.score_multiplier ?? WEEKLY_EXPERT_SCORE_MULTIPLIER} pts
+                  {weeklyExpertWindowLabel(
+                    e.window_start_hour ?? WEEKLY_EXPERT_WINDOW_START_HOUR,
+                    WEEKLY_EXPERT_WINDOW_END_HOUR
+                  )}{' '}
+                  · ×{e.score_multiplier ?? WEEKLY_EXPERT_SCORE_MULTIPLIER} pts
                 </p>
               </div>
               <div className="flex gap-2">
@@ -191,7 +199,7 @@ export function WeeklyExpertForm() {
 
       <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
         <label className="block text-sm font-medium text-slate-900">
-          Data do desafio *
+          Escolha o dia *
           <input
             type="date"
             value={date}
@@ -200,8 +208,9 @@ export function WeeklyExpertForm() {
           />
         </label>
         <p className="mt-1 text-xs text-slate-500">
-          Sugestão: quarta. Abre às {WEEKLY_EXPERT_WINDOW_START_HOUR}h (Brasília). Se às 17h ainda
-          não estiver pronto, salve rascunho e publique no dia.
+          Dia livre — você decide cada semana. Janela: {weeklyExpertWindowLabel()} (Brasília), só{' '}
+          {WEEKLY_EXPERT_WINDOW_HOURS} horas. Se ainda não estiver pronto, salve rascunho e publique
+          no dia.
         </p>
 
         <div className="mt-6 space-y-6">

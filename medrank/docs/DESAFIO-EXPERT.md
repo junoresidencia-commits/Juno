@@ -2,11 +2,11 @@
 
 ## Regra
 
-- O professor cria **5 questões difíceis** (casos clínicos reais: dose, medicação, conduta…).
-- Escolhe **um dia da semana** (ex.: quarta).
-- Alunos só podem fazer a partir das **20h** (Brasília) desse dia.
-- Cada acerto vale **2×** no ranking (multiplicador da prova).
-- Se às 17h ainda não estiver pronto: salva **rascunho** e **publica no dia**.
+- O professor cria **5 questões difíceis** (casos clínicos: dose, medicação, conduta…).
+- **Escolhe o dia** no calendário — não é dia fixo da semana (pode variar).
+- Alunos só podem fazer nesse dia, das **20h às 22h** (Brasília) — **2 horas**.
+- Cada acerto vale **2×** no ranking.
+- Se ainda não estiver pronto: salva **rascunho** e **publica no dia**.
 
 ## Onde
 
@@ -14,8 +14,8 @@ Admin → **Desafio Expert** (`/admin/desafio-expert`)
 
 ## SQL
 
-Rode `supabase/migrations/040_weekly_expert.sql` (exam_kind `weekly_expert` + `score_multiplier` + índice único por kind).
+Rode `supabase/migrations/040_weekly_expert.sql`.
 
 ## Aluno
 
-Na home, card **Desafio Expert** aparece no dia publicado. Antes das 20h: “Abre às 20h”.
+Na home, card **Desafio Expert** no dia publicado. Antes das 20h: “Abre às 20h”. Depois das 22h: prazo encerrado.

@@ -93,7 +93,7 @@ export async function GET(request: Request) {
 
 /**
  * Cria as 5 questões + prova weekly_expert.
- * publish=false → rascunho (você publica no dia, antes das 20h).
+ * publish=false → rascunho (publique no dia escolhido, antes da janela).
  */
 export async function POST(request: Request) {
   const auth = await requireAdminApi();
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
   const questions = validateQuestions(body.questions);
 
   if (!dateAvailable) {
-    return NextResponse.json({ error: 'Informe a data (ex.: quarta-feira).' }, { status: 400 });
+    return NextResponse.json({ error: 'Escolha o dia do desafio.' }, { status: 400 });
   }
   if (typeof questions === 'string') {
     return NextResponse.json({ error: questions }, { status: 400 });
@@ -229,8 +229,8 @@ export async function POST(request: Request) {
     exam,
     questionIds: insertedIds,
     message: publish
-      ? `Publicado. Alunos podem começar a partir das ${WEEKLY_EXPERT_WINDOW_START_HOUR}h.`
-      : 'Rascunho salvo. Publique no dia (antes das 20h) quando as questões estiverem prontas.',
+      ? `Publicado. Alunos têm das ${WEEKLY_EXPERT_WINDOW_START_HOUR}h às ${WEEKLY_EXPERT_WINDOW_END_HOUR}h nesse dia.`
+      : 'Rascunho salvo. Publique no dia escolhido quando as questões estiverem prontas.',
   });
 }
 

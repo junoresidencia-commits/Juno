@@ -54,7 +54,7 @@ export default async function DesafiosPage() {
         <Link href="/admin/desafio-expert" className="font-semibold text-teal-800 hover:underline">
           Desafio Expert →
         </Link>{' '}
-        <span className="text-slate-600">5 casos difíceis que você cria · 20h · ×2 pontos</span>
+        <span className="text-slate-600">5 casos · você escolhe o dia · 20h–22h · ×2 pontos</span>
       </p>
 
       <div className="mt-6">
