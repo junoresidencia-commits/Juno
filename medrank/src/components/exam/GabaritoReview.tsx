@@ -41,6 +41,15 @@ export function GabaritoReview({ rows }: { rows: GabaritoRow[] }) {
               <p className="exam-stem mt-2 text-sm font-medium leading-relaxed text-slate-900">
                 {formatExamReadableText(q.statement)}
               </p>
+              {q.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={q.image_url}
+                  alt={`Imagem da questão ${i + 1}`}
+                  className="mt-3 max-h-64 w-full rounded-lg object-contain ring-1 ring-slate-200"
+                  loading="lazy"
+                />
+              ) : null}
               <div className="mt-3 space-y-1.5 text-sm">
                 {(['A', 'B', 'C', 'D', 'E'] as OptionLetter[]).map((letter) => {
                   const text = q[`option_${letter.toLowerCase()}` as keyof Question] as string;

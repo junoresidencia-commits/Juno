@@ -22,6 +22,7 @@ type QDraft = {
   correct_option: OptionLetter;
   explanation: string;
   topic: string;
+  image_url: string;
 };
 
 type ExistingExam = {
@@ -45,6 +46,7 @@ function emptyQuestion(): QDraft {
     correct_option: 'A',
     explanation: '',
     topic: 'Dose / medicação / caso clínico',
+    image_url: '',
   };
 }
 
@@ -73,6 +75,27 @@ export function WeeklyExpertForm() {
 
   function updateQ(index: number, patch: Partial<QDraft>) {
     setQuestions((prev) => prev.map((q, i) => (i === index ? { ...q, ...patch } : q)));
+  }
+
+  async function uploadImage(index: number, file: File | null) {
+    if (!file) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      body.append('folder', `expert-${date}`);
+      const res = await fetch('/api/admin/question-images', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) {
+        setErr(data.error || `Falha no upload (questão ${index + 1})`);
+        return;
+      }
+      updateQ(index, { image_url: data.url as string });
+      setMsg(`Imagem da questão ${index + 1} enviada.`);
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function submit(publish: boolean) {
@@ -228,6 +251,57 @@ export function WeeklyExpertForm() {
                   placeholder="Paciente de 62 anos, DRC G4, em uso de…"
                 />
               </label>
+
+              <div className="mt-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+                <p className="text-sm font-medium text-slate-800">Imagem (opcional)</p>
+                <p className="mt-0.5 text-xs text-slate-600">
+                  ECG, TC, curva, foto de exame — JPG/PNG/WEBP até 5 MB.
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <label className="inline-flex cursor-pointer rounded-lg bg-teal-800 px-3 py-2 text-xs font-semibold text-white hover:bg-teal-900">
+                    Enviar arquivo
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      className="hidden"
+                      disabled={busy}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0] ?? null;
+                        e.target.value = '';
+                        void uploadImage(i, f);
+                      }}
+                    />
+                  </label>
+                  {q.image_url ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => updateQ(i, { image_url: '' })}
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      Remover imagem
+                    </button>
+                  ) : null}
+                </div>
+                <label className="mt-2 block text-xs font-medium text-slate-700">
+                  Ou cole uma URL
+                  <input
+                    value={q.image_url}
+                    onChange={(e) => updateQ(i, { image_url: e.target.value })}
+                    className={inputClass}
+                    placeholder="https://…"
+                  />
+                </label>
+                {q.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={q.image_url}
+                    alt={`Prévia questão ${i + 1}`}
+                    className="mt-2 max-h-48 w-full rounded-lg object-contain ring-1 ring-slate-200"
+                  />
+                ) : null}
+              </div>
+
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {(
                   [
