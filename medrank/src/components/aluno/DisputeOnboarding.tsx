@@ -37,7 +37,7 @@ export function DisputeOnboarding({ disputeCount = 1, hasTreino = false }: Props
       <ul className="mt-3 space-y-2 text-sm text-teal-50">
         <li>
           <strong className="text-white">Hoje:</strong>{' '}
-          {disputeCount === 1 ? '1 disputa' : `${disputeCount} disputas`} · 20 questões · 7h–23h59
+          {disputeCount === 1 ? '1 disputa' : `${disputeCount} disputas`} · 20 questões · 8h30–21h
         </li>
         <li>
           <strong className="text-white">1 chance</strong> — trocar de aba/app zera. Refresh ou queda de

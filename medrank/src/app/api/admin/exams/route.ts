@@ -107,8 +107,8 @@ export async function POST(request: Request) {
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
       ranking_release: release.ranking_release,
-      window_start_hour: Number(body.window_start_hour) || 7,
-      window_end_hour: Number(body.window_end_hour) || 22,
+      window_start_hour: Number(body.window_start_hour) || 8,
+      window_end_hour: Number(body.window_end_hour) || 21,
     })
     .select()
     .single();

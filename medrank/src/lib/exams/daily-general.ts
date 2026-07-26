@@ -10,6 +10,7 @@ import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   filterApprovedBank,
   isMedRankLotQuestion,
+  isPremiumBankQuestion,
   isOfficialOrigin,
   isStaleOfficial,
   sortByBankPriority,
@@ -204,11 +205,14 @@ async function pickGeneralQuestions(
 
   pool = filterApprovedBank(pool).filter((q) => !isStaleOfficial(q));
 
+  const lots = pool.filter((q) => isMedRankLotQuestion(q) && !isOfficialExamQuestion(q));
+  const premium = lots.filter(isPremiumBankQuestion);
+  const otherLots = lots.filter((q) => !isPremiumBankQuestion(q));
   const y2026 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2026);
   const y2025 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2025);
   const y2024 = pool.filter((q) => isOfficialExamQuestion(q) && q.year === 2024);
-  const lots = pool.filter((q) => isMedRankLotQuestion(q) && !isOfficialExamQuestion(q));
-  const preferred = [...y2026, ...y2025, ...y2024, ...lots];
+  // Preferir Banco Mestre/Adicional (provas novas) antes de oficiais e lotes antigos
+  const preferred = [...premium, ...otherLots, ...y2026, ...y2025, ...y2024];
   if (preferred.length >= count) {
     pool = preferred;
   } else {
@@ -351,8 +355,8 @@ export async function ensureDailyGeneralExam(
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
       ranking_release: release.ranking_release,
-      window_start_hour: 7,
-      window_end_hour: 24,
+    window_start_hour: 8,
+    window_end_hour: 21,
     })
     .select('id, title, date_available, total_questions, duration_minutes, status')
     .single();

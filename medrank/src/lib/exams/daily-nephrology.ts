@@ -387,8 +387,8 @@ export async function ensureDailyNephrologyExam(
       release_days: release.release_days,
       ranking_visible_to_students: release.ranking_visible_to_students,
       ranking_release: release.ranking_release,
-      window_start_hour: 7,
-      window_end_hour: 24,
+    window_start_hour: 8,
+    window_end_hour: 21,
     })
     .select('id, title, date_available, total_questions, duration_minutes, status')
     .single();
