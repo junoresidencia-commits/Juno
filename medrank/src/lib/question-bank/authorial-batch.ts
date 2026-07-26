@@ -124,7 +124,9 @@ function normalizeKind(raw: string): AuthorialQuestionKind | null {
   if (KIND_MAP[key] || KIND_MAP[raw.trim()]) return KIND_MAP[key] || KIND_MAP[raw.trim()];
   if (key.includes('oficial') && key.includes('residencia')) return 'official_residency';
   if (key.includes('diretriz')) return 'authorial_guideline';
-  if (key.includes('previsao')) return 'authorial_prediction';
+  if (key.includes('previsao') || key.includes('preparacao') || key.includes('autoral')) {
+    return 'authorial_prediction';
+  }
   if (key.includes('revisao')) return 'in_review';
   return null;
 }
