@@ -144,34 +144,62 @@ export async function POST(request: Request) {
   const dupIssues = findInternalDuplicates(parsed.items);
   const issues: AuthorialParseIssue[] = [...parsed.issues, ...dupIssues];
   const errorCount = issues.filter((i) => i.severity === 'error').length;
+  const loteCodigoHint =
+    parsed.loteHint || parsed.items[0]?.lote_importacao || null;
 
-  // Duplicatas já no banco
-  const fps = parsed.items.map((i) => i.statement_fingerprint);
-  const existingByFp = new Map<string, string>();
-  if (fps.length) {
-    const { data: existing } = await admin
-      .from('questions')
-      .select('id, statement_fingerprint, external_id')
-      .in('statement_fingerprint', fps.slice(0, 200));
-    for (const row of existing ?? []) {
-      if (row.statement_fingerprint) {
-        existingByFp.set(row.statement_fingerprint, row.external_id || row.id);
-      }
+  // Já no banco? (fingerprint / external_id) — mesmo lote = reimport ok
+  type ExistingQ = {
+    id: string;
+    statement_fingerprint: string | null;
+    external_id: string | null;
+    lote_importacao: string | null;
+  };
+  const existingByFp = new Map<string, ExistingQ>();
+  const existingByExt = new Map<string, ExistingQ>();
+  const fps = parsed.items.map((i) => i.statement_fingerprint).filter(Boolean);
+  const extIds = parsed.items.map((i) => i.id_externo).filter(Boolean);
+
+  if (fps.length || extIds.length) {
+    const { data: byFp } = fps.length
+      ? await admin
+          .from('questions')
+          .select('id, statement_fingerprint, external_id, lote_importacao')
+          .in('statement_fingerprint', fps.slice(0, 200))
+      : { data: [] as ExistingQ[] };
+    const { data: byExt } = extIds.length
+      ? await admin
+          .from('questions')
+          .select('id, statement_fingerprint, external_id, lote_importacao')
+          .in('external_id', extIds.slice(0, 200))
+      : { data: [] as ExistingQ[] };
+
+    for (const row of [...(byFp ?? []), ...(byExt ?? [])] as ExistingQ[]) {
+      if (row.statement_fingerprint) existingByFp.set(row.statement_fingerprint, row);
+      if (row.external_id) existingByExt.set(row.external_id, row);
     }
   }
 
   const preview = parsed.items.map((item, index) => {
-    const dbDup = existingByFp.get(item.statement_fingerprint);
     const itemErrors = issues.filter((i) => i.index === index && i.severity === 'error');
-    if (dbDup) {
+    const hit =
+      existingByExt.get(item.id_externo) ||
+      existingByFp.get(item.statement_fingerprint) ||
+      null;
+    const sameLote =
+      Boolean(hit) &&
+      Boolean(loteCodigoHint) &&
+      (hit!.lote_importacao === loteCodigoHint || hit!.external_id === item.id_externo);
+
+    if (hit && !sameLote) {
       itemErrors.push({
         index,
         id_externo: item.id_externo,
         severity: 'error',
         code: 'duplicata_banco',
-        message: `Já existe no banco (external_id/id ${dbDup})`,
+        message: `Já existe em outro lote (${hit.lote_importacao || hit.external_id || hit.id})`,
       });
     }
+
     return {
       index,
       id_externo: item.id_externo,
@@ -186,6 +214,7 @@ export async function POST(request: Request) {
         .filter(Boolean)
         .join(' '),
       ok: itemErrors.length === 0,
+      willUpdate: Boolean(hit && sameLote),
       errors: itemErrors,
     };
   });
@@ -197,7 +226,8 @@ export async function POST(request: Request) {
     invalid: parsed.items.length - validItems.length,
     errors: errorCount + preview.filter((p) => !p.ok).length,
     warnings: issues.filter((i) => i.severity === 'warning').length,
-    lote: parsed.loteHint,
+    lote: loteCodigoHint,
+    willUpdate: preview.filter((p) => p.willUpdate).length,
   };
 
   if (!commit) {
@@ -209,7 +239,9 @@ export async function POST(request: Request) {
       issues,
       message:
         validItems.length > 0
-          ? `${validItems.length} prontas para importar como rascunho. Confirme com commit=true.`
+          ? summary.willUpdate
+            ? `${validItems.length} ok — ${summary.willUpdate} já no lote e serão atualizadas.`
+            : `${validItems.length} prontas para importar. Confirme com commit=true.`
           : 'Nenhuma questão válida no arquivo.',
     });
   }
@@ -239,7 +271,7 @@ export async function POST(request: Request) {
       ? (await auth.supabase.auth.getUser()).data.user?.id ?? null
       : null;
 
-  const loteCodigo = parsed.loteHint || validItems[0]?.lote_importacao || `lote-${Date.now()}`;
+  const loteCodigo = loteCodigoHint || `lote-${Date.now()}`;
 
   // Reusa o lote se já existir (reimportar LOTE_04 etc.) — evita duplicate key
   let batch: { id: string; lote_codigo: string | null } | null = null;
@@ -248,6 +280,8 @@ export async function POST(request: Request) {
     .select('id, lote_codigo')
     .eq('lote_codigo', loteCodigo)
     .maybeSingle();
+
+  const isReimport = Boolean(existingBatch?.id);
 
   if (existingBatch?.id) {
     const { data: updated, error: updErr } = await admin
@@ -297,41 +331,90 @@ export async function POST(request: Request) {
       .single();
 
     if (batchErr || !created) {
-      return NextResponse.json(
-        {
-          error: batchErr?.message || 'Falha ao criar lote',
-          hint: 'Aplique migration 034_authorial_batch_import.sql',
-        },
-        { status: 500 }
-      );
+      // Corrida / índice único: tenta reusar
+      if (batchErr?.message?.includes('lote_codigo') || batchErr?.code === '23505') {
+        const { data: raced } = await admin
+          .from('question_import_batches')
+          .select('id, lote_codigo')
+          .eq('lote_codigo', loteCodigo)
+          .maybeSingle();
+        if (raced?.id) {
+          batch = raced;
+        } else {
+          return NextResponse.json(
+            {
+              error: batchErr?.message || 'Falha ao criar lote',
+              hint: 'Aplique migration 034_authorial_batch_import.sql',
+            },
+            { status: 500 }
+          );
+        }
+      } else {
+        return NextResponse.json(
+          {
+            error: batchErr?.message || 'Falha ao criar lote',
+            hint: 'Aplique migration 034_authorial_batch_import.sql',
+          },
+          { status: 500 }
+        );
+      }
+    } else {
+      batch = created;
     }
-    batch = created;
   }
 
   const rows = validItems.map((item) => {
     const row = toDbRow(item, batch!.id);
-    // Reimportação do mesmo código: mantém no banco aprovado (já estava em uso)
-    if (existingBatch?.id) {
+    // Reusa id já existente (external_id) — evita unique em external_id
+    const hit =
+      existingByExt.get(item.id_externo) ||
+      existingByFp.get(item.statement_fingerprint) ||
+      null;
+    if (hit?.id) {
+      row.id = hit.id;
+    }
+    // Reimportação / já no mesmo lote: aprova direto
+    if (isReimport || hit?.lote_importacao === loteCodigo || hit?.external_id === item.id_externo) {
       row.bank_status = 'approved';
       row.quality_label = 'aprovada';
       row.quality_notes = 'Reimportação do lote — aprovada automaticamente';
       row.tags = Array.from(
-        new Set([...(row.tags || []), 'authorial-published'].filter(Boolean))
+        new Set(
+          [...(row.tags || []).filter((t) => t !== 'rascunho'), 'authorial-published'].filter(
+            Boolean
+          )
+        )
       );
     }
     return row;
   });
+
   let inserted = 0;
   const insertErrors: string[] = [];
   for (let i = 0; i < rows.length; i += 50) {
     const chunk = rows.slice(i, i + 50);
-    // Upsert: reimport / SQL prévio com mesmo id determinístico
     const { error } = await admin.from('questions').upsert(chunk, { onConflict: 'id' });
-    if (error) insertErrors.push(error.message);
-    else inserted += chunk.length;
+    if (error) {
+      // Fallback: atualiza uma a uma por external_id / id
+      for (const row of chunk) {
+        const { error: oneErr } = await admin.from('questions').upsert(row, { onConflict: 'id' });
+        if (oneErr) {
+          const { error: byExtErr } = await admin
+            .from('questions')
+            .update(row)
+            .eq('external_id', row.external_id);
+          if (byExtErr) insertErrors.push(`${row.external_id}: ${oneErr.message}`);
+          else inserted += 1;
+        } else {
+          inserted += 1;
+        }
+      }
+    } else {
+      inserted += chunk.length;
+    }
   }
 
-  if (existingBatch?.id && insertErrors.length === 0) {
+  if ((isReimport || inserted > 0) && insertErrors.length === 0) {
     await admin
       .from('question_import_batches')
       .update({
@@ -339,22 +422,22 @@ export async function POST(request: Request) {
         approved_count: inserted,
         question_count: inserted,
       })
-      .eq('id', batch.id);
+      .eq('id', batch!.id);
   }
 
   return NextResponse.json({
     ok: insertErrors.length === 0,
     mode: 'commit',
-    batchId: batch.id,
-    lote_codigo: batch.lote_codigo,
+    batchId: batch!.id,
+    lote_codigo: batch!.lote_codigo,
     inserted,
-    reusedBatch: Boolean(existingBatch?.id),
+    reusedBatch: isReimport,
     summary,
     preview,
     errors: insertErrors,
-    message: existingBatch?.id
-      ? `${inserted} questões atualizadas e aprovadas no lote ${batch.lote_codigo}.`
-      : `${inserted} questões em rascunho no lote ${batch.lote_codigo}. Revise e publique pelo painel.`,
+    message: isReimport
+      ? `${inserted} questões atualizadas e aprovadas no lote ${batch!.lote_codigo}.`
+      : `${inserted} questões importadas no lote ${batch!.lote_codigo}.`,
   });
 }
 
