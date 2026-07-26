@@ -191,7 +191,7 @@ export function parseAuthorialBatchJson(raw: string): {
     questions?: unknown[];
     questoes?: unknown[];
     itens?: unknown[];
-    metadados?: { nome_lote?: string };
+    metadados?: { nome_lote?: string; codigo_lote?: string };
   };
   const list = Array.isArray(data)
     ? data
@@ -231,9 +231,24 @@ export function parseAuthorialBatchJson(raw: string): {
     issues.push(...parsed.issues);
   }
 
-  // nome amigável do metadados só como fallback se o arquivo não trouxer lote_importacao
-  if (!loteHint && typeof obj?.metadados?.nome_lote === 'string') {
+  // nome amigável / codigo do metadados
+  if (typeof obj?.metadados?.codigo_lote === 'string' && obj.metadados.codigo_lote.trim()) {
+    loteHint = obj.metadados.codigo_lote.trim();
+  } else if (!loteHint && typeof obj?.metadados?.nome_lote === 'string') {
     loteHint = obj.metadados.nome_lote;
+  }
+
+  // Se metadados pedem um lote único (Banco Mestre), unifica
+  if (
+    typeof obj?.metadados?.codigo_lote === 'string' &&
+    obj.metadados.codigo_lote.trim() &&
+    items.length
+  ) {
+    const code = obj.metadados.codigo_lote.trim();
+    for (const item of items) {
+      item.lote_importacao = code;
+    }
+    loteHint = code;
   }
 
   return { items, issues, loteHint };

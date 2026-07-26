@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const REPO_LOTES = [
+  'MEDRANK_BANCO_MESTRE_2026',
   'MEDRANK_AUTORAL_2026_LOTE_01',
   'MEDRANK_AUTORAL_2026_LOTE_02',
   'MEDRANK_AUTORAL_2026_LOTE_03',
@@ -34,6 +35,7 @@ const REPO_LOTES = [
 ] as const;
 
 function loteLabel(lote: string): string {
+  if (lote.includes('BANCO_MESTRE')) return 'BANCO MESTRE';
   return lote
     .replace('MEDRANK_AUTORAL_2026_', '')
     .replace('MEDRANK_NEFRO_NEFROPED_2026_', 'NEFRO_')
@@ -419,13 +421,21 @@ export default function ImportarLotePage() {
             const active = loadedLote === lote;
             const nefro = lote.includes('NEFRO');
             const dir = lote.includes('DIRETRIZES');
+            const mestre = lote.includes('BANCO_MESTRE');
             return (
               <li
                 key={lote}
-                className="flex flex-wrap items-center gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-teal-200"
+                className={`flex flex-wrap items-center gap-2 rounded-lg px-3 py-2 ring-1 ${
+                  mestre
+                    ? 'bg-amber-50 ring-amber-300'
+                    : 'bg-white/80 ring-teal-200'
+                }`}
               >
                 <span className="min-w-[6.5rem] text-xs font-bold text-teal-950">
                   {label}
+                  {mestre ? (
+                    <span className="ml-1 font-medium text-amber-800">1000 qs</span>
+                  ) : null}
                   {nefro ? (
                     <span className="ml-1 font-medium text-teal-700">nefro</span>
                   ) : null}

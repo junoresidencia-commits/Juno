@@ -13,7 +13,7 @@ import {
 } from '@/lib/question-bank/authorial-batch';
 import { createHash } from 'crypto';
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 function deterministicUuid(seed: string): string {
   const hex = createHash('sha256').update(`medrank-authorial:${seed}`).digest('hex');
