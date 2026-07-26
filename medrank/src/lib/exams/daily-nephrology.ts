@@ -9,6 +9,7 @@ import { TRACK_CONFIG } from '@/lib/treino/config';
 import { isStructurallySound } from '@/lib/question-bank/polish-options';
 import {
   filterApprovedBank,
+  isPremiumBankQuestion,
   sortByBankPriority,
 } from '@/lib/question-bank/provenance';
 import {
@@ -207,6 +208,11 @@ async function pickTrackQuestions(
   const allTagged = [...byId.values()];
   const approvedTagged = filterApprovedBank(allTagged);
   let pool = filterExpertPool(approvedTagged, count, mode === 'ai');
+
+  // Preferir Banco Nefro (1000) como fonte principal
+  const premium = pool.filter(isPremiumBankQuestion);
+  if (premium.length >= count) pool = premium;
+
   pool = sortByBankPriority(pool);
   const avoid = new Set(await recentQuestionIds(admin, dateStr));
   const fresh = pool.filter((q) => !avoid.has(q.id));
@@ -214,10 +220,13 @@ async function pickTrackQuestions(
 
   if (pool.length < count) {
     if (mode === 'bank' && approvedTagged.length >= count) {
-      pool = sortByBankPriority(approvedTagged);
+      const premiumApproved = approvedTagged.filter(isPremiumBankQuestion);
+      pool = sortByBankPriority(
+        premiumApproved.length >= count ? premiumApproved : approvedTagged
+      );
     } else {
       throw new Error(
-        `Questoes insuficientes de ${TRACK_CONFIG[track].label} / especialidade ${specialty} (${pool.length}/${count}; ${approvedTagged.length} no lote). Publique os lotes NEFRO e regenere.`
+        `Questoes insuficientes de ${TRACK_CONFIG[track].label} / especialidade ${specialty} (${pool.length}/${count}; ${approvedTagged.length} no lote). Publique o Banco Nefro / lotes NEFRO e regenere.`
       );
     }
   }

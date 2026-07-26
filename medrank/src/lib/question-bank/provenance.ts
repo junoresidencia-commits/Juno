@@ -57,18 +57,28 @@ export function isMedRankLotQuestion(q: {
   return tags.some((t) => /^medrank-lote-/i.test(String(t)));
 }
 
-/** Bancos novos (Mestre / Adicional) — preferidos na disputa diária. */
+/** Bancos novos (Mestre / Adicional / Nefro) — preferidos na disputa diária. */
 export function isPremiumBankQuestion(q: {
   lote_importacao?: string | null;
   tags?: string[] | null;
 }): boolean {
   const c = String(q.lote_importacao || '');
-  if (c.includes('BANCO_MESTRE') || c.includes('BANCO_ADICIONAL')) return true;
+  if (
+    c.includes('BANCO_MESTRE') ||
+    c.includes('BANCO_ADICIONAL') ||
+    c.includes('BANCO_NEFRO')
+  ) {
+    return true;
+  }
   const tags = q.tags ?? [];
-  return tags.includes('banco-mestre') || tags.includes('banco-adicional');
+  return (
+    tags.includes('banco-mestre') ||
+    tags.includes('banco-adicional') ||
+    tags.includes('banco-nefro')
+  );
 }
 
-/** Menor = mais preferido (Mestre → Adicional → outros). */
+/** Menor = mais preferido (Mestre → Nefro → Adicional → outros). */
 export function premiumBankRank(q: {
   lote_importacao?: string | null;
   tags?: string[] | null;
@@ -76,6 +86,7 @@ export function premiumBankRank(q: {
   const c = String(q.lote_importacao || '');
   const tags = q.tags ?? [];
   if (c.includes('BANCO_MESTRE') || tags.includes('banco-mestre')) return 0;
+  if (c.includes('BANCO_NEFRO') || tags.includes('banco-nefro')) return 0;
   if (c.includes('BANCO_ADICIONAL') || tags.includes('banco-adicional')) return 1;
   return 9;
 }

@@ -22,6 +22,15 @@ export const GENERAL_RESIDENCY_SPECIALTIES = [
 export const NEFRO_ADULT_SPECIALTY = 'Nefrologia';
 export const NEFRO_PED_SPECIALTY = 'Nefropediatria';
 
+/** Aliases de especialidade usados em imports (ex.: "Nefrologia Pediátrica"). */
+export const NEFRO_SPECIALTY_ALIASES: Record<
+  'Nefrologia' | 'Nefropediatria',
+  string[]
+> = {
+  Nefrologia: ['Nefrologia'],
+  Nefropediatria: ['Nefropediatria', 'Nefrologia Pediátrica', 'Nefrologia Pediatrica'],
+};
+
 const LOT_OR =
   'lote_importacao.like.MEDRANK_AUTORAL_2026_LOTE_%,lote_importacao.like.MEDRANK_NEFRO_NEFROPED_2026_LOTE_%,lote_importacao.like.MEDRANK_DIRETRIZES_ATUAIS_2026_LOTE_%';
 
@@ -130,7 +139,12 @@ export async function fetchApprovedNefroLotsBySpecialty(
   admin: Admin,
   specialty: 'Nefrologia' | 'Nefropediatria'
 ): Promise<Question[]> {
-  return fetchApprovedLotsBySpecialty(admin, [specialty], { onlyNefroLots: true });
+  const aliases = NEFRO_SPECIALTY_ALIASES[specialty] ?? [specialty];
+  // Preferir Banco Nefro (1000) + demais lotes NEFRO_NEFROPED
+  return fetchApprovedLotsBySpecialty(admin, aliases, {
+    onlyNefroLots: true,
+    maxPages: 8,
+  });
 }
 
 /** Contagem por especialidade nos lotes aprovados (painel admin). */

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const REPO_LOTES = [
+  'MEDRANK_BANCO_NEFRO_2026',
   'MEDRANK_BANCO_MESTRE_2026',
   'MEDRANK_BANCO_ADICIONAL_2026',
   'MEDRANK_AUTORAL_2026_LOTE_01',
@@ -36,6 +37,7 @@ const REPO_LOTES = [
 ] as const;
 
 function loteLabel(lote: string): string {
+  if (lote.includes('BANCO_NEFRO')) return 'BANCO NEFRO';
   if (lote.includes('BANCO_MESTRE')) return 'BANCO MESTRE';
   if (lote.includes('BANCO_ADICIONAL')) return 'BANCO ADICIONAL';
   return lote
@@ -425,7 +427,8 @@ export default function ImportarLotePage() {
             const dir = lote.includes('DIRETRIZES');
             const mestre = lote.includes('BANCO_MESTRE');
             const adicional = lote.includes('BANCO_ADICIONAL');
-            const highlight = mestre || adicional;
+            const bancoNefro = lote.includes('BANCO_NEFRO');
+            const highlight = mestre || adicional || bancoNefro;
             return (
               <li
                 key={lote}
@@ -437,13 +440,16 @@ export default function ImportarLotePage() {
               >
                 <span className="min-w-[6.5rem] text-xs font-bold text-teal-950">
                   {label}
+                  {bancoNefro ? (
+                    <span className="ml-1 font-medium text-amber-800">1000 qs · principal</span>
+                  ) : null}
                   {mestre ? (
                     <span className="ml-1 font-medium text-amber-800">1000 qs</span>
                   ) : null}
                   {adicional ? (
                     <span className="ml-1 font-medium text-amber-800">1000 qs · sem clínica</span>
                   ) : null}
-                  {nefro ? (
+                  {nefro && !bancoNefro ? (
                     <span className="ml-1 font-medium text-teal-700">nefro</span>
                   ) : null}
                   {dir ? (
