@@ -240,43 +240,106 @@ export async function POST(request: Request) {
       : null;
 
   const loteCodigo = parsed.loteHint || validItems[0]?.lote_importacao || `lote-${Date.now()}`;
-  const { data: batch, error: batchErr } = await admin
-    .from('question_import_batches')
-    .insert({
-      title: title || `Lote autoral ${loteCodigo}`,
-      lote_codigo: loteCodigo,
-      batch_kind: 'authorial',
-      status: 'draft',
-      question_count: validItems.length,
-      created_by: userId,
-      notes: 'Importação JSON/CSV externa — status rascunho até revisão',
-      payload_meta: {
-        format,
-        requested: parsed.items.length,
-        valid: validItems.length,
-      },
-    })
-    .select('id, lote_codigo')
-    .single();
 
-  if (batchErr || !batch) {
-    return NextResponse.json(
-      {
-        error: batchErr?.message || 'Falha ao criar lote',
-        hint: 'Aplique migration 034_authorial_batch_import.sql',
-      },
-      { status: 500 }
-    );
+  // Reusa o lote se já existir (reimportar LOTE_04 etc.) — evita duplicate key
+  let batch: { id: string; lote_codigo: string | null } | null = null;
+  const { data: existingBatch } = await admin
+    .from('question_import_batches')
+    .select('id, lote_codigo')
+    .eq('lote_codigo', loteCodigo)
+    .maybeSingle();
+
+  if (existingBatch?.id) {
+    const { data: updated, error: updErr } = await admin
+      .from('question_import_batches')
+      .update({
+        title: title || `Lote autoral ${loteCodigo}`,
+        batch_kind: 'authorial',
+        status: 'draft',
+        question_count: validItems.length,
+        notes: 'Reimportação — substitui/atualiza questões do mesmo lote_codigo',
+        undone_at: null,
+        payload_meta: {
+          format,
+          requested: parsed.items.length,
+          valid: validItems.length,
+          reimport: true,
+        },
+      })
+      .eq('id', existingBatch.id)
+      .select('id, lote_codigo')
+      .single();
+    if (updErr || !updated) {
+      return NextResponse.json(
+        { error: updErr?.message || 'Falha ao atualizar lote existente' },
+        { status: 500 }
+      );
+    }
+    batch = updated;
+  } else {
+    const { data: created, error: batchErr } = await admin
+      .from('question_import_batches')
+      .insert({
+        title: title || `Lote autoral ${loteCodigo}`,
+        lote_codigo: loteCodigo,
+        batch_kind: 'authorial',
+        status: 'draft',
+        question_count: validItems.length,
+        created_by: userId,
+        notes: 'Importação JSON/CSV externa — status rascunho até revisão',
+        payload_meta: {
+          format,
+          requested: parsed.items.length,
+          valid: validItems.length,
+        },
+      })
+      .select('id, lote_codigo')
+      .single();
+
+    if (batchErr || !created) {
+      return NextResponse.json(
+        {
+          error: batchErr?.message || 'Falha ao criar lote',
+          hint: 'Aplique migration 034_authorial_batch_import.sql',
+        },
+        { status: 500 }
+      );
+    }
+    batch = created;
   }
 
-  const rows = validItems.map((item) => toDbRow(item, batch.id));
+  const rows = validItems.map((item) => {
+    const row = toDbRow(item, batch!.id);
+    // Reimportação do mesmo código: mantém no banco aprovado (já estava em uso)
+    if (existingBatch?.id) {
+      row.bank_status = 'approved';
+      row.quality_label = 'aprovada';
+      row.quality_notes = 'Reimportação do lote — aprovada automaticamente';
+      row.tags = Array.from(
+        new Set([...(row.tags || []), 'authorial-published'].filter(Boolean))
+      );
+    }
+    return row;
+  });
   let inserted = 0;
   const insertErrors: string[] = [];
   for (let i = 0; i < rows.length; i += 50) {
     const chunk = rows.slice(i, i + 50);
-    const { error } = await admin.from('questions').insert(chunk);
+    // Upsert: reimport / SQL prévio com mesmo id determinístico
+    const { error } = await admin.from('questions').upsert(chunk, { onConflict: 'id' });
     if (error) insertErrors.push(error.message);
     else inserted += chunk.length;
+  }
+
+  if (existingBatch?.id && insertErrors.length === 0) {
+    await admin
+      .from('question_import_batches')
+      .update({
+        status: 'published',
+        approved_count: inserted,
+        question_count: inserted,
+      })
+      .eq('id', batch.id);
   }
 
   return NextResponse.json({
@@ -285,10 +348,13 @@ export async function POST(request: Request) {
     batchId: batch.id,
     lote_codigo: batch.lote_codigo,
     inserted,
+    reusedBatch: Boolean(existingBatch?.id),
     summary,
     preview,
     errors: insertErrors,
-    message: `${inserted} questões em rascunho no lote ${batch.lote_codigo}. Revise e publique pelo painel.`,
+    message: existingBatch?.id
+      ? `${inserted} questões atualizadas e aprovadas no lote ${batch.lote_codigo}.`
+      : `${inserted} questões em rascunho no lote ${batch.lote_codigo}. Revise e publique pelo painel.`,
   });
 }
 
