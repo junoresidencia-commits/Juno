@@ -163,7 +163,10 @@ export function WeeklyExpertForm() {
             Publique quando quiser. Alunos só fazem nesse dia, das{' '}
             {weeklyExpertWindowLabel()} ({WEEKLY_EXPERT_WINDOW_HOURS} horas).
           </li>
-          <li>Cada acerto vale {WEEKLY_EXPERT_SCORE_MULTIPLIER}× no ranking.</li>
+          <li>
+            Cada acerto vale {WEEKLY_EXPERT_SCORE_MULTIPLIER}× no ranking.
+          </li>
+          <li>Pode anexar imagem (ECG, TC, curva) em cada caso.</li>
         </ol>
       </section>
 
