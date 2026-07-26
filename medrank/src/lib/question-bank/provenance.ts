@@ -57,6 +57,29 @@ export function isMedRankLotQuestion(q: {
   return tags.some((t) => /^medrank-lote-/i.test(String(t)));
 }
 
+/** Bancos novos (Mestre / Adicional) — preferidos na disputa diária. */
+export function isPremiumBankQuestion(q: {
+  lote_importacao?: string | null;
+  tags?: string[] | null;
+}): boolean {
+  const c = String(q.lote_importacao || '');
+  if (c.includes('BANCO_MESTRE') || c.includes('BANCO_ADICIONAL')) return true;
+  const tags = q.tags ?? [];
+  return tags.includes('banco-mestre') || tags.includes('banco-adicional');
+}
+
+/** Menor = mais preferido (Mestre → Adicional → outros). */
+export function premiumBankRank(q: {
+  lote_importacao?: string | null;
+  tags?: string[] | null;
+}): number {
+  const c = String(q.lote_importacao || '');
+  const tags = q.tags ?? [];
+  if (c.includes('BANCO_MESTRE') || tags.includes('banco-mestre')) return 0;
+  if (c.includes('BANCO_ADICIONAL') || tags.includes('banco-adicional')) return 1;
+  return 9;
+}
+
 export function isOfficialOrigin(q: {
   question_origin?: string | null;
   tags?: string[] | null;
@@ -113,9 +136,10 @@ export function filterApprovedBank<T extends { bank_status?: string | null }>(po
 
 /**
  * Ordena o pool da disputa:
- * 1) oficiais/universidade recentes (2026 → 2025 → 2024)
- * 2) lotes MedRank novos
- * 3) demais originais
+ * 1) Banco Mestre / Adicional (provas novas)
+ * 2) demais lotes MedRank
+ * 3) oficiais/universidade recentes (2026 → 2025 → 2024)
+ * 4) demais originais
  * Oficiais &lt; 2024 ficam no fim (e devem ser filtrados antes).
  */
 export function sortByBankPriority<
@@ -133,26 +157,35 @@ export function sortByBankPriority<
     const bOfficial = isOfficialOrigin(b);
     const aLot = isMedRankLotQuestion(a);
     const bLot = isMedRankLotQuestion(b);
+    const aPremium = isPremiumBankQuestion(a);
+    const bPremium = isPremiumBankQuestion(b);
 
-    // Bucket: official recente (0) > lote MedRank (1) > outro (2) > official velho (9)
-    const bucket = (q: T, official: boolean, lot: boolean) => {
-      if (official && !isStaleOfficial(q)) return 0;
+    // Bucket: premium (0) > lote MedRank (1) > official recente (2) > outro (3+) > official velho (9)
+    const bucket = (q: T, official: boolean, lot: boolean, premium: boolean) => {
+      if (premium) return 0;
       if (lot) return 1;
+      if (official && !isStaleOfficial(q)) return 2;
       if (official && isStaleOfficial(q)) return 9;
       const origin =
         ORIGIN_PRIORITY[(q.question_origin as QuestionOrigin) || 'original'] ?? 9;
-      return 2 + Math.min(origin, 3);
+      return 3 + Math.min(origin, 3);
     };
 
-    const ba = bucket(a, aOfficial, aLot);
-    const bb = bucket(b, bOfficial, bLot);
+    const ba = bucket(a, aOfficial, aLot, aPremium);
+    const bb = bucket(b, bOfficial, bLot, bPremium);
     if (ba !== bb) return ba - bb;
+
+    if (aPremium || bPremium) {
+      const pa = premiumBankRank(a);
+      const pb = premiumBankRank(b);
+      if (pa !== pb) return pa - pb;
+    }
 
     const ya = yearPreferenceRank(a.year);
     const yb = yearPreferenceRank(b.year);
     if (ya !== yb) return ya - yb;
 
-    // Dentro do mesmo ano: oficiais antes de lotes
+    if (aLot !== bLot) return aLot ? -1 : 1;
     if (aOfficial !== bOfficial) return aOfficial ? -1 : 1;
     return 0;
   });

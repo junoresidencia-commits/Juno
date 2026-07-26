@@ -31,7 +31,7 @@ export async function GET(
     );
     if (!canStudentDownloadExamPdf(exam, finished)) {
       return NextResponse.json(
-        { error: 'PDF ainda não liberado. Termine a prova e aguarde as 22h.' },
+        { error: 'PDF ainda não liberado. Termine a prova e aguarde as 21h.' },
         { status: 403 }
       );
     }
@@ -59,7 +59,7 @@ export async function GET(
 
   const { data: exam, error: examError } = await admin
     .from('exams')
-    .select('id, title, date_available')
+    .select('id, title, date_available, window_start_hour, window_end_hour')
     .eq('id', examId)
     .maybeSingle();
 
@@ -82,7 +82,7 @@ export async function GET(
 
   if (!canStudentDownloadExamPdf(exam, !!attempt?.finished_at)) {
     return NextResponse.json(
-      { error: 'PDF ainda não liberado. Termine a prova e aguarde as 22h.' },
+      { error: 'PDF ainda não liberado. Termine a prova e aguarde as 21h.' },
       { status: 403 }
     );
   }

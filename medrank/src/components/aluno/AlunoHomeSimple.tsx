@@ -61,10 +61,10 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
   const qCount = card.exam?.total_questions ?? 20;
   const isNefro = card.key === 'nephrology';
   const isExpert = card.variant === 'expert' || card.key === 'weekly_expert';
-  const openHour = card.exam?.window_start_hour ?? 7;
   const windowLabel = card.exam
     ? formatExamWindowForExam(card.exam)
     : formatExamWindowShort();
+  const openLabel = windowLabel.includes('–') ? windowLabel.split('–')[0] : windowLabel;
   const multiplier = card.exam?.score_multiplier ?? (isExpert ? WEEKLY_EXPERT_SCORE_MULTIPLIER : 1);
 
   return (
@@ -173,7 +173,7 @@ function DisputeBlock({ card }: { card: HomeDisputeCard }) {
                   : 'bg-sky-50 text-sky-950'
             }`}
           >
-            Abre às {openHour}h (Brasília)
+            Abre às {openLabel} (Brasília)
             {isExpert ? ` — só ${windowLabel}, mais pontos` : ''}
           </div>
         ) : card.missedToday ? (
