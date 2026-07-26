@@ -24,7 +24,16 @@ type ExpertQuestionInput = {
   correct_option: OptionLetter;
   explanation?: string | null;
   topic?: string | null;
+  image_url?: string | null;
 };
+
+function normalizeImageUrl(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null;
+  const url = raw.trim();
+  if (!url) return null;
+  if (!/^https?:\/\//i.test(url)) return null;
+  return url.slice(0, 2000);
+}
 
 function validateQuestions(raw: unknown): ExpertQuestionInput[] | string {
   if (!Array.isArray(raw) || raw.length !== WEEKLY_EXPERT_QUESTION_COUNT) {
@@ -45,6 +54,10 @@ function validateQuestions(raw: unknown): ExpertQuestionInput[] | string {
     ) {
       return `Questão ${i + 1}: preencha enunciado, A–E e gabarito.`;
     }
+    const imageUrl = normalizeImageUrl(q.image_url);
+    if (q.image_url && String(q.image_url).trim() && !imageUrl) {
+      return `Questão ${i + 1}: URL da imagem inválida (use http/https).`;
+    }
     out.push({
       statement: q.statement.trim(),
       option_a: q.option_a.trim(),
@@ -55,6 +68,7 @@ function validateQuestions(raw: unknown): ExpertQuestionInput[] | string {
       correct_option: q.correct_option as OptionLetter,
       explanation: q.explanation?.trim() || null,
       topic: q.topic?.trim() || 'Caso clínico Expert',
+      image_url: imageUrl,
     });
   }
   return out;
@@ -159,6 +173,7 @@ export async function POST(request: Request) {
         question_kind: 'authorial_prediction',
         lote_importacao: lote,
         quality_label: 'aprovada',
+        image_url: q.image_url,
       })
       .select('id')
       .single();
