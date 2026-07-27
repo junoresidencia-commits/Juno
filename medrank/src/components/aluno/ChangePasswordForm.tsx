@@ -1,8 +1,15 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export function ChangePasswordForm() {
+export function ChangePasswordForm({
+  required = false,
+}: {
+  /** Primeiro acesso — senha definida pelo professor. */
+  required?: boolean;
+}) {
+  const router = useRouter();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -29,6 +36,10 @@ export function ChangePasswordForm() {
         setCurrentPassword('');
         setNewPassword('');
         setConfirm('');
+        if (required) {
+          router.replace('/aluno');
+          router.refresh();
+        }
       }
     } catch {
       setErr('Erro de conexão');
@@ -42,14 +53,18 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={(e) => void submit(e)} className="space-y-4 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
       <div>
-        <h2 className="font-semibold text-slate-900">Trocar senha</h2>
+        <h2 className="font-semibold text-slate-900">
+          {required ? 'Defina sua senha' : 'Trocar senha'}
+        </h2>
         <p className="mt-1 text-sm text-slate-600">
-          Use a senha que o professor criou (ou a atual) e escolha uma nova.
+          {required
+            ? 'Primeiro acesso: use a senha que o professor passou e escolha uma nova só sua.'
+            : 'Use a senha que o professor criou (ou a atual) e escolha uma nova.'}
         </p>
       </div>
 
       <label className="block text-sm font-medium text-slate-700">
-        Senha atual
+        {required ? 'Senha temporária (do professor)' : 'Senha atual'}
         <input
           type="password"
           autoComplete="current-password"
@@ -94,7 +109,7 @@ export function ChangePasswordForm() {
         disabled={loading}
         className="exam-tap w-full rounded-xl bg-teal-800 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-50"
       >
-        {loading ? 'Salvando…' : 'Salvar nova senha'}
+        {loading ? 'Salvando…' : required ? 'Salvar e entrar' : 'Salvar nova senha'}
       </button>
     </form>
   );

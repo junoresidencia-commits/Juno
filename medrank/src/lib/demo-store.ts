@@ -28,6 +28,8 @@ export interface DemoStudent {
   /** Módulos ligados pelo admin. */
   enabled_tracks?: string[];
   subscriptionExpiresAt?: string | null;
+  /** Primeiro login: trocar senha temporária do professor. */
+  mustChangePassword?: boolean;
 }
 
 export interface DemoStore {
@@ -318,6 +320,7 @@ export function createDemoStudentByAdmin(
     approvedAt: now,
     createdAt: now,
     enabled_tracks: tracks,
+    mustChangePassword: true,
   });
   writeDemoStore(store);
 
@@ -385,6 +388,7 @@ export function changeDemoStudentPassword(
   if (student.password !== currentPassword) return false;
   if (!newPassword || newPassword.length < 4) return false;
   student.password = newPassword;
+  student.mustChangePassword = false;
   writeDemoStore(store);
   return true;
 }
