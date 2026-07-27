@@ -67,16 +67,18 @@ export function getDemoDashboardData(userId = 'guest-student') {
   const windowPhase = todayExam ? getExamWindowStatus(todayExam) : null;
   const attempt = todayExam ? getDemoAttemptByExam(todayExam.id, userId) : null;
   const hasFinished = Boolean(attempt?.finished_at);
-  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished);
+  const allAttempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
+  const finishedToday = todayExam
+    ? countFinishedAttempts(allAttempts, todayExam.id)
+    : 0;
+  const activeStudents = countActiveStudents();
+  const allGroupFinished = Boolean(todayExam) && finishedToday >= activeStudents;
+  const showRanking = canStudentSeeTodayRanking(todayExam, hasFinished, { allGroupFinished });
   const rankingDate = getTodayRankingDate();
   const { rankings: todayRankings } = showRanking
     ? getDemoRanking('daily', rankingDate)
     : { rankings: [] };
 
-  const allAttempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
-  const finishedToday = todayExam
-    ? countFinishedAttempts(allAttempts, todayExam.id)
-    : 0;
   const streakDays = computeStreakDays(userId);
 
   return {

@@ -44,7 +44,8 @@ export function DisputeOnboarding({ disputeCount = 1, hasTreino = false }: Props
           conexão: pode continuar.
         </li>
         <li>
-          <strong className="text-white">Ranking</strong> do seu grupo
+          <strong className="text-white">Ranking</strong> do seu grupo libera quando todos
+          terminarem (ou após 21h)
           {hasTreino ? ' · treino livre não conta' : ''}.
         </li>
       </ul>

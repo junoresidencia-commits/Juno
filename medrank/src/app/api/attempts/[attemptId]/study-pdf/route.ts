@@ -7,6 +7,7 @@ import {
   getDemoQuestionsForAttempt,
 } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
+import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { generateStudyPdfBuffer } from '@/lib/exams/exam-pdf';
 import { canStudentSeeExamGabarito } from '@/lib/exams/ranking-visibility';
 import { formatQuestionExplanation } from '@/lib/question-bank/quality';
@@ -35,8 +36,16 @@ export async function GET(
       return NextResponse.json({ error: 'Resultado não encontrado' }, { status: 404 });
     }
     const exam = getDemoExams().find((e) => e.id === attempt.exam_id);
-    if (!exam || !canStudentSeeExamGabarito(exam, true)) {
-      return NextResponse.json({ error: 'Finalize a disputa para baixar o PDF de estudo.' }, { status: 403 });
+    const { finishedCount, activeStudents } = getDemoAdminExamStatus();
+    const allGroupFinished = finishedCount >= activeStudents && activeStudents > 0;
+    if (!exam || !canStudentSeeExamGabarito(exam, true, { allGroupFinished })) {
+      return NextResponse.json(
+        {
+          error:
+            'Gabarito ainda bloqueado. Libera quando todos do grupo terminarem ou após o horário da disputa.',
+        },
+        { status: 403 }
+      );
     }
 
     const questions = getDemoQuestionsForAttempt(attemptId);
@@ -81,7 +90,9 @@ export async function GET(
 
   const { data: attempt } = await admin
     .from('attempts')
-    .select('id, user_id, exam_id, finished_at, total_correct, total_questions, score, exams(id, title, date_available)')
+    .select(
+      'id, user_id, exam_id, finished_at, total_correct, total_questions, score, exams(id, title, date_available, window_start_hour, window_end_hour)'
+    )
     .eq('id', attemptId)
     .eq('user_id', session.userId)
     .maybeSingle();
@@ -94,9 +105,26 @@ export async function GET(
     id: string;
     title: string;
     date_available: string;
+    window_start_hour?: number;
+    window_end_hour?: number;
   } | null;
-  if (!exam || !canStudentSeeExamGabarito(exam, true)) {
-    return NextResponse.json({ error: 'Prova não encontrada' }, { status: 404 });
+
+  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
+  const ctx = await resolveUserExamAudience(session.userId);
+  let allGroupFinished = false;
+  if (exam && ctx.rankingGroupId) {
+    const { areAllGroupMembersFinished } = await import('@/lib/exams/group-finished');
+    allGroupFinished = await areAllGroupMembersFinished(admin, attempt.exam_id, ctx.rankingGroupId);
+  }
+
+  if (!exam || !canStudentSeeExamGabarito(exam, true, { allGroupFinished })) {
+    return NextResponse.json(
+      {
+        error:
+          'Gabarito ainda bloqueado. Libera quando todos do grupo terminarem ou após o horário da disputa.',
+      },
+      { status: 403 }
+    );
   }
 
   const { data: examQuestions, error: qError } = await admin

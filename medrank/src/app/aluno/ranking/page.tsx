@@ -107,7 +107,7 @@ export default async function RankingAlunoPage({
 
   const { data: todayExam } = await supabase
     .from('exams')
-    .select('id, date_available, audience')
+    .select('id, date_available, audience, window_start_hour, window_end_hour')
     .eq('date_available', today)
     .eq('audience', ctx.audience)
     .eq('status', 'published')
@@ -122,7 +122,21 @@ export default async function RankingAlunoPage({
         .maybeSingle()
     : { data: null };
 
-  const showRanking = canStudentSeeTodayRanking(todayExam, Boolean(attempt?.finished_at));
+  let allGroupFinished = false;
+  if (todayExam?.id && ctx.rankingGroupId) {
+    const { areAllGroupMembersFinished } = await import('@/lib/exams/group-finished');
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const admin = createAdminClient() ?? supabase;
+    allGroupFinished = await areAllGroupMembersFinished(
+      admin,
+      todayExam.id,
+      ctx.rankingGroupId
+    );
+  }
+
+  const showRanking = canStudentSeeTodayRanking(todayExam, Boolean(attempt?.finished_at), {
+    allGroupFinished,
+  });
   const canSee = period !== 'daily' || showRanking;
 
   const bounds =
