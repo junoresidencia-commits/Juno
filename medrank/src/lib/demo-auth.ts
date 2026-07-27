@@ -101,6 +101,8 @@ export function parseDemoSession(token: string | undefined): Profile | null {
         ? true
         : !!findDemoStudentById(data.id)?.leagueAdmin;
 
+    const demoStudent = data.role === 'student' ? findDemoStudentById(data.id) : null;
+
     return {
       id: data.id,
       email: data.email,
@@ -109,6 +111,7 @@ export function parseDemoSession(token: string | undefined): Profile | null {
       active: data.active !== false,
       created_at: new Date().toISOString(),
       league_admin,
+      must_change_password: demoStudent?.mustChangePassword === true,
     };
   } catch {
     return null;

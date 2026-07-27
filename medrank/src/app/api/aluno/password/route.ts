@@ -7,6 +7,13 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
 import { createClient as createSupabaseJs } from '@supabase/supabase-js';
 
+async function clearMustChangePassword(userId: string): Promise<void> {
+  if (isDemoMode()) return;
+  const admin = createAdminClient();
+  if (!admin) return;
+  await admin.from('profiles').update({ must_change_password: false }).eq('id', userId);
+}
+
 /**
  * Aluno troca a própria senha.
  * body: { currentPassword, newPassword, confirm }
@@ -81,10 +88,12 @@ export async function POST(request: Request) {
       if (adminErr) {
         return NextResponse.json({ error: adminErr.message }, { status: 500 });
       }
+      await clearMustChangePassword(session.userId);
       return NextResponse.json({ ok: true, message: 'Senha alterada.' });
     }
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
+  await clearMustChangePassword(session.userId);
   return NextResponse.json({ ok: true, message: 'Senha alterada.' });
 }

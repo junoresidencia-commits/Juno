@@ -109,6 +109,7 @@ export async function POST(request: Request) {
     active: true,
     approved_at: now,
     enabled_tracks: tracks,
+    must_change_password: true,
   });
 
   if (profileError) {
@@ -120,6 +121,22 @@ export async function POST(request: Request) {
         role: 'student',
         active: true,
         approved_at: now,
+        must_change_password: true,
+      });
+      if (retryErr) {
+        await admin.auth.admin.deleteUser(authUser.user.id);
+        if (formSubmit) return redirectAlunos(request, { error: retryErr.message });
+        return NextResponse.json({ error: retryErr.message }, { status: 500 });
+      }
+    } else if (/must_change_password/i.test(profileError.message)) {
+      const { error: retryErr } = await admin.from('profiles').insert({
+        id: authUser.user.id,
+        name: name.trim(),
+        email,
+        role: 'student',
+        active: true,
+        approved_at: now,
+        enabled_tracks: tracks,
       });
       if (retryErr) {
         await admin.auth.admin.deleteUser(authUser.user.id);

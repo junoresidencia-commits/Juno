@@ -31,6 +31,8 @@ export interface Profile {
   /** Fim do período pago (30 dias após liberar/renovar). */
   subscription_expires_at?: string | null;
   approved_at?: string | null;
+  /** true = obrigar troca de senha no próximo acesso (conta criada pelo professor). */
+  must_change_password?: boolean;
 }
 
 export type BankStatus =
