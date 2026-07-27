@@ -50,7 +50,7 @@ export function applyReleaseWindow(exam: Exam, releaseDays: 1 | 2, startDate?: s
     show_answers_after_submit: false,
     show_answers_when_all_done: false,
     ranking_visible_to_students: true,
-    ranking_release: 'after_window',
+    ranking_release: 'after_all_done',
   };
 }
 
@@ -124,6 +124,6 @@ export function defaultExamReleaseFields(dateAvailable: string): Pick<
     date_closes: dateAvailable,
     release_days: 1,
     ranking_visible_to_students: true,
-    ranking_release: 'after_window',
+    ranking_release: 'after_all_done',
   };
 }

@@ -9,17 +9,33 @@ import {
 } from '@/lib/exams/window';
 import { formatDateBR } from '@/lib/format';
 
+export type RankingVisibilityOpts = {
+  /** Todos os membros ativos do grupo já finalizaram a disputa de hoje. */
+  allGroupFinished?: boolean;
+  now?: Date;
+};
+
 /**
- * Ranking diário visível:
- * - Quem terminou a prova: vê o ranking (atualiza conforme outros terminam)
- * - Após o fim da janela (21h): todos veem
+ * Ranking diário liberado só quando:
+ * - a janela da disputa fechou (21h), ou
+ * - todos do grupo já terminaram
+ *
+ * Quem termina cedo NÃO vê o placar — evita vazar posição/nota para quem ainda faz a prova.
  */
 export function canStudentSeeTodayRanking(
   exam: Pick<Exam, 'date_available' | 'window_start_hour' | 'window_end_hour'> | null,
-  hasFinishedAttempt: boolean,
-  now = new Date()
+  _hasFinishedAttempt: boolean,
+  opts: RankingVisibilityOpts = {}
 ): boolean {
   if (!exam) return false;
+
+  const now = opts.now ?? new Date();
+  const today = todayDateStringBrazil(now);
+  if (exam.date_available !== today && today < exam.date_available) return false;
+  // Dias anteriores: ranking histórico ok
+  if (today > exam.date_available) return true;
+
+  if (opts.allGroupFinished) return true;
 
   const b = boundsFromExamHours(exam.window_start_hour, exam.window_end_hour);
   const phase = getExamWindowPhase(
@@ -30,12 +46,6 @@ export function canStudentSeeTodayRanking(
     b.startMinute,
     b.endMinute
   );
-  const today = todayDateStringBrazil(now);
-
-  if (exam.date_available !== today) return false;
-
-  if (hasFinishedAttempt) return true;
-
   return phase === 'after';
 }
 
@@ -46,25 +56,28 @@ export function studentDailyRankingLabel(date: string): string {
 }
 
 export function studentRankingBeforeFinishMessage(): string {
-  return 'Termine a disputa de hoje para ver o ranking.';
+  return 'Ranking libera quando todos do grupo terminarem a disputa (ou após o horário, às 21h).';
 }
 
 export function studentRankingAfterWindowMessage(): string {
-  return `Ranking liberado após o horário da disputa (${EXAM_WINDOW_END_HOUR}h).`;
+  return `Ranking liberado após o horário da disputa (${EXAM_WINDOW_END_HOUR}h) ou quando todos terminarem.`;
 }
 
-/** Gabarito logo após terminar — reforço imediato do aprendizado */
+/**
+ * Gabarito comentado: mesma regra do ranking.
+ * Quem termina cedo não leva as respostas certas para outro aluno ainda na prova.
+ */
 export function canStudentSeeExamGabarito(
-  exam: Pick<Exam, 'date_available'> | null,
+  exam: Pick<Exam, 'date_available' | 'window_start_hour' | 'window_end_hour'> | null,
   hasFinishedAttempt: boolean,
-  _now = new Date()
+  opts: RankingVisibilityOpts = {}
 ): boolean {
   if (!exam || !hasFinishedAttempt) return false;
-  return true;
+  return canStudentSeeTodayRanking(exam, hasFinishedAttempt, opts);
 }
 
 export function studentGabaritoBeforeWindowMessage(): string {
-  return 'Finalize a disputa para ver o gabarito comentado.';
+  return 'Gabarito libera quando todos do grupo terminarem (ou após o horário da disputa). Seu placar pessoal (acertos/tempo) já aparece acima.';
 }
 
 /**
@@ -107,7 +120,11 @@ export function getTodayRankingDate(now = new Date()): string {
   return todayDateStringBrazil(now);
 }
 
-/** Ranking visível no resultado logo após enviar a prova */
-export function canShowRankingOnResult(hasFinishedAttempt: boolean): boolean {
-  return hasFinishedAttempt;
+/** Posição no ranking no resultado: mesma regra do placar do dia. */
+export function canShowRankingOnResult(
+  exam: Pick<Exam, 'date_available' | 'window_start_hour' | 'window_end_hour'> | null,
+  hasFinishedAttempt: boolean,
+  opts: RankingVisibilityOpts = {}
+): boolean {
+  return canStudentSeeTodayRanking(exam, hasFinishedAttempt, opts);
 }

@@ -8,9 +8,11 @@ import { buildResultInsights } from '@/lib/exams/result-analysis';
 import {
   canStudentSeeExamGabarito,
   canStudentDownloadExamPdf,
+  canShowRankingOnResult,
   studentGabaritoBeforeWindowMessage,
   studentExamPdfBeforeReleaseMessage,
 } from '@/lib/exams/ranking-visibility';
+import { countActiveStudents } from '@/lib/exams/ranking';
 import type { Question, OptionLetter } from '@/types/database';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoAttemptAnswers, getDemoAttemptById, getDemoQuestionsForAttempt } from '@/lib/demo/runtime';
@@ -92,16 +94,21 @@ export default async function ResultadoPage({
 
     const totalWrong = (attempt.total_questions ?? 0) - (attempt.total_correct ?? 0);
     const maxScore = getExamMaxScore(attempt.total_questions ?? exam?.total_questions ?? 20);
-    const showGabarito = canStudentSeeExamGabarito(exam ?? null, true);
+    const allGroupFinished =
+      finishedCount >= countActiveStudents() && countActiveStudents() > 0;
+    const showBoard = canShowRankingOnResult(exam ?? null, true, { allGroupFinished });
+    const showGabarito = canStudentSeeExamGabarito(exam ?? null, true, { allGroupFinished });
     const showPdf = canStudentDownloadExamPdf(exam ?? null, true);
     const insights = buildResultInsights({
       rows: buildAnalysisRows(gabaritoRows),
       userScore: attempt.score ?? 0,
-      rankings: rankings.map((r) => ({
-        position: r.position,
-        total_score: r.total_score,
-        user_id: r.user_id,
-      })),
+      rankings: showBoard
+        ? rankings.map((r) => ({
+            position: r.position,
+            total_score: r.total_score,
+            user_id: r.user_id,
+          }))
+        : [],
       userId,
       finishedToday: finishedCount,
     });
@@ -117,7 +124,7 @@ export default async function ResultadoPage({
         <ResultInsightsPanel
           score={attempt.score ?? 0}
           maxScore={maxScore}
-          position={ranking?.position ?? null}
+          position={showBoard ? ranking?.position ?? null : null}
           insights={insights}
           showGabarito={showGabarito}
         />
@@ -164,18 +171,33 @@ export default async function ResultadoPage({
     title: string;
     date_available: string;
     total_questions: number;
+    window_start_hour?: number;
+    window_end_hour?: number;
   };
-
-  const showGabarito = canStudentSeeExamGabarito(exam, true);
-  const showPdf = canStudentDownloadExamPdf(exam, true);
 
   const { resolveUserExamAudience } = await import('@/lib/exams/audience');
   const ctx = await resolveUserExamAudience(userId);
 
+  let allGroupFinished = false;
+  if (ctx.rankingGroupId) {
+    const { areAllGroupMembersFinished } = await import('@/lib/exams/group-finished');
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const admin = createAdminClient() ?? supabase;
+    allGroupFinished = await areAllGroupMembersFinished(
+      admin,
+      attempt.exam_id,
+      ctx.rankingGroupId
+    );
+  }
+
+  const showBoard = canShowRankingOnResult(exam, true, { allGroupFinished });
+  const showGabarito = canStudentSeeExamGabarito(exam, true, { allGroupFinished });
+  const showPdf = canStudentDownloadExamPdf(exam, true);
+
   let ranking: { position: number | null } | null = null;
   let allRankings: Array<{ position: number | null; total_score: number; user_id: string }> = [];
 
-  if (ctx.rankingGroupId) {
+  if (showBoard && ctx.rankingGroupId) {
     const { data: mine } = await supabase
       .from('study_group_rankings')
       .select('position')
@@ -234,11 +256,13 @@ export default async function ResultadoPage({
   const insights = buildResultInsights({
     rows: buildAnalysisRows(gabaritoRows),
     userScore: attempt.score ?? 0,
-    rankings: (allRankings ?? []).map((r) => ({
-      position: r.position,
-      total_score: r.total_score,
-      user_id: r.user_id,
-    })),
+    rankings: showBoard
+      ? (allRankings ?? []).map((r) => ({
+          position: r.position,
+          total_score: r.total_score,
+          user_id: r.user_id,
+        }))
+      : [],
     userId,
     finishedToday: finishedToday ?? 0,
   });
@@ -254,7 +278,7 @@ export default async function ResultadoPage({
       <ResultInsightsPanel
         score={attempt.score ?? 0}
         maxScore={maxScore}
-        position={ranking?.position ?? null}
+        position={showBoard ? ranking?.position ?? null : null}
         insights={insights}
         showGabarito={showGabarito}
       />

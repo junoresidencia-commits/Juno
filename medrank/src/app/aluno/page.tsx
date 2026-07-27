@@ -192,9 +192,22 @@ export default async function AlunoDashboard() {
   const rankingDate = getTodayRankingDate();
   const primary = dailyDisputes[0] ?? null;
   const hasFinishedAny = dailyDisputes.some((d) => d.completed || d.forfeitedToday);
+
+  let allGroupFinished = false;
+  if (primary?.exam?.id && ctx.rankingGroupId) {
+    const { areAllGroupMembersFinished } = await import('@/lib/exams/group-finished');
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const admin = createAdminClient() ?? supabase;
+    allGroupFinished = await areAllGroupMembersFinished(
+      admin,
+      primary.exam.id,
+      ctx.rankingGroupId
+    );
+  }
+
   const showRanking =
     Boolean(primary?.exam) &&
-    canStudentSeeTodayRanking(primary?.exam ?? null, hasFinishedAny) &&
+    canStudentSeeTodayRanking(primary?.exam ?? null, hasFinishedAny, { allGroupFinished }) &&
     Boolean(ctx.rankingGroupId);
 
   // Ranking completo fica em /aluno/ranking — home só indica status (menos carga)
