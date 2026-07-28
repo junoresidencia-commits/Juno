@@ -16,7 +16,7 @@ export function IntegrationsPage() {
     try {
       const result = await pushCloud()
       setMessage(
-        `Enviado: ${result.studiesUpserted} trabalhos, ${result.patientsUpserted} pacientes.`,
+        `Enviado: ${result.studiesUpserted} trabalhos, ${result.patientsUpserted} pacientes, ${result.literatureUpserted} artigos.`,
       )
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Falha ao enviar.')

@@ -24,10 +24,12 @@ Plataforma que **produz trabalhos científicos** na região IRC: artigos, revis�
 
 ## Integrações
 
-- **Excel** (`xlsx`): exportar pacientes, modelo, importar com recálculo de TFG
-- **Supabase**: tabelas `irc_studies` e `irc_patients` — ver `docs/SUPABASE.md`
-- **ChatGPT**: prompt copiável gerado no blueprint (sem API key no app)
+- **Excel** (`xlsx`): pacientes (com opção anônima), modelo, importação com recálculo de TFG, extração de literatura
+- **Manuscrito**: seções editáveis, resumo PT/EN, preenchimento automático de Resultados, export `.md`
+- **Literatura**: tabela de artigos incluídos/excluídos alimenta a síntese
+- **Supabase**: `irc_studies`, `irc_patients`, `irc_literature` — migrations `001` e `002`
+- **ChatGPT**: prompt copiável no blueprint
 
 ## Persistência
 
-Local-first (`localStorage`, versão 2 do schema). Migração automática a partir da v1.
+Local-first (`localStorage`, versão **3**). Migração automática a partir de v1/v2.

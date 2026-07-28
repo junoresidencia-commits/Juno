@@ -1,5 +1,6 @@
-import type { AppData, Patient, Study } from '../types'
+import type { AppData, LiteratureRecord, Patient, Study } from '../types'
 import { generateBlueprint } from '../lib/blueprint'
+import { createManuscriptFromBlueprint } from '../lib/manuscript'
 import { calculateCkdEpi2021, hasCkdByEgfr, stageFromEgfr } from '../lib/ckd-epi'
 import { createId } from '../lib/id'
 
@@ -49,6 +50,10 @@ export function seedData(): AppData {
     kind,
     region: 'IRC',
   })
+  const manuscript = createManuscriptFromBlueprint(
+    { title, objective: blueprint.specificObjectives[0] ?? idea, idea, kind, region: 'IRC' },
+    blueprint,
+  )
 
   const study: Study = {
     id: studyId,
@@ -59,6 +64,7 @@ export function seedData(): AppData {
     kind,
     idea,
     blueprint,
+    manuscript,
     status: 'active',
     createdAt: now,
     updatedAt: now,
@@ -112,5 +118,63 @@ export function seedData(): AppData {
     }),
   ]
 
-  return { version: 2, studies: [study], patients }
+  const reviewId = createId('study')
+  const reviewTitle = 'Revisão: DRC e estatina na atenção primária'
+  const reviewIdea =
+    'Revisão de literatura sobre uso de estatina em pacientes com DRC na atenção primária, com aplicação à região IRC.'
+  const reviewBlueprint = generateBlueprint({
+    title: reviewTitle,
+    idea: reviewIdea,
+    kind: 'literature_review',
+    region: 'IRC',
+  })
+  const reviewStudy: Study = {
+    id: reviewId,
+    title: reviewTitle,
+    objective: reviewBlueprint.specificObjectives[0] ?? reviewIdea,
+    region: 'IRC',
+    template: 'none',
+    kind: 'literature_review',
+    idea: reviewIdea,
+    blueprint: reviewBlueprint,
+    manuscript: createManuscriptFromBlueprint(
+      {
+        title: reviewTitle,
+        objective: reviewBlueprint.specificObjectives[0] ?? reviewIdea,
+        idea: reviewIdea,
+        kind: 'literature_review',
+        region: 'IRC',
+      },
+      reviewBlueprint,
+    ),
+    status: 'active',
+    createdAt: now,
+    updatedAt: now,
+  }
+
+  const literature: LiteratureRecord[] = [
+    {
+      id: createId('lit'),
+      studyId: reviewId,
+      title: 'Statins and chronic kidney disease outcomes',
+      authors: 'Exemplo A, Exemplo B',
+      year: 2021,
+      journal: 'Exemplo Journal of Nephrology',
+      studyType: 'Revisão / metanálise',
+      population: 'Adultos com DRC',
+      mainFindings: 'Associação de estatina com redução de eventos CV em estratos selecionados.',
+      limitations: 'Heterogeneidade entre estudos.',
+      included: true,
+      notes: 'Usar na discussão do trabalho local.',
+      createdAt: now,
+      updatedAt: now,
+    },
+  ]
+
+  return {
+    version: 3,
+    studies: [study, reviewStudy],
+    patients,
+    literature,
+  }
 }

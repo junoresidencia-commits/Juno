@@ -2,23 +2,23 @@ import { Link } from 'react-router-dom'
 import { useData } from '../hooks/useData'
 import { WORK_KIND_LABELS } from '../types'
 import { computeStudyStats } from '../lib/stats'
+import { manuscriptProgress } from '../lib/manuscript'
 
 export function HomePage() {
-  const { studies, patientsOf } = useData()
+  const { studies, patientsOf, literatureOf } = useData()
 
   return (
     <div className="page">
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">Região IRC · produtor de ciência e emprego</p>
+          <p className="eyebrow">Região IRC · fábrica de artigos</p>
           <h1>
             <span className="hero-brand">Meu Rim</span>
             <span className="hero-sub">Estudos</span>
           </h1>
           <p className="lede">
-            Ideia → estrutura → dados → artigo. Gere trabalhos (DRC, transversal,
-            revisão de literatura), calcule CKD-EPI, exporte Excel e sincronize
-            com Supabase quando quiser.
+            Ideia → pacientes ou literatura → resultados automáticos → artigo
+            exportável. Organize revisão, dados e manuscrito no mesmo lugar.
           </p>
           <div className="cta-row">
             <Link className="btn primary" to="/novo-trabalho">
@@ -32,9 +32,9 @@ export function HomePage() {
         <div className="hero-visual" aria-hidden>
           <div className="hero-orb" />
           <div className="hero-panel">
-            <span>Da ideia ao manuscrito</span>
-            <strong>PICO · seções · prompt</strong>
-            <p>CKD-EPI · Excel · Supabase · revisão</p>
+            <span>Fluxo completo</span>
+            <strong>Dados → Artigo.md</strong>
+            <p>CKD-EPI · Literatura · Manuscrito · Excel</p>
           </div>
         </div>
       </section>
@@ -43,8 +43,8 @@ export function HomePage() {
         <div className="section-head">
           <h2>Trabalhos na IRC</h2>
           <p>
-            Cada item é um produto científico independente — artigo, revisão ou
-            estudo com coleta.
+            Cada item é um produto científico: colete, revise a literatura e
+            escreva o artigo.
           </p>
         </div>
 
@@ -59,9 +59,8 @@ export function HomePage() {
           <ul className="study-list">
             {studies.map((study) => {
               const stats = computeStudyStats(patientsOf(study.id))
-              const doneSections =
-                study.blueprint?.articleSections.filter((s) => s.done).length ?? 0
-              const totalSections = study.blueprint?.articleSections.length ?? 0
+              const lit = literatureOf(study.id)
+              const progress = manuscriptProgress(study.manuscript)
               return (
                 <li key={study.id}>
                   <Link to={`/trabalho/${study.id}`} className="study-row">
@@ -86,11 +85,10 @@ export function HomePage() {
                             </span>
                           </>
                         ) : null}
-                        {totalSections ? (
-                          <span>
-                            Manuscrito {doneSections}/{totalSections}
-                          </span>
-                        ) : null}
+                        <span>
+                          Lit. {lit.filter((r) => r.included).length}/{lit.length}
+                        </span>
+                        <span>Artigo {progress.pct}%</span>
                       </div>
                     </div>
                     <span className="chevron" aria-hidden>

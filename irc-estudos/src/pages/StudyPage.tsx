@@ -1,6 +1,8 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BlueprintPreview } from '../components/BlueprintPreview'
+import { LiteraturePanel } from '../components/LiteraturePanel'
+import { ManuscriptEditor } from '../components/ManuscriptEditor'
 import { useData } from '../hooks/useData'
 import { generateBlueprint } from '../lib/blueprint'
 import {
@@ -8,6 +10,7 @@ import {
   hasCkdByEgfr,
   stageFromEgfr,
 } from '../lib/ckd-epi'
+import { createManuscriptFromBlueprint } from '../lib/manuscript'
 import { computeStudyStats, patientsToCsv } from '../lib/stats'
 import {
   CKD_STAGE_LABELS,
@@ -26,7 +29,7 @@ const DISEASE_OPTIONS = Object.entries(UNDERLYING_DISEASE_LABELS) as [
   string,
 ][]
 
-type Tab = 'dados' | 'artigo' | 'excel'
+type Tab = 'dados' | 'literatura' | 'manuscrito' | 'estrutura' | 'excel'
 
 export function StudyPage() {
   const { studyId = '' } = useParams()
@@ -34,19 +37,24 @@ export function StudyPage() {
   const {
     studyOf,
     patientsOf,
+    literatureOf,
     savePatient,
     importPatients,
     removePatient,
+    saveLiterature,
+    removeLiterature,
     updateStudy,
     removeStudy,
   } = useData()
   const study = studyOf(studyId)
   const patients = patientsOf(studyId)
+  const literature = literatureOf(studyId)
   const stats = useMemo(() => computeStudyStats(patients), [patients])
   const [editing, setEditing] = useState<Patient | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [tab, setTab] = useState<Tab>('dados')
   const [importMsg, setImportMsg] = useState<string | null>(null)
+  const [anonymize, setAnonymize] = useState(true)
 
   if (!study) {
     return (
@@ -72,7 +80,7 @@ export function StudyPage() {
 
   async function onExportExcel() {
     const { downloadPatientsExcel } = await import('../lib/excel')
-    downloadPatientsExcel(patients, study!.title)
+    downloadPatientsExcel(patients, study!.title, { anonymize })
   }
 
   async function onTemplateExcel() {
@@ -86,6 +94,11 @@ export function StudyPage() {
     return importPatients(rows)
   }
 
+  async function onExportLiterature() {
+    const { downloadLiteratureExcel } = await import('../lib/excel')
+    downloadLiteratureExcel(literature, study!.title)
+  }
+
   function ensureBlueprint() {
     if (study!.blueprint) return study!.blueprint
     const bp = generateBlueprint({
@@ -96,6 +109,17 @@ export function StudyPage() {
     })
     updateStudy({ ...study!, blueprint: bp })
     return bp
+  }
+
+  function ensureManuscriptReady() {
+    const bp = ensureBlueprint()
+    if (!study!.manuscript) {
+      updateStudy({
+        ...study!,
+        blueprint: bp,
+        manuscript: createManuscriptFromBlueprint(study!, bp),
+      })
+    }
   }
 
   return (
@@ -158,26 +182,49 @@ export function StudyPage() {
       </header>
 
       <div className="tabs" role="tablist" aria-label="Áreas do trabalho">
+        {collectsPatients ? (
+          <button
+            type="button"
+            role="tab"
+            className={tab === 'dados' ? 'active' : ''}
+            aria-selected={tab === 'dados'}
+            onClick={() => setTab('dados')}
+          >
+            Dados
+          </button>
+        ) : null}
         <button
           type="button"
           role="tab"
-          className={tab === 'dados' ? 'active' : ''}
-          aria-selected={tab === 'dados'}
-          onClick={() => setTab('dados')}
+          className={tab === 'literatura' ? 'active' : ''}
+          aria-selected={tab === 'literatura'}
+          onClick={() => setTab('literatura')}
         >
-          Dados
+          Literatura
         </button>
         <button
           type="button"
           role="tab"
-          className={tab === 'artigo' ? 'active' : ''}
-          aria-selected={tab === 'artigo'}
+          className={tab === 'manuscrito' ? 'active' : ''}
+          aria-selected={tab === 'manuscrito'}
           onClick={() => {
-            ensureBlueprint()
-            setTab('artigo')
+            ensureManuscriptReady()
+            setTab('manuscrito')
           }}
         >
-          Artigo / revisão
+          Artigo
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={tab === 'estrutura' ? 'active' : ''}
+          aria-selected={tab === 'estrutura'}
+          onClick={() => {
+            ensureBlueprint()
+            setTab('estrutura')
+          }}
+        >
+          Estrutura
         </button>
         <button
           type="button"
@@ -395,16 +442,56 @@ export function StudyPage() {
       {tab === 'dados' && !collectsPatients ? (
         <div className="empty">
           <p>
-            Este tipo de trabalho não usa ficha de pacientes. Use a aba{' '}
-            <strong>Artigo / revisão</strong> para o roteiro científico.
+            Este tipo de trabalho não usa ficha de pacientes. Use{' '}
+            <strong>Literatura</strong> e <strong>Artigo</strong>.
           </p>
-          <button type="button" className="btn primary" onClick={() => setTab('artigo')}>
-            Abrir produtor
+          <button
+            type="button"
+            className="btn primary"
+            onClick={() => setTab('literatura')}
+          >
+            Abrir literatura
           </button>
         </div>
       ) : null}
 
-      {tab === 'artigo' ? (
+      {tab === 'literatura' ? (
+        <section className="panel">
+          <LiteraturePanel
+            studyId={study.id}
+            records={literature}
+            onSave={saveLiterature}
+            onRemove={removeLiterature}
+            onExportExcel={() => void onExportLiterature()}
+          />
+        </section>
+      ) : null}
+
+      {tab === 'manuscrito' ? (
+        <section className="panel">
+          {study.manuscript ? (
+            <ManuscriptEditor
+              study={study}
+              stats={stats}
+              literature={literature}
+              onChange={(manuscript) => updateStudy({ ...study, manuscript })}
+            />
+          ) : (
+            <div className="empty">
+              <p>Preparando manuscrito…</p>
+              <button
+                type="button"
+                className="btn primary"
+                onClick={() => ensureManuscriptReady()}
+              >
+                Gerar rascunho do artigo
+              </button>
+            </div>
+          )}
+        </section>
+      ) : null}
+
+      {tab === 'estrutura' ? (
         <section className="panel">
           {study.blueprint ? (
             <BlueprintPreview
@@ -456,7 +543,7 @@ export function StudyPage() {
               disabled={!collectsPatients || patients.length === 0}
               onClick={() => void onExportExcel()}
             >
-              Exportar Excel
+              Exportar Excel {anonymize ? '(anônimo)' : ''}
             </button>
             <button
               type="button"
@@ -472,7 +559,15 @@ export function StudyPage() {
               disabled={!collectsPatients}
               onClick={() => void onTemplateExcel()}
             >
-              Baixar modelo
+              Baixar modelo pacientes
+            </button>
+            <button
+              type="button"
+              className="btn ghost"
+              disabled={!literature.length}
+              onClick={() => void onExportLiterature()}
+            >
+              Exportar literatura
             </button>
             <label className={`btn ghost file-btn ${!collectsPatients ? 'disabled' : ''}`}>
               Importar Excel
@@ -497,6 +592,16 @@ export function StudyPage() {
               />
             </label>
           </div>
+          {collectsPatients ? (
+            <label className="check-row">
+              <input
+                type="checkbox"
+                checked={anonymize}
+                onChange={(e) => setAnonymize(e.target.checked)}
+              />
+              Anonimizar nomes no Excel (P001, P002…) — recomendado para ética
+            </label>
+          ) : null}
           {importMsg ? <p className="sync-msg">{importMsg}</p> : null}
           {!collectsPatients ? (
             <p className="hint">

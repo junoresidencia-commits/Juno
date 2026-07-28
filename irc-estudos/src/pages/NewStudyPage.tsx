@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../hooks/useData'
 import { generateBlueprint, templateForKind } from '../lib/blueprint'
+import { createManuscriptFromBlueprint } from '../lib/manuscript'
 import type { WorkBlueprint, WorkKind } from '../types'
 import { WORK_KIND_HINTS, WORK_KIND_LABELS } from '../types'
 import { BlueprintPreview } from '../components/BlueprintPreview'
@@ -50,6 +51,16 @@ export function NewStudyPage() {
       kind,
       idea: idea.trim(),
       blueprint: bp,
+      manuscript: createManuscriptFromBlueprint(
+        {
+          title: title.trim(),
+          objective: bp.specificObjectives[0] || idea.trim(),
+          idea: idea.trim(),
+          kind,
+          region: region.trim() || 'IRC',
+        },
+        bp,
+      ),
       status: 'active',
     })
     navigate(`/trabalho/${study.id}`)

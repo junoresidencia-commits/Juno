@@ -64,6 +64,43 @@ export interface WorkBlueprint {
   generatedAt: string
 }
 
+/** Seção editável do manuscrito (texto real do artigo). */
+export interface ManuscriptSection {
+  id: string
+  title: string
+  content: string
+  done: boolean
+}
+
+/** Rascunho completo do artigo / revisão. */
+export interface Manuscript {
+  authors: string
+  affiliations: string
+  keywords: string
+  abstractPt: string
+  abstractEn: string
+  sections: ManuscriptSection[]
+  updatedAt: string
+}
+
+/** Artigo extraído para revisão de literatura. */
+export interface LiteratureRecord {
+  id: string
+  studyId: string
+  title: string
+  authors: string
+  year: number | null
+  journal: string
+  studyType: string
+  population: string
+  mainFindings: string
+  limitations: string
+  included: boolean
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface Study {
   id: string
   title: string
@@ -74,6 +111,7 @@ export interface Study {
   /** Ideia bruta / rascunho que originou o trabalho. */
   idea: string
   blueprint?: WorkBlueprint
+  manuscript?: Manuscript
   status: StudyStatus
   createdAt: string
   updatedAt: string
@@ -97,9 +135,10 @@ export interface Patient {
 }
 
 export interface AppData {
-  version: 2
+  version: 3
   studies: Study[]
   patients: Patient[]
+  literature: LiteratureRecord[]
 }
 
 export interface StudyStats {

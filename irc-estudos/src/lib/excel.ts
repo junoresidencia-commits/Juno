@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'
-import type { Patient, Sex, UnderlyingDisease } from '../types'
+import type { LiteratureRecord, Patient, Sex, UnderlyingDisease } from '../types'
 import {
   calculateCkdEpi2021,
   hasCkdByEgfr,
@@ -30,10 +30,15 @@ const HEADER = [
   'cadastrado_em',
 ] as const
 
-export function downloadPatientsExcel(patients: Patient[], studyTitle: string) {
-  const rows = patients.map((p) => ({
+export function downloadPatientsExcel(
+  patients: Patient[],
+  studyTitle: string,
+  options?: { anonymize?: boolean },
+) {
+  const anonymize = options?.anonymize ?? false
+  const rows = patients.map((p, index) => ({
     id: p.id,
-    nome: p.name,
+    nome: anonymize ? `P${String(index + 1).padStart(3, '0')}` : p.name,
     idade: p.age,
     sexo: p.sex,
     creatinina_mg_dl: p.creatinineMgDl,
@@ -42,7 +47,7 @@ export function downloadPatientsExcel(patients: Patient[], studyTitle: string) {
     drc_egfr_lt_60: p.hasCkd ? 'sim' : 'nao',
     doenca_base: UNDERLYING_DISEASE_LABELS[p.underlyingDisease],
     estatina: p.onStatin ? 'sim' : 'nao',
-    observacoes: p.notes,
+    observacoes: anonymize ? '' : p.notes,
     cadastrado_em: p.createdAt,
   }))
 
@@ -50,7 +55,8 @@ export function downloadPatientsExcel(patients: Patient[], studyTitle: string) {
   const book = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(book, sheet, 'Pacientes')
   const safe = studyTitle.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase()
-  XLSX.writeFile(book, `${safe || 'estudo'}-pacientes.xlsx`)
+  const suffix = anonymize ? '-anonimizado' : '-pacientes'
+  XLSX.writeFile(book, `${safe || 'estudo'}${suffix}.xlsx`)
 }
 
 export function downloadPatientsTemplate(studyTitle: string) {
@@ -176,4 +182,27 @@ function parseDisease(raw: string): UnderlyingDisease {
   if (value.includes('autoim')) return 'autoimmune'
   if (value.includes('outra') || value.includes('other')) return 'other'
   return 'unknown'
+}
+
+export function downloadLiteratureExcel(
+  records: LiteratureRecord[],
+  studyTitle: string,
+) {
+  const rows = records.map((r) => ({
+    incluido: r.included ? 'sim' : 'nao',
+    ano: r.year ?? '',
+    titulo: r.title,
+    autores: r.authors,
+    periodico: r.journal,
+    tipo_estudo: r.studyType,
+    populacao: r.population,
+    achados: r.mainFindings,
+    limitacoes: r.limitations,
+    notas: r.notes,
+  }))
+  const sheet = XLSX.utils.json_to_sheet(rows)
+  const book = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(book, sheet, 'Literatura')
+  const safe = studyTitle.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase()
+  XLSX.writeFile(book, `${safe || 'revisao'}-literatura.xlsx`)
 }

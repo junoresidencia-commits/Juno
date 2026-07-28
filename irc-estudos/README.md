@@ -1,15 +1,15 @@
 # Meu Rim · Estudos IRC
 
-Produtor de **trabalhos científicos** na região IRC: da ideia ao artigo, com dados, Excel e Supabase.
+Fábrica de **artigos e revisões** para a região IRC: ideia → dados/literatura → manuscrito → Excel/Supabase.
 
-## O que faz
+## Fluxo pronto
 
-1. **Ideia → estrutura** — título + ideia (ou texto do ChatGPT) gera pergunta, PICO, variáveis, métodos, seções do manuscrito, plano de revisão e prompt pronto
-2. **Tipos** — epidemiologia de DRC, transversal, artigo original, revisão de literatura, série de casos
-3. **Dados DRC** — nome, idade, sexo, creatinina, doença de base, estatina + **CKD-EPI 2021**
-4. **Excel** — exportar, modelo e importar (recalcula TFG)
-5. **Supabase** — opcional; sync em Integrações
-6. **Backup JSON** — sempre disponível
+1. **Nova ideia** — título + ideia (ou texto do ChatGPT) → estrutura + rascunho do artigo
+2. **Dados** — pacientes + CKD-EPI 2021 (quando for estudo com coleta)
+3. **Literatura** — tabela de extração (incluir/excluir artigos)
+4. **Artigo** — escreva seções; botão **Preencher Resultados com dados**; exporte `.md`
+5. **Excel** — pacientes (com anonimização), modelo e literatura
+6. **Integrações** — backup JSON + Supabase
 
 ## Início rápido
 
@@ -19,17 +19,13 @@ npm install
 npm run dev
 ```
 
-## Fluxo sugerido (Tulin)
+## O que ainda é opcional / produção
 
-1. **Nova ideia** → cole o nome do trabalho e a ideia
-2. Escolha o tipo (artigo / revisão / DRC…) → **Gerar estrutura**
-3. **Criar trabalho** → aba **Artigo / revisão** (checklist) e/ou **Dados**
-4. Aba **Excel** para planilha; **Integrações** para Supabase
-
-## Supabase
-
-Veja [`docs/SUPABASE.md`](./docs/SUPABASE.md) e `.env.example`.
+- Conta Supabase + `.env` (veja `docs/SUPABASE.md` e migrations `001` + `002`)
+- Autenticação multi-usuário e RLS restrita
+- Hospedagem (Vercel) com root `irc-estudos`
+- Revisão humana do texto gerado / preenchido automaticamente
 
 ## Aviso
 
-Ferramenta de apoio à pesquisa. Não substitui consulta clínica nem revisão editorial.
+Apoio à pesquisa. Não substitui consulta clínica nem revisão editorial.

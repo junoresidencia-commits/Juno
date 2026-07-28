@@ -1030,7 +1030,132 @@ tr.row-ckd td:first-child {
   pointer-events: none;
 }
 
+.manuscript-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.progress-ring {
+  display: flex;
+  flex-direction: column;
+  padding: 0.65rem 1rem;
+  border-radius: 14px;
+  background: rgba(15, 76, 69, 0.08);
+}
+
+.progress-ring strong {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--sea-deep);
+}
+
+.progress-ring span {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.manuscript-meta {
+  margin-bottom: 0.85rem;
+}
+
+.manuscript label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.85rem;
+}
+
+.manuscript input,
+.manuscript textarea,
+.section-editor textarea {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  font: inherit;
+}
+
+.manuscript-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.section-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.section-nav button {
+  text-align: left;
+  border: 1px solid transparent;
+  background: rgba(15, 76, 69, 0.04);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.section-nav button.active {
+  background: rgba(15, 76, 69, 0.12);
+  border-color: var(--line);
+  color: var(--sea-deep);
+}
+
+.section-editor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+}
+
+.section-editor-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.check-row.compact {
+  margin: 0;
+  align-items: center;
+}
+
+.section-editor textarea {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.modal.wide {
+  width: min(720px, 100%);
+}
+
+.row-muted {
+  opacity: 0.65;
+}
+
+.clip {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 900px) {
+  .manuscript-body {
+    grid-template-columns: 1fr;
+  }
+
   .hero,
   .split,
   .stats-grid,
