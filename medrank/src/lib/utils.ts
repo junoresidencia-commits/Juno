@@ -96,10 +96,11 @@ export function getRemainingSeconds(startedAt: string, durationMinutes: number):
 export function getEffectiveExamRemainingSeconds(
   startedAt: string,
   durationMinutes: number,
-  now = new Date()
+  now = new Date(),
+  /** Disputa diária: corta no fim da janela (21h). Treino/simulados: false. */
+  capByDailyWindow = true
 ): number {
-  return Math.min(
-    getRemainingSeconds(startedAt, durationMinutes),
-    getSecondsUntilWindowClose(now)
-  );
+  const byDuration = getRemainingSeconds(startedAt, durationMinutes);
+  if (!capByDailyWindow) return byDuration;
+  return Math.min(byDuration, getSecondsUntilWindowClose(now));
 }

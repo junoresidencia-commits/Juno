@@ -53,6 +53,7 @@ export default async function NefropediatriaSessionPage({
         finishLabel="Finalizar treino"
         collectConfidence
         antiFraud={false}
+        capByDailyWindow={false}
       />
     </div>
   );
