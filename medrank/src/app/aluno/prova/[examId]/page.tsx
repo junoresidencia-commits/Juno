@@ -50,7 +50,7 @@ export default async function ProvaPage({
     return (
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-          {formatExamWindowLabel()}. Fique nesta tela · troca de aba encerra · 30 min · até 1 min 30 s
+          {formatExamWindowLabel()}. Fique nesta tela · troca de aba encerra · 30 min · até 2 min 30 s
           por questão.
         </div>
         {resumed && (
@@ -183,7 +183,7 @@ export default async function ProvaPage({
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
         {formatExamWindowLabel()}. Fique nesta tela · troca de aba encerra · {exam.duration_minutes}{' '}
-        min · até 1 min 30 s por questão.
+        min · até 2 min 30 s por questão.
       </div>
       {resumed && (
         <div className="border-b border-sky-200 bg-sky-50 px-4 py-2 text-center text-sm text-sky-950">
