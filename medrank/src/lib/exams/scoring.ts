@@ -1,5 +1,7 @@
 /** Resposta mais rápida que isso: acerto vale, mas sem bônus de velocidade (anti-chute) */
 export const MIN_ANSWER_SECONDS = 8;
+/** Régua única de tempo por questão para bônus/auto-skip: 2min30s */
+export const QUESTION_TIME_LIMIT_SECONDS = 150;
 
 /** Pontos base por acerto (sem bônus de velocidade) */
 export const QUESTION_BASE_POINTS = 85;
@@ -14,7 +16,7 @@ export function getExamMaxScore(totalQuestions: number): number {
 
 export function getQuestionTimeLimitSeconds(durationMinutes: number, totalQuestions: number): number {
   const pooled = Math.floor((durationMinutes * 60) / Math.max(totalQuestions, 1));
-  return Math.min(90, Math.max(60, pooled));
+  return Math.min(QUESTION_TIME_LIMIT_SECONDS, Math.max(QUESTION_TIME_LIMIT_SECONDS, pooled));
 }
 
 export function scoreQuestionAnswer(
@@ -47,5 +49,5 @@ export function calculateExamScoreFromAnswers(
 
 export function formatRankingScoreExplanation(totalQuestions = 20): string {
   const maxScore = getExamMaxScore(totalQuestions);
-  return `Cada acerto vale até ${QUESTION_MAX_POINTS} pts (${QUESTION_BASE_POINTS} base + até ${QUESTION_MAX_SPEED_BONUS} de bônus por velocidade). Prova de ${totalQuestions} questões: máximo ${maxScore.toLocaleString('pt-BR')} pts. Erro ou em branco = 0. Resposta em menos de ${MIN_ANSWER_SECONDS} s não ganha bônus.`;
+  return `Cada acerto vale até ${QUESTION_MAX_POINTS} pts (${QUESTION_BASE_POINTS} base + até ${QUESTION_MAX_SPEED_BONUS} de bônus por velocidade). A régua de velocidade por questão é de até 2 min 30 s. Prova de ${totalQuestions} questões: máximo ${maxScore.toLocaleString('pt-BR')} pts. Erro ou em branco = 0. Resposta em menos de ${MIN_ANSWER_SECONDS} s não ganha bônus.`;
 }
