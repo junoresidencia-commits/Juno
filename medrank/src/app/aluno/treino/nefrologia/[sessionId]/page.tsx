@@ -8,7 +8,7 @@ import {
   getTreinoSession,
 } from '@/lib/treino/runtime';
 
-export default async function NefropediatriaSessionPage({
+export default async function NefrologiaAvancadaSessionPage({
   params,
 }: {
   params: Promise<{ sessionId: string }>;
@@ -53,6 +53,7 @@ export default async function NefropediatriaSessionPage({
         finishLabel="Finalizar treino"
         collectConfidence
         antiFraud={false}
+        capByDailyWindow={false}
       />
     </div>
   );

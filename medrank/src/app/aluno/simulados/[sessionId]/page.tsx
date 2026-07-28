@@ -45,6 +45,7 @@ export default async function SimuladoSessionPage({
         apiBase="/api/simulados"
         finishLabel="Finalizar simulado"
         antiFraud={false}
+        capByDailyWindow={false}
       />
     </div>
   );

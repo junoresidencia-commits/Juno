@@ -31,6 +31,11 @@ interface Props {
   collectConfidence?: boolean;
   /** Tolerância zero — disputa diária. Desligado em treino/simulados. */
   antiFraud?: boolean;
+  /**
+   * Corta o tempo no fim da janela da disputa (8h30–21h).
+   * Só disputa diária. Treino/simulados devem passar false.
+   */
+  capByDailyWindow?: boolean;
 }
 
 function secondsOnQuestion(questionStartedAtMs: number, now = Date.now()): number {
@@ -50,6 +55,7 @@ export function ExamRunner({
   linearMode = true,
   collectConfidence = false,
   antiFraud = true,
+  capByDailyWindow = true,
 }: Props) {
   const router = useRouter();
   const questionLimit = getQuestionTimeLimitSeconds(durationMinutes, questions.length);
@@ -104,9 +110,11 @@ export function ExamRunner({
 
   useEffect(() => {
     setMounted(true);
-    setRemaining(getEffectiveExamRemainingSeconds(startedAt, durationMinutes));
+    setRemaining(
+      getEffectiveExamRemainingSeconds(startedAt, durationMinutes, new Date(), capByDailyWindow)
+    );
     setQuestionRemaining(questionLimit);
-  }, [startedAt, durationMinutes, questionLimit]);
+  }, [startedAt, durationMinutes, questionLimit, capByDailyWindow]);
 
   useEffect(() => {
     if (finishedRef.current || antiFraud) return;
@@ -272,7 +280,12 @@ export function ExamRunner({
     if (!mounted) return;
 
     const tick = () => {
-      const examSecs = getEffectiveExamRemainingSeconds(startedAt, durationMinutes);
+      const examSecs = getEffectiveExamRemainingSeconds(
+        startedAt,
+        durationMinutes,
+        new Date(),
+        capByDailyWindow
+      );
       setRemaining(examSecs);
       if (examSecs <= 0) {
         submitExam(true);
@@ -297,7 +310,17 @@ export function ExamRunner({
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [durationMinutes, linearMode, mounted, questionLimit, questions, skipQuestion, startedAt, submitExam]);
+  }, [
+    capByDailyWindow,
+    durationMinutes,
+    linearMode,
+    mounted,
+    questionLimit,
+    questions,
+    skipQuestion,
+    startedAt,
+    submitExam,
+  ]);
 
   const current = questions[currentIndex];
   if (!current) {
