@@ -100,14 +100,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: authError.message }, { status: 500 });
   }
 
-  const now = new Date().toISOString();
   const { error: profileError } = await admin.from('profiles').insert({
     id: authUser.user.id,
     name: name.trim(),
     email,
     role: 'student',
-    active: true,
-    approved_at: now,
+    // Aguarda PIX: professor libera em /admin/alunos → Liberar após PIX (+30 dias)
+    active: false,
+    approved_at: null,
     enabled_tracks: tracks,
     must_change_password: true,
   });
@@ -119,8 +119,8 @@ export async function POST(request: Request) {
         name: name.trim(),
         email,
         role: 'student',
-        active: true,
-        approved_at: now,
+        active: false,
+        approved_at: null,
         must_change_password: true,
       });
       if (retryErr) {
@@ -134,8 +134,8 @@ export async function POST(request: Request) {
         name: name.trim(),
         email,
         role: 'student',
-        active: true,
-        approved_at: now,
+        active: false,
+        approved_at: null,
         enabled_tracks: tracks,
       });
       if (retryErr) {

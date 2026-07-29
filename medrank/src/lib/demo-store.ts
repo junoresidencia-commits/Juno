@@ -316,8 +316,9 @@ export function createDemoStudentByAdmin(
     name: name.trim(),
     email: emailNorm,
     password,
-    active: true,
-    approvedAt: now,
+    // Aguarda PIX — liberar em Alunos
+    active: false,
+    approvedAt: null,
     createdAt: now,
     enabled_tracks: tracks,
     mustChangePassword: true,

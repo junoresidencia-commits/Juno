@@ -151,7 +151,17 @@ export function StudentActions({
             {...approveHandlers}
             className="exam-tap rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
           >
-            {loading === 'approve' ? '...' : 'Liberar após PIX'}
+            {loading === 'approve' ? '...' : 'Liberar após PIX (+30 dias)'}
+          </button>
+        )}
+        {pending && (
+          <button
+            type="button"
+            disabled={loading !== null}
+            {...deleteHandlers}
+            className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          >
+            {loading === 'delete' ? '...' : 'Não liberar / excluir'}
           </button>
         )}
         {!pending && (
@@ -171,7 +181,7 @@ export function StudentActions({
             {...blockHandlers}
             className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
           >
-            {loading === 'block' ? '...' : active ? 'Bloquear' : 'Desbloquear'}
+            {loading === 'block' ? '...' : active ? 'Bloquear acesso' : 'Desbloquear'}
           </button>
         )}
         {!pending && active && (
@@ -192,14 +202,16 @@ export function StudentActions({
                 : 'Tornar admin de liga'}
           </button>
         )}
-        <button
-          type="button"
-          disabled={loading !== null}
-          {...deleteHandlers}
-          className="exam-tap rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
-        >
-          {loading === 'delete' ? '...' : 'Excluir'}
-        </button>
+        {!pending && (
+          <button
+            type="button"
+            disabled={loading !== null}
+            {...deleteHandlers}
+            className="exam-tap rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            {loading === 'delete' ? '...' : 'Excluir'}
+          </button>
+        )}
       </div>
 
       {!pending && (

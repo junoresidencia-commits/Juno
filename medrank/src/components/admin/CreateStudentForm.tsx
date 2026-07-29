@@ -10,13 +10,15 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
     <div className="rounded-xl bg-white p-5 text-slate-900 shadow-sm ring-1 ring-slate-200">
       <h2 className="font-semibold text-slate-900">Criar login do aluno</h2>
       <p className="mt-1 text-sm text-slate-600">
-        Você define o e-mail, a senha e quais módulos ficam ligados. Depois pode ligar/desligar
-        na lista de alunos.
+        Cria o cadastro com o <strong>nome</strong> do aluno. Ele fica em{' '}
+        <strong>Aguardando PIX</strong> até você confirmar o pagamento e tocar em{' '}
+        <strong>Liberar após PIX</strong> (+30 dias). Quem já está liberado mantém a validade.
       </p>
 
       {initialSuccess && (
-        <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
-          ✓ Login criado para <strong>{initialSuccess.name}</strong> ({initialSuccess.email})
+        <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-950 ring-1 ring-amber-200">
+          ✓ Cadastro criado: <strong>{initialSuccess.name}</strong> ({initialSuccess.email}).
+          Confira o PIX e libere na lista abaixo.
         </div>
       )}
 
