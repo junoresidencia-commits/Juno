@@ -10,6 +10,22 @@
     {
       "path": "/api/cron/subscriptions",
       "schedule": "15 9 * * *"
+    },
+    {
+      "path": "/api/cron/exam-nudge",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/exam-nudge",
+      "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/cron/exam-nudge",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/exam-nudge",
+      "schedule": "0 22 * * *"
     }
   ]
 }

@@ -73,13 +73,18 @@ export function EnsureDailyExamsButton() {
       setDetails(lines);
 
       if (createdCount > 0) {
-        setMessage(`Pronto — ${createdCount} prova(s) de hoje gerada(s).`);
+        const emailed = data.notify?.emailed ?? 0;
+        const inApp = data.notify?.inApp ?? 0;
+        const skip = data.notify?.skipped ? ` (${data.notify.skipped})` : '';
+        setMessage(
+          `Pronto — ${createdCount} prova(s) de hoje gerada(s). Avisos: ${emailed} e-mail(s), ${inApp} no app${skip}.`
+        );
       } else if (data.general?.exam || data.nephrology?.exam) {
         setMessage('Já existem as de hoje. Use “Regenerar hoje” se quiser remontar.');
       } else {
         setMessage('Não foi possível criar as provas de hoje');
       }
-      const err = data.general?.error || data.nephrology?.error || data.error;
+      const err = data.general?.error || data.nephrology?.error || data.error || data.notify?.error;
       if (err) setError(err);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro de rede');
@@ -123,7 +128,16 @@ export function EnsureDailyExamsButton() {
       if (gLine) lines.push(gLine);
       if (nLine) lines.push(nLine);
       setDetails(lines);
-      setMessage(data.message || 'Provas regeneradas.');
+      setMessage(
+        [
+          data.message || 'Provas regeneradas.',
+          data.notify
+            ? `Avisos: ${data.notify.emailed ?? 0} e-mail(s), ${data.notify.inApp ?? 0} no app.`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' ')
+      );
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro de rede');
     } finally {

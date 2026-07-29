@@ -201,6 +201,26 @@ cd medrank
 | Prova não aparece | Prova precisa estar `published` e na data de hoje |
 | Ranking vazio | Alunos precisam terminar a prova; ranking libera conforme config da prova |
 | Build falha na Vercel | Root Directory deve ser `medrank`, não a raiz do repo |
+| Aluno não recebe e-mail da prova | Configure `RESEND_API_KEY` + `EMAIL_FROM` (ver `docs/EMAIL-PROVA-ATIVA.md`). Sem isso, só notificação no app. |
+
+---
+
+## 5.1 E-mail “prova ativa” + empurrões (opcional)
+
+Quando a disputa do dia é gerada, alunos ativos recebem e-mail (Resend) + aviso no sino.
+
+Ao longo do dia (9h / 13h / 17h / 19h BRT), quem **ainda não fez** recebe lembrete estimulando a fazer antes de 21h — com toques de placar da semana (“faltam X pts do 1º”).
+
+Na Vercel:
+
+```
+RESEND_API_KEY=re_...
+EMAIL_FROM=MedRank <prova@seudominio.com>
+NEXT_PUBLIC_SITE_URL=https://seu-app.vercel.app
+CRON_SECRET=...
+```
+
+Detalhes: `docs/EMAIL-PROVA-ATIVA.md`.
 
 ---
 

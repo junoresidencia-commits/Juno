@@ -60,6 +60,7 @@ export async function POST(request: Request) {
     failures,
     general: regenerated.general,
     nephrology: regenerated.nephrology,
+    notify: regenerated.notify,
     message:
       failures.length === 0
         ? `Apaguei ${deleted} disputa(s) de ${today} em diante e regeneri as de hoje com o banco atual.`
