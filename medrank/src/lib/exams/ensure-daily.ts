@@ -5,18 +5,25 @@ import { ensureDailyNephrologyExam, type EnsureDailyExamResult } from '@/lib/exa
 import { ensureDailyGeneralExam, type EnsureGeneralExamResult } from '@/lib/exams/daily-general';
 import { ensureNephrologyLeague } from '@/lib/exams/audience';
 import { getAiPaidSettings } from '@/lib/exams/ai-paid-settings';
+import {
+  notifyStudentsExamReady,
+  type ExamReadyNotifyResult,
+} from '@/lib/email/exam-ready';
 
 export type DualEnsureResult = {
   date: string;
   mode: 'ai' | 'bank';
   general: EnsureGeneralExamResult;
   nephrology: EnsureDailyExamResult;
+  notify?: ExamReadyNotifyResult;
 };
 
 export type EnsureDailyOpts = {
   force?: boolean;
   /** ai = OpenAI (pago); bank = só banco local (gratis). Default: bank. */
   mode?: 'ai' | 'bank';
+  /** Se false, não envia e-mail/notificação (default true). */
+  notifyStudents?: boolean;
 };
 
 export function resolveDailyMode(requested?: 'ai' | 'bank'): 'ai' | 'bank' {
@@ -45,7 +52,31 @@ export async function ensureBothDailyExams(
 
   const general = await ensureDailyGeneralExam(dateStr, { force: opts?.force, mode });
   const nephrology = await ensureDailyNephrologyExam(dateStr, { force: opts?.force, mode });
-  return { date: dateStr, mode, general, nephrology };
+
+  const result: DualEnsureResult = { date: dateStr, mode, general, nephrology };
+
+  if (opts?.notifyStudents !== false) {
+    try {
+      result.notify = await notifyStudentsExamReady(result);
+      if (result.notify.error) {
+        console.error('[ensure-daily] exam-ready email:', result.notify.error);
+      } else if (result.notify.emailed > 0 || result.notify.inApp > 0) {
+        console.info(
+          `[ensure-daily] avisos: email=${result.notify.emailed} app=${result.notify.inApp}`
+        );
+      }
+    } catch (err) {
+      console.error('[ensure-daily] notifyStudentsExamReady failed', err);
+      result.notify = {
+        emailed: 0,
+        inApp: 0,
+        recipients: 0,
+        error: err instanceof Error ? err.message : 'Falha ao avisar alunos',
+      };
+    }
+  }
+
+  return result;
 }
 
 export async function ensureBothDailyHorizons(
