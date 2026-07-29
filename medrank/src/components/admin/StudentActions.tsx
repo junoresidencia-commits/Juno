@@ -39,10 +39,17 @@ export function StudentActions({
         headers: body ? { 'Content-Type': 'application/json' } : undefined,
         body: body ? JSON.stringify(body) : undefined,
       });
-      const data = await res.json();
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        warning?: string;
+        ok?: boolean;
+      };
       if (!res.ok) {
-        alert(data.error ?? 'Erro');
+        alert(data.error ?? `Erro ao ${method === 'DELETE' ? 'excluir' : 'atualizar'} aluno (${res.status})`);
         return false;
+      }
+      if (data.warning) {
+        alert(data.warning);
       }
       router.refresh();
       return true;
@@ -55,7 +62,10 @@ export function StudentActions({
   async function approve() {
     if (!confirm(`Confirmar PIX de R$ 10 e liberar ${name} por 30 dias?`)) return;
     setLoading('approve');
-    await apiCall('PATCH', { action: 'approve' });
+    const ok = await apiCall('PATCH', { action: 'approve' });
+    if (ok) {
+      // refresh já feito; feedback rápido no mobile
+    }
     setLoading(null);
   }
 
@@ -141,7 +151,17 @@ export function StudentActions({
             {...approveHandlers}
             className="exam-tap rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
           >
-            {loading === 'approve' ? '...' : 'Liberar após PIX'}
+            {loading === 'approve' ? '...' : 'Liberar após PIX (+30 dias)'}
+          </button>
+        )}
+        {pending && (
+          <button
+            type="button"
+            disabled={loading !== null}
+            {...deleteHandlers}
+            className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          >
+            {loading === 'delete' ? '...' : 'Não liberar / excluir'}
           </button>
         )}
         {!pending && (
@@ -161,7 +181,7 @@ export function StudentActions({
             {...blockHandlers}
             className="exam-tap rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
           >
-            {loading === 'block' ? '...' : active ? 'Bloquear' : 'Desbloquear'}
+            {loading === 'block' ? '...' : active ? 'Bloquear acesso' : 'Desbloquear'}
           </button>
         )}
         {!pending && active && (
@@ -182,14 +202,16 @@ export function StudentActions({
                 : 'Tornar admin de liga'}
           </button>
         )}
-        <button
-          type="button"
-          disabled={loading !== null}
-          {...deleteHandlers}
-          className="exam-tap rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
-        >
-          {loading === 'delete' ? '...' : 'Excluir'}
-        </button>
+        {!pending && (
+          <button
+            type="button"
+            disabled={loading !== null}
+            {...deleteHandlers}
+            className="exam-tap rounded-lg border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            {loading === 'delete' ? '...' : 'Excluir'}
+          </button>
+        )}
       </div>
 
       {!pending && (
