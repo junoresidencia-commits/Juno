@@ -96,8 +96,8 @@ function buildExamReadyEmail(opts: {
 
   const subject =
     opts.exams.length > 1
-      ? `MedRank: suas disputas de ${opts.dateLabel} já estão ativas`
-      : `MedRank: sua prova de ${opts.dateLabel} já está ativa`;
+      ? `MedRank: disputas de ${opts.dateLabel} ativas — bora garantir os pontos`
+      : `MedRank: prova de ${opts.dateLabel} ativa — faz hoje antes de acabar`;
 
   const html = `
     <div style="font-family: system-ui, -apple-system, Segoe UI, sans-serif; line-height: 1.5; color: #0f172a;">
@@ -105,12 +105,13 @@ function buildExamReadyEmail(opts: {
       <p>A disputa de <strong>${dateLabel}</strong> já está <strong>ativa</strong> no MedRank.</p>
       <ul>${listHtml}</ul>
       <p>Janela de hoje: <strong>${windowLabel()}</strong> (horário de Brasília).</p>
+      <p><strong>Não deixa pra depois</strong> — quem faz hoje sobe no ranking; a janela fecha às 21h.</p>
       <p>
         <a href="${opts.homeUrl}" style="display:inline-block;background:#047857;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:600;">
-          Abrir a prova
+          Fazer a prova agora
         </a>
       </p>
-      <p style="font-size:13px;color:#64748b;">Se o botão não abrir, use: ${opts.homeUrl}</p>
+      <p style="font-size:13px;color:#64748b;">MedRank não para — e o placar também não. Se o botão não abrir: ${opts.homeUrl}</p>
     </div>
   `.trim();
 
@@ -121,7 +122,8 @@ function buildExamReadyEmail(opts: {
     listText,
     '',
     `Janela: ${windowLabel()} (Brasília).`,
-    `Acesse: ${opts.homeUrl}`,
+    'Não deixa pra depois — quem faz hoje sobe no ranking; fecha às 21h.',
+    `Fazer a prova agora: ${opts.homeUrl}`,
   ].join('\n');
 
   return { subject, html, text };

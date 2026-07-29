@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { assertCronAuthorized } from '@/lib/cron/auth';
 import { ensureBothDailyExams, resolveDailyMode } from '@/lib/exams/ensure-daily';
 import { todayDateStringBrazil } from '@/lib/exams/window';
 
@@ -10,21 +11,8 @@ export const maxDuration = 300;
  * Padrao: modo banco (sem OpenAI). MEDRANK_DAILY_MODE=ai para pipeline pago.
  */
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  const auth = request.headers.get('authorization') ?? '';
-  const headerSecret = request.headers.get('x-cron-secret') ?? '';
-  const bearer = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-
-  if (secret) {
-    if (bearer !== secret && headerSecret !== secret) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-  } else if (process.env.NODE_ENV === 'production' && process.env.DEMO_MODE !== 'true') {
-    return NextResponse.json(
-      { error: 'CRON_SECRET nao configurado na Vercel.' },
-      { status: 503 }
-    );
-  }
+  const denied = assertCronAuthorized(request);
+  if (denied) return denied;
 
   const mode = resolveDailyMode();
   if (mode === 'ai' && !process.env.OPENAI_API_KEY?.trim()) {
@@ -49,6 +37,7 @@ export async function GET(request: Request) {
     date,
     created,
     checked: 2,
+    notify: result.notify ?? null,
     general: {
       created: result.general.created,
       examId: result.general.exam?.id ?? null,

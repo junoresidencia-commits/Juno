@@ -1,24 +1,47 @@
-# E-mail: prova do dia ativa
+# E-mail: prova ativa + empurrões do dia
 
-Quando a disputa diária é **gerada e publicada** (cron ou Admin → Provas → Gerar), o MedRank avisa os alunos ativos:
+## 1) Quando a prova é gerada
+Cron `/api/cron/daily-exam` ou Admin → Provas → Gerar.
 
-1. **E-mail** (Resend) — “sua prova já está ativa”
-2. **Notificação no app** (sino) — mesmo aviso
+Alunos ativos recebem e-mail + aviso no sino: **prova já está ativa — faz hoje**.
 
-Não reenvia se a prova do dia **já existia** (só na criação/regeneração).
+## 2) Lembretes ao longo do dia (quem ainda não fez)
+Cron `/api/cron/exam-nudge` nos horários (Brasília):
 
-## Configurar na Vercel
+| BRT | UTC (cron) | Tom |
+|-----|------------|-----|
+| 9h  | 12:00 | Prova no ar — bora |
+| 13h | 16:00 | Ainda dá tempo |
+| 17h | 20:00 | Tarde passando + toque de placar |
+| 19h | 22:00 | Última chamada (fecha 21h) + placar |
 
-1. Conta em [resend.com](https://resend.com)
-2. **API Key** → variável `RESEND_API_KEY`
-3. Domínio verificado → `EMAIL_FROM=MedRank <prova@seudominio.com>`
-4. Sem domínio (teste): `EMAIL_FROM=MedRank <onboarding@resend.dev>` (só envia para o e-mail da conta Resend)
-5. `NEXT_PUBLIC_SITE_URL=https://seu-app.vercel.app` (link “Abrir a prova”)
+Só para quem:
+- está **ativo** e tem **e-mail**
+- ainda **não finalizou** a disputa do dia (geral / nefro liberada)
 
-Sem `RESEND_API_KEY`, a notificação **no app** continua; o e-mail é pulado.
+Quem já fez não recebe.
 
-## Quem recebe
+### Toque de ranking (sem humilhar)
+À tarde/noite (e às vezes de manhã se o placar já andou):
 
-- Alunos com `active = true`
-- Prova geral → todos os ativos
-- Prova de Nefrologia → só quem tem o módulo Nefrologia ligado
+- “Faltam X pts para o 1º da semana…”
+- “O 1º já soma Y pts — a de hoje ainda conta”
+- Se for o 1º: “liderança sob pressão — mantém o ritmo”
+
+## Configurar (Vercel)
+
+```
+RESEND_API_KEY=re_...
+EMAIL_FROM=MedRank <prova@seudominio.com>
+NEXT_PUBLIC_SITE_URL=https://seu-app.vercel.app
+CRON_SECRET=...   # mesmo dos outros crons
+```
+
+Sem `RESEND_API_KEY`, o e-mail é pulado e a notificação no app continua.
+
+Teste manual (com secret):
+
+```
+GET /api/cron/exam-nudge?phase=evening
+Authorization: Bearer $CRON_SECRET
+```
