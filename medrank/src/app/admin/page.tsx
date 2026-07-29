@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { requireRole } from '@/lib/auth';
 import { formatPercent } from '@/lib/format';
 import { fetchStudentPerformance } from '@/lib/reports/data';
@@ -58,7 +59,8 @@ export default async function AdminDashboard() {
     );
   }
 
-  const supabase = await createClient();
+  // Prefer service_role: evita contagem 0 / lista vazia quando RLS/is_admin falha na sessão
+  const supabase = createAdminClient() ?? (await createClient());
 
   const [
     { count: studentCount },
