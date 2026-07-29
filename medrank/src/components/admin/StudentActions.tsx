@@ -39,10 +39,17 @@ export function StudentActions({
         headers: body ? { 'Content-Type': 'application/json' } : undefined,
         body: body ? JSON.stringify(body) : undefined,
       });
-      const data = await res.json();
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        warning?: string;
+        ok?: boolean;
+      };
       if (!res.ok) {
-        alert(data.error ?? 'Erro');
+        alert(data.error ?? `Erro ao ${method === 'DELETE' ? 'excluir' : 'atualizar'} aluno (${res.status})`);
         return false;
+      }
+      if (data.warning) {
+        alert(data.warning);
       }
       router.refresh();
       return true;
@@ -55,7 +62,10 @@ export function StudentActions({
   async function approve() {
     if (!confirm(`Confirmar PIX de R$ 10 e liberar ${name} por 30 dias?`)) return;
     setLoading('approve');
-    await apiCall('PATCH', { action: 'approve' });
+    const ok = await apiCall('PATCH', { action: 'approve' });
+    if (ok) {
+      // refresh já feito; feedback rápido no mobile
+    }
     setLoading(null);
   }
 

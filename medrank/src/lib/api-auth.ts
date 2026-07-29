@@ -35,11 +35,15 @@ export async function requireAdminApi(): Promise<AdminApiAuth> {
     return { error: NextResponse.json({ error: 'Não autenticado' }, { status: 401 }) };
   }
 
-  const { data: profile } = await supabase
+  // Prefer service_role para ler o papel — evita 403 se RLS/is_admin falhar na sessão
+  const { createAdminClient } = await import('@/lib/supabase/admin');
+  const admin = createAdminClient();
+  const roleClient = admin ?? supabase;
+  const { data: profile } = await roleClient
     .from('profiles')
     .select('role')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   if (profile?.role !== 'admin') {
     return { error: NextResponse.json({ error: 'Acesso negado' }, { status: 403 }) };

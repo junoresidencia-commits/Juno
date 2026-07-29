@@ -13,11 +13,85 @@ import { normalizeTracks } from '@/lib/tracks/config';
 import { ensureGeneralTrack, syncTrackGroupMembership } from '@/lib/exams/audience';
 import { subscriptionExpiresAt } from '@/lib/billing/pix';
 
+type StudentLookup = {
+  id: string;
+  role: string;
+  active: boolean;
+  approved_at: string | null;
+  league_admin?: boolean;
+  enabled_tracks?: string[] | null;
+  subscription_expires_at?: string | null;
+};
+
 function nextExpiryIso(currentExpires: string | null | undefined): string {
   const now = new Date();
   const current = currentExpires ? new Date(currentExpires) : now;
   const from = current > now ? current : now;
   return subscriptionExpiresAt(from).toISOString();
+}
+
+async function loadStudent(
+  admin: NonNullable<ReturnType<typeof createAdminClient>>,
+  id: string
+): Promise<{ student: StudentLookup | null; error: string | null }> {
+  const full = await admin
+    .from('profiles')
+    .select('id, role, active, approved_at, league_admin, enabled_tracks, subscription_expires_at')
+    .eq('id', id)
+    .eq('role', 'student')
+    .maybeSingle();
+
+  if (!full.error) {
+    return { student: (full.data as StudentLookup | null) ?? null, error: null };
+  }
+
+  const msg = full.error.message ?? '';
+  if (!/subscription_expires_at|enabled_tracks|league_admin|schema cache/i.test(msg)) {
+    return { student: null, error: msg };
+  }
+
+  const mid = await admin
+    .from('profiles')
+    .select('id, role, active, approved_at, league_admin')
+    .eq('id', id)
+    .eq('role', 'student')
+    .maybeSingle();
+
+  if (!mid.error) {
+    return {
+      student: mid.data
+        ? {
+            ...(mid.data as StudentLookup),
+            enabled_tracks: null,
+            subscription_expires_at: null,
+          }
+        : null,
+      error: null,
+    };
+  }
+
+  const basic = await admin
+    .from('profiles')
+    .select('id, role, active, approved_at')
+    .eq('id', id)
+    .eq('role', 'student')
+    .maybeSingle();
+
+  if (basic.error) {
+    return { student: null, error: basic.error.message || mid.error.message || msg };
+  }
+
+  return {
+    student: basic.data
+      ? {
+          ...(basic.data as StudentLookup),
+          league_admin: false,
+          enabled_tracks: null,
+          subscription_expires_at: null,
+        }
+      : null,
+    error: null,
+  };
 }
 
 export async function PATCH(
@@ -86,14 +160,19 @@ export async function PATCH(
     return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });
   }
 
-  const admin = createAdminClient() ?? auth.supabase;
-  const { data: student } = await admin
-    .from('profiles')
-    .select('id, role, active, approved_at, league_admin, enabled_tracks, subscription_expires_at')
-    .eq('id', id)
-    .eq('role', 'student')
-    .single();
+  // Liberar / renovar / bloquear exige service role (não depender de RLS/is_admin na sessão)
+  const admin = createAdminClient();
+  if (!admin) {
+    return NextResponse.json(
+      { error: 'Service role necessária para liberar / gerenciar alunos.' },
+      { status: 503 }
+    );
+  }
 
+  const { student, error: loadError } = await loadStudent(admin, id);
+  if (loadError) {
+    return NextResponse.json({ error: loadError }, { status: 500 });
+  }
   if (!student) {
     return NextResponse.json({ error: 'Aluno não encontrado' }, { status: 404 });
   }
@@ -107,13 +186,15 @@ export async function PATCH(
         approved_at: new Date().toISOString(),
         subscription_expires_at: expires,
       })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) {
       if (/subscription_expires_at|schema cache/i.test(error.message)) {
         const { error: fallback } = await admin
           .from('profiles')
           .update({ active: true, approved_at: new Date().toISOString() })
-          .eq('id', id);
+          .eq('id', id)
+          .eq('role', 'student');
         if (fallback) return NextResponse.json({ error: fallback.message }, { status: 500 });
         return NextResponse.json({
           ok: true,
@@ -127,18 +208,16 @@ export async function PATCH(
   }
 
   if (action === 'renew') {
-    const expires = nextExpiryIso(
-      (student as { subscription_expires_at?: string | null }).subscription_expires_at
-    );
+    const expires = nextExpiryIso(student.subscription_expires_at);
     const { error } = await admin
       .from('profiles')
       .update({
         active: true,
-        approved_at:
-          (student as { approved_at?: string | null }).approved_at ?? new Date().toISOString(),
+        approved_at: student.approved_at ?? new Date().toISOString(),
         subscription_expires_at: expires,
       })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) {
       if (/subscription_expires_at|schema cache/i.test(error.message)) {
         return NextResponse.json(
@@ -155,25 +234,41 @@ export async function PATCH(
   }
 
   if (action === 'block') {
-    const { error } = await admin.from('profiles').update({ active: false }).eq('id', id);
+    const { error } = await admin
+      .from('profiles')
+      .update({ active: false })
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, active: false });
   }
 
   if (action === 'unblock') {
-    const { error } = await admin.from('profiles').update({ active: true }).eq('id', id);
+    const { error } = await admin
+      .from('profiles')
+      .update({ active: true })
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, active: true });
   }
 
   if (action === 'make_league_admin') {
-    const { error } = await admin.from('profiles').update({ league_admin: true }).eq('id', id);
+    const { error } = await admin
+      .from('profiles')
+      .update({ league_admin: true })
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, league_admin: true });
   }
 
   if (action === 'revoke_league_admin') {
-    const { error } = await admin.from('profiles').update({ league_admin: false }).eq('id', id);
+    const { error } = await admin
+      .from('profiles')
+      .update({ league_admin: false })
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, league_admin: false });
   }
@@ -185,7 +280,8 @@ export async function PATCH(
     const { error } = await admin
       .from('profiles')
       .update({ enabled_tracks: tracks })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('role', 'student');
     if (error) {
       if (/enabled_tracks|schema cache/i.test(error.message)) {
         return NextResponse.json(
@@ -198,7 +294,7 @@ export async function PATCH(
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    await syncTrackGroupMembership(id, tracks, createAdminClient());
+    await syncTrackGroupMembership(id, tracks, admin);
     return NextResponse.json({ ok: true, enabled_tracks: tracks });
   }
 
