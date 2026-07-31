@@ -7,6 +7,7 @@ import {
   getPaidAccessCopy,
   getWhatsAppProofUrl,
   QUARTER_PRICE_CENTS,
+  RECOMMENDED_PLAN_ID,
 } from '@/lib/billing/pix';
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   success?: boolean;
   /** E-mail usado no sucesso (público ou convite). */
   successEmail?: string;
+  successName?: string;
 }
 
 export function CadastroForm({
@@ -27,14 +29,20 @@ export function CadastroForm({
   inviteEmail,
   success,
   successEmail,
+  successName,
 }: Props) {
   const emailForPix = successEmail || inviteEmail;
   const publicSignup = !token;
-  const whatsappUrl = getWhatsAppProofUrl(emailForPix);
-  const whatsappDisplay = formatWhatsAppDisplay();
   const pricing = getPaidAccessCopy();
   const quarterPrice = formatPriceBrl(QUARTER_PRICE_CENTS);
   const fullMonth = formatPriceBrl(FULL_MONTHLY_CENTS);
+  const whatsappDisplay = formatWhatsAppDisplay();
+  const whatsappUrl = getWhatsAppProofUrl({
+    emailHint: emailForPix,
+    nameHint: successName,
+    planId: RECOMMENDED_PLAN_ID,
+    afterSignup: true,
+  });
 
   if (success) {
     return (
@@ -42,13 +50,22 @@ export function CadastroForm({
         <div className="rounded-xl bg-emerald-50 p-5 text-center ring-1 ring-emerald-200">
           <p className="text-lg font-semibold text-emerald-900">Conta criada</p>
           <p className="mt-2 text-sm text-emerald-800">
-            1) Promo {pricing.promoHeadline}. Só 1 mês: {fullMonth}. À vista 3 meses:{' '}
-            {quarterPrice} (−R$ 10).
+            1) Escolha o plano e pague o PIX abaixo
             <br />
-            2) Me manda no WhatsApp <strong>{whatsappDisplay}</strong> pra eu liberar (com o
-            comprovante)
+            2) Me manda no WhatsApp <strong>{whatsappDisplay}</strong> com o comprovante pra
+            liberar
+          </p>
+          <p className="mt-2 text-xs text-emerald-900/80">
+            Promo {pricing.promoHeadline}. Só 1 mês: {fullMonth}. À vista 3 meses: {quarterPrice}{' '}
+            (−R$ 10).
           </p>
         </div>
+
+        <PixPaymentCard
+          emailHint={emailForPix}
+          nameHint={successName}
+          afterSignup
+        />
 
         <a
           href={whatsappUrl}
@@ -59,10 +76,9 @@ export function CadastroForm({
           Me manda no WhatsApp pra liberar →
         </a>
         <p className="text-center text-xs text-slate-600">
-          Abre o WhatsApp com a mensagem pronta. Anexe o comprovante do PIX.
+          Abre o WhatsApp com plano e valor. Anexe o comprovante do PIX.
         </p>
 
-        <PixPaymentCard emailHint={emailForPix} />
         <Link
           href="/login"
           className="exam-tap block w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white"
@@ -102,12 +118,19 @@ export function CadastroForm({
   return (
     <form action={action} method="POST" className="space-y-4">
       <p className="text-sm text-slate-600">
-        {publicSignup
-          ? `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses · só 1 mês ${fullMonth} · 3 meses à vista ${quarterPrice} (−R$ 10). Depois WhatsApp ${whatsappDisplay} pra liberar.`
-          : `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses · só 1 mês ${fullMonth} · 3 meses à vista ${quarterPrice} (−R$ 10). Depois me manda no WhatsApp pra liberar.`}
+        Crie seu login primeiro. Depois você vê o PIX (promo {formatPriceBrl()}/mês · 1 mês{' '}
+        {fullMonth} · 3 meses {quarterPrice}). WhatsApp {whatsappDisplay} pra liberar.
       </p>
 
-      <PixPaymentCard emailHint={inviteEmail} compact />
+      <div className="rounded-xl bg-teal-50 px-4 py-3 text-sm text-teal-950 ring-1 ring-teal-200">
+        <p className="font-semibold">Valores (PIX depois de criar a conta)</p>
+        <ul className="mt-1 list-disc space-y-0.5 pl-5 text-xs text-teal-900">
+          <li>Só 1 mês: {fullMonth}</li>
+          <li>Promo: {formatPriceBrl()}/mês por 3 meses</li>
+          <li>3 meses à vista: {quarterPrice} (−R$ 10)</li>
+          <li>Semestral / anual: paga o período de uma vez</li>
+        </ul>
+      </div>
 
       <div>
         <label htmlFor="cadastro-name" className="block text-sm font-medium">

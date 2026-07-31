@@ -30,8 +30,8 @@ export async function notifyAdminNewSignup(opts: {
     <div style="font-family:system-ui,sans-serif;line-height:1.5;color:#0f172a">
       <p><strong>${opts.name}</strong> (${opts.email}) criou a conta no MedRank.</p>
       <p>Status: <strong>aguardando PIX</strong>.</p>
-      <p>Valores: 1 mês ${fullMonth} · promo ${promoMonth}/mês por 3 meses · 3 meses à vista ${quarter} (−R$ 10) · anual ${year}.</p>
-      <p>Quando o comprovante chegar no WhatsApp (${formatWhatsAppDisplay()}), libere em Alunos no plano certo.</p>
+      <p>Valores: 1 mês ${fullMonth} · promo ${promoMonth}/mês · promo mensal ${promoMonth} · 3 meses à vista ${quarter} (−R$ 10) · anual ${year}.</p>
+      <p>Quando o comprovante chegar no WhatsApp (${formatWhatsAppDisplay()}), libere em Alunos no plano certo (inclui “Promo mensal”).</p>
       <p><a href="${alunosUrl}">Abrir Alunos → Liberar após PIX</a></p>
     </div>
   `.trim();

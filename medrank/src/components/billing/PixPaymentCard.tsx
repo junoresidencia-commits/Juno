@@ -6,6 +6,7 @@ import {
   formatWhatsAppDisplay,
   getPaidAccessCopy,
   getWhatsAppProofUrl,
+  RECOMMENDED_PLAN_ID,
   SUBSCRIPTION_PLAN_LIST,
   type SubscriptionPlanId,
 } from '@/lib/billing/pix';
@@ -13,18 +14,26 @@ import {
 type Props = {
   /** E-mail do aluno — sugerido na descrição do PIX e na msg do WhatsApp */
   emailHint?: string;
+  nameHint?: string;
+  /** Mensagem pós-cadastro (ainda vai pagar). */
+  afterSignup?: boolean;
   compact?: boolean;
 };
 
-export function PixPaymentCard({ emailHint, compact }: Props) {
+export function PixPaymentCard({ emailHint, nameHint, afterSignup, compact }: Props) {
   const copy = getPaidAccessCopy();
   const [copied, setCopied] = useState(false);
-  const [selected, setSelected] = useState<SubscriptionPlanId>(copy.recommendedPlanId);
-  const plan = SUBSCRIPTION_PLAN_LIST.find((p) => p.id === selected) ?? SUBSCRIPTION_PLAN_LIST[1];
+  const [selected, setSelected] = useState<SubscriptionPlanId>(RECOMMENDED_PLAN_ID);
+  const plan = SUBSCRIPTION_PLAN_LIST.find((p) => p.id === selected) ?? SUBSCRIPTION_PLAN_LIST[2];
   const descricao = emailHint
     ? `MedRank ${emailHint}`
     : 'MedRank — coloque seu e-mail na descrição';
-  const whatsappUrl = getWhatsAppProofUrl(emailHint);
+  const whatsappUrl = getWhatsAppProofUrl({
+    emailHint,
+    nameHint,
+    planId: selected,
+    afterSignup,
+  });
   const whatsappDisplay = formatWhatsAppDisplay(copy.whatsappDigits);
 
   async function copyKey() {
@@ -86,7 +95,9 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
                 </span>
               ) : null}
               {p.payHint ? (
-                <span className={`mt-0.5 block text-[10px] ${active ? 'text-slate-600' : 'text-teal-100/90'}`}>
+                <span
+                  className={`mt-0.5 block text-[10px] ${active ? 'text-slate-600' : 'text-teal-100/90'}`}
+                >
                   {p.payHint}
                 </span>
               ) : null}
@@ -122,7 +133,9 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
 
       <div className="mt-4 rounded-xl bg-emerald-500/20 p-3 ring-1 ring-emerald-300/40">
         <p className="text-center text-sm font-semibold text-emerald-50">
-          Pagou? Me manda no WhatsApp pra eu liberar
+          {afterSignup
+            ? 'Depois do PIX, me manda no WhatsApp pra liberar'
+            : 'Pagou? Me manda no WhatsApp pra eu liberar'}
         </p>
         <a
           href={whatsappUrl}
@@ -133,7 +146,8 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
           Abrir WhatsApp {whatsappDisplay}
         </a>
         <p className="mt-2 text-center text-xs text-teal-50">
-          A mensagem já vem pronta: peça a liberação e anexe o comprovante.
+          A mensagem já inclui o plano ({plan.label} · {formatPriceBrl(plan.priceCents)}). Anexe o
+          comprovante.
         </p>
       </div>
 

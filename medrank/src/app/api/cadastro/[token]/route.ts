@@ -103,11 +103,24 @@ export async function POST(
     } catch {
       /* ignore */
     }
+    try {
+      const { notifyStudentSignupPending } = await import('@/lib/email/student-notify');
+      await notifyStudentSignupPending({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+      });
+    } catch {
+      /* ignore */
+    }
 
     const message =
-      'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês por 3 meses · à vista R$ 49,70 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
+      'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês · 3 meses R$ 50 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
     if (formSubmit) {
-      return cadastroRedirect(request, token, { ok: '1' });
+      return cadastroRedirect(request, token, {
+        ok: '1',
+        email: email.trim().toLowerCase(),
+        name: name.trim(),
+      });
     }
     return NextResponse.json({ ok: true, message });
   }
@@ -215,10 +228,21 @@ export async function POST(
     console.error('[cadastro/token] notify admin failed', err);
   }
 
+  try {
+    const { notifyStudentSignupPending } = await import('@/lib/email/student-notify');
+    await notifyStudentSignupPending({ name: name.trim(), email: emailNorm });
+  } catch (err) {
+    console.error('[cadastro/token] notify student failed', err);
+  }
+
   const message =
-    'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês por 3 meses · à vista R$ 49,70 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
+    'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês · 3 meses R$ 50 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
   if (formSubmit) {
-    return cadastroRedirect(request, token, { ok: '1' });
+    return cadastroRedirect(request, token, {
+      ok: '1',
+      email: emailNorm,
+      name: name.trim(),
+    });
   }
 
   return NextResponse.json({ ok: true, message });
