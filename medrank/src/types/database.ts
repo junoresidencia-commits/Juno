@@ -2,7 +2,15 @@ export type UserRole = 'admin' | 'student';
 
 export type ExamStatus = 'draft' | 'published' | 'closed';
 
-export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'general';
+export type PeriodType =
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'quarterly'
+  | 'yearly'
+  | 'general';
+
+export type CollectivePeriodType = 'weekly' | 'monthly' | 'quarterly' | 'yearly';
 
 export type OptionLetter = 'A' | 'B' | 'C' | 'D' | 'E';
 
@@ -286,7 +294,7 @@ export interface StudyGroupJoinRequest {
 export interface StudyGroupCollectiveRanking {
   id: string;
   group_id: string;
-  period_type: 'weekly' | 'monthly';
+  period_type: CollectivePeriodType;
   period_start: string;
   period_end: string;
   active_members: number;

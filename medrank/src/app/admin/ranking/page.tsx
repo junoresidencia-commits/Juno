@@ -8,7 +8,7 @@ import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { RankingCompetitiveHero } from '@/components/ranking/RankingCompetitiveHero';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoRanking } from '@/lib/demo/presenters';
-import { daysLeftInMonth } from '@/lib/periods';
+import { daysLeftInMonth, daysLeftInQuarter } from '@/lib/periods';
 
 export default async function AdminRankingPage({
   searchParams,
@@ -26,6 +26,7 @@ export default async function AdminRankingPage({
     daily: 'Hoje',
     weekly: 'Semana',
     monthly: 'Mês (zera todo dia 1)',
+    quarterly: 'Trimestre (3 meses)',
     yearly: 'Ano (acumulado)',
     general: 'Geral (todo o histórico)',
   };
@@ -48,11 +49,19 @@ export default async function AdminRankingPage({
           subtitle={
             period === 'monthly'
               ? 'Disputa do mês — reinicia todo dia 1.'
-              : period === 'yearly'
-                ? 'Quem fez mais no ano.'
-                : 'Visão admin entre todas as ligas.'
+              : period === 'quarterly'
+                ? 'Aposta de 3 meses.'
+                : period === 'yearly'
+                  ? 'Quem fez mais no ano.'
+                  : 'Visão admin entre todas as ligas.'
           }
-          daysLeft={period === 'monthly' ? daysLeftInMonth() : null}
+          daysLeft={
+            period === 'monthly'
+              ? daysLeftInMonth()
+              : period === 'quarterly'
+                ? daysLeftInQuarter()
+                : null
+          }
         />
         <ol className="mt-6 space-y-2">
           {rankings.map((r) => {
@@ -130,11 +139,19 @@ export default async function AdminRankingPage({
         subtitle={
           period === 'monthly'
             ? 'Disputa do mês — reinicia todo dia 1.'
-            : period === 'yearly'
-              ? 'Quem fez mais no ano.'
-              : 'Visão admin entre todas as ligas.'
+            : period === 'quarterly'
+              ? 'Aposta de 3 meses.'
+              : period === 'yearly'
+                ? 'Quem fez mais no ano.'
+                : 'Visão admin entre todas as ligas.'
         }
-        daysLeft={period === 'monthly' ? daysLeftInMonth() : null}
+        daysLeft={
+          period === 'monthly'
+            ? daysLeftInMonth()
+            : period === 'quarterly'
+              ? daysLeftInQuarter()
+              : null
+        }
       />
 
       {error && period === 'yearly' ? (
