@@ -50,8 +50,8 @@ export default async function ProvaPage({
     return (
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-          {formatExamWindowLabel()}. Fique nesta tela · troca de aba encerra · 30 min · até 2 min 30 s
-          por questão.
+          {formatExamWindowLabel()}. Fique nesta tela · trocar de aba ou tirar print encerra a prova ·
+          30 min · até 2 min 30 s por questão.
         </div>
         {resumed && (
           <div className="border-b border-sky-200 bg-sky-50 px-4 py-2 text-center text-sm text-sky-950">
@@ -182,25 +182,12 @@ export default async function ProvaPage({
   return (
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
-        {formatExamWindowLabel()}. Fique nesta tela · troca de aba encerra · {exam.duration_minutes}{' '}
-        min · até 2 min 30 s por questão.
+        {formatExamWindowLabel()}. Fique nesta tela · trocar de aba ou tirar print encerra a prova ·{' '}
+        {exam.duration_minutes} min · até 2 min 30 s por questão.
       </div>
       {resumed && (
         <div className="border-b border-sky-200 bg-sky-50 px-4 py-2 text-center text-sm text-sky-950">
           Continuando de onde parou — suas respostas salvas foram restauradas.
-        </div>
-      )}
-      {(qualityStatus === 'warning' || qualityStatus === 'approved_override') && (
-        <div
-          className={`border-b px-4 py-2 text-center text-sm ${
-            qualityStatus === 'warning'
-              ? 'border-amber-300 bg-amber-50 text-amber-950'
-              : 'border-sky-200 bg-sky-50 text-sky-950'
-          }`}
-        >
-          {qualityStatus === 'warning'
-            ? qualitySummary || 'Aviso da revisão automática: alertas menores nesta prova.'
-            : 'Prova liberada pelo professor após revisão.'}
         </div>
       )}
       <ExamRunner

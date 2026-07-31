@@ -144,6 +144,7 @@ export function useExamAntiFraud({
       const key = e.key;
       const ctrl = e.ctrlKey || e.metaKey;
       const shift = e.shiftKey;
+      const meta = e.metaKey;
 
       if (
         key === 'F12' ||
@@ -161,9 +162,21 @@ export function useExamAntiFraud({
         return;
       }
 
-      if (key === 'PrintScreen') {
+      // Print / captura de tela (teclado)
+      const isPrintScreen = key === 'PrintScreen' || key === 'Print';
+      const isMacScreenshot = meta && shift && ['3', '4', '5'].includes(key);
+      const isWinSnip = e.metaKey === false && ctrl && shift && key.toUpperCase() === 'S';
+      if (isPrintScreen || isMacScreenshot || isWinSnip) {
         e.preventDefault();
-        safeTrigger('screenshot_shortcut');
+        safeTrigger('screenshot_shortcut', { key, meta, shift, ctrl });
+      }
+    };
+
+    const onKeyUp = (e: KeyboardEvent) => {
+      // PrintScreen em alguns teclados só dispara no keyup
+      if (e.key === 'PrintScreen' || e.key === 'Print') {
+        e.preventDefault();
+        safeTrigger('screenshot_shortcut', { key: e.key, phase: 'keyup' });
       }
     };
 
@@ -185,6 +198,7 @@ export function useExamAntiFraud({
     document.addEventListener('cut', onCut, true);
     document.addEventListener('selectstart', onSelectStart, true);
     window.addEventListener('keydown', onKeyDown, true);
+    window.addEventListener('keyup', onKeyUp, true);
     const interval = window.setInterval(checkDevtools, 1500);
 
     return () => {
@@ -197,6 +211,7 @@ export function useExamAntiFraud({
       document.removeEventListener('cut', onCut, true);
       document.removeEventListener('selectstart', onSelectStart, true);
       window.removeEventListener('keydown', onKeyDown, true);
+      window.removeEventListener('keyup', onKeyUp, true);
     };
   }, [enabled, trigger]);
 

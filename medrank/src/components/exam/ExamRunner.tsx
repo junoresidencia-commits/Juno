@@ -368,7 +368,7 @@ export function ExamRunner({
       {terminated ? <ExamTerminatedOverlay attemptId={attemptId} /> : null}
       {antiFraud ? (
         <div className="mb-3 rounded-2xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-snug text-red-900 sm:text-sm">
-          <strong>Tolerância zero:</strong> sair da tela, trocar de aba ou copiar encerra a prova (0 pts).
+          <strong>Tolerância zero:</strong> trocar de aba ou tirar print encerra a prova (0 pts).
         </div>
       ) : null}
 
