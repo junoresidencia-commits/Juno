@@ -134,18 +134,30 @@ export function CadastroForm({
           name="password"
           type="password"
           required
-          minLength={4}
+          minLength={6}
           className={inputClass}
         />
+        <p className="mt-1 text-xs text-slate-500">Mínimo 6 caracteres.</p>
       </div>
       <div>
         <label htmlFor="cadastro-confirm" className="block text-sm font-medium">
           Confirmar senha *
         </label>
-        <input id="cadastro-confirm" name="confirm" type="password" required className={inputClass} />
+        <input
+          id="cadastro-confirm"
+          name="confirm"
+          type="password"
+          required
+          minLength={6}
+          className={inputClass}
+        />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"

@@ -302,8 +302,8 @@ export function registerDemoStudentPublic(
   const emailNorm = normalizeEmail(email);
   if (!name.trim()) return { ok: false, error: 'Informe o nome.' };
   if (!emailNorm.includes('@')) return { ok: false, error: 'E-mail inválido.' };
-  if (!password || password.length < 4) {
-    return { ok: false, error: 'Senha com no mínimo 4 caracteres.' };
+  if (!password || password.length < 6) {
+    return { ok: false, error: 'Senha com no mínimo 6 caracteres.' };
   }
 
   const store = readDemoStore();
