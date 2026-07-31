@@ -3,9 +3,10 @@ import { PixPaymentCard } from '@/components/billing/PixPaymentCard';
 import {
   formatPriceBrl,
   formatWhatsAppDisplay,
+  FULL_MONTHLY_CENTS,
   getPaidAccessCopy,
   getWhatsAppProofUrl,
-  SUBSCRIPTION_PLANS,
+  QUARTER_PRICE_CENTS,
 } from '@/lib/billing/pix';
 
 interface Props {
@@ -32,7 +33,8 @@ export function CadastroForm({
   const whatsappUrl = getWhatsAppProofUrl(emailForPix);
   const whatsappDisplay = formatWhatsAppDisplay();
   const pricing = getPaidAccessCopy();
-  const quarterPrice = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
+  const quarterPrice = formatPriceBrl(QUARTER_PRICE_CENTS);
+  const fullMonth = formatPriceBrl(FULL_MONTHLY_CENTS);
 
   if (success) {
     return (
@@ -40,7 +42,8 @@ export function CadastroForm({
         <div className="rounded-xl bg-emerald-50 p-5 text-center ring-1 ring-emerald-200">
           <p className="text-lg font-semibold text-emerald-900">Conta criada</p>
           <p className="mt-2 text-sm text-emerald-800">
-            1) Promo: {pricing.promoHeadline} — ou {quarterPrice} à vista (3 meses)
+            1) Promo {pricing.promoHeadline}. Só 1 mês: {fullMonth}. À vista 3 meses:{' '}
+            {quarterPrice} (−R$ 10).
             <br />
             2) Me manda no WhatsApp <strong>{whatsappDisplay}</strong> pra eu liberar (com o
             comprovante)
@@ -100,8 +103,8 @@ export function CadastroForm({
     <form action={action} method="POST" className="space-y-4">
       <p className="text-sm text-slate-600">
         {publicSignup
-          ? `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses — ou ${quarterPrice} à vista. Depois me manda no WhatsApp ${whatsappDisplay} pra liberar.`
-          : `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses — ou ${quarterPrice} à vista. Depois me manda no WhatsApp pra liberar.`}
+          ? `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses · só 1 mês ${fullMonth} · 3 meses à vista ${quarterPrice} (−R$ 10). Depois WhatsApp ${whatsappDisplay} pra liberar.`
+          : `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses · só 1 mês ${fullMonth} · 3 meses à vista ${quarterPrice} (−R$ 10). Depois me manda no WhatsApp pra liberar.`}
       </p>
 
       <PixPaymentCard emailHint={inviteEmail} compact />

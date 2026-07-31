@@ -1,5 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { formatPriceBrl, SUBSCRIPTION_PLANS } from '@/lib/billing/pix';
+import {
+  formatPriceBrl,
+  FULL_MONTHLY_CENTS,
+  QUARTER_LIST_CENTS,
+  QUARTER_PRICE_CENTS,
+} from '@/lib/billing/pix';
 
 export function isSubscriptionExpired(
   expiresAt: string | null | undefined,
@@ -21,16 +26,18 @@ export function accessDeniedMessage(profile: {
     return '';
   }
 
-  const monthly = formatPriceBrl();
-  const quarter = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
+  const promoMonth = formatPriceBrl();
+  const fullMonth = formatPriceBrl(FULL_MONTHLY_CENTS);
+  const quarter = formatPriceBrl(QUARTER_PRICE_CENTS);
+  const quarterList = formatPriceBrl(QUARTER_LIST_CENTS);
 
   if (!profile.approved_at) {
-    return `Aguardando liberação. Promo ${monthly}/mês por 3 meses — ou ${quarter} à vista. Me manda no WhatsApp com o comprovante pra liberar.`;
+    return `Aguardando liberação. Promo ${promoMonth}/mês por 3 meses · 1 mês ${fullMonth} · 3 meses à vista ${quarter} (de ${quarterList}, −R$ 10). Me manda no WhatsApp com o comprovante.`;
   }
 
   if (isSubscriptionExpired(profile.subscription_expires_at) || !profile.active) {
     if (isSubscriptionExpired(profile.subscription_expires_at)) {
-      return `Assinatura vencida. Pague via PIX (${monthly}/mês ou ${quarter} / 3 meses) e o professor renova.`;
+      return `Assinatura vencida. PIX: 1 mês ${fullMonth} · promo ${promoMonth}/mês · 3 meses ${quarter}. O professor renova.`;
     }
     return 'Acesso bloqueado.';
   }

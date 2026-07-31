@@ -4,7 +4,13 @@ import { redirect } from 'next/navigation';
 import { LoginForm } from '@/components/login/LoginForm';
 import { getSessionProfile } from '@/lib/auth';
 import { isDemoMode } from '@/lib/demo-mode';
-import { formatPriceBrl, formatWhatsAppDisplay, SUBSCRIPTION_PLANS } from '@/lib/billing/pix';
+import {
+  formatPriceBrl,
+  formatWhatsAppDisplay,
+  FULL_MONTHLY_CENTS,
+  QUARTER_PRICE_CENTS,
+  SUBSCRIPTION_PLANS,
+} from '@/lib/billing/pix';
 
 export default async function LoginPage() {
   const session = await getSessionProfile();
@@ -13,7 +19,8 @@ export default async function LoginPage() {
   }
 
   const demoMode = isDemoMode();
-  const quarter = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
+  const quarter = formatPriceBrl(QUARTER_PRICE_CENTS);
+  const fullMonth = formatPriceBrl(FULL_MONTHLY_CENTS);
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-8 sm:py-12">
@@ -47,8 +54,9 @@ export default async function LoginPage() {
           </Link>
         </p>
         <p className="mt-2 text-center text-xs text-slate-500">
-          Promo {formatPriceBrl()}/mês · ou {quarter} à vista (3 meses). Depois do PIX, WhatsApp{' '}
-          {formatWhatsAppDisplay()} pra liberar.
+          Promo {formatPriceBrl()}/mês por 3 meses · 1 mês {fullMonth} · à vista {quarter} (−R$
+          10). Ano: {formatPriceBrl(SUBSCRIPTION_PLANS.year.priceCents)}. WhatsApp{' '}
+          {formatWhatsAppDisplay()}.
         </p>
       </div>
     </div>

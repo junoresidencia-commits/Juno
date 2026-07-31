@@ -1,15 +1,20 @@
 # Assinatura MedRank — planos via PIX
 
-## Valores (promo)
+## Como funciona o preço
 
-| Plano | Valor | Acesso |
-| --- | --- | --- |
-| **1 mês** | R$ 19,90 | 30 dias |
-| **3 meses (à vista)** | R$ 50,00 | 90 dias |
-| **Semestral** | R$ 90,00 | 180 dias |
-| **Anual** | R$ 160,00 | 365 dias |
+1. **Só 1 mês** → **R$ 30**
+2. **Promo 3 meses** → **R$ 19,90/mês** (pode pagar mês a mês nessa promo)
+3. **3 meses à vista** → de **R$ 59,70** por **R$ 49,70** (**−R$ 10**)
+4. **Semestral / anual** → paga o período de uma vez (anual **R$ 180**)
 
-Destaque comercial: **R$ 19,90/mês por 3 meses** — ou **R$ 50** pagando de uma vez.
+## Valores
+
+| Plano | Valor do PIX | Acesso | Observação |
+| --- | --- | --- | --- |
+| **1 mês** | R$ 30,00 | 30 dias | Avulso |
+| **3 meses (à vista)** | R$ 49,70 | 90 dias | De R$ 59,70 (−R$ 10) |
+| **Semestral** | R$ 99,40 | 180 dias | À vista |
+| **Anual** | R$ 180,00 | 365 dias | Paga o ano inteiro |
 
 ## Regra
 

@@ -45,7 +45,9 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
         Pagamento · promoção
       </p>
       <p className="mt-1 text-2xl font-bold leading-tight">{copy.promoHeadline}</p>
+      <p className="mt-1 text-sm text-teal-50">{copy.fullMonthLine}</p>
       <p className="mt-1 text-sm font-semibold text-emerald-200">{copy.promoDeal}</p>
+      <p className="mt-1 text-xs text-teal-100">{copy.yearLine}</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         {SUBSCRIPTION_PLAN_LIST.map((p) => {
@@ -64,10 +66,28 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
               <span className="block text-xs font-semibold uppercase tracking-wide opacity-80">
                 {p.label}
               </span>
-              <span className="mt-0.5 block text-base font-bold">{formatPriceBrl(p.priceCents)}</span>
-              {p.highlight ? (
-                <span className="mt-0.5 block text-[11px] font-semibold text-emerald-700">
-                  Melhor custo
+              <span className="mt-0.5 flex flex-wrap items-baseline gap-1.5">
+                <span className="text-base font-bold">{formatPriceBrl(p.priceCents)}</span>
+                {p.compareAtCents ? (
+                  <span
+                    className={`text-xs line-through ${active ? 'text-slate-500' : 'text-teal-200/80'}`}
+                  >
+                    {formatPriceBrl(p.compareAtCents)}
+                  </span>
+                ) : null}
+              </span>
+              {p.note ? (
+                <span
+                  className={`mt-0.5 block text-[11px] font-semibold ${
+                    active ? 'text-emerald-700' : 'text-emerald-200'
+                  }`}
+                >
+                  {p.note}
+                </span>
+              ) : null}
+              {p.payHint ? (
+                <span className={`mt-0.5 block text-[10px] ${active ? 'text-slate-600' : 'text-teal-100/90'}`}>
+                  {p.payHint}
                 </span>
               ) : null}
             </button>
@@ -90,6 +110,12 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
         <strong className="text-white">
           {formatPriceBrl(plan.priceCents)} · {plan.label}
         </strong>
+        {plan.compareAtCents ? (
+          <>
+            {' '}
+            <span className="line-through opacity-70">{formatPriceBrl(plan.compareAtCents)}</span>
+          </>
+        ) : null}
         <br />
         Descrição sugerida: <strong className="text-white">{descricao}</strong>
       </p>

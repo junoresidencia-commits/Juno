@@ -353,8 +353,8 @@ export default async function AlunosPage({
             Liberar ou não? — Aguardando PIX ({pending.length})
           </h2>
           <p className="mt-1 text-sm text-amber-900/80">
-            Confira o PIX no extrato (R$ 19,90 · R$ 50 · R$ 90 · R$ 160). Em cada nome: escolha o
-            plano e liberar — ou não liberar / excluir.
+            Confira o PIX no extrato (R$ 30 · R$ 19,90 · R$ 49,70 · semestral · anual). Em cada
+            nome: escolha o plano e liberar — ou não liberar / excluir.
           </p>
           <div className="mt-4 space-y-3">
             {pending.map((s) => (
