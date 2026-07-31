@@ -12,7 +12,25 @@ function cadastroRedirect(request: Request, params: Record<string, string>) {
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
-  return NextResponse.redirect(url);
+  // 303: após POST do formulário, o browser deve abrir a página com GET
+  // (307 reenvia POST e quebra /cadastro com erro).
+  return NextResponse.redirect(url, 303);
+}
+
+function friendlyAuthError(message: string): string {
+  if (/already|registered|exists|duplicate/i.test(message)) {
+    return 'Este e-mail já está cadastrado. Faça login ou use outro e-mail.';
+  }
+  if (/password|senha/i.test(message) && /(?:6|least|mín|min)/i.test(message)) {
+    return 'A senha precisa ter no mínimo 6 caracteres.';
+  }
+  if (/password|senha/i.test(message) && /weak|forte|strong/i.test(message)) {
+    return 'Senha muito fraca. Use letras e números (mín. 6 caracteres).';
+  }
+  if (/invalid.*email|email.*invalid|valid email/i.test(message)) {
+    return 'E-mail inválido. Confira e tente de novo.';
+  }
+  return message;
 }
 
 /** Cadastro público (sem convite): cria aluno inativo até liberar após PIX. */
@@ -32,8 +50,8 @@ export async function POST(request: Request) {
     return cadastroRedirect(request, { error: 'As senhas não coincidem.' });
   }
 
-  if (!name || !email || !password || password.length < 4) {
-    const message = 'Preencha nome, e-mail e senha (mín. 4 caracteres).';
+  if (!name || !email || !password || password.length < 6) {
+    const message = 'Preencha nome, e-mail e senha (mín. 6 caracteres).';
     if (formSubmit) return cadastroRedirect(request, { error: message });
     return NextResponse.json({ error: message }, { status: 400 });
   }
@@ -70,44 +88,59 @@ export async function POST(request: Request) {
   });
 
   if (authError) {
-    const msg = /already|registered|exists/i.test(authError.message)
-      ? 'Este e-mail já está cadastrado. Faça login ou use outro e-mail.'
-      : authError.message;
+    const msg = friendlyAuthError(authError.message);
     if (formSubmit) return cadastroRedirect(request, { error: msg });
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 
+  if (!authUser.user?.id) {
+    const message = 'Não foi possível criar a conta. Tente de novo.';
+    if (formSubmit) return cadastroRedirect(request, { error: message });
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+
   const tracks = ensureGeneralTrack([]);
-  const { error: profileError } = await admin.from('profiles').insert({
+  const baseProfile = {
     id: authUser.user.id,
     name: name.trim(),
     email: emailNorm,
-    role: 'student',
+    role: 'student' as const,
     active: false,
-    approved_at: null,
-    enabled_tracks: tracks,
-  });
+    approved_at: null as null,
+  };
 
-  if (profileError) {
-    if (/enabled_tracks|schema cache/i.test(profileError.message)) {
-      const { error: retryErr } = await admin.from('profiles').insert({
-        id: authUser.user.id,
+  let profileError = (
+    await admin.from('profiles').insert({
+      ...baseProfile,
+      enabled_tracks: tracks,
+    })
+  ).error;
+
+  if (profileError && /enabled_tracks|schema cache/i.test(profileError.message)) {
+    profileError = (await admin.from('profiles').insert(baseProfile)).error;
+  }
+
+  if (profileError && /duplicate|unique|already exists/i.test(profileError.message)) {
+    // Perfil já existia (retry / corrida): atualiza dados e segue.
+    const { error: updateErr } = await admin
+      .from('profiles')
+      .update({
         name: name.trim(),
         email: emailNorm,
         role: 'student',
         active: false,
         approved_at: null,
-      });
-      if (retryErr) {
-        await admin.auth.admin.deleteUser(authUser.user.id);
-        if (formSubmit) return cadastroRedirect(request, { error: retryErr.message });
-        return NextResponse.json({ error: retryErr.message }, { status: 500 });
-      }
-    } else {
-      await admin.auth.admin.deleteUser(authUser.user.id);
-      if (formSubmit) return cadastroRedirect(request, { error: profileError.message });
-      return NextResponse.json({ error: profileError.message }, { status: 500 });
-    }
+        enabled_tracks: tracks,
+      })
+      .eq('id', authUser.user.id);
+    profileError = updateErr;
+  }
+
+  if (profileError) {
+    await admin.auth.admin.deleteUser(authUser.user.id);
+    const msg = friendlyAuthError(profileError.message);
+    if (formSubmit) return cadastroRedirect(request, { error: msg });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 
   try {

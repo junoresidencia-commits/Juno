@@ -28,7 +28,22 @@ function cadastroRedirect(request: Request, token: string, params: Record<string
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
-  return NextResponse.redirect(url);
+  // 303: após POST do formulário, o browser deve abrir a página com GET
+  // (307 reenvia POST e quebra /cadastro com erro).
+  return NextResponse.redirect(url, 303);
+}
+
+function friendlyAuthError(message: string): string {
+  if (/already|registered|exists|duplicate/i.test(message)) {
+    return 'Este e-mail já está cadastrado. Faça login ou use outro e-mail.';
+  }
+  if (/password|senha/i.test(message) && /(?:6|least|mín|min)/i.test(message)) {
+    return 'A senha precisa ter no mínimo 6 caracteres.';
+  }
+  if (/invalid.*email|email.*invalid|valid email/i.test(message)) {
+    return 'E-mail inválido. Confira e tente de novo.';
+  }
+  return message;
 }
 
 export async function GET(
@@ -65,8 +80,8 @@ export async function POST(
     return cadastroRedirect(request, token, { error: 'As senhas não coincidem.' });
   }
 
-  if (!name || !email || !password || password.length < 4) {
-    const message = 'Preencha nome, e-mail e senha (mín. 4 caracteres).';
+  if (!name || !email || !password || password.length < 6) {
+    const message = 'Preencha nome, e-mail e senha (mín. 6 caracteres).';
     if (formSubmit) {
       return cadastroRedirect(request, token, { error: message });
     }
@@ -137,27 +152,51 @@ export async function POST(
   });
 
   if (authError) {
+    const msg = friendlyAuthError(authError.message);
     if (formSubmit) {
-      return cadastroRedirect(request, token, { error: authError.message });
+      return cadastroRedirect(request, token, { error: msg });
     }
-    return NextResponse.json({ error: authError.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 
-  const { error: profileError } = await admin.from('profiles').insert({
-    id: authUser.user.id,
-    name: name.trim(),
-    email: emailNorm,
-    role: 'student',
-    active: false,
-    approved_at: null,
-  });
+  if (!authUser.user?.id) {
+    const message = 'Não foi possível criar a conta. Tente de novo.';
+    if (formSubmit) return cadastroRedirect(request, token, { error: message });
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+
+  let profileError = (
+    await admin.from('profiles').insert({
+      id: authUser.user.id,
+      name: name.trim(),
+      email: emailNorm,
+      role: 'student',
+      active: false,
+      approved_at: null,
+    })
+  ).error;
+
+  if (profileError && /duplicate|unique|already exists/i.test(profileError.message)) {
+    const { error: updateErr } = await admin
+      .from('profiles')
+      .update({
+        name: name.trim(),
+        email: emailNorm,
+        role: 'student',
+        active: false,
+        approved_at: null,
+      })
+      .eq('id', authUser.user.id);
+    profileError = updateErr;
+  }
 
   if (profileError) {
     await admin.auth.admin.deleteUser(authUser.user.id);
+    const msg = friendlyAuthError(profileError.message);
     if (formSubmit) {
-      return cadastroRedirect(request, token, { error: profileError.message });
+      return cadastroRedirect(request, token, { error: msg });
     }
-    return NextResponse.json({ error: profileError.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 
   await admin
