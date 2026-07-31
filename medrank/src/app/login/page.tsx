@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { LoginForm } from '@/components/login/LoginForm';
 import { getSessionProfile } from '@/lib/auth';
 import { isDemoMode } from '@/lib/demo-mode';
+import { formatWhatsAppDisplay } from '@/lib/billing/pix';
 
 export default async function LoginPage() {
   const session = await getSessionProfile();
@@ -38,7 +40,13 @@ export default async function LoginPage() {
         </Suspense>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          Novo aluno? O professor cria seu login em <strong className="text-slate-700">Alunos</strong>.
+          Novo aluno?{' '}
+          <Link href="/cadastro" className="font-semibold text-emerald-700 hover:underline">
+            Criar minha conta
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-xs text-slate-500">
+          Depois do PIX, me manda no WhatsApp {formatWhatsAppDisplay()} pra liberar.
         </p>
       </div>
     </div>
