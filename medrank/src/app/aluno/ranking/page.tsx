@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
 import {
   daysLeftInMonth,
+  daysLeftInQuarter,
   DEFAULT_STUDENT_RANKING_PERIOD,
   getPeriodBounds,
   STUDENT_RANKING_PERIODS,
@@ -27,8 +28,9 @@ import {
 
 function periodSubtitle(period: PeriodType): string {
   if (period === 'monthly') return 'Disputa do mês — zera todo dia 1. Quem pontua mais leva.';
-  if (period === 'yearly') return 'Acumulado do ano — quem fez mais ao longo do ano.';
   if (period === 'weekly') return 'Semana atual — ritmo curto e competitivo.';
+  if (period === 'quarterly') return 'Trimestre — aposta mais longa (3 meses).';
+  if (period === 'yearly') return 'Acumulado do ano — quem fez mais ao longo do ano.';
   if (period === 'daily') return 'Só a disputa de hoje no seu grupo.';
   return 'Ranking do grupo';
 }
@@ -54,13 +56,18 @@ export default async function RankingAlunoPage({
         ? getDemoRanking('daily', getTodayRankingDate())
         : getDemoRanking(period);
     const myRanking = rankings.find((r) => r.user_id === userId);
-    const daysLeft = period === 'monthly' ? daysLeftInMonth() : null;
+    const daysLeft =
+      period === 'monthly'
+        ? daysLeftInMonth()
+        : period === 'quarterly'
+          ? daysLeftInQuarter()
+          : null;
 
     return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking do grupo</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Mensal é a disputa principal (reinicia todo mês). O anual guarda quem fez mais no ano.
+          Mensal e semanal são apostas curtas; trimestral e anual premiam quem joga mais tempo.
         </p>
         <RankingPeriodNav
           basePath="/aluno/ranking"
@@ -243,7 +250,12 @@ export default async function RankingAlunoPage({
       : Promise.resolve(null),
   ]);
 
-  const daysLeft = period === 'monthly' ? daysLeftInMonth() : null;
+  const daysLeft =
+    period === 'monthly'
+      ? daysLeftInMonth()
+      : period === 'quarterly'
+        ? daysLeftInQuarter()
+        : null;
 
   return (
     <div className="mx-auto w-full px-4 py-6 md:px-6">
@@ -251,7 +263,8 @@ export default async function RankingAlunoPage({
         Ranking · {ctx.rankingGroupName}
       </h1>
       <p className="mt-1 text-sm text-slate-600">
-        Mensal zera todo dia 1. Anual guarda quem fez mais no ano. Só o seu grupo vê este ranking.
+          Mensal e semanal são apostas curtas; trimestral e anual premiam quem joga mais tempo. Só o
+        seu grupo vê este ranking.
       </p>
       <RankingPeriodNav
         basePath="/aluno/ranking"

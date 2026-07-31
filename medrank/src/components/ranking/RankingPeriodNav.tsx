@@ -1,11 +1,13 @@
 import Link from 'next/link';
-import type { PeriodType } from '@/types/database';
+import type { CollectivePeriodType, PeriodType } from '@/types/database';
 import { PERIOD_OPTIONS } from '@/lib/periods';
+
+type NavPeriod = PeriodType | CollectivePeriodType;
 
 interface Props {
   basePath: string;
-  current: PeriodType;
-  periods?: { value: PeriodType; label: string }[];
+  current: NavPeriod;
+  periods?: { value: NavPeriod; label: string }[];
 }
 
 export function RankingPeriodNav({ basePath, current, periods = PERIOD_OPTIONS }: Props) {

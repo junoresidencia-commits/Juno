@@ -145,13 +145,14 @@ export function getDemoHistory() {
 }
 
 export function getDemoRanking(
-  period: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'general',
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'general',
   rankingDate?: string
 ) {
   const today = todayDateString();
   const date = rankingDate ?? today;
   const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
-  const resolved = period === 'yearly' ? 'general' : period;
+  const resolved =
+    period === 'yearly' || period === 'quarterly' ? 'general' : period;
 
   let rankings: Ranking[];
   if (resolved === 'daily') {
@@ -167,13 +168,20 @@ export function getDemoRanking(
   }
 
   const rankingsWithNames = withProfileNames(rankings);
+  const now = new Date();
+  const qMonth = Math.floor(now.getUTCMonth() / 3) * 3;
   const bounds = {
     daily: { start: date, end: date, label: date === today ? 'Hoje' : `Dia ${date}` },
-    weekly: { start: getWeekStart(new Date()), end: getWeekEnd(new Date()), label: 'Semana atual' },
-    monthly: { start: getMonthStart(new Date()), end: getMonthEnd(new Date()), label: 'Mês atual' },
+    weekly: { start: getWeekStart(now), end: getWeekEnd(now), label: 'Semana atual' },
+    monthly: { start: getMonthStart(now), end: getMonthEnd(now), label: 'Mês atual' },
+    quarterly: {
+      start: getMonthStart(new Date(Date.UTC(now.getUTCFullYear(), qMonth, 1))),
+      end: getMonthEnd(new Date(Date.UTC(now.getUTCFullYear(), qMonth + 2, 1))),
+      label: 'Trimestre atual',
+    },
     yearly: {
-      start: `${new Date().getUTCFullYear()}-01-01`,
-      end: `${new Date().getUTCFullYear()}-12-31`,
+      start: `${now.getUTCFullYear()}-01-01`,
+      end: `${now.getUTCFullYear()}-12-31`,
       label: 'Ano atual',
     },
     general: { start: '2026-07-09', end: today, label: 'Geral' },

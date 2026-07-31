@@ -3,8 +3,15 @@ import { requireAuth } from '@/lib/auth';
 import { usesDemoStore } from '@/lib/demo-data';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getPeriodBounds } from '@/lib/periods';
+import {
+  COLLECTIVE_RANKING_PERIODS,
+  collectivePeriodLabel,
+  DEFAULT_COLLECTIVE_RANKING_PERIOD,
+  getPeriodBounds,
+} from '@/lib/periods';
 import { todayDateStringBrazil } from '@/lib/exams/window';
+import type { CollectivePeriodType } from '@/types/database';
+import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 
 export default async function RankingEntreGruposPage({
   searchParams,
@@ -13,7 +20,10 @@ export default async function RankingEntreGruposPage({
 }) {
   await requireAuth();
   const { period: periodParam } = await searchParams;
-  const period = periodParam === 'monthly' ? 'monthly' : 'weekly';
+  const allowed = COLLECTIVE_RANKING_PERIODS.map((p) => p.value);
+  const period = allowed.includes(periodParam as CollectivePeriodType)
+    ? (periodParam as CollectivePeriodType)
+    : DEFAULT_COLLECTIVE_RANKING_PERIOD;
   const today = todayDateStringBrazil();
   const bounds = getPeriodBounds(period, new Date(`${today}T12:00:00`));
 
@@ -39,7 +49,7 @@ export default async function RankingEntreGruposPage({
 
   if (!usesDemoStore()) {
     const client = createAdminClient() ?? (await createClient());
-    // Não recalcula no page load (pesado). O score já roda ao finalizar provas.
+    // Não recalcula no page load (pesado). O score já roda ao finalizar provas + cron 21h.
 
     const [{ data }, { data: hist }] = await Promise.all([
       client
@@ -74,28 +84,11 @@ export default async function RankingEntreGruposPage({
         ganham vantagem automática. Mínimo de 3 participantes ativos.
       </p>
 
-      <div className="mt-4 flex gap-2">
-        <Link
-          href="/aluno/ranking/grupos?period=weekly"
-          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
-            period === 'weekly'
-              ? 'bg-emerald-700 text-white'
-              : 'bg-white text-slate-700 ring-1 ring-slate-200'
-          }`}
-        >
-          Semanal
-        </Link>
-        <Link
-          href="/aluno/ranking/grupos?period=monthly"
-          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
-            period === 'monthly'
-              ? 'bg-emerald-700 text-white'
-              : 'bg-white text-slate-700 ring-1 ring-slate-200'
-          }`}
-        >
-          Mensal
-        </Link>
-      </div>
+      <RankingPeriodNav
+        basePath="/aluno/ranking/grupos"
+        current={period}
+        periods={COLLECTIVE_RANKING_PERIODS}
+      />
 
       <ol className="mt-6 space-y-2">
         {rows.length === 0 ? (
@@ -149,7 +142,12 @@ export default async function RankingEntreGruposPage({
                 className="flex justify-between rounded-xl bg-slate-50 px-4 py-3 text-sm ring-1 ring-slate-200"
               >
                 <span className="text-slate-700">
-                  {w.period_type === 'weekly' ? 'Semana' : 'Mês'} {w.period_start}
+                  {collectivePeriodLabel(
+                    (allowed.includes(w.period_type as CollectivePeriodType)
+                      ? w.period_type
+                      : 'monthly') as CollectivePeriodType
+                  )}{' '}
+                  {w.period_start}
                 </span>
                 <span className="font-medium text-slate-900">
                   {w.group_name} · {Number(w.average_percentage).toFixed(0)}%
