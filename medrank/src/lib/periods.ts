@@ -150,23 +150,44 @@ export const PERIOD_OPTIONS: { value: PeriodType; label: string }[] = [
   { value: 'general', label: 'Geral' },
 ];
 
-/** Períodos do aluno — mensal primeiro (disputa que zera todo mês). */
+/** Abas principais do aluno — poucas, foco na disputa. */
 export const STUDENT_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
   { value: 'monthly', label: 'Mensal' },
   { value: 'weekly', label: 'Semanal' },
-  { value: 'quarterly', label: 'Trimestral' },
   { value: 'yearly', label: 'Anual' },
-  { value: 'daily', label: 'Diário' },
 ];
 
-/** Rankings internos de grupo */
+/** Links secundários (não competem visualmente com as abas). */
+export const STUDENT_RANKING_SECONDARY_PERIODS: { value: PeriodType; label: string }[] = [
+  { value: 'quarterly', label: 'Trimestral' },
+  { value: 'daily', label: 'Só hoje' },
+];
+
+/** Todos os períodos que o aluno pode abrir via URL. */
+export const STUDENT_RANKING_ALL_PERIODS: { value: PeriodType; label: string }[] = [
+  ...STUDENT_RANKING_PERIODS,
+  ...STUDENT_RANKING_SECONDARY_PERIODS,
+];
+
+/** Rankings internos de grupo — mesmos períodos principais do aluno. */
 export const GROUP_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
   { value: 'monthly', label: 'Mensal' },
   { value: 'weekly', label: 'Semanal' },
-  { value: 'quarterly', label: 'Trimestral' },
   { value: 'yearly', label: 'Anual' },
-  { value: 'daily', label: 'Diário' },
 ];
+
+export const GROUP_RANKING_SECONDARY_PERIODS: { value: PeriodType; label: string }[] = [
+  { value: 'quarterly', label: 'Trimestral' },
+  { value: 'daily', label: 'Só hoje' },
+];
+
+export function studentPeriodLabel(period: PeriodType): string {
+  return (
+    STUDENT_RANKING_ALL_PERIODS.find((p) => p.value === period)?.label ??
+    PERIOD_OPTIONS.find((p) => p.value === period)?.label ??
+    'Ranking'
+  );
+}
 
 /** Ranking entre ligas (coletivo) */
 export const COLLECTIVE_RANKING_PERIODS: { value: CollectivePeriodType; label: string }[] = [

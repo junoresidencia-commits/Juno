@@ -80,8 +80,8 @@ export default async function RankingEntreGruposPage({
         Ranking entre grupos
       </h1>
       <p className="mt-1 text-sm text-slate-600">
-        Disputa coletiva justa: média de acertos, participação e regularidade. Grupos maiores não
-        ganham vantagem automática. Mínimo de 3 participantes ativos.
+        Semanal e mensal = apostas curtas · Trimestre = 3 meses · Anual = temporada. Média justa —
+        grupo grande não ganha vantagem. Mínimo 3 ativos.
       </p>
 
       <RankingPeriodNav

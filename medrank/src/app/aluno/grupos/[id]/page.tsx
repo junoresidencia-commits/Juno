@@ -8,7 +8,12 @@ import {
   getDemoStudyGroup,
 } from '@/lib/groups/demo';
 import { createClient } from '@/lib/supabase/server';
-import { GROUP_RANKING_PERIODS, getPeriodBounds } from '@/lib/periods';
+import {
+  DEFAULT_STUDENT_RANKING_PERIOD,
+  getPeriodBounds,
+  GROUP_RANKING_PERIODS,
+  GROUP_RANKING_SECONDARY_PERIODS,
+} from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
 import { todayDateStringBrazil } from '@/lib/exams/window';
@@ -27,10 +32,13 @@ export default async function AlunoGrupoDetailPage({
   const { userId } = await requireAuth();
   const { id } = await params;
   const { period: periodParam } = await searchParams;
-  const allowed = GROUP_RANKING_PERIODS.map((p) => p.value);
+  const allowed = [
+    ...GROUP_RANKING_PERIODS.map((p) => p.value),
+    ...GROUP_RANKING_SECONDARY_PERIODS.map((p) => p.value),
+  ];
   const period = allowed.includes(periodParam as PeriodType)
     ? (periodParam as PeriodType)
-    : 'daily';
+    : DEFAULT_STUDENT_RANKING_PERIOD;
 
   if (usesDemoStore()) {
     const mine = getDemoGroupsForUser(userId).some((g) => g.id === id);
@@ -59,6 +67,7 @@ export default async function AlunoGrupoDetailPage({
           basePath={`/aluno/grupos/${id}`}
           current={period}
           periods={GROUP_RANKING_PERIODS}
+          secondaryPeriods={GROUP_RANKING_SECONDARY_PERIODS}
         />
         {mineRow ? (
           <div className="mt-4 rounded-xl bg-emerald-50 p-4">
@@ -171,6 +180,7 @@ export default async function AlunoGrupoDetailPage({
         basePath={`/aluno/grupos/${id}`}
         current={period}
         periods={GROUP_RANKING_PERIODS}
+        secondaryPeriods={GROUP_RANKING_SECONDARY_PERIODS}
       />
 
       {mineRow ? (
