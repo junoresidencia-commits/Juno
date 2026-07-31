@@ -266,6 +266,7 @@ export default async function ProvasPage() {
         <div className="mt-4 space-y-4">
           <p className="text-sm text-slate-600">
             Nefro hoje: <strong>{todayTrack}</strong>. Geração usa o banco aprovado (sem OpenAI).
+            Dá para pré-gerar 7, 14 ou 30 dias de uma vez.
           </p>
           <EnsureDailyExamsButton />
           <AiPaidSettingsCard />

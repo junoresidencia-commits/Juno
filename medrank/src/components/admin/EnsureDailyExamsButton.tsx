@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { HORIZON_PRESETS } from '@/lib/exams/daily-schedule';
 
 type Progress = {
   poolSize?: number;
@@ -20,14 +21,27 @@ function formatProgress(label: string, p?: Progress | null, examQs?: number | nu
   return `${label}: ${selected} questões`;
 }
 
+function horizonLabel(days: number): string {
+  if (days === 7) return '7 dias (1 semana)';
+  if (days === 14) return '14 dias (2 semanas)';
+  if (days === 30) return '30 dias (1 mês)';
+  return `${days} dias`;
+}
+
 export function EnsureDailyExamsButton() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [details, setDetails] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  async function run(force: boolean, mode: 'ai' | 'bank') {
-    if (mode === 'ai') {
+  async function run(force: boolean, mode: 'ai' | 'bank', days = 1) {
+    if (days > 1) {
+      const ok = window.confirm(
+        `Gerar disputas para ${horizonLabel(days)} a partir de hoje?\n\n` +
+          'Usa o banco (grátis). Dias que já existem são mantidos — só preenche o que faltar.\n\nContinuar?'
+      );
+      if (!ok) return;
+    } else if (mode === 'ai') {
       const ok = window.confirm(
         'IA paga: regenerar pode custar ~US$ 0,50 a US$ 5.\n\nPreferível usar o banco (grátis). Continuar com IA?'
       );
@@ -47,13 +61,29 @@ export function EnsureDailyExamsButton() {
       const res = await fetch('/api/admin/exams/ensure-daily', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ today: true, force, mode }),
+        body: JSON.stringify({ today: true, force: days > 1 ? false : force, mode, days }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Falha ao gerar disputa');
         return;
       }
+
+      if (days > 1) {
+        const lines: string[] = [
+          `Período: ${data.fromDate} → ${data.toDate}`,
+          `Criadas: ${data.createdGeneral ?? 0} geral · ${data.createdNephrology ?? 0} nefro`,
+          `Já existiam: ${data.alreadyOk ?? 0} dia(s)`,
+        ];
+        if (Array.isArray(data.errors) && data.errors.length) {
+          lines.push(`Falhas: ${data.errors.length}`);
+        }
+        setDetails(lines);
+        setMessage(data.message || `Horizonte de ${days} dias processado.`);
+        if (data.error) setError(data.error);
+        return;
+      }
+
       const createdCount =
         (data.general?.created ? 1 : 0) + (data.nephrology?.created ? 1 : 0);
 
@@ -136,11 +166,31 @@ export function EnsureDailyExamsButton() {
       <button
         type="button"
         disabled={loading}
-        onClick={() => void run(false, 'bank')}
+        onClick={() => void run(false, 'bank', 1)}
         className="w-full rounded-xl bg-teal-800 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-60"
       >
         {loading ? 'Gerando…' : 'Gerar provas de hoje'}
       </button>
+
+      <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
+        <p className="text-sm font-semibold text-slate-900">Pré-gerar vários dias</p>
+        <p className="mt-1 text-xs text-slate-600">
+          Monta hoje + os próximos de uma vez (banco, grátis). Assim você não precisa gerar todo dia.
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          {HORIZON_PRESETS.map((days) => (
+            <button
+              key={days}
+              type="button"
+              disabled={loading}
+              onClick={() => void run(false, 'bank', days)}
+              className="rounded-lg border border-teal-700 bg-teal-50 px-3 py-2.5 text-sm font-semibold text-teal-900 hover:bg-teal-100 disabled:opacity-60"
+            >
+              {loading ? '…' : horizonLabel(days)}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {message && <p className="text-sm text-emerald-800">{message}</p>}
       {details.length > 0 ? (
@@ -162,7 +212,7 @@ export function EnsureDailyExamsButton() {
           <button
             type="button"
             disabled={loading}
-            onClick={() => void run(true, 'bank')}
+            onClick={() => void run(true, 'bank', 1)}
             className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-60"
           >
             Regenerar hoje
