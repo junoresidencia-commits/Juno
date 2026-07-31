@@ -102,7 +102,11 @@ export function addCalendarDaysBrazil(dateStr: string, days: number): string {
 export const DAILY_EXAM_QUESTION_COUNT = 20;
 export const DAILY_EXAM_DURATION_MINUTES = 30;
 /**
- * Pipeline IA (revisar + trocar) é caro — só gera a disputa de HOJE (1×/dia).
- * Não pré-gerar horizonte longo.
+ * Cron diário gera só HOJE (1 dia).
+ * No admin dá para pré-gerar horizonte (7 / 14 / 30 dias) no modo banco.
  */
 export const DAILY_EXAM_HORIZON_DAYS = 1;
+/** Máximo de dias que o admin pode gerar de uma vez (hoje + futuros). */
+export const MAX_HORIZON_DAYS = 31;
+/** Atalhos do painel: semana, 2 semanas, 1 mês. */
+export const HORIZON_PRESETS = [7, 14, 30] as const;
