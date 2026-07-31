@@ -35,12 +35,21 @@ function HistoryCard({
           <p className="text-sm text-slate-600">{formatDateBR(date)}</p>
         </div>
         <div className="shrink-0 text-right text-sm">
-          <p className="font-semibold text-emerald-700">
-            {totalCorrect}/{totalQuestions} acertos
-          </p>
-          <p className="text-slate-600">
-            {formatPercent(percentage)} · {formatDuration(durationSeconds)}
-          </p>
+          {pdfAvailable ? (
+            <>
+              <p className="font-semibold text-emerald-700">
+                {totalCorrect}/{totalQuestions} acertos
+              </p>
+              <p className="text-slate-600">
+                {formatPercent(percentage)} · {formatDuration(durationSeconds)}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-semibold text-slate-700">Nota após 21h</p>
+              <p className="text-slate-600">{formatDuration(durationSeconds)}</p>
+            </>
+          )}
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">

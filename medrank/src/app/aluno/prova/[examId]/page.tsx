@@ -51,7 +51,7 @@ export default async function ProvaPage({
       <div>
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
           {formatExamWindowLabel()}. Fique nesta tela · trocar de aba ou tirar print encerra a prova ·
-          30 min · até 2 min 30 s por questão.
+          30 min · até 2 min 30 s por questão · nota e gabarito só às 21h.
         </div>
         {resumed && (
           <div className="border-b border-sky-200 bg-sky-50 px-4 py-2 text-center text-sm text-sky-950">
@@ -183,7 +183,7 @@ export default async function ProvaPage({
     <div>
       <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
         {formatExamWindowLabel()}. Fique nesta tela · trocar de aba ou tirar print encerra a prova ·{' '}
-        {exam.duration_minutes} min · até 2 min 30 s por questão.
+        {exam.duration_minutes} min · até 2 min 30 s por questão · nota e gabarito só às 21h.
       </div>
       {resumed && (
         <div className="border-b border-sky-200 bg-sky-50 px-4 py-2 text-center text-sm text-sky-950">

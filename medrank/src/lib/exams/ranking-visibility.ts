@@ -102,7 +102,7 @@ export function canStudentSeeExamGabarito(
 }
 
 export function studentGabaritoBeforeWindowMessage(): string {
-  return 'Gabarito e PDF com respostas liberam só às 21h (Brasília), quando a disputa fecha. Seu placar (acertos/tempo) já aparece acima.';
+  return 'Pontuação, acertos, gabarito e PDF liberam só às 21h (Brasília), quando a disputa fecha. Até lá só o tempo (e o ranking do grupo, se todos já terminaram) ficam visíveis.';
 }
 
 export function studentExamPdfBeforeReleaseMessage(

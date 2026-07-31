@@ -10,6 +10,36 @@ interface Props {
 }
 
 export function ResultInsightsPanel({ score, maxScore, position, insights, showGabarito }: Props) {
+  if (!showGabarito) {
+    return (
+      <div className="mt-6 space-y-4">
+        <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 p-6 text-white shadow-lg shadow-slate-900/20">
+          <p className="text-sm font-medium text-slate-200">Disputa registrada</p>
+          <p className="mt-2 text-2xl font-bold tracking-tight">Prova enviada</p>
+          <p className="mt-3 text-sm text-slate-200">
+            Pontuação, acertos e gabarito liberam só às <strong className="text-white">21h</strong>{' '}
+            (Brasília) — evita cola enquanto a disputa está aberta.
+          </p>
+          {position != null && (
+            <p className="mt-4 text-lg font-semibold">
+              {position === 1
+                ? '1º lugar no ranking de hoje (placar parcial do grupo)'
+                : `${position}º no ranking de hoje (placar parcial do grupo)`}
+            </p>
+          )}
+        </div>
+        {insights.finishedToday > 0 && (
+          <div className="rounded-xl bg-white p-4 text-center ring-1 ring-slate-200">
+            <p className="text-sm text-slate-600">
+              <strong className="text-slate-900">{insights.finishedToday}</strong>{' '}
+              {insights.finishedToday === 1 ? 'aluno já disputou' : 'alunos já disputaram'} hoje
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   const beatAverage =
     insights.averageScore != null ? score >= insights.averageScore : null;
   const scorePct = maxScore ? Math.round((score / maxScore) * 100) : 0;
@@ -19,21 +49,24 @@ export function ResultInsightsPanel({ score, maxScore, position, insights, showG
       <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white shadow-lg shadow-emerald-900/20">
         <p className="text-sm font-medium text-emerald-100">Sua pontuação</p>
         <p className="mt-1 text-5xl font-bold tabular-nums tracking-tight">{score}</p>
-        <p className="mt-1 text-emerald-100">de {maxScore} pts · {scorePct}% do máximo</p>
+        <p className="mt-1 text-emerald-100">
+          de {maxScore} pts · {scorePct}% do máximo
+        </p>
         {position != null && (
           <p className="mt-4 text-lg font-semibold">
-            {position === 1 ? '🏆 1º lugar no ranking de hoje!' : `${position}º no ranking de hoje`}
+            {position === 1 ? '1º lugar no ranking de hoje!' : `${position}º no ranking de hoje`}
           </p>
         )}
         {insights.pointsToFirst != null && insights.pointsToFirst > 0 && (
           <p className="mt-1 text-sm text-emerald-100">
-            Faltam <strong className="text-white">{insights.pointsToFirst} pts</strong> para o 1º lugar
+            Faltam <strong className="text-white">{insights.pointsToFirst} pts</strong> para o 1º
+            lugar
           </p>
         )}
         {beatAverage != null && (
           <p className="mt-2 text-sm text-emerald-100">
             {beatAverage
-              ? `Acima da média do dia (${insights.averageScore} pts) 🎯`
+              ? `Acima da média do dia (${insights.averageScore} pts)`
               : `Média do dia: ${insights.averageScore} pts — amanhã é nova chance`}
           </p>
         )}
@@ -79,7 +112,7 @@ export function ResultInsightsPanel({ score, maxScore, position, insights, showG
         </section>
       )}
 
-      {insights.weakestAreas.length > 0 && showGabarito && (
+      {insights.weakestAreas.length > 0 && (
         <section className="rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
           <h2 className="font-semibold text-amber-900">Foco de revisão</h2>
           <p className="mt-1 text-sm text-amber-800">

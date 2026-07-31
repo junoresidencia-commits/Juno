@@ -28,12 +28,31 @@ function ResultStats({
   totalWrong,
   percentage,
   durationSeconds,
+  showDetail,
 }: {
   totalCorrect: number;
   totalWrong: number;
   percentage: number | null;
   durationSeconds: number;
+  showDetail: boolean;
 }) {
+  if (!showDetail) {
+    return (
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
+          <p className="text-sm text-slate-600">Tempo na prova</p>
+          <p className="text-2xl font-bold text-slate-900">{formatDuration(durationSeconds)}</p>
+        </div>
+        <div className="rounded-xl bg-slate-50 p-4 text-slate-700 ring-1 ring-slate-200">
+          <p className="text-sm font-medium text-slate-800">Acertos e nota</p>
+          <p className="mt-1 text-sm text-slate-600">
+            Liberam às 21h, junto com o gabarito.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-4 grid grid-cols-2 gap-3">
       <div className="rounded-xl bg-white p-4 text-slate-900 shadow-sm ring-1 ring-slate-200">
@@ -133,6 +152,7 @@ export default async function ResultadoPage({
           totalWrong={totalWrong}
           percentage={attempt.percentage}
           durationSeconds={attempt.duration_seconds ?? 0}
+          showDetail={showGabarito}
         />
         {attempt.submitted_automatically && (
           <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
@@ -291,6 +311,7 @@ export default async function ResultadoPage({
         totalWrong={totalWrong}
         percentage={attempt.percentage}
         durationSeconds={attempt.duration_seconds ?? 0}
+        showDetail={showGabarito}
       />
       {attempt.submitted_automatically && (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-100">
