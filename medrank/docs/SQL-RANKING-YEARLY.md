@@ -1,15 +1,22 @@
-# Ranking competitivo (mensal + anual)
+# Ranking competitivo — SQL
 
-Rode no SQL Editor do Supabase o arquivo:
+Cole no **SQL Editor** do Supabase o arquivo:
 
-`supabase/migrations/047_ranking_yearly_competitive.sql`
+**`docs/SQL-RANKING-COMPETITIVO.sql`**
 
-## O que passa a valer
+## O que libera
 
-1. **Mensal** — disputa principal; zera todo dia 1
-2. **Anual** — acumula o ano civil (quem fez mais no ano)
-3. **Hall da fama** — top 3 dos meses anteriores
-4. **Hero** — sua posição + dias restantes no mês
-5. **Participação** — quantas disputas você fez no mês
+| Período | Pessoa no grupo | Entre ligas |
+| --- | --- | --- |
+| Semanal | sim | sim |
+| Mensal | sim | sim |
+| Trimestral (3 meses) | sim | sim |
+| Anual | sim | sim |
+| Diário / geral | sim | — |
 
-Medalhas gold/silver/bronze também no ranking **mensal**.
+- Mensal zera todo dia 1  
+- Trimestral = jan–mar / abr–jun / jul–set / out–dez  
+- Entre ligas: mínimo 3 ativos (já existia)  
+- Medalhas gold/silver/bronze no mensal (hall da fama)
+
+No final o script já roda o recálculo de hoje.
