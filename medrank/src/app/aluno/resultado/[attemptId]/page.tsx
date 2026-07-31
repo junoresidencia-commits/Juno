@@ -139,7 +139,11 @@ export default async function ResultadoPage({
             Disputa enviada automaticamente ao fim do tempo.
           </p>
         )}
-        <StudyPdfDownloadButton attemptId={attemptId} available={showGabarito} />
+        <StudyPdfDownloadButton
+          attemptId={attemptId}
+          available={showGabarito}
+          lockedMessage={studentGabaritoBeforeWindowMessage()}
+        />
         <ExamPdfDownloadButton
           examId={attempt.exam_id}
           available={showPdf}
@@ -293,7 +297,11 @@ export default async function ResultadoPage({
           Disputa enviada automaticamente ao fim do tempo.
         </p>
       )}
-      <StudyPdfDownloadButton attemptId={attemptId} available={showGabarito} />
+      <StudyPdfDownloadButton
+        attemptId={attemptId}
+        available={showGabarito}
+        lockedMessage={studentGabaritoBeforeWindowMessage()}
+      />
       <ExamPdfDownloadButton
         examId={attempt.exam_id}
         available={showPdf}

@@ -5,7 +5,7 @@ import { useState } from 'react';
 export function StudyPdfDownloadButton({
   attemptId,
   available = true,
-  lockedMessage = 'Finalize a disputa para baixar o PDF de estudo.',
+  lockedMessage = 'PDF com gabarito libera só às 21h, quando a disputa fecha.',
   compact = false,
 }: {
   attemptId: string;
@@ -74,7 +74,7 @@ export function StudyPdfDownloadButton({
     <div className="mt-6 rounded-2xl bg-teal-900 p-5 text-white">
       <p className="text-sm font-semibold text-teal-100">Estudar depois</p>
       <p className="mt-1 text-sm text-teal-50">
-        Baixe o PDF com gabarito, suas respostas e o que você acertou ou errou.
+        Após as 21h: PDF com gabarito, suas respostas e o que você acertou ou errou.
       </p>
       <button
         type="button"

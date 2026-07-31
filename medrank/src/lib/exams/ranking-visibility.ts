@@ -64,23 +64,6 @@ export function studentRankingAfterWindowMessage(): string {
 }
 
 /**
- * Gabarito comentado: mesma regra do ranking.
- * Quem termina cedo não leva as respostas certas para outro aluno ainda na prova.
- */
-export function canStudentSeeExamGabarito(
-  exam: Pick<Exam, 'date_available' | 'window_start_hour' | 'window_end_hour'> | null,
-  hasFinishedAttempt: boolean,
-  opts: RankingVisibilityOpts = {}
-): boolean {
-  if (!exam || !hasFinishedAttempt) return false;
-  return canStudentSeeTodayRanking(exam, hasFinishedAttempt, opts);
-}
-
-export function studentGabaritoBeforeWindowMessage(): string {
-  return 'Gabarito libera quando todos do grupo terminarem (ou após o horário da disputa). Seu placar pessoal (acertos/tempo) já aparece acima.';
-}
-
-/**
  * PDF da prova (só enunciados/alternativas, sem gabarito/comentários):
  * - aluno precisa ter terminado a disputa
  * - liberado depois que a janela fecha (21h) no dia da prova, ou em dias seguintes
@@ -104,6 +87,22 @@ export function canStudentDownloadExamPdf(
     b.endMinute
   );
   return phase === 'after';
+}
+
+/**
+ * Gabarito + PDF de estudo: SOMENTE após a janela (21h).
+ * Não libera quando o grupo termina cedo — evita cola (quem acabou vaza respostas).
+ */
+export function canStudentSeeExamGabarito(
+  exam: Pick<Exam, 'date_available' | 'window_start_hour' | 'window_end_hour'> | null,
+  hasFinishedAttempt: boolean,
+  opts: RankingVisibilityOpts = {}
+): boolean {
+  return canStudentDownloadExamPdf(exam, hasFinishedAttempt, opts.now);
+}
+
+export function studentGabaritoBeforeWindowMessage(): string {
+  return 'Gabarito e PDF com respostas liberam só às 21h (Brasília), quando a disputa fecha. Seu placar (acertos/tempo) já aparece acima.';
 }
 
 export function studentExamPdfBeforeReleaseMessage(

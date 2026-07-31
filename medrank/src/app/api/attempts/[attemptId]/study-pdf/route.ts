@@ -7,7 +7,6 @@ import {
   getDemoQuestionsForAttempt,
 } from '@/lib/demo/runtime';
 import { getDemoExams } from '@/lib/demo/content';
-import { getDemoAdminExamStatus } from '@/lib/demo/presenters';
 import { generateStudyPdfBuffer } from '@/lib/exams/exam-pdf';
 import { canStudentSeeExamGabarito } from '@/lib/exams/ranking-visibility';
 import { formatQuestionExplanation } from '@/lib/question-bank/quality';
@@ -36,13 +35,11 @@ export async function GET(
       return NextResponse.json({ error: 'Resultado não encontrado' }, { status: 404 });
     }
     const exam = getDemoExams().find((e) => e.id === attempt.exam_id);
-    const { finishedCount, activeStudents } = getDemoAdminExamStatus();
-    const allGroupFinished = finishedCount >= activeStudents && activeStudents > 0;
-    if (!exam || !canStudentSeeExamGabarito(exam, true, { allGroupFinished })) {
+    if (!exam || !canStudentSeeExamGabarito(exam, true)) {
       return NextResponse.json(
         {
           error:
-            'Gabarito ainda bloqueado. Libera quando todos do grupo terminarem ou após o horário da disputa.',
+            'PDF com gabarito bloqueado até as 21h (Brasília), quando a disputa fecha.',
         },
         { status: 403 }
       );
@@ -109,19 +106,11 @@ export async function GET(
     window_end_hour?: number;
   } | null;
 
-  const { resolveUserExamAudience } = await import('@/lib/exams/audience');
-  const ctx = await resolveUserExamAudience(session.userId);
-  let allGroupFinished = false;
-  if (exam && ctx.rankingGroupId) {
-    const { areAllGroupMembersFinished } = await import('@/lib/exams/group-finished');
-    allGroupFinished = await areAllGroupMembersFinished(admin, attempt.exam_id, ctx.rankingGroupId);
-  }
-
-  if (!exam || !canStudentSeeExamGabarito(exam, true, { allGroupFinished })) {
+  if (!exam || !canStudentSeeExamGabarito(exam, true)) {
     return NextResponse.json(
       {
         error:
-          'Gabarito ainda bloqueado. Libera quando todos do grupo terminarem ou após o horário da disputa.',
+          'PDF com gabarito bloqueado até as 21h (Brasília), quando a disputa fecha.',
       },
       { status: 403 }
     );
