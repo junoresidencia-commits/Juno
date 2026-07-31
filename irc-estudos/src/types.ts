@@ -15,7 +15,91 @@ export type UnderlyingDisease =
 
 export type StudyStatus = 'active' | 'paused' | 'completed'
 
-export type StudyTemplate = 'ckd_epidemiology' | 'general'
+/** Ficha de coleta de pacientes (dados clínicos). */
+export type StudyTemplate = 'ckd_epidemiology' | 'general' | 'none'
+
+/**
+ * Tipo de produto científico do trabalho.
+ * O app ajuda a estruturar artigo, revisão, etc. a partir de uma ideia.
+ */
+export type WorkKind =
+  | 'ckd_epidemiology'
+  | 'cross_sectional'
+  | 'original_article'
+  | 'literature_review'
+  | 'case_series'
+
+export interface PicoFrame {
+  population: string
+  interventionOrExposure: string
+  comparison: string
+  outcome: string
+}
+
+export interface ArticleSection {
+  id: string
+  title: string
+  guidance: string
+  done: boolean
+}
+
+export interface LiteraturePlan {
+  databases: string[]
+  keywords: string[]
+  inclusion: string[]
+  exclusion: string[]
+}
+
+/** Estrutura gerada a partir da ideia — o que o trabalho precisa para ficar bom. */
+export interface WorkBlueprint {
+  researchQuestion: string
+  pico: PicoFrame
+  specificObjectives: string[]
+  requiredVariables: string[]
+  methodsOutline: string[]
+  articleSections: ArticleSection[]
+  literaturePlan: LiteraturePlan
+  deliverables: string[]
+  chatGptPrompt: string
+  generatedAt: string
+}
+
+/** Seção editável do manuscrito (texto real do artigo). */
+export interface ManuscriptSection {
+  id: string
+  title: string
+  content: string
+  done: boolean
+}
+
+/** Rascunho completo do artigo / revisão. */
+export interface Manuscript {
+  authors: string
+  affiliations: string
+  keywords: string
+  abstractPt: string
+  abstractEn: string
+  sections: ManuscriptSection[]
+  updatedAt: string
+}
+
+/** Artigo extraído para revisão de literatura. */
+export interface LiteratureRecord {
+  id: string
+  studyId: string
+  title: string
+  authors: string
+  year: number | null
+  journal: string
+  studyType: string
+  population: string
+  mainFindings: string
+  limitations: string
+  included: boolean
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
 
 export interface Study {
   id: string
@@ -23,6 +107,11 @@ export interface Study {
   objective: string
   region: string
   template: StudyTemplate
+  kind: WorkKind
+  /** Ideia bruta / rascunho que originou o trabalho. */
+  idea: string
+  blueprint?: WorkBlueprint
+  manuscript?: Manuscript
   status: StudyStatus
   createdAt: string
   updatedAt: string
@@ -46,9 +135,10 @@ export interface Patient {
 }
 
 export interface AppData {
-  version: 1
+  version: 3
   studies: Study[]
   patients: Patient[]
+  literature: LiteratureRecord[]
 }
 
 export interface StudyStats {
@@ -88,6 +178,28 @@ export const CKD_STAGE_LABELS: Record<CkdStage, string> = {
 }
 
 export const STUDY_TEMPLATE_LABELS: Record<StudyTemplate, string> = {
-  ckd_epidemiology: 'Epidemiologia de DRC',
-  general: 'Estudo geral (IRC)',
+  ckd_epidemiology: 'Ficha DRC + CKD-EPI',
+  general: 'Ficha clínica geral',
+  none: 'Sem coleta de pacientes',
+}
+
+export const WORK_KIND_LABELS: Record<WorkKind, string> = {
+  ckd_epidemiology: 'Epidemiologia de DRC (dados + artigo)',
+  cross_sectional: 'Estudo transversal',
+  original_article: 'Artigo original',
+  literature_review: 'Revisão de literatura',
+  case_series: 'Série de casos',
+}
+
+export const WORK_KIND_HINTS: Record<WorkKind, string> = {
+  ckd_epidemiology:
+    'Coleta pacientes, calcula TFG e já estrutura o artigo de prevalência.',
+  cross_sectional:
+    'Corte transversal com variáveis, objetivos e seções do manuscrito.',
+  original_article:
+    'Produto científico completo: pergunta, métodos, resultados e discussão.',
+  literature_review:
+    'Bases, descritores, inclusão/exclusão e roteiro da revisão.',
+  case_series:
+    'Casos clínicos com variáveis mínimas e narrativa para publicação.',
 }

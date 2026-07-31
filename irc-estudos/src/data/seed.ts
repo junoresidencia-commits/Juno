@@ -1,4 +1,6 @@
-import type { AppData, Patient, Study } from '../types'
+import type { AppData, LiteratureRecord, Patient, Study } from '../types'
+import { generateBlueprint } from '../lib/blueprint'
+import { createManuscriptFromBlueprint } from '../lib/manuscript'
 import { calculateCkdEpi2021, hasCkdByEgfr, stageFromEgfr } from '../lib/ckd-epi'
 import { createId } from '../lib/id'
 
@@ -38,14 +40,31 @@ function makePatient(
 export function seedData(): AppData {
   const now = new Date().toISOString()
   const studyId = createId('study')
+  const title = 'Prevalência de DRC na região IRC'
+  const idea =
+    'Quero estimar prevalência de doença renal crônica na região IRC, com creatinina, CKD-EPI, doença de base e estatina, e transformar isso em artigo.'
+  const kind = 'ckd_epidemiology' as const
+  const blueprint = generateBlueprint({
+    title,
+    idea,
+    kind,
+    region: 'IRC',
+  })
+  const manuscript = createManuscriptFromBlueprint(
+    { title, objective: blueprint.specificObjectives[0] ?? idea, idea, kind, region: 'IRC' },
+    blueprint,
+  )
 
   const study: Study = {
     id: studyId,
-    title: 'Prevalência de DRC na região IRC',
-    objective:
-      'Estimar prevalência e perfil clínico de doença renal crônica (DRC) na região IRC, com cálculo automático de TFG pela equação CKD-EPI 2021.',
+    title,
+    objective: blueprint.specificObjectives[0] ?? idea,
     region: 'IRC',
     template: 'ckd_epidemiology',
+    kind,
+    idea,
+    blueprint,
+    manuscript,
     status: 'active',
     createdAt: now,
     updatedAt: now,
@@ -99,5 +118,63 @@ export function seedData(): AppData {
     }),
   ]
 
-  return { version: 1, studies: [study], patients }
+  const reviewId = createId('study')
+  const reviewTitle = 'Revisão: DRC e estatina na atenção primária'
+  const reviewIdea =
+    'Revisão de literatura sobre uso de estatina em pacientes com DRC na atenção primária, com aplicação à região IRC.'
+  const reviewBlueprint = generateBlueprint({
+    title: reviewTitle,
+    idea: reviewIdea,
+    kind: 'literature_review',
+    region: 'IRC',
+  })
+  const reviewStudy: Study = {
+    id: reviewId,
+    title: reviewTitle,
+    objective: reviewBlueprint.specificObjectives[0] ?? reviewIdea,
+    region: 'IRC',
+    template: 'none',
+    kind: 'literature_review',
+    idea: reviewIdea,
+    blueprint: reviewBlueprint,
+    manuscript: createManuscriptFromBlueprint(
+      {
+        title: reviewTitle,
+        objective: reviewBlueprint.specificObjectives[0] ?? reviewIdea,
+        idea: reviewIdea,
+        kind: 'literature_review',
+        region: 'IRC',
+      },
+      reviewBlueprint,
+    ),
+    status: 'active',
+    createdAt: now,
+    updatedAt: now,
+  }
+
+  const literature: LiteratureRecord[] = [
+    {
+      id: createId('lit'),
+      studyId: reviewId,
+      title: 'Statins and chronic kidney disease outcomes',
+      authors: 'Exemplo A, Exemplo B',
+      year: 2021,
+      journal: 'Exemplo Journal of Nephrology',
+      studyType: 'Revisão / metanálise',
+      population: 'Adultos com DRC',
+      mainFindings: 'Associação de estatina com redução de eventos CV em estratos selecionados.',
+      limitations: 'Heterogeneidade entre estudos.',
+      included: true,
+      notes: 'Usar na discussão do trabalho local.',
+      createdAt: now,
+      updatedAt: now,
+    },
+  ]
+
+  return {
+    version: 3,
+    studies: [study, reviewStudy],
+    patients,
+    literature,
+  }
 }
