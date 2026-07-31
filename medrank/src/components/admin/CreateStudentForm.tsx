@@ -12,7 +12,8 @@ export function CreateStudentForm({ initialError, initialSuccess }: Props) {
       <p className="mt-1 text-sm text-slate-600">
         Cria o cadastro com o <strong>nome</strong> do aluno. Ele fica em{' '}
         <strong>Aguardando PIX</strong> até você confirmar o pagamento e tocar em{' '}
-        <strong>Liberar após PIX</strong> (+30 dias). Quem já está liberado mantém a validade.
+        <strong>Liberar após PIX</strong> (escolha 1 mês, 3 meses, semestral ou anual). Quem já
+        está liberado mantém a validade.
       </p>
 
       {initialSuccess && (

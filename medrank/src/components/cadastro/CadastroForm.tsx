@@ -3,7 +3,9 @@ import { PixPaymentCard } from '@/components/billing/PixPaymentCard';
 import {
   formatPriceBrl,
   formatWhatsAppDisplay,
+  getPaidAccessCopy,
   getWhatsAppProofUrl,
+  SUBSCRIPTION_PLANS,
 } from '@/lib/billing/pix';
 
 interface Props {
@@ -29,6 +31,8 @@ export function CadastroForm({
   const publicSignup = !token;
   const whatsappUrl = getWhatsAppProofUrl(emailForPix);
   const whatsappDisplay = formatWhatsAppDisplay();
+  const pricing = getPaidAccessCopy();
+  const quarterPrice = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
 
   if (success) {
     return (
@@ -36,7 +40,7 @@ export function CadastroForm({
         <div className="rounded-xl bg-emerald-50 p-5 text-center ring-1 ring-emerald-200">
           <p className="text-lg font-semibold text-emerald-900">Conta criada</p>
           <p className="mt-2 text-sm text-emerald-800">
-            1) Pague {formatPriceBrl()} no PIX abaixo
+            1) Promo: {pricing.promoHeadline} — ou {quarterPrice} à vista (3 meses)
             <br />
             2) Me manda no WhatsApp <strong>{whatsappDisplay}</strong> pra eu liberar (com o
             comprovante)
@@ -96,8 +100,8 @@ export function CadastroForm({
     <form action={action} method="POST" className="space-y-4">
       <p className="text-sm text-slate-600">
         {publicSignup
-          ? `Crie seu login. Depois pague ${formatPriceBrl()}/mês no PIX e me manda no WhatsApp ${whatsappDisplay} pra eu liberar.`
-          : `Crie seu login. Em seguida você verá o PIX de ${formatPriceBrl()}/mês. Depois me manda no WhatsApp pra liberar.`}
+          ? `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses — ou ${quarterPrice} à vista. Depois me manda no WhatsApp ${whatsappDisplay} pra liberar.`
+          : `Crie seu login. Promo ${formatPriceBrl()}/mês por 3 meses — ou ${quarterPrice} à vista. Depois me manda no WhatsApp pra liberar.`}
       </p>
 
       <PixPaymentCard emailHint={inviteEmail} compact />

@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     name: name.trim(),
     email,
     role: 'student',
-    // Aguarda PIX: professor libera em /admin/alunos → Liberar após PIX (+30 dias)
+    // Aguarda PIX: professor libera em /admin/alunos (1 mês / 3 meses / semestral / anual)
     active: false,
     approved_at: null,
     enabled_tracks: tracks,

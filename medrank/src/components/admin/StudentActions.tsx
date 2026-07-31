@@ -4,6 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMobileAction } from '@/hooks/use-mobile-action';
 import { APP_TRACKS, type AppTrackId } from '@/lib/tracks/config';
+import {
+  formatPriceBrl,
+  getSubscriptionPlan,
+  RECOMMENDED_PLAN_ID,
+  SUBSCRIPTION_PLAN_LIST,
+  type SubscriptionPlanId,
+} from '@/lib/billing/pix';
 
 interface Props {
   studentId: string;
@@ -26,11 +33,14 @@ export function StudentActions({
 }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
+  const [planId, setPlanId] = useState<SubscriptionPlanId>(RECOMMENDED_PLAN_ID);
   const [tracks, setTracks] = useState<AppTrackId[]>(
     enabledTracks.includes('general')
       ? enabledTracks
       : (['general', ...enabledTracks] as AppTrackId[])
   );
+
+  const plan = getSubscriptionPlan(planId);
 
   async function apiCall(method: string, body?: object) {
     try {
@@ -60,19 +70,28 @@ export function StudentActions({
   }
 
   async function approve() {
-    if (!confirm(`Confirmar PIX de R$ 10 e liberar ${name} por 30 dias?`)) return;
-    setLoading('approve');
-    const ok = await apiCall('PATCH', { action: 'approve' });
-    if (ok) {
-      // refresh já feito; feedback rápido no mobile
+    if (
+      !confirm(
+        `Confirmar PIX de ${formatPriceBrl(plan.priceCents)} e liberar ${name} por ${plan.label} (${plan.days} dias)?`
+      )
+    ) {
+      return;
     }
+    setLoading('approve');
+    await apiCall('PATCH', { action: 'approve', plan: planId });
     setLoading(null);
   }
 
   async function renew() {
-    if (!confirm(`Confirmar novo PIX e renovar ${name} por +30 dias?`)) return;
+    if (
+      !confirm(
+        `Confirmar PIX de ${formatPriceBrl(plan.priceCents)} e renovar ${name} por +${plan.label} (${plan.days} dias)?`
+      )
+    ) {
+      return;
+    }
     setLoading('renew');
-    await apiCall('PATCH', { action: 'renew' });
+    await apiCall('PATCH', { action: 'renew', plan: planId });
     setLoading(null);
   }
 
@@ -143,6 +162,36 @@ export function StudentActions({
           Assinatura até <strong className="text-slate-800">{expiresLabel}</strong>
         </p>
       ) : null}
+
+      <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+          Plano do PIX
+        </p>
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {SUBSCRIPTION_PLAN_LIST.map((p) => {
+            const on = planId === p.id;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                disabled={loading !== null}
+                onClick={() => setPlanId(p.id)}
+                className={`rounded-lg px-2.5 py-2 text-left text-xs font-semibold ring-1 disabled:opacity-50 ${
+                  on
+                    ? 'bg-teal-800 text-white ring-teal-900'
+                    : 'bg-white text-slate-700 ring-slate-300 hover:bg-slate-100'
+                }`}
+              >
+                <span className="block">{p.label}</span>
+                <span className={`mt-0.5 block ${on ? 'text-teal-100' : 'text-slate-500'}`}>
+                  {formatPriceBrl(p.priceCents)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="flex flex-wrap gap-2">
         {pending && (
           <button
@@ -151,7 +200,9 @@ export function StudentActions({
             {...approveHandlers}
             className="exam-tap rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
           >
-            {loading === 'approve' ? '...' : 'Liberar após PIX (+30 dias)'}
+            {loading === 'approve'
+              ? '...'
+              : `Liberar após PIX (${plan.label} · ${formatPriceBrl(plan.priceCents)})`}
           </button>
         )}
         {pending && (
@@ -171,7 +222,9 @@ export function StudentActions({
             {...renewHandlers}
             className="exam-tap rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-50"
           >
-            {loading === 'renew' ? '...' : 'Renovar mês (+30d)'}
+            {loading === 'renew'
+              ? '...'
+              : `Renovar (${plan.label} · ${formatPriceBrl(plan.priceCents)})`}
           </button>
         )}
         {!pending && (

@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import {
+  formatPriceBrl,
   formatWhatsAppDisplay,
   getPaidAccessCopy,
   getWhatsAppProofUrl,
+  SUBSCRIPTION_PLAN_LIST,
+  type SubscriptionPlanId,
 } from '@/lib/billing/pix';
 
 type Props = {
@@ -16,6 +19,8 @@ type Props = {
 export function PixPaymentCard({ emailHint, compact }: Props) {
   const copy = getPaidAccessCopy();
   const [copied, setCopied] = useState(false);
+  const [selected, setSelected] = useState<SubscriptionPlanId>(copy.recommendedPlanId);
+  const plan = SUBSCRIPTION_PLAN_LIST.find((p) => p.id === selected) ?? SUBSCRIPTION_PLAN_LIST[1];
   const descricao = emailHint
     ? `MedRank ${emailHint}`
     : 'MedRank — coloque seu e-mail na descrição';
@@ -36,11 +41,40 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
     <div
       className={`rounded-2xl bg-teal-900 p-5 text-white ${compact ? '' : 'ring-1 ring-teal-950'}`}
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-teal-200">Pagamento</p>
-      <p className="mt-1 text-2xl font-bold">
-        {copy.priceLabel}{' '}
-        <span className="text-base font-medium text-teal-100">{copy.periodLabel}</span>
+      <p className="text-xs font-semibold uppercase tracking-wide text-teal-200">
+        Pagamento · promoção
       </p>
+      <p className="mt-1 text-2xl font-bold leading-tight">{copy.promoHeadline}</p>
+      <p className="mt-1 text-sm font-semibold text-emerald-200">{copy.promoDeal}</p>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {SUBSCRIPTION_PLAN_LIST.map((p) => {
+          const active = p.id === selected;
+          return (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => setSelected(p.id)}
+              className={`rounded-xl px-3 py-2.5 text-left transition ${
+                active
+                  ? 'bg-white text-teal-950 ring-2 ring-emerald-300'
+                  : 'bg-teal-800/80 text-teal-50 ring-1 ring-teal-700 hover:bg-teal-800'
+              }`}
+            >
+              <span className="block text-xs font-semibold uppercase tracking-wide opacity-80">
+                {p.label}
+              </span>
+              <span className="mt-0.5 block text-base font-bold">{formatPriceBrl(p.priceCents)}</span>
+              {p.highlight ? (
+                <span className="mt-0.5 block text-[11px] font-semibold text-emerald-700">
+                  Melhor custo
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+
       <p className="mt-3 text-sm text-teal-50">
         PIX · chave CPF · {copy.pixKeyDisplay}
       </p>
@@ -52,7 +86,10 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
         {copied ? 'Copiado!' : 'Copiar chave PIX'}
       </button>
       <p className="mt-3 text-xs leading-relaxed text-teal-100">
-        Valor: <strong className="text-white">{copy.priceLabel}</strong>
+        Valor selecionado:{' '}
+        <strong className="text-white">
+          {formatPriceBrl(plan.priceCents)} · {plan.label}
+        </strong>
         <br />
         Descrição sugerida: <strong className="text-white">{descricao}</strong>
       </p>

@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { CadastroForm } from '@/components/cadastro/CadastroForm';
-import { formatPriceBrl, formatWhatsAppDisplay } from '@/lib/billing/pix';
+import {
+  formatPriceBrl,
+  formatWhatsAppDisplay,
+  SUBSCRIPTION_PLANS,
+} from '@/lib/billing/pix';
 
 /** Cadastro público — sem convite. Aluno cria login → PIX → WhatsApp comprovante → admin libera. */
 export default async function PublicCadastroPage({
@@ -10,6 +14,7 @@ export default async function PublicCadastroPage({
 }) {
   const query = await searchParams;
   const success = query.ok === '1';
+  const quarter = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
 
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
@@ -17,7 +22,10 @@ export default async function PublicCadastroPage({
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-teal-900">MedRank</h1>
           <p className="mt-2 text-sm text-slate-600">
-            Criar conta · {formatPriceBrl()}/mês
+            Criar conta · promo {formatPriceBrl()}/mês por 3 meses
+          </p>
+          <p className="mt-1 text-xs font-semibold text-teal-800">
+            Ou {quarter} à vista (3 meses)
           </p>
           <p className="mt-1 text-xs text-slate-500">
             Após o PIX, WhatsApp {formatWhatsAppDisplay()} com o comprovante.

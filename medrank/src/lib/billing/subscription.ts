@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { formatPriceBrl } from '@/lib/billing/pix';
+import { formatPriceBrl, SUBSCRIPTION_PLANS } from '@/lib/billing/pix';
 
 export function isSubscriptionExpired(
   expiresAt: string | null | undefined,
@@ -21,13 +21,16 @@ export function accessDeniedMessage(profile: {
     return '';
   }
 
+  const monthly = formatPriceBrl();
+  const quarter = formatPriceBrl(SUBSCRIPTION_PLANS.quarter.priceCents);
+
   if (!profile.approved_at) {
-    return `Aguardando liberação. Pague o PIX de ${formatPriceBrl()} e me manda no WhatsApp com o comprovante pra liberar.`;
+    return `Aguardando liberação. Promo ${monthly}/mês por 3 meses — ou ${quarter} à vista. Me manda no WhatsApp com o comprovante pra liberar.`;
   }
 
   if (isSubscriptionExpired(profile.subscription_expires_at) || !profile.active) {
     if (isSubscriptionExpired(profile.subscription_expires_at)) {
-      return `Assinatura vencida. Pague ${formatPriceBrl()} via PIX e o professor renova o mês.`;
+      return `Assinatura vencida. Pague via PIX (${monthly}/mês ou ${quarter} / 3 meses) e o professor renova.`;
     }
     return 'Acesso bloqueado.';
   }
