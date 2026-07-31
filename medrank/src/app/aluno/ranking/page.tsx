@@ -6,7 +6,10 @@ import {
   daysLeftInQuarter,
   DEFAULT_STUDENT_RANKING_PERIOD,
   getPeriodBounds,
+  STUDENT_RANKING_ALL_PERIODS,
   STUDENT_RANKING_PERIODS,
+  STUDENT_RANKING_SECONDARY_PERIODS,
+  studentPeriodLabel,
 } from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
@@ -27,13 +30,16 @@ import {
 } from '@/lib/rankings/competitive';
 
 function periodSubtitle(period: PeriodType): string {
-  if (period === 'monthly') return 'Disputa do mês — zera todo dia 1. Quem pontua mais leva.';
-  if (period === 'weekly') return 'Semana atual — ritmo curto e competitivo.';
-  if (period === 'quarterly') return 'Trimestre — aposta mais longa (3 meses).';
-  if (period === 'yearly') return 'Acumulado do ano — quem fez mais ao longo do ano.';
+  if (period === 'monthly') return 'Zera todo dia 1 — disputa principal do mês.';
+  if (period === 'weekly') return 'Aposta curta da semana — quem pontua mais leva.';
+  if (period === 'quarterly') return 'Trimestre = 3 meses — aposta mais longa.';
+  if (period === 'yearly') return 'Temporada do ano — quem fez mais no acumulado.';
   if (period === 'daily') return 'Só a disputa de hoje no seu grupo.';
   return 'Ranking do grupo';
 }
+
+const PERIOD_RULES =
+  'Mensal zera dia 1 · Semanal = aposta curta · Anual = temporada · Trimestre = 3 meses';
 
 export default async function RankingAlunoPage({
   searchParams,
@@ -42,7 +48,7 @@ export default async function RankingAlunoPage({
 }) {
   const { userId } = await requireAuth();
   const { period: periodParam } = await searchParams;
-  const allowedPeriods = STUDENT_RANKING_PERIODS.map((p) => p.value);
+  const allowedPeriods = STUDENT_RANKING_ALL_PERIODS.map((p) => p.value);
   const period = allowedPeriods.includes(periodParam as PeriodType)
     ? (periodParam as PeriodType)
     : DEFAULT_STUDENT_RANKING_PERIOD;
@@ -66,17 +72,16 @@ export default async function RankingAlunoPage({
     return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking do grupo</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Mensal e semanal são apostas curtas; trimestral e anual premiam quem joga mais tempo.
-        </p>
+        <p className="mt-1 text-sm text-slate-600">{PERIOD_RULES}</p>
         <RankingPeriodNav
           basePath="/aluno/ranking"
           current={period}
           periods={STUDENT_RANKING_PERIODS}
+          secondaryPeriods={STUDENT_RANKING_SECONDARY_PERIODS}
         />
         {canSeeDaily ? (
           <RankingCompetitiveHero
-            periodLabel={STUDENT_RANKING_PERIODS.find((p) => p.value === period)?.label ?? 'Ranking'}
+            periodLabel={studentPeriodLabel(period)}
             subtitle={periodSubtitle(period)}
             myPosition={myRanking?.position}
             myScore={myRanking?.total_score}
@@ -263,18 +268,18 @@ export default async function RankingAlunoPage({
         Ranking · {ctx.rankingGroupName}
       </h1>
       <p className="mt-1 text-sm text-slate-600">
-          Mensal e semanal são apostas curtas; trimestral e anual premiam quem joga mais tempo. Só o
-        seu grupo vê este ranking.
+        {PERIOD_RULES}. Só o seu grupo vê este ranking.
       </p>
       <RankingPeriodNav
         basePath="/aluno/ranking"
         current={period}
         periods={STUDENT_RANKING_PERIODS}
+        secondaryPeriods={STUDENT_RANKING_SECONDARY_PERIODS}
       />
 
       {canSee ? (
         <RankingCompetitiveHero
-          periodLabel={STUDENT_RANKING_PERIODS.find((p) => p.value === period)?.label ?? 'Ranking'}
+          periodLabel={studentPeriodLabel(period)}
           subtitle={periodSubtitle(period)}
           myPosition={myRanking?.position}
           myScore={myRanking?.total_score}
