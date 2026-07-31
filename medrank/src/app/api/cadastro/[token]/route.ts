@@ -82,8 +82,15 @@ export async function POST(
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
+    try {
+      const { notifyAdminNewSignup } = await import('@/lib/email/admin-notify');
+      await notifyAdminNewSignup({ name: name.trim(), email: email.trim().toLowerCase() });
+    } catch {
+      /* ignore */
+    }
+
     const message =
-      'Cadastro realizado! Pague o PIX de R$ 10 e aguarde o professor liberar seu acesso.';
+      'Cadastro realizado! Pague o PIX de R$ 10, envie o comprovante no WhatsApp e aguarde a liberação.';
     if (formSubmit) {
       return cadastroRedirect(request, token, { ok: '1' });
     }
@@ -158,8 +165,19 @@ export async function POST(
     .update({ used_at: new Date().toISOString(), used_by: authUser.user.id })
     .eq('token', token);
 
+  try {
+    const { notifyAdminNewSignup } = await import('@/lib/email/admin-notify');
+    await notifyAdminNewSignup({
+      name: name.trim(),
+      email: emailNorm,
+      userId: authUser.user.id,
+    });
+  } catch (err) {
+    console.error('[cadastro/token] notify admin failed', err);
+  }
+
   const message =
-    'Cadastro realizado! Pague o PIX de R$ 10 e aguarde o professor liberar seu acesso.';
+    'Cadastro realizado! Pague o PIX de R$ 10, envie o comprovante no WhatsApp e aguarde a liberação.';
   if (formSubmit) {
     return cadastroRedirect(request, token, { ok: '1' });
   }

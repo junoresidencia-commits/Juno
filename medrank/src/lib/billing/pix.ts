@@ -5,6 +5,9 @@
 export const MONTHLY_PRICE_CENTS = 1000; // R$ 10,00
 export const SUBSCRIPTION_DAYS = 30;
 
+/** WhatsApp do professor para enviar comprovante (DDD+número). Override: NEXT_PUBLIC_MEDRANK_WHATSAPP */
+export const DEFAULT_WHATSAPP_DIGITS = '73999052933';
+
 /** Dígitos da chave PIX (CPF). Override: NEXT_PUBLIC_MEDRANK_PIX_KEY ou MEDRANK_PIX_KEY */
 export function getPixKeyDigits(): string {
   const raw = (
@@ -13,6 +16,35 @@ export function getPixKeyDigits(): string {
     '01695189574'
   ).replace(/\D/g, '');
   return raw || '01695189574';
+}
+
+export function getWhatsAppDigits(): string {
+  const raw = (
+    process.env.NEXT_PUBLIC_MEDRANK_WHATSAPP ??
+    process.env.MEDRANK_WHATSAPP ??
+    DEFAULT_WHATSAPP_DIGITS
+  ).replace(/\D/g, '');
+  return raw || DEFAULT_WHATSAPP_DIGITS;
+}
+
+/** Exibe 739-9905-2933 (padrão do professor). */
+export function formatWhatsAppDisplay(digits = getWhatsAppDigits()): string {
+  if (digits.length === 11) {
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return digits;
+}
+
+/** Link wa.me com mensagem pronta para comprovante. */
+export function getWhatsAppProofUrl(emailHint?: string): string {
+  const digits = getWhatsAppDigits();
+  const withCountry = digits.startsWith('55') ? digits : `55${digits}`;
+  const emailPart = emailHint?.trim() ? ` Meu e-mail: ${emailHint.trim()}.` : '';
+  const text = `Olá! Fiz o PIX do MedRank e quero liberar o acesso.${emailPart} Segue o comprovante.`;
+  return `https://wa.me/${withCountry}?text=${encodeURIComponent(text)}`;
 }
 
 export function formatPixKeyDisplay(digits = getPixKeyDigits()): string {
@@ -34,6 +66,7 @@ export function subscriptionExpiresAt(from = new Date()): Date {
 
 export function getPaidAccessCopy() {
   const digits = getPixKeyDigits();
+  const whatsappDisplay = formatWhatsAppDisplay();
   return {
     priceCents: MONTHLY_PRICE_CENTS,
     priceLabel: formatPriceBrl(),
@@ -41,10 +74,14 @@ export function getPaidAccessCopy() {
     pixKeyDigits: digits,
     pixKeyDisplay: formatPixKeyDisplay(digits),
     pixKeyType: 'CPF' as const,
+    whatsappDigits: getWhatsAppDigits(),
+    whatsappDisplay,
+    whatsappUrl: getWhatsAppProofUrl(),
     instructions: [
       `Pague ${formatPriceBrl()} via PIX (chave CPF).`,
       'Na descrição do PIX, coloque seu nome e e-mail de cadastro.',
-      'Depois do pagamento, o professor libera sua conta (em geral no mesmo dia).',
+      `Depois do pagamento, fale no WhatsApp ${whatsappDisplay} e envie o comprovante.`,
+      'O professor confere e libera sua conta no app (em geral no mesmo dia).',
     ],
   };
 }

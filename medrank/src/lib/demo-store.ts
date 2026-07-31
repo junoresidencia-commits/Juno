@@ -293,6 +293,39 @@ export function registerDemoStudent(
   return { ok: true };
 }
 
+/** Cadastro público (sem convite) no modo demo. */
+export function registerDemoStudentPublic(
+  name: string,
+  email: string,
+  password: string
+): { ok: boolean; error?: string; id?: string } {
+  const emailNorm = normalizeEmail(email);
+  if (!name.trim()) return { ok: false, error: 'Informe o nome.' };
+  if (!emailNorm.includes('@')) return { ok: false, error: 'E-mail inválido.' };
+  if (!password || password.length < 4) {
+    return { ok: false, error: 'Senha com no mínimo 4 caracteres.' };
+  }
+
+  const store = readDemoStore();
+  if (store.students.some((s) => s.email === emailNorm)) {
+    return { ok: false, error: 'Este e-mail já está cadastrado.' };
+  }
+
+  const id = `demo-student-${randomBytes(4).toString('hex')}`;
+  store.students.push({
+    id,
+    name: name.trim(),
+    email: emailNorm,
+    password,
+    active: false,
+    approvedAt: null,
+    createdAt: new Date().toISOString(),
+    enabled_tracks: ['general'],
+  });
+  writeDemoStore(store);
+  return { ok: true, id };
+}
+
 export function createDemoStudentByAdmin(
   name: string,
   email: string,

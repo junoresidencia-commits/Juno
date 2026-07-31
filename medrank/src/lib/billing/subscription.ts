@@ -22,7 +22,7 @@ export function accessDeniedMessage(profile: {
   }
 
   if (!profile.approved_at) {
-    return `Aguardando liberação. Pague o PIX de ${formatPriceBrl()} e aguarde o professor confirmar.`;
+    return `Aguardando liberação. Pague o PIX de ${formatPriceBrl()} e envie o comprovante no WhatsApp para o professor confirmar.`;
   }
 
   if (isSubscriptionExpired(profile.subscription_expires_at) || !profile.active) {
