@@ -2,7 +2,7 @@ export type UserRole = 'admin' | 'student';
 
 export type ExamStatus = 'draft' | 'published' | 'closed';
 
-export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'general';
+export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'general';
 
 export type OptionLetter = 'A' | 'B' | 'C' | 'D' | 'E';
 

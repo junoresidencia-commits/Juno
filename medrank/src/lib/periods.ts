@@ -34,6 +34,38 @@ export function getMonthEnd(date = new Date()): string {
   return toDateString(new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0)));
 }
 
+export function getYearStart(date = new Date()): string {
+  return toDateString(new Date(Date.UTC(date.getFullYear(), 0, 1)));
+}
+
+export function getYearEnd(date = new Date()): string {
+  return toDateString(new Date(Date.UTC(date.getFullYear(), 11, 31)));
+}
+
+/** Dias restantes no mês civil (incluindo hoje). */
+export function daysLeftInMonth(date = new Date()): number {
+  const end = new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0));
+  const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  return Math.max(0, Math.round((end.getTime() - today.getTime()) / 86400000) + 1);
+}
+
+/** Últimos N meses (sem o mês atual), do mais recente ao mais antigo. */
+export function listPastMonthStarts(count = 6, date = new Date()): string[] {
+  const out: string[] = [];
+  for (let i = 1; i <= count; i++) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth() - i, 1));
+    out.push(getMonthStart(d));
+  }
+  return out;
+}
+
+export function monthLabelPt(periodStart: string): string {
+  const [y, m] = periodStart.split('-').map(Number);
+  const d = new Date(Date.UTC(y, (m || 1) - 1, 1));
+  const label = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 export function getPeriodBounds(type: PeriodType, date = new Date()): PeriodBounds {
   const today = toDateString(date);
 
@@ -54,6 +86,13 @@ export function getPeriodBounds(type: PeriodType, date = new Date()): PeriodBoun
         end: getMonthEnd(date),
         label: 'Mês',
       };
+    case 'yearly':
+      return {
+        type,
+        start: getYearStart(date),
+        end: getYearEnd(date),
+        label: 'Ano',
+      };
     case 'general':
       return {
         type,
@@ -65,22 +104,27 @@ export function getPeriodBounds(type: PeriodType, date = new Date()): PeriodBoun
 }
 
 export const PERIOD_OPTIONS: { value: PeriodType; label: string }[] = [
-  { value: 'daily', label: 'Diário' },
-  { value: 'weekly', label: 'Semanal' },
   { value: 'monthly', label: 'Mensal' },
+  { value: 'yearly', label: 'Anual' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'daily', label: 'Diário' },
   { value: 'general', label: 'Geral' },
 ];
 
-/** Períodos visíveis para alunos = ranking do GRUPO (não o geral entre ligas). */
+/** Períodos do aluno — mensal primeiro (disputa que zera todo mês). */
 export const STUDENT_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
-  { value: 'daily', label: 'Diário' },
-  { value: 'weekly', label: 'Semanal' },
   { value: 'monthly', label: 'Mensal' },
+  { value: 'yearly', label: 'Anual' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'daily', label: 'Diário' },
 ];
 
-/** Rankings internos de grupo (inclui mensal) */
+/** Rankings internos de grupo */
 export const GROUP_RANKING_PERIODS: { value: PeriodType; label: string }[] = [
-  { value: 'daily', label: 'Diário' },
-  { value: 'weekly', label: 'Semanal' },
   { value: 'monthly', label: 'Mensal' },
+  { value: 'yearly', label: 'Anual' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'daily', label: 'Diário' },
 ];
+
+export const DEFAULT_STUDENT_RANKING_PERIOD: PeriodType = 'monthly';

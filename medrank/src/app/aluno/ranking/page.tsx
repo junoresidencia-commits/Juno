@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/auth';
-import { getPeriodBounds } from '@/lib/periods';
+import {
+  daysLeftInMonth,
+  DEFAULT_STUDENT_RANKING_PERIOD,
+  getPeriodBounds,
+  STUDENT_RANKING_PERIODS,
+} from '@/lib/periods';
 import type { PeriodType } from '@/types/database';
 import { RankingPeriodNav } from '@/components/ranking/RankingPeriodNav';
+import { RankingCompetitiveHero } from '@/components/ranking/RankingCompetitiveHero';
+import { RankingHallOfFame } from '@/components/ranking/RankingHallOfFame';
 import { usesDemoStore } from '@/lib/demo-data';
 import { getDemoDashboardData, getDemoRanking } from '@/lib/demo/presenters';
 import {
@@ -13,7 +20,18 @@ import {
   studentRankingBeforeFinishMessage,
 } from '@/lib/exams/ranking-visibility';
 import { todayDateStringBrazil } from '@/lib/exams/window';
-import { STUDENT_RANKING_PERIODS } from '@/lib/periods';
+import {
+  fetchGroupHallOfFame,
+  fetchMonthlyParticipation,
+} from '@/lib/rankings/competitive';
+
+function periodSubtitle(period: PeriodType): string {
+  if (period === 'monthly') return 'Disputa do mês — zera todo dia 1. Quem pontua mais leva.';
+  if (period === 'yearly') return 'Acumulado do ano — quem fez mais ao longo do ano.';
+  if (period === 'weekly') return 'Semana atual — ritmo curto e competitivo.';
+  if (period === 'daily') return 'Só a disputa de hoje no seu grupo.';
+  return 'Ranking do grupo';
+}
 
 export default async function RankingAlunoPage({
   searchParams,
@@ -25,21 +43,41 @@ export default async function RankingAlunoPage({
   const allowedPeriods = STUDENT_RANKING_PERIODS.map((p) => p.value);
   const period = allowedPeriods.includes(periodParam as PeriodType)
     ? (periodParam as PeriodType)
-    : 'daily';
+    : DEFAULT_STUDENT_RANKING_PERIOD;
 
   if (usesDemoStore()) {
-    const { showRanking } = getDemoDashboardData(userId);
+    const { showRanking, streakDays } = getDemoDashboardData(userId);
     const canSeeDaily = period !== 'daily' || showRanking;
 
-    const { rankings } = period === 'daily'
-      ? getDemoRanking('daily', getTodayRankingDate())
-      : getDemoRanking(period);
+    const { rankings } =
+      period === 'daily'
+        ? getDemoRanking('daily', getTodayRankingDate())
+        : getDemoRanking(period);
     const myRanking = rankings.find((r) => r.user_id === userId);
+    const daysLeft = period === 'monthly' ? daysLeftInMonth() : null;
 
     return (
       <div className="mx-auto w-full px-4 py-6 md:px-6">
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Ranking do grupo</h1>
-        <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
+        <p className="mt-1 text-sm text-slate-600">
+          Mensal é a disputa principal (reinicia todo mês). O anual guarda quem fez mais no ano.
+        </p>
+        <RankingPeriodNav
+          basePath="/aluno/ranking"
+          current={period}
+          periods={STUDENT_RANKING_PERIODS}
+        />
+        {canSeeDaily ? (
+          <RankingCompetitiveHero
+            periodLabel={STUDENT_RANKING_PERIODS.find((p) => p.value === period)?.label ?? 'Ranking'}
+            subtitle={periodSubtitle(period)}
+            myPosition={myRanking?.position}
+            myScore={myRanking?.total_score}
+            daysLeft={daysLeft}
+            finishedCount={period === 'monthly' ? Math.max(streakDays, 1) : null}
+            activeDays={period === 'monthly' ? streakDays : null}
+          />
+        ) : null}
         {period === 'daily' && !canSeeDaily && (
           <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
         )}
@@ -47,13 +85,6 @@ export default async function RankingAlunoPage({
           <p className="mt-3 text-sm text-slate-600">
             {studentDailyRankingLabel(getTodayRankingDate())} — só quem está no seu grupo.
           </p>
-        )}
-        {canSeeDaily && myRanking && (
-          <div className="mt-4 rounded-xl bg-emerald-50 p-4">
-            <p className="font-semibold text-emerald-800">
-              Você: {myRanking.position}º · {myRanking.total_score} pts
-            </p>
-          </div>
         )}
         {canSeeDaily && (
           <ol className="mt-6 space-y-2">
@@ -67,12 +98,21 @@ export default async function RankingAlunoPage({
                   <li
                     key={r.id}
                     className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-                      isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white text-slate-900 ring-1 ring-slate-200'
+                      isMe
+                        ? 'bg-emerald-50 ring-1 ring-emerald-200'
+                        : 'bg-white text-slate-900 ring-1 ring-slate-200'
                     }`}
                   >
                     <span className="font-medium text-slate-900">
-                      {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
-                      {' '}{name}{isMe ? ' (você)' : ''}
+                      {r.position === 1
+                        ? '🥇'
+                        : r.position === 2
+                          ? '🥈'
+                          : r.position === 3
+                            ? '🥉'
+                            : `${r.position}º`}{' '}
+                      {name}
+                      {isMe ? ' (você)' : ''}
                     </span>
                     <span className="text-sm text-slate-600">{r.total_score} pts</span>
                   </li>
@@ -81,6 +121,21 @@ export default async function RankingAlunoPage({
             )}
           </ol>
         )}
+        <RankingHallOfFame
+          entries={[
+            {
+              periodStart: '2026-06-01',
+              periodEnd: '2026-06-30',
+              monthLabel: 'Junho de 2026',
+              champions: [
+                { position: 1, userId: 'r1', name: 'Larissa', totalScore: 420 },
+                { position: 2, userId: 'r2', name: 'Mateus', totalScore: 390 },
+                { position: 3, userId: userId, name: 'Você', totalScore: 360 },
+              ],
+            },
+          ]}
+          currentUserId={userId}
+        />
       </div>
     );
   }
@@ -144,28 +199,51 @@ export default async function RankingAlunoPage({
       ? { start: getTodayRankingDate(), end: getTodayRankingDate() }
       : getPeriodBounds(period);
 
-  let rankings = null;
-  let myRanking = null;
+  let rankings: Array<{
+    user_id: string;
+    position: number;
+    total_score: number;
+    profiles?: { name?: string } | { name?: string }[] | null;
+  }> | null = null;
+  let myRanking: { position: number; total_score: number } | null = null;
+  let yearlyFallback = false;
+
   if (canSee) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('study_group_rankings')
       .select('user_id, position, total_score, profiles(name)')
       .eq('group_id', ctx.rankingGroupId)
       .eq('period_type', period)
       .eq('period_start', bounds.start)
       .order('position', { ascending: true });
-    rankings = data;
 
-    const { data: mine } = await supabase
-      .from('study_group_rankings')
-      .select('position, total_score')
-      .eq('group_id', ctx.rankingGroupId)
-      .eq('user_id', userId)
-      .eq('period_type', period)
-      .eq('period_start', bounds.start)
-      .maybeSingle();
-    myRanking = mine;
+    if (error && period === 'yearly') {
+      yearlyFallback = true;
+    } else {
+      rankings = data;
+    }
+
+    if (!yearlyFallback) {
+      const { data: mine } = await supabase
+        .from('study_group_rankings')
+        .select('position, total_score')
+        .eq('group_id', ctx.rankingGroupId)
+        .eq('user_id', userId)
+        .eq('period_type', period)
+        .eq('period_start', bounds.start)
+        .maybeSingle();
+      myRanking = mine;
+    }
   }
+
+  const [hallOfFame, participation] = await Promise.all([
+    fetchGroupHallOfFame(supabase, ctx.rankingGroupId, 6),
+    period === 'monthly' || period === 'yearly'
+      ? fetchMonthlyParticipation(supabase, userId)
+      : Promise.resolve(null),
+  ]);
+
+  const daysLeft = period === 'monthly' ? daysLeftInMonth() : null;
 
   return (
     <div className="mx-auto w-full px-4 py-6 md:px-6">
@@ -173,10 +251,26 @@ export default async function RankingAlunoPage({
         Ranking · {ctx.rankingGroupName}
       </h1>
       <p className="mt-1 text-sm text-slate-600">
-        Só quem participa deste grupo vê este ranking. O ranking geral entre todas as ligas é
-        exclusivo do administrador.
+        Mensal zera todo dia 1. Anual guarda quem fez mais no ano. Só o seu grupo vê este ranking.
       </p>
-      <RankingPeriodNav basePath="/aluno/ranking" current={period} periods={STUDENT_RANKING_PERIODS} />
+      <RankingPeriodNav
+        basePath="/aluno/ranking"
+        current={period}
+        periods={STUDENT_RANKING_PERIODS}
+      />
+
+      {canSee ? (
+        <RankingCompetitiveHero
+          periodLabel={STUDENT_RANKING_PERIODS.find((p) => p.value === period)?.label ?? 'Ranking'}
+          subtitle={periodSubtitle(period)}
+          myPosition={myRanking?.position}
+          myScore={myRanking?.total_score}
+          daysLeft={daysLeft}
+          finishedCount={participation?.finishedCount ?? null}
+          activeDays={participation?.activeDays ?? null}
+        />
+      ) : null}
+
       {period === 'daily' && !canSee && (
         <p className="mt-3 text-sm text-slate-600">{studentRankingBeforeFinishMessage()}</p>
       )}
@@ -185,16 +279,14 @@ export default async function RankingAlunoPage({
           {studentDailyRankingLabel(getTodayRankingDate())} — atualiza conforme o grupo termina.
         </p>
       )}
-
-      {canSee && myRanking && (
-        <div className="mt-4 rounded-xl bg-emerald-50 p-4">
-          <p className="font-semibold text-emerald-800">
-            Você: {myRanking.position}º · {myRanking.total_score} pts
-          </p>
-        </div>
+      {yearlyFallback && (
+        <p className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-950 ring-1 ring-amber-200">
+          Ranking anual ainda não está ativo no banco. Peça ao professor para rodar a migration{' '}
+          <code>047_ranking_yearly_competitive.sql</code>.
+        </p>
       )}
 
-      {canSee && (
+      {canSee && !yearlyFallback && (
         <ol className="mt-6 space-y-2">
           {(rankings ?? []).length === 0 ? (
             <li className="text-sm text-slate-600">Aguardando primeiros resultados…</li>
@@ -207,12 +299,21 @@ export default async function RankingAlunoPage({
                 <li
                   key={r.position}
                   className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-                    isMe ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'bg-white text-slate-900 ring-1 ring-slate-200'
+                    isMe
+                      ? 'bg-emerald-50 ring-1 ring-emerald-200'
+                      : 'bg-white text-slate-900 ring-1 ring-slate-200'
                   }`}
                 >
                   <span className="font-medium text-slate-900">
-                    {r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : `${r.position}º`}
-                    {' '}{name}{isMe ? ' (você)' : ''}
+                    {r.position === 1
+                      ? '🥇'
+                      : r.position === 2
+                        ? '🥈'
+                        : r.position === 3
+                          ? '🥉'
+                          : `${r.position}º`}{' '}
+                    {name}
+                    {isMe ? ' (você)' : ''}
                   </span>
                   <span className="text-sm text-slate-600">{r.total_score} pts</span>
                 </li>
@@ -221,6 +322,9 @@ export default async function RankingAlunoPage({
           )}
         </ol>
       )}
+
+      <RankingHallOfFame entries={hallOfFame} currentUserId={userId} />
+
       <p className="mt-6 text-sm">
         <Link href="/aluno/grupos" className="font-semibold text-emerald-700 hover:underline">
           Outros grupos →

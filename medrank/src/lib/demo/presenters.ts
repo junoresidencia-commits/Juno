@@ -145,15 +145,16 @@ export function getDemoHistory() {
 }
 
 export function getDemoRanking(
-  period: 'daily' | 'weekly' | 'monthly' | 'general',
+  period: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'general',
   rankingDate?: string
 ) {
   const today = todayDateString();
   const date = rankingDate ?? today;
   const attempts = getAllDemoAttempts().filter((a) => !a.id.startsWith('seed-'));
+  const resolved = period === 'yearly' ? 'general' : period;
 
   let rankings: Ranking[];
-  if (period === 'daily') {
+  if (resolved === 'daily') {
     const exam = getDemoExams().find((e) => e.date_available === date);
     if (exam) {
       const real = buildExamRankings(attempts, exam);
@@ -162,7 +163,7 @@ export function getDemoRanking(
       rankings = getDemoRankings('daily', date);
     }
   } else {
-    rankings = getDemoRankings(period, today);
+    rankings = getDemoRankings(resolved, today);
   }
 
   const rankingsWithNames = withProfileNames(rankings);
@@ -170,6 +171,11 @@ export function getDemoRanking(
     daily: { start: date, end: date, label: date === today ? 'Hoje' : `Dia ${date}` },
     weekly: { start: getWeekStart(new Date()), end: getWeekEnd(new Date()), label: 'Semana atual' },
     monthly: { start: getMonthStart(new Date()), end: getMonthEnd(new Date()), label: 'Mês atual' },
+    yearly: {
+      start: `${new Date().getUTCFullYear()}-01-01`,
+      end: `${new Date().getUTCFullYear()}-12-31`,
+      label: 'Ano atual',
+    },
     general: { start: '2026-07-09', end: today, label: 'Geral' },
   }[period];
   return { rankings: rankingsWithNames, bounds };
