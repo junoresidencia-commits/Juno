@@ -105,7 +105,7 @@ export async function POST(
     }
 
     const message =
-      'Cadastro realizado! Pague o PIX de R$ 10, envie o comprovante no WhatsApp e aguarde a liberação.';
+      'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês por 3 meses · à vista R$ 49,70 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
     if (formSubmit) {
       return cadastroRedirect(request, token, { ok: '1' });
     }
@@ -216,7 +216,7 @@ export async function POST(
   }
 
   const message =
-    'Cadastro realizado! Pague o PIX de R$ 10, envie o comprovante no WhatsApp e aguarde a liberação.';
+    'Cadastro realizado! Pague o PIX (1 mês R$ 30 · promo R$ 19,90/mês por 3 meses · à vista R$ 49,70 com −R$ 10), envie o comprovante no WhatsApp e aguarde a liberação.';
   if (formSubmit) {
     return cadastroRedirect(request, token, { ok: '1' });
   }

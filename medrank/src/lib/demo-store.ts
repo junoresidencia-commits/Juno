@@ -380,7 +380,7 @@ export function setDemoLeagueAdmin(id: string, leagueAdmin: boolean): boolean {
   return true;
 }
 
-export function approveDemoStudent(id: string): boolean {
+export function approveDemoStudent(id: string, days = 90): boolean {
   const store = readDemoStore();
   const student = store.students.find((s) => s.id === id);
   if (!student) return false;
@@ -388,13 +388,13 @@ export function approveDemoStudent(id: string): boolean {
   student.active = true;
   student.approvedAt = new Date().toISOString();
   const base = new Date();
-  base.setDate(base.getDate() + 30);
+  base.setDate(base.getDate() + days);
   student.subscriptionExpiresAt = base.toISOString();
   writeDemoStore(store);
   return true;
 }
 
-export function renewDemoStudent(id: string): boolean {
+export function renewDemoStudent(id: string, days = 90): boolean {
   const store = readDemoStore();
   const student = store.students.find((s) => s.id === id);
   if (!student) return false;
@@ -403,7 +403,7 @@ export function renewDemoStudent(id: string): boolean {
     ? new Date(student.subscriptionExpiresAt)
     : now;
   const from = current > now ? current : now;
-  from.setDate(from.getDate() + 30);
+  from.setDate(from.getDate() + days);
   student.subscriptionExpiresAt = from.toISOString();
   student.active = true;
   if (!student.approvedAt) student.approvedAt = now.toISOString();

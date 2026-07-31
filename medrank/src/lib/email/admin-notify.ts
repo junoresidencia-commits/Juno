@@ -3,7 +3,13 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getAppBaseUrl } from '@/lib/app-url';
 import { getAdminNotifyEmail, isEmailSendingConfigured } from '@/lib/email/config';
 import { sendEmail } from '@/lib/email/send';
-import { formatPriceBrl, formatWhatsAppDisplay } from '@/lib/billing/pix';
+import {
+  formatPriceBrl,
+  formatWhatsAppDisplay,
+  FULL_MONTHLY_CENTS,
+  QUARTER_PRICE_CENTS,
+  SUBSCRIPTION_PLANS,
+} from '@/lib/billing/pix';
 import { usesDemoStore } from '@/lib/demo-data';
 
 /**
@@ -15,18 +21,23 @@ export async function notifyAdminNewSignup(opts: {
   userId?: string;
 }): Promise<{ emailed: boolean; inApp: number; error?: string }> {
   const alunosUrl = `${getAppBaseUrl()}/admin/alunos`;
+  const promoMonth = formatPriceBrl();
+  const fullMonth = formatPriceBrl(FULL_MONTHLY_CENTS);
+  const quarter = formatPriceBrl(QUARTER_PRICE_CENTS);
+  const year = formatPriceBrl(SUBSCRIPTION_PLANS.year.priceCents);
   const subject = `MedRank: novo cadastro — ${opts.name} aguarda PIX`;
   const html = `
     <div style="font-family:system-ui,sans-serif;line-height:1.5;color:#0f172a">
       <p><strong>${opts.name}</strong> (${opts.email}) criou a conta no MedRank.</p>
-      <p>Status: <strong>aguardando PIX</strong> (${formatPriceBrl()}/mês).</p>
-      <p>Quando o comprovante chegar no WhatsApp (${formatWhatsAppDisplay()}), libere em Alunos.</p>
+      <p>Status: <strong>aguardando PIX</strong>.</p>
+      <p>Valores: 1 mês ${fullMonth} · promo ${promoMonth}/mês por 3 meses · 3 meses à vista ${quarter} (−R$ 10) · anual ${year}.</p>
+      <p>Quando o comprovante chegar no WhatsApp (${formatWhatsAppDisplay()}), libere em Alunos no plano certo.</p>
       <p><a href="${alunosUrl}">Abrir Alunos → Liberar após PIX</a></p>
     </div>
   `.trim();
   const text = [
     `${opts.name} (${opts.email}) criou a conta no MedRank.`,
-    `Aguardando PIX (${formatPriceBrl()}/mês).`,
+    `Aguardando PIX: 1 mês ${fullMonth} · promo ${promoMonth}/mês · 3 meses ${quarter} (−R$ 10) · anual ${year}.`,
     `WhatsApp comprovante: ${formatWhatsAppDisplay()}.`,
     `Liberar: ${alunosUrl}`,
   ].join('\n');

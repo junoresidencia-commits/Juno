@@ -28,7 +28,7 @@ export interface Profile {
    * Controla disputas diárias e treinos livres.
    */
   enabled_tracks?: string[];
-  /** Fim do período pago (30 dias após liberar/renovar). */
+  /** Fim do período pago (conforme plano: 30 / 90 / 180 / 365 dias). */
   subscription_expires_at?: string | null;
   approved_at?: string | null;
   /** true = obrigar troca de senha no próximo acesso (conta criada pelo professor). */

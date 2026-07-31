@@ -222,7 +222,8 @@ function StudentCard({ s }: { s: StudentRow }) {
           </p>
         ) : pending ? (
           <p className="mt-1 text-xs text-amber-900/80">
-            Ainda sem acesso. Confirme o PIX e libere (+30 dias) — ou não libere / exclua.
+            Ainda sem acesso. Confirme o PIX e libere (1 mês / 3 meses / semestral / anual) — ou não
+            libere / exclua.
           </p>
         ) : null}
         {s.groups.length > 0 ? (
@@ -332,8 +333,8 @@ export default async function AlunosPage({
 
       <p className="mt-3 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200">
         Fluxo: cadastre pelo <strong>nome</strong> → aluno paga PIX → você{' '}
-        <strong>libera (+30 dias)</strong> ou <strong>não libera</strong>. Quem já está liberado
-        mantém os dias restantes; só renova quando pagar o próximo mês.
+        <strong>libera</strong> (1 mês, 3 meses, semestral ou anual) ou <strong>não libera</strong>.
+        Quem já está liberado mantém os dias restantes; só renova depois do próximo PIX.
       </p>
 
       {loadError ? (
@@ -352,8 +353,8 @@ export default async function AlunosPage({
             Liberar ou não? — Aguardando PIX ({pending.length})
           </h2>
           <p className="mt-1 text-sm text-amber-900/80">
-            Confira o PIX de R$ 10 no extrato. Em cada nome: liberar (+30 dias) ou não liberar /
-            excluir.
+            Confira o PIX no extrato (R$ 30 · R$ 19,90 · R$ 49,70 · semestral · anual). Em cada
+            nome: escolha o plano e liberar — ou não liberar / excluir.
           </p>
           <div className="mt-4 space-y-3">
             {pending.map((s) => (
@@ -366,10 +367,11 @@ export default async function AlunosPage({
       {expired.length > 0 && (
         <section className="mt-8">
           <h2 className="text-lg font-bold text-red-900">
-            Mês vencido — renovar ({expired.length})
+            Assinatura vencida — renovar ({expired.length})
           </h2>
           <p className="mt-1 text-sm text-red-900/80">
-            Confirme o PIX do mês e toque em Renovar (+30 dias a partir de hoje ou do fim atual).
+            Confirme o PIX e renove no plano certo (1 mês / 3 meses / semestral / anual), a partir
+            de hoje ou do fim atual.
           </p>
           <div className="mt-4 space-y-3">
             {expired.map((s) => (
@@ -381,7 +383,7 @@ export default async function AlunosPage({
 
       <section className="mt-8">
         <h2 className="text-lg font-bold text-slate-900">
-          Liberados — mantêm os 30 dias ({liberated.length})
+          Liberados — com validade ativa ({liberated.length})
         </h2>
         <p className="mt-1 text-sm text-slate-600">
           Já pagos/liberados. A validade atual não é resetada ao abrir esta página. Renove só

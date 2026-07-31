@@ -11,7 +11,12 @@ import {
 import { requireAdminApi } from '@/lib/api-auth';
 import { normalizeTracks } from '@/lib/tracks/config';
 import { ensureGeneralTrack, syncTrackGroupMembership } from '@/lib/exams/audience';
-import { subscriptionExpiresAt } from '@/lib/billing/pix';
+import {
+  getSubscriptionPlan,
+  isSubscriptionPlanId,
+  nextSubscriptionExpiry,
+  subscriptionExpiresAt,
+} from '@/lib/billing/pix';
 
 type StudentLookup = {
   id: string;
@@ -23,11 +28,21 @@ type StudentLookup = {
   subscription_expires_at?: string | null;
 };
 
-function nextExpiryIso(currentExpires: string | null | undefined): string {
-  const now = new Date();
-  const current = currentExpires ? new Date(currentExpires) : now;
-  const from = current > now ? current : now;
-  return subscriptionExpiresAt(from).toISOString();
+function resolvePlanDays(body: { plan?: string; days?: number }): number {
+  if (isSubscriptionPlanId(body.plan)) {
+    return getSubscriptionPlan(body.plan).days;
+  }
+  if (typeof body.days === 'number' && body.days > 0 && body.days <= 400) {
+    return Math.floor(body.days);
+  }
+  return getSubscriptionPlan('quarter').days;
+}
+
+function nextExpiryIso(
+  currentExpires: string | null | undefined,
+  days: number
+): string {
+  return nextSubscriptionExpiry(currentExpires, days).toISOString();
 }
 
 async function loadStudent(
@@ -104,6 +119,7 @@ export async function PATCH(
 
   const body = await request.json();
   const action = (body as { action: string }).action;
+  const planDays = resolvePlanDays(body as { plan?: string; days?: number });
 
   if (isDemoMode() || auth.demo) {
     const store = readDemoStore();
@@ -113,17 +129,17 @@ export async function PATCH(
     }
 
     if (action === 'approve') {
-      if (!approveDemoStudent(id)) {
+      if (!approveDemoStudent(id, planDays)) {
         return NextResponse.json({ error: 'Não foi possível liberar o aluno.' }, { status: 400 });
       }
-      return NextResponse.json({ ok: true, active: true });
+      return NextResponse.json({ ok: true, active: true, days: planDays });
     }
 
     if (action === 'renew') {
-      if (!renewDemoStudent(id)) {
+      if (!renewDemoStudent(id, planDays)) {
         return NextResponse.json({ error: 'Não foi possível renovar.' }, { status: 400 });
       }
-      return NextResponse.json({ ok: true, renewed: true });
+      return NextResponse.json({ ok: true, renewed: true, days: planDays });
     }
 
     if (action === 'block') {
@@ -178,7 +194,7 @@ export async function PATCH(
   }
 
   if (action === 'approve') {
-    const expires = subscriptionExpiresAt().toISOString();
+    const expires = subscriptionExpiresAt(new Date(), planDays).toISOString();
     const { error } = await admin
       .from('profiles')
       .update({
@@ -199,16 +215,21 @@ export async function PATCH(
         return NextResponse.json({
           ok: true,
           active: true,
-          warning: 'Rode a migration 039 no Supabase para gravar validade de 30 dias.',
+          warning: 'Rode a migration 039 no Supabase para gravar validade da assinatura.',
         });
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, active: true, subscription_expires_at: expires });
+    return NextResponse.json({
+      ok: true,
+      active: true,
+      subscription_expires_at: expires,
+      days: planDays,
+    });
   }
 
   if (action === 'renew') {
-    const expires = nextExpiryIso(student.subscription_expires_at);
+    const expires = nextExpiryIso(student.subscription_expires_at, planDays);
     const { error } = await admin
       .from('profiles')
       .update({
@@ -230,7 +251,11 @@ export async function PATCH(
       }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, subscription_expires_at: expires });
+    return NextResponse.json({
+      ok: true,
+      subscription_expires_at: expires,
+      days: planDays,
+    });
   }
 
   if (action === 'block') {

@@ -118,8 +118,9 @@ export default async function PagamentosPage({
       </section>
 
       <p className="mt-8 text-xs text-slate-500">
-        Pagou → Liberar / Renovar (+30 dias). Não pagou ou venceu → conta bloqueada no login e
-        pelo cron diário. Confira o PIX no extrato do banco antes de liberar.
+        Pagou → Liberar / Renovar (escolha o plano: 1 mês, 3 meses, semestral ou anual). Não pagou
+        ou venceu → conta bloqueada no login e pelo cron diário. Confira o PIX no extrato do banco
+        antes de liberar.
       </p>
     </div>
   );
