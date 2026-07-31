@@ -38,12 +38,16 @@ export function formatWhatsAppDisplay(digits = getWhatsAppDigits()): string {
   return digits;
 }
 
-/** Link wa.me com mensagem pronta para comprovante. */
-export function getWhatsAppProofUrl(emailHint?: string): string {
+/** Link wa.me: aluno manda mensagem pedindo liberação + comprovante. */
+export function getWhatsAppProofUrl(emailHint?: string, nameHint?: string): string {
   const digits = getWhatsAppDigits();
   const withCountry = digits.startsWith('55') ? digits : `55${digits}`;
-  const emailPart = emailHint?.trim() ? ` Meu e-mail: ${emailHint.trim()}.` : '';
-  const text = `Olá! Fiz o PIX do MedRank e quero liberar o acesso.${emailPart} Segue o comprovante.`;
+  const namePart = nameHint?.trim() ? ` Nome: ${nameHint.trim()}.` : '';
+  const emailPart = emailHint?.trim() ? ` E-mail: ${emailHint.trim()}.` : '';
+  const text =
+    `Olá! Acabei de me cadastrar no MedRank e já paguei o PIX.` +
+    `${namePart}${emailPart}` +
+    ` Pode liberar meu acesso? Segue o comprovante.`;
   return `https://wa.me/${withCountry}?text=${encodeURIComponent(text)}`;
 }
 
@@ -80,8 +84,8 @@ export function getPaidAccessCopy() {
     instructions: [
       `Pague ${formatPriceBrl()} via PIX (chave CPF).`,
       'Na descrição do PIX, coloque seu nome e e-mail de cadastro.',
-      `Depois do pagamento, fale no WhatsApp ${whatsappDisplay} e envie o comprovante.`,
-      'O professor confere e libera sua conta no app (em geral no mesmo dia).',
+      `Depois, toque em “Me manda no WhatsApp pra liberar” (${whatsappDisplay}) e envie o comprovante.`,
+      'O professor confere a mensagem e libera sua conta no app.',
     ],
   };
 }

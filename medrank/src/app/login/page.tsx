@@ -46,7 +46,7 @@ export default async function LoginPage() {
           </Link>
         </p>
         <p className="mt-2 text-center text-xs text-slate-500">
-          Depois do PIX, envie o comprovante no WhatsApp {formatWhatsAppDisplay()}.
+          Depois do PIX, me manda no WhatsApp {formatWhatsAppDisplay()} pra liberar.
         </p>
       </div>
     </div>

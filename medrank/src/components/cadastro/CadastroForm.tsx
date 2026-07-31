@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { PixPaymentCard } from '@/components/billing/PixPaymentCard';
-import { formatPriceBrl, formatWhatsAppDisplay } from '@/lib/billing/pix';
+import {
+  formatPriceBrl,
+  formatWhatsAppDisplay,
+  getWhatsAppProofUrl,
+} from '@/lib/billing/pix';
 
 interface Props {
   /** Se omitido, cadastro público (sem convite). */
@@ -23,6 +27,8 @@ export function CadastroForm({
 }: Props) {
   const emailForPix = successEmail || inviteEmail;
   const publicSignup = !token;
+  const whatsappUrl = getWhatsAppProofUrl(emailForPix);
+  const whatsappDisplay = formatWhatsAppDisplay();
 
   if (success) {
     return (
@@ -30,10 +36,25 @@ export function CadastroForm({
         <div className="rounded-xl bg-emerald-50 p-5 text-center ring-1 ring-emerald-200">
           <p className="text-lg font-semibold text-emerald-900">Conta criada</p>
           <p className="mt-2 text-sm text-emerald-800">
-            Agora pague {formatPriceBrl()} via PIX e envie o comprovante no WhatsApp{' '}
-            <strong>{formatWhatsAppDisplay()}</strong>. Só depois liberamos o acesso.
+            1) Pague {formatPriceBrl()} no PIX abaixo
+            <br />
+            2) Me manda no WhatsApp <strong>{whatsappDisplay}</strong> pra eu liberar (com o
+            comprovante)
           </p>
         </div>
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="exam-tap flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-4 text-center text-base font-bold text-white hover:bg-emerald-700"
+        >
+          Me manda no WhatsApp pra liberar →
+        </a>
+        <p className="text-center text-xs text-slate-600">
+          Abre o WhatsApp com a mensagem pronta. Anexe o comprovante do PIX.
+        </p>
+
         <PixPaymentCard emailHint={emailForPix} />
         <Link
           href="/login"
@@ -75,8 +96,8 @@ export function CadastroForm({
     <form action={action} method="POST" className="space-y-4">
       <p className="text-sm text-slate-600">
         {publicSignup
-          ? `Crie seu login. Depois pague ${formatPriceBrl()}/mês no PIX e envie o comprovante no WhatsApp ${formatWhatsAppDisplay()}. O professor libera no app.`
-          : `Crie seu login. Em seguida você verá o PIX de ${formatPriceBrl()}/mês. A conta só libera após o pagamento confirmado.`}
+          ? `Crie seu login. Depois pague ${formatPriceBrl()}/mês no PIX e me manda no WhatsApp ${whatsappDisplay} pra eu liberar.`
+          : `Crie seu login. Em seguida você verá o PIX de ${formatPriceBrl()}/mês. Depois me manda no WhatsApp pra liberar.`}
       </p>
 
       <PixPaymentCard emailHint={inviteEmail} compact />

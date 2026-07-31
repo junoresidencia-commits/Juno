@@ -8,7 +8,7 @@ import {
 } from '@/lib/billing/pix';
 
 type Props = {
-  /** E-mail do aluno — sugerido na descrição do PIX */
+  /** E-mail do aluno — sugerido na descrição do PIX e na msg do WhatsApp */
   emailHint?: string;
   compact?: boolean;
 };
@@ -57,17 +57,22 @@ export function PixPaymentCard({ emailHint, compact }: Props) {
         Descrição sugerida: <strong className="text-white">{descricao}</strong>
       </p>
 
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="exam-tap mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-sm font-bold text-teal-950 hover:bg-emerald-300"
-      >
-        WhatsApp {whatsappDisplay} — enviar comprovante
-      </a>
-      <p className="mt-2 text-center text-xs text-teal-100">
-        Pagou? Fale neste número e mande o comprovante para liberarmos o acesso.
-      </p>
+      <div className="mt-4 rounded-xl bg-emerald-500/20 p-3 ring-1 ring-emerald-300/40">
+        <p className="text-center text-sm font-semibold text-emerald-50">
+          Pagou? Me manda no WhatsApp pra eu liberar
+        </p>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="exam-tap mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3.5 text-sm font-bold text-teal-950 hover:bg-emerald-300"
+        >
+          Abrir WhatsApp {whatsappDisplay}
+        </a>
+        <p className="mt-2 text-center text-xs text-teal-50">
+          A mensagem já vem pronta: peça a liberação e anexe o comprovante.
+        </p>
+      </div>
 
       {!compact && (
         <ol className="mt-4 list-decimal space-y-1 pl-4 text-sm text-teal-50">
