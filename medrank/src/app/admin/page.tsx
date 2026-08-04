@@ -18,7 +18,7 @@ export default async function AdminDashboard() {
     const { rankings: weeklyRankings } = getDemoRanking('weekly');
     const menu = [
       { href: '/admin/alunos', label: 'Alunos', desc: 'Criar login e gerenciar acesso' },
-      { href: '/admin/pagamentos', label: 'Pagamentos PIX', desc: 'R$ 30 · promo R$ 19,90 · R$ 49,70 / 3 meses' },
+      { href: '/admin/pagamentos', label: 'Pagamentos PIX', desc: 'R$ 30 · R$ 19,90 · R$ 50 / 3 meses · liberar' },
       { href: '/admin/grupos', label: 'Grupos', desc: 'Ligas, turmas e rankings exclusivos' },
       { href: '/admin/importar/lote', label: 'Importar lote', desc: 'JSON autorais → publicar' },
       { href: '/admin/importar/prova', label: 'Importar prova', desc: 'PDF · Word · ZIP · gabarito · tudo' },
@@ -87,7 +87,7 @@ export default async function AdminDashboard() {
 
   const menu = [
     { href: '/admin/alunos', label: 'Alunos', desc: `${studentCount ?? 0} cadastrados — criar login` },
-    { href: '/admin/pagamentos', label: 'Pagamentos PIX', desc: 'R$ 30 · promo R$ 19,90 · R$ 49,70 / 3 meses' },
+    { href: '/admin/pagamentos', label: 'Pagamentos PIX', desc: 'R$ 30 · R$ 19,90 · R$ 50 / 3 meses · liberar' },
     { href: '/admin/grupos', label: 'Grupos', desc: 'Ligas, turmas e rankings exclusivos' },
     { href: '/admin/importar/lote', label: 'Importar lote', desc: 'JSON autorais (20–27) → publicar' },
     { href: '/admin/importar/prova', label: 'Importar prova', desc: 'PDF · Word · ZIP · gabarito · tudo' },

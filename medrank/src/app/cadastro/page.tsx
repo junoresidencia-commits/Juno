@@ -11,7 +11,7 @@ import {
 export default async function PublicCadastroPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ok?: string; error?: string; email?: string }>;
+  searchParams: Promise<{ ok?: string; error?: string; email?: string; name?: string }>;
 }) {
   const query = await searchParams;
   const success = query.ok === '1';
@@ -30,7 +30,7 @@ export default async function PublicCadastroPage({
             Só 1 mês: {fullMonth} · 3 meses à vista: {quarter} (−R$ 10)
           </p>
           <p className="mt-1 text-xs text-slate-500">
-            Após o PIX, WhatsApp {formatWhatsAppDisplay()} com o comprovante.
+            Crie a conta → pague o PIX → WhatsApp {formatWhatsAppDisplay()} com o comprovante.
           </p>
         </div>
         <CadastroForm
@@ -38,6 +38,7 @@ export default async function PublicCadastroPage({
           error={success ? undefined : query.error}
           success={success}
           successEmail={query.email}
+          successName={query.name}
         />
         <p className="mt-6 text-center text-sm text-slate-600">
           Já tem conta?{' '}

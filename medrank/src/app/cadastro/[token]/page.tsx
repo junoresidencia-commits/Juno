@@ -11,7 +11,7 @@ export default async function CadastroPage({
   searchParams,
 }: {
   params: Promise<{ token: string }>;
-  searchParams: Promise<{ ok?: string; error?: string }>;
+  searchParams: Promise<{ ok?: string; error?: string; email?: string; name?: string }>;
 }) {
   const { token } = await params;
   const query = await searchParams;
@@ -20,6 +20,8 @@ export default async function CadastroPage({
   let error: string | undefined = query.error;
   let inviteEmail: string | undefined;
   const success = query.ok === '1';
+  const successEmail = query.email || undefined;
+  const successName = query.name || undefined;
 
   if (success) {
     // Convite já foi marcado como usado no POST — ainda assim mostramos PIX
@@ -77,6 +79,8 @@ export default async function CadastroPage({
           error={success ? undefined : error}
           inviteEmail={inviteEmail}
           success={success}
+          successEmail={successEmail || inviteEmail}
+          successName={successName}
         />
         <p className="mt-6 text-center text-sm text-slate-600">
           Já tem conta?{' '}

@@ -5,6 +5,7 @@ import { getRequestOrigin, isSupabaseConfigured } from '@/lib/app-url';
 import { parseRequestFields } from '@/lib/parse-request-body';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notifyAdminNewSignup } from '@/lib/email/admin-notify';
+import { notifyStudentSignupPending } from '@/lib/email/student-notify';
 import { ensureGeneralTrack } from '@/lib/exams/audience';
 
 function cadastroRedirect(request: Request, params: Record<string, string>) {
@@ -65,7 +66,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
     await notifyAdminNewSignup({ name: name.trim(), email: emailNorm, userId: result.id });
-    if (formSubmit) return cadastroRedirect(request, { ok: '1', email: emailNorm });
+    try {
+      await notifyStudentSignupPending({ name: name.trim(), email: emailNorm });
+    } catch (err) {
+      console.error('[cadastro] notify student failed', err);
+    }
+    if (formSubmit) {
+      return cadastroRedirect(request, { ok: '1', email: emailNorm, name: name.trim() });
+    }
     return NextResponse.json({ ok: true });
   }
 
@@ -153,6 +161,14 @@ export async function POST(request: Request) {
     console.error('[cadastro] notify admin failed', err);
   }
 
-  if (formSubmit) return cadastroRedirect(request, { ok: '1', email: emailNorm });
+  try {
+    await notifyStudentSignupPending({ name: name.trim(), email: emailNorm });
+  } catch (err) {
+    console.error('[cadastro] notify student failed', err);
+  }
+
+  if (formSubmit) {
+    return cadastroRedirect(request, { ok: '1', email: emailNorm, name: name.trim() });
+  }
   return NextResponse.json({ ok: true });
 }

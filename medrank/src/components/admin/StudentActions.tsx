@@ -167,7 +167,7 @@ export function StudentActions({
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
           Plano do PIX
         </p>
-        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {SUBSCRIPTION_PLAN_LIST.map((p) => {
             const on = planId === p.id;
             return (

@@ -4,25 +4,31 @@
  *
  * Preços:
  * - Só 1 mês: R$ 30
- * - Promo 3 meses: R$ 19,90/mês (pode pagar mês a mês nessa promo)
- * - 3 meses à vista: R$ 59,70 → R$ 49,70 (promo −R$ 10)
- * - Semestral / anual: pagar o período de uma vez
+ * - Promo mensal (R$ 19,90/mês na promo de 3 meses)
+ * - 3 meses à vista: de R$ 60 por R$ 50 (−R$ 10)
+ * - Semestral R$ 100 / anual R$ 180 (paga o período de uma vez)
  */
 
 /** Preço cheio de 1 mês avulso. */
 export const FULL_MONTHLY_CENTS = 3000;
 
-/** Promo: R$ 19,90/mês durante 3 meses. */
+/** Promo: R$ 19,90/mês. */
 export const PROMO_MONTHLY_CENTS = 1990;
+
+/** 3 meses “cheio” da promo (arredondado): R$ 60. */
+export const QUARTER_LIST_CENTS = 6000;
 
 /** Desconto da promo à vista (3 meses): −R$ 10. */
 export const QUARTER_PROMO_OFF_CENTS = 1000;
 
-/** 3 × R$ 19,90 = R$ 59,70 (antes do −R$ 10). */
-export const QUARTER_LIST_CENTS = PROMO_MONTHLY_CENTS * 3;
+/** 3 meses à vista com promo −R$ 10 → R$ 50. */
+export const QUARTER_PRICE_CENTS = QUARTER_LIST_CENTS - QUARTER_PROMO_OFF_CENTS; // 5000
 
-/** 3 meses à vista com promo −R$ 10. */
-export const QUARTER_PRICE_CENTS = QUARTER_LIST_CENTS - QUARTER_PROMO_OFF_CENTS; // 4970
+/** Semestral à vista (arredondado). */
+export const SEMESTER_PRICE_CENTS = 10000;
+
+/** Anual à vista. */
+export const YEAR_PRICE_CENTS = 18000;
 
 /** Compat: preço mensal de referência (promo). */
 export const MONTHLY_PRICE_CENTS = PROMO_MONTHLY_CENTS;
@@ -30,11 +36,12 @@ export const MONTHLY_PRICE_CENTS = PROMO_MONTHLY_CENTS;
 /** Dias do plano mensal (compat). */
 export const SUBSCRIPTION_DAYS = 30;
 
-function formatPriceBrlStatic(cents: number): string {
-  return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-export type SubscriptionPlanId = 'month' | 'quarter' | 'semester' | 'year';
+export type SubscriptionPlanId =
+  | 'month'
+  | 'promo_month'
+  | 'quarter'
+  | 'semester'
+  | 'year';
 
 export type SubscriptionPlan = {
   id: SubscriptionPlanId;
@@ -55,11 +62,12 @@ export type SubscriptionPlan = {
 };
 
 /**
- * Planos oficiais:
+ * Planos oficiais (valores redondos no PIX):
  * - 1 mês avulso: R$ 30
- * - 3 meses à vista: R$ 49,70 (de R$ 59,70 · −R$ 10)
- * - Semestral à vista: R$ 99,40 (2× 3 meses promo)
- * - Anual à vista: R$ 180 (paga o ano inteiro)
+ * - Promo mensal: R$ 19,90 (1 mês na promo de 3)
+ * - 3 meses à vista: R$ 50 (de R$ 60 · −R$ 10)
+ * - Semestral: R$ 100
+ * - Anual: R$ 180
  */
 export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = {
   month: {
@@ -70,6 +78,15 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     note: 'Só 1 mês',
     payHint: 'Avulso — sem promo',
   },
+  promo_month: {
+    id: 'promo_month',
+    label: 'Promo mensal',
+    days: 30,
+    priceCents: PROMO_MONTHLY_CENTS,
+    compareAtCents: FULL_MONTHLY_CENTS,
+    note: 'R$ 19,90/mês',
+    payHint: 'Na promo de 3 meses',
+  },
   quarter: {
     id: 'quarter',
     label: '3 meses',
@@ -78,13 +95,13 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     compareAtCents: QUARTER_LIST_CENTS,
     highlight: true,
     note: 'Promo −R$ 10',
-    payHint: `Ou ${formatPriceBrlStatic(PROMO_MONTHLY_CENTS)}/mês por 3 meses`,
+    payHint: 'Ou R$ 19,90/mês por 3 meses',
   },
   semester: {
     id: 'semester',
     label: 'Semestral',
     days: 180,
-    priceCents: QUARTER_PRICE_CENTS * 2,
+    priceCents: SEMESTER_PRICE_CENTS,
     compareAtCents: FULL_MONTHLY_CENTS * 6,
     note: '6 meses à vista',
     payHint: 'Paga o semestre de uma vez',
@@ -93,15 +110,17 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     id: 'year',
     label: 'Anual',
     days: 365,
-    priceCents: 18000,
+    priceCents: YEAR_PRICE_CENTS,
     compareAtCents: FULL_MONTHLY_CENTS * 12,
     note: 'Paga o ano inteiro',
     payHint: 'Melhor para o ano todo',
   },
 };
 
+/** Planos na tela do aluno (card PIX). */
 export const SUBSCRIPTION_PLAN_LIST: SubscriptionPlan[] = [
   SUBSCRIPTION_PLANS.month,
+  SUBSCRIPTION_PLANS.promo_month,
   SUBSCRIPTION_PLANS.quarter,
   SUBSCRIPTION_PLANS.semester,
   SUBSCRIPTION_PLANS.year,
@@ -112,7 +131,11 @@ export const RECOMMENDED_PLAN_ID: SubscriptionPlanId = 'quarter';
 
 export function isSubscriptionPlanId(value: unknown): value is SubscriptionPlanId {
   return (
-    value === 'month' || value === 'quarter' || value === 'semester' || value === 'year'
+    value === 'month' ||
+    value === 'promo_month' ||
+    value === 'quarter' ||
+    value === 'semester' ||
+    value === 'year'
   );
 }
 
@@ -154,16 +177,40 @@ export function formatWhatsAppDisplay(digits = getWhatsAppDigits()): string {
   return digits;
 }
 
+export type WhatsAppProofOpts = {
+  emailHint?: string;
+  nameHint?: string;
+  /** Plano escolhido — inclui valor na mensagem. */
+  planId?: SubscriptionPlanId | null;
+  /** Se true, mensagem de “conta criada, falta PIX”. */
+  afterSignup?: boolean;
+};
+
 /** Link wa.me: aluno manda mensagem pedindo liberação + comprovante. */
-export function getWhatsAppProofUrl(emailHint?: string, nameHint?: string): string {
+export function getWhatsAppProofUrl(opts: WhatsAppProofOpts | string = {}): string {
+  // Compat: getWhatsAppProofUrl(email) antigo
+  const options: WhatsAppProofOpts =
+    typeof opts === 'string' ? { emailHint: opts } : opts ?? {};
+
   const digits = getWhatsAppDigits();
   const withCountry = digits.startsWith('55') ? digits : `55${digits}`;
-  const namePart = nameHint?.trim() ? ` Nome: ${nameHint.trim()}.` : '';
-  const emailPart = emailHint?.trim() ? ` E-mail: ${emailHint.trim()}.` : '';
-  const text =
-    `Olá! Acabei de me cadastrar no MedRank e já paguei o PIX.` +
-    `${namePart}${emailPart}` +
-    ` Pode liberar meu acesso? Segue o comprovante.`;
+  const namePart = options.nameHint?.trim() ? ` Nome: ${options.nameHint.trim()}.` : '';
+  const emailPart = options.emailHint?.trim() ? ` E-mail: ${options.emailHint.trim()}.` : '';
+
+  const plan = options.planId ? getSubscriptionPlan(options.planId) : null;
+  const planPart = plan
+    ? ` Paguei ${formatPriceBrl(plan.priceCents)} no plano ${plan.label}.`
+    : '';
+
+  const opener = options.afterSignup
+    ? 'Olá! Acabei de criar minha conta no MedRank.'
+    : 'Olá! Acabei de me cadastrar no MedRank e já paguei o PIX.';
+
+  const closer = options.afterSignup
+    ? `${planPart}${namePart}${emailPart} Vou pagar o PIX e envio o comprovante. Pode liberar meu acesso?`
+    : `${planPart}${namePart}${emailPart} Pode liberar meu acesso? Segue o comprovante.`;
+
+  const text = `${opener}${closer}`;
   return `https://wa.me/${withCountry}?text=${encodeURIComponent(text)}`;
 }
 
@@ -207,7 +254,8 @@ export function getPaidAccessCopy() {
   const promoMonth = formatPriceBrl(PROMO_MONTHLY_CENTS);
   const quarterList = formatPriceBrl(QUARTER_LIST_CENTS);
   const quarterPromo = formatPriceBrl(QUARTER_PRICE_CENTS);
-  const yearPromo = formatPriceBrl(SUBSCRIPTION_PLANS.year.priceCents);
+  const semester = formatPriceBrl(SEMESTER_PRICE_CENTS);
+  const yearPromo = formatPriceBrl(YEAR_PRICE_CENTS);
 
   return {
     priceCents: PROMO_MONTHLY_CENTS,
@@ -232,7 +280,7 @@ export function getPaidAccessCopy() {
     instructions: [
       `Só 1 mês: ${fullMonth}.`,
       `Promo 3 meses: ${promoMonth}/mês — ou pague de uma vez ${quarterPromo} (de ${quarterList}, −R$ 10).`,
-      `Semestral ou anual: pague o período de uma vez (anual ${yearPromo}).`,
+      `Semestral ${semester} ou anual ${yearPromo}: pague o período de uma vez.`,
       'Na descrição do PIX, coloque seu nome e e-mail de cadastro.',
       `Depois, toque em “Me manda no WhatsApp pra liberar” (${whatsappDisplay}) e envie o comprovante.`,
     ],
