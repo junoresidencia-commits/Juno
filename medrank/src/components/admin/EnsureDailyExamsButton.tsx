@@ -169,13 +169,14 @@ export function EnsureDailyExamsButton() {
         onClick={() => void run(false, 'bank', 1)}
         className="w-full rounded-xl bg-teal-800 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-900 disabled:opacity-60"
       >
-        {loading ? 'Gerando…' : 'Gerar provas de hoje'}
+        {loading ? 'Gerando Geral + Nefro…' : 'Gerar provas de hoje (Geral + Nefro)'}
       </button>
 
       <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200">
         <p className="text-sm font-semibold text-slate-900">Pré-gerar vários dias</p>
         <p className="mt-1 text-xs text-slate-600">
-          Monta hoje + os próximos de uma vez (banco, grátis). Assim você não precisa gerar todo dia.
+          Monta hoje + os próximos — <strong>Residência Geral e Nefrologia</strong> em cada dia
+          (banco, grátis). Assim você não precisa gerar todo dia.
         </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {HORIZON_PRESETS.map((days) => (
