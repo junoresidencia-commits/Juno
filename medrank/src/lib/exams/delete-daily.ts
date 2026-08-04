@@ -25,7 +25,17 @@ export async function deleteDailyExamForRegen(
   }
 
   await admin.from('exam_question_reviews').delete().eq('exam_id', examId);
-  await admin.from('exam_question_overrides').delete().eq('exam_id', examId);
+  // Tabela pode não existir em DBs que pularam a migration 025
+  const { error: overrideErr } = await admin
+    .from('exam_question_overrides')
+    .delete()
+    .eq('exam_id', examId);
+  if (
+    overrideErr &&
+    !/exam_question_overrides|does not exist|42P01/i.test(overrideErr.message)
+  ) {
+    return { ok: false, error: overrideErr.message };
+  }
   await admin.from('exam_questions').delete().eq('exam_id', examId);
 
   const { error: delExam } = await admin.from('exams').delete().eq('id', examId);
